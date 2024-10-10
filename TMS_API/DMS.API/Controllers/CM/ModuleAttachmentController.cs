@@ -13,7 +13,7 @@ namespace DMS.API.Controllers.BU
         public readonly IModuleAttachmentService _service = service;
 
         [HttpPost("Upload")]
-        public async Task<IActionResult> Insert(IFormFile file, string moduleType, Guid? referenceId, int? deleteAttachmentId)
+        public async Task<IActionResult> Insert(IFormFile file, string? moduleType, Guid? referenceId, Guid? deleteAttachmentId)
         {
             var transferObject = new TransferObject();
             var result = await _service.Upload(file, moduleType, referenceId, deleteAttachmentId);
@@ -52,7 +52,7 @@ namespace DMS.API.Controllers.BU
         }
 
         [HttpPost("BatchUpload")]
-        public async Task<IActionResult> BatchUpload(List<IFormFile> files, string moduleType, Guid? referenceId, [FromQuery] List<int>? deleteAttachmentIds)
+        public async Task<IActionResult> BatchUpload(List<IFormFile> files, string? moduleType, Guid? referenceId, [FromQuery] List<Guid>? deleteAttachmentIds)
         {
             var transferObject = new TransferObject();
 

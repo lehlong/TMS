@@ -13,6 +13,7 @@ import { AuthService } from '../../services/auth.service'
 import { SidebarMenuService } from '../../services/sidebar-menu.service'
 import { Router } from '@angular/router'
 import { RouterModule } from '@angular/router'
+import { DropdownService } from '../../services/dropdown/dropdown.service'
 
 @Component({
   selector: 'app-main-layout',
@@ -41,9 +42,11 @@ export class MainLayoutComponent {
   breadcrumbs: any = this.globalService.breadcrumb || []
   loading: boolean = false
   screenWidth: number = window.innerWidth
+  listAccount: any[] = []
 
   constructor(
     private globalService: GlobalService,
+    private dropdownService: DropdownService,
     private authService: AuthService,
     private router: Router,
     private sidebarMenuService: SidebarMenuService,
@@ -114,6 +117,7 @@ export class MainLayoutComponent {
     window.addEventListener('resize', this.onResize)
     this.getSidebarMenu()
     this.currentUrl = this.router.url
+    this.getAllAccount();
   }
 
   logout(): void {
@@ -147,5 +151,19 @@ export class MainLayoutComponent {
     if (url && !this.loading) {
       this.router.navigate([url])
     }
+  }
+  getAllAccount() {
+    this.dropdownService.GetAllAccount().subscribe({
+      next: (data) => {
+        this.listAccount = data
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
+  }
+  getAccountName(userName: string): string {
+    const listAccount = this.listAccount.find(item => item.userName === userName);
+    return listAccount ? listAccount.fullName : 'N/A';
   }
 }

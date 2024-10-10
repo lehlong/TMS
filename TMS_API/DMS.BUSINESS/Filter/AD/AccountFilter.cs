@@ -10,7 +10,7 @@ namespace DMS.BUSINESS.Filter.AD
 
         public string? AccountType { get; set; }
 
-        public int? PartnerId { get; set; }
+        public string? OrganizeCode { get; set; }
     }
 
     public class AccountFilterLite

@@ -54,7 +54,7 @@
 .sidebar-logo h1 {
   display: inline-block;
   margin: 0 0 0 20px;
-  color: #fff;
+  color: #ffffff;
   font-weight: 600;
   font-size: 14px;
   font-family:
@@ -76,7 +76,7 @@ nz-header {
   position: relative;
   height: 56px;
   padding: 0 24px;
-  background: #fff;
+  background: #ffffff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 }
 
@@ -86,45 +86,68 @@ nz-content {
 
 .inner-content {
   height: calc(100vh - 75px);
-  background: #fff;
+  background: #ffffff;
 }
-
+.ant-menu.ant-menu-dark .ant-menu-item:hover,
+.ant-menu.ant-menu-dark .ant-menu-submenu-title:hover {
+  background: #f2f2f2 !important; /* Màu nền khi hover vào các dòng */
+  color: #000000 !important; /* Màu chữ khi hover vào các dòng */
+}
+.ant-menu.ant-menu-dark .ant-menu-item,
+.ant-menu.ant-menu-dark .ant-menu-submenu-title {
+  color: #ffffff !important; /* Màu chữ menu */
+}
 ::ng-deep .ant-menu-dark .ant-menu-item-selected {
   background-color: #1e2a38 !important;
+  color: #000000;
+}
+::ng-deep .ant-menu-dark .ant-menu-item-selected,
+::ng-deep .ant-menu-dark .ant-menu-item-selected span,
+::ng-deep .ant-menu-dark .ant-menu-item-selected span[nz-icon] {
+  color: #000000 !important; /* Đảm bảo màu sắc của văn bản và icon */
 }
 
 ::ng-deep .ant-menu-dark .ant-menu-submenu-title-selected {
   background-color: #1e2a38 !important;
+  color: #000000;
 }
 
 // tam diem theme
 
 .ant-menu.ant-menu-dark {
-  background: #ab8553 !important;
+  background: #424242 !important;
 }
 
 .ant-menu.ant-menu-dark .ant-menu-item-selected {
-  background: #c49d6b !important;
+  background: #ffffff !important;
+  color: #000000;
 }
 
 .sidebar-logo {
-  background: #ab8553;
+  background: #424242;
 }
 
 ::ng-deep {
   .ant-menu-dark .ant-menu-inline.ant-menu-sub {
-    background: #ab8553 !important;
+    background: #222222 !important;
+    color: #000000;
   }
 
   .ant-menu-submenu-popup .ant-menu-item-selected {
-    background: #c49d6b !important;
+    background: #ffffff !important;
+    color: #000000;
   }
 
   .ant-menu-dark .ant-menu-sub {
-    background: #ab8553 !important;
+    background: #1b84ff !important;
+    color: #000000;
   }
 }
-
+h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+}
 @media (max-width: 576px) {
   .ant-layout-sider {
     flex: 0 0 0px !important;

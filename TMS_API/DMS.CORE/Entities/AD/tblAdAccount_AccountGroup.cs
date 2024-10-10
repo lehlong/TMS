@@ -16,6 +16,7 @@ namespace DMS.CORE.Entities.AD
         [Column("GROUP_ID")]
         public Guid GroupId { get; set; }
 
+        
         public virtual TblAdAccount Account { get; set; }
 
         public virtual TblAdAccountGroup AccountGroup { get; set; }

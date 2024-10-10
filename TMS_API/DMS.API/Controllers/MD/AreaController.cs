@@ -15,7 +15,7 @@ namespace DMS.API.Controllers.MD
         public readonly IAreaService _service = service;
 
         [HttpGet("Search")]
-        public async Task<IActionResult> Search([FromQuery] AreaFilter filter)
+        public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
         {
             var transferObject = new TransferObject();
             var result = await _service.Search(filter);
@@ -31,10 +31,27 @@ namespace DMS.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll([FromQuery] BaseMdFilter filter)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.GetAll(filter);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
 
 
         [HttpPost("Insert")]
-        public async Task<IActionResult> Insert([FromBody] AreaCreateUpdateDto Area)
+        public async Task<IActionResult> Insert([FromBody] AreaDto Area)
         {
             var transferObject = new TransferObject();
             var result = await _service.Add(Area);
@@ -55,7 +72,7 @@ namespace DMS.API.Controllers.MD
         }
 
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] AreaCreateUpdateDto Area)
+        public async Task<IActionResult> Update([FromBody] AreaDto Area)
         {
             var transferObject = new TransferObject();
             await _service.Update(Area);
@@ -74,11 +91,11 @@ namespace DMS.API.Controllers.MD
             return Ok(transferObject);
         }
 
-        [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [HttpDelete("Delete/{code}")]
+        public async Task<IActionResult> Delete([FromRoute] string code)
         {
             var transferObject = new TransferObject();
-            await _service.Delete(id);
+            await _service.Delete(code);
             if (_service.Status)
             {
                 transferObject.Status = true;
@@ -93,7 +110,23 @@ namespace DMS.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+        [HttpGet("Export")]
+        public async Task<IActionResult> Export([FromQuery] BaseMdFilter filter)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.Export(filter);
+            if (_service.Status)
+            {
+                return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "DSV" + DateTime.Now.ToString() + ".xlsx");
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("2000", _service);
+                return Ok(transferObject);
+            }
+        }
 
-        
     }
 }

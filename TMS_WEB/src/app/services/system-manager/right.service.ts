@@ -11,6 +11,9 @@ export class RightService {
   GetRightTree() {
     return this.commonService.get('Right/GetRightTree');
   }
+  GetRightOfUser(userName: string) {
+    return this.commonService.get('Right/GetRightOfUser', { userName });
+  }
 
   Update(data: any) {
     return this.commonService.put('Right/Update', data);

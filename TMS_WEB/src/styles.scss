@@ -184,7 +184,7 @@
   }
 }
 
-// tam diep
+// stc
 
 .menu-sidebar {
   .ant-menu-root {
@@ -192,23 +192,29 @@
     overflow: auto;
     &::-webkit-scrollbar {
       width: 5px !important;
-      background: #ab8553 !important;
+      background: #207CE5
+ !important;
     }
     &::-webkit-scrollbar-track {
-      background: #ab8553 !important;
+      background: #207CE5
+ !important;
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: #ab8553 !important;
+      background-color: #207CE5
+ !important;
       border-radius: 5px;
       cursor: pointer;
       &:hover {
-        background-color: #ab8553 !important;
+        background-color: #207CE5
+ !important;
       }
     }
     & {
-      scrollbar-width: thin;
-      scrollbar-color: #ab8553 #ab8553;
+      scrollbar-width: none;
+      scrollbar-color: #424242
+ #424242
+;
       scrollbar-width: 2px;
     }
   }

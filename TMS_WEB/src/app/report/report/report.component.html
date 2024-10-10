@@ -1,0 +1,45 @@
+<div class="container-list">
+  <div style="display: flex;">
+    <span style="margin: 5px;">Chọn năm</span>
+    <nz-select style="width: 120px" nzShowSearch nzAllowClear placeholder="Chọn năm kiểm toán" [(ngModel)]="yearValue" (ngModelChange) = "viewTemplate()">
+      <nz-option *ngFor="let item of listTimeYear" [nzLabel]="item.timeyear" [nzValue]="item.timeyear">
+      </nz-option>
+    </nz-select>
+
+    <span style="margin: 5px;">Chọn đợt</span>
+    <nz-select style="width: 120px" nzShowSearch nzAllowClear placeholder="Chọn đợt kiểm toán" [(ngModel)]="auditValue" (ngModelChange) = "viewTemplate()">
+      <nz-option *ngFor="let item of listAudit" [nzLabel]="item.auditPeriod" [nzValue]="item.code">
+      </nz-option>
+    </nz-select>
+
+    <!-- <button style="margin: 0 10px;" nz-button (click)="downloadTemplate()">
+      <span nz-icon nzType="download" nzTheme="outline"></span>
+      Download mẫu
+    </button> -->
+    <!-- <nz-upload [nzShowUploadList] = "false" [nzAction]="this.baseUrl + '/Report/Upload'"
+      [nzCustomRequest]="customRequest" (nzChange)="handleChange($event)" *ngIf="yearValue !='' && auditValue != ''">
+      <button nz-button>
+        <span nz-icon nzType="upload"></span>
+        Upload
+      </button>
+    </nz-upload> -->
+    <!-- <a nz-button *ngIf="urlDownload != ''" style="margin: 0 10px;" href="{{urlDownload}}" target="_blank">
+      <span nz-icon nzType="download" nzTheme="outline"></span>
+      Download báo cáo
+    </a> -->
+    <!-- <a nz-button *ngIf="yearValue !='' && auditValue != ''" style="margin: 0 10px;" (click)="viewTemplate()">
+      <span nz-icon nzType="primary" nzTheme="outline"></span>
+      Xem danh sách Template
+    </a> -->
+    <span *ngIf="listElement.length > 0" style="margin: 5px;">Chọn Template Báo Cáo</span>
+    <nz-select *ngIf="listElement.length > 0" style="width: 300px" nzShowSearch nzAllowClear placeholder="Chọn Template Báo Cáo" [(ngModel)]="idTemplate" (ngModelChange) = "getListTemplate(this.yearValue, this.auditValue)">
+      <nz-option *ngFor="let item of listElement" [nzLabel]="item.fileOldName" [nzValue]="item.id">
+      </nz-option>
+    </nz-select>
+  </div>
+
+  <!-- <div class="office-viewer">
+    <iframe [src]='urlSafe' width='100%' height='100%' frameborder='0'></iframe>
+  </div> -->
+
+</div>

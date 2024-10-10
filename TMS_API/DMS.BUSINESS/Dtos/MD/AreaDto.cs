@@ -15,12 +15,10 @@ namespace DMS.CORE.Entities.MD
 
         [Key]
         [Description("Mã")]
-        public int Id { get; set; }
+        public string Code { get; set; }
 
         [Description("Tên")]
         public string Name { get; set; }
-
-      
 
         public void Mapping(Profile profile)
         {
@@ -28,19 +26,19 @@ namespace DMS.CORE.Entities.MD
         }
     }
 
-    public class AreaCreateUpdateDto : BaseMdDto, IMapFrom, IDto
-    {
-        [Key]
-        public int Id { get; set; }
+    //public class AreaCreateUpdateDto : BaseMdDto, IMapFrom, IDto
+    //{
+    //    [Key]
+    //    public int Id { get; set; }
 
-        public string Name { get; set; }
+    //    public string Name { get; set; }
 
         
 
-        public void Mapping(Profile profile)
-        {
-            profile.CreateMap<TblMdArea, AreaCreateUpdateDto>().ReverseMap();
-        }
-    }
+    //    public void Mapping(Profile profile)
+    //    {
+    //        profile.CreateMap<TblMdArea, AreaCreateUpdateDto>().ReverseMap();
+    //    }
+    //}
 
 }

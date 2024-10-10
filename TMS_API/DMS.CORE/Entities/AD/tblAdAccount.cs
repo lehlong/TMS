@@ -31,6 +31,9 @@ namespace DMS.CORE.Entities.AD
         [Column("ACCOUNT_TYPE", TypeName = "VARCHAR(10)")]
         public string? AccountType { get; set; }
 
+        [Column("ORG_CODE", TypeName = "VARCHAR(50)")]
+        public string? OrganizeCode { get; set; }
+
 
         public virtual ICollection<TblAdAccount_AccountGroup> Account_AccountGroups { get; set; }
 

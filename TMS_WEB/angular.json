@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "TAM_DIEP_DMS_WEB": {
+    "STC_DMS_WEB": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/tam-diep-dms-web",
+            "outputPath": "dist/stc-dms-web",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -70,12 +70,17 @@
               "optimization": {
                 "scripts": true,
                 "styles": {
-                  "minify": true,
+                  "minify": false,
                   "inlineCritical": false
                 }
               },
               "extractLicenses": false,
-              "sourceMap": true,
+              "sourceMap": {
+                "scripts": true,
+                "styles": true, 
+                "vendor": false,
+                "hidden": false
+              },
               "namedChunks": true,
               "aot": false,
               "vendorChunk": true,
@@ -88,10 +93,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "TAM_DIEP_DMS_WEB:build:production"
+              "buildTarget": "STC_DMS_WEB:build:production"
             },
             "development": {
-              "buildTarget": "TAM_DIEP_DMS_WEB:build:development"
+              "buildTarget": "STC_DMS_WEB:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -99,7 +104,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "TAM_DIEP_DMS_WEB:build"
+            "buildTarget": "STC_DMS_WEB:build"
           }
         },
         "test": {

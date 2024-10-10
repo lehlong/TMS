@@ -11,9 +11,9 @@ namespace DMS.BUSINESS.Services.BU.Attachment
 {
     public interface IAttachmentManagerService
     {
-        Task<ServiceResponseDto> UploadModuleAttachment(byte[] data, string fileName, string extension, string fileType, ModuleType moduleType, Guid? RefId = null);
+        Task<ServiceResponseDto> UploadModuleAttachment(byte[] data, string fileName, string extension, string fileType, ModuleType? moduleType, Guid? RefId = null);
         Task<ServiceResponseDto> BatchUploadModuleAttachment(List<BatchUploadDto> datas, ModuleType moduleType, Guid? RefId = null);
-        Task<ServiceResponseDto> Delete(List<int> attachmentIds);
+        Task<ServiceResponseDto> Delete(List<Guid> attachmentIds);
     }
     public class AttachmentManagerService : IAttachmentManagerService
     {
@@ -24,17 +24,28 @@ namespace DMS.BUSINESS.Services.BU.Attachment
         {
             _dbContext = context;
             _configuration = configuration;
-            _baseUploadUrl = _configuration.GetSection("Path:Upload").Value ?? string.Empty;
+            _baseUploadUrl = _configuration.GetSection("Path:Uploads").Value ?? string.Empty;
         }
 
-        public async Task<ServiceResponseDto> UploadModuleAttachment(byte[] data, string fileName, string extension, string fileType, ModuleType moduleType, Guid? RefId = null)
+        public async Task<ServiceResponseDto> UploadModuleAttachment(byte[] data, string fileName, string extension, string fileType, ModuleType? moduleType, Guid? RefId = null)
         {
             if (RefId == null) RefId = Guid.NewGuid();
 
             string physicalFileName = Guid.NewGuid().ToString();
 
-            var uploadPath = Path.Combine(moduleType.ToString(), DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(), $"{physicalFileName}{extension}");
+            //var uploadPath = Path.Combine(moduleType.ToString(), DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(), $"{physicalFileName}{extension}");
+            var rootUploadPath = Path.Combine("Uploads");
+            var uploadPath = Path.Combine(
+                rootUploadPath,
+                moduleType.ToString(),
+                DateTime.Now.Year.ToString(),
+                DateTime.Now.Month.ToString(),
+                DateTime.Now.Day.ToString(),
+                $"{physicalFileName}{extension}"
+            );
 
+            // Tạo thư mục nếu chưa tồn tại
+            Directory.CreateDirectory(Path.GetDirectoryName(uploadPath));
             var uploadResult = await Upload(data, uploadPath);
 
             if (uploadResult.Status == false) return uploadResult;
@@ -50,6 +61,7 @@ namespace DMS.BUSINESS.Services.BU.Attachment
             {
                 var attachment = new TblCmAttachment
                 {
+                    Id = Guid.NewGuid(),
                     Url = uploadPath,
                     Extension = extension,
                     Size = data.Length / 1024.0,
@@ -225,7 +237,7 @@ namespace DMS.BUSINESS.Services.BU.Attachment
             }
         }
 
-        public async Task<ServiceResponseDto> Delete(List<int> attachmentIds)
+        public async Task<ServiceResponseDto> Delete(List<Guid> attachmentIds)
         {
             try
             {

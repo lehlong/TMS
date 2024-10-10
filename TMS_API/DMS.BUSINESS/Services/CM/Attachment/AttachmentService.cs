@@ -10,12 +10,12 @@ namespace DMS.BUSINESS.Services.BU.Attachment
 {
     public interface IAttachmentService : IGenericService<TblCmAttachment, AttachmentDto>
     {
-        Task<(byte[], string)> Download(int attachmentId);
+        Task<(byte[], string)> Download(Guid attachmentId);
     }
 
     public class AttachmentService(AppDbContext dbContext, IMapper mapper, IConfiguration configuration) : GenericService<TblCmAttachment, AttachmentDto>(dbContext, mapper), IAttachmentService
     {
-        public async Task<(byte[], string)> Download(int attachmentId)
+        public async Task<(byte[], string)> Download(Guid attachmentId)
         {
             var attachment = await _dbContext.TblBuAttachment.FirstOrDefaultAsync(x => x.Id == attachmentId);
 

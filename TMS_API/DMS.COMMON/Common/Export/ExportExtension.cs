@@ -11,7 +11,7 @@ namespace Common
     /// </summary>
     public static class ExportExtension
     {
-        public static async Task<byte[]> ExportToExcel<T>(IEnumerable<T> data, string sheetName = "Sheet1", string? title = null)
+        public static async Task<byte[]> ExportToExcel<T>(IEnumerable<T> data, string sheetName = "Sheet1", string? title = null, Dictionary<string, string>? additionalInfo = null)
         {
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             var stream = new MemoryStream();
@@ -26,8 +26,19 @@ namespace Common
             worksheet.Cells["A3"].Style.Font.Bold = true;
 
             // Tạo tiêu đề cho các cột
+            int rowIn = 5;
+            if (additionalInfo != null)
+            {
+                foreach (var info in additionalInfo)
+                {
+                    worksheet.Cells[rowIn, 1].Value = info.Key;
+                    worksheet.Cells[rowIn, 2].Value = info.Value;
+                    rowIn++;
+                }
+            }
+            // Tạo tiêu đề cho các cột
             int colIndex = 1;
-            var rowIndex = 6;
+            var rowIndex = 7;
             CreateHeader(properties, worksheet, rowIndex, ref colIndex);
 
             using (var r = worksheet.Cells[1, 1, 1, colIndex - 1])

@@ -43,6 +43,7 @@ namespace DMS.BUSINESS.Services.AD
                     Url = menu.Url,
                     Title = $"{menu.Id} - {menu.Name}",
                     Key = menu.Id,
+                    IsActive = menu.IsActive,
                     Expanded = true,
                 };
                 lstNode.Add(node);
@@ -106,11 +107,11 @@ namespace DMS.BUSINESS.Services.AD
 
             var lstRightOfUser = await GetRightOfUser(userName);
             var lstAllMenu = await _dbContext.TblAdMenu.Include(x => x.RightReferences)
-                .Where(x => x.RightReferences.Any(y => lstRightOfUser.Contains(y.RightId))).OrderBy(x => x.OrderNumber).ToListAsync();
+                .Where(x => x.RightReferences.Any(y => lstRightOfUser.Contains(y.RightId)) || x.IsActive == true).OrderBy(x => x.OrderNumber).ToListAsync();
 
             foreach (var menu in lstAllMenu)
             {
-                var node = new MenuDto() { Id = menu.Id, Name = menu.Name, PId = menu.PId, OrderNumber = menu.OrderNumber, Icon = menu.Icon, Url = menu.Url };
+                var node = new MenuDto() { Id = menu.Id, Name = menu.Name, PId = menu.PId, OrderNumber = menu.OrderNumber, Icon = menu.Icon, Url = menu.Url, IsActive = menu.IsActive };
                 lstNode.Add(node);
             }
             var nodeDict = lstNode.ToDictionary(n => n.Id);
@@ -187,7 +188,7 @@ namespace DMS.BUSINESS.Services.AD
 
         public async Task<MenuDetailDto> GetMenuWithTreeRight(object id)
         {
-            var data = await _dbContext.TblAdMenu.Include(x => x.RightReferences).Include(x=>x.RightReferences).FirstOrDefaultAsync(x => x.Id == id as string);
+            var data = await _dbContext.TblAdMenu.Include(x => x.RightReferences).FirstOrDefaultAsync(x => x.Id == id as string);
 
             if (data == null) return null;
 
@@ -205,7 +206,16 @@ namespace DMS.BUSINESS.Services.AD
             }
             foreach (var right in lstAllRight)
             {
-                var node = new RightDto() { Id = right.Id, Name = right.Name, PId = right.PId };
+                var node = new RightDto() { 
+                    Id = right.Id, 
+                    Name = right.Name, 
+                    PId = right.PId,
+                    OrderNumber = right.OrderNumber,
+                    Title = $"{right.Id} - {right.Name}",
+                    Key = right.Id,
+                    IsActive = right.IsActive,
+                    Expanded = true,
+                };
                 if (lstRightInMenu.Contains(right.Id))
                 {
                     node.IsChecked = true;

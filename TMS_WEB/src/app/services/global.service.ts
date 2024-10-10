@@ -7,6 +7,8 @@ import {BehaviorSubject, Observable, Subject} from 'rxjs';
 export class GlobalService {
   private loading: BehaviorSubject<boolean>;
   private apiCallCount: number = 0; // Thêm bộ đếm API
+  private userNameSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+
   rightSubject: Subject<string> = new Subject<string>();
   rightData: any = [];
   breadcrumbSubject: Subject<boolean> = new Subject<boolean>();
@@ -21,6 +23,24 @@ export class GlobalService {
     this.breadcrumbSubject.subscribe((value) => {
       this.breadcrumb = value;
     });
+  }
+  setUserName(userName: string): void {
+    this.userNameSubject.next(userName);
+    localStorage.setItem('userName', userName); // Lưu userName vào localStorage nếu cần
+  }
+
+  getUserName(){
+    var usString : any = localStorage.getItem('userName')
+   // var username = JSON.parse(usString);
+    return usString;
+  }
+
+  // Phương thức để lấy userName từ localStorage khi cần
+  loadUserNameFromStorage(): void {
+    const storedUserName = localStorage.getItem('userName');
+    if (storedUserName) {
+      this.userNameSubject.next(storedUserName);
+    }
   }
 
   setBreadcrumb(value: any) {

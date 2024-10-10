@@ -16,6 +16,7 @@ using DMS.BUSINESS.Services.HUB;
 using DMS.API.AppCode.Util;
 using DMS.CORE;
 using Common;
+using Microsoft.Extensions.FileProviders;
 
 var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -108,35 +109,43 @@ builder.Services.AddSignalR(options =>
 
 builder.Services.AddMemoryCache();
 
+//builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
+//        builder =>
+//        {
+//            builder.AllowAnyHeader()
+//                    .AllowAnyMethod()
+//                    .AllowCredentials()
+//                    .SetIsOriginAllowed((host) => true);
+//        }));
 builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
         builder =>
         {
-            builder.AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .SetIsOriginAllowed((host) => true)
-                    .AllowCredentials();
+            builder.WithOrigins("*")
+           .AllowAnyMethod()
+           .AllowAnyHeader();
         }));
 
 var app = builder.Build();
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHangfireDashboard();
-    using var scope = app.Services.CreateScope();
-    using var server = new BackgroundJobServer();
-    await scope.ServiceProvider.GetRequiredService<ISystemTraceService>().StartService();
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    var lstMessage = dbContext.TblAdMessage.ToList();
-    foreach (var message in lstMessage)
-    {
-        MessageUtil.AddToCache(new MessageObject()
-        {
-            Code = message.Code,
-            Language = message.Lang,
-            Message = message.Value
-        });
-    }
-}
-   
+
+//if (!app.Environment.IsDevelopment())
+//{
+//    //app.UseHangfireDashboard();
+//   // using var scope = app.Services.CreateScope();
+//   // using var server = new BackgroundJobServer();
+//   // await scope.ServiceProvider.GetRequiredService<ISystemTraceService>().StartService();
+//   // var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//   // var lstMessage = dbContext.TblAdMessage.ToList();
+//    foreach (var message in lstMessage)
+//    {
+//        MessageUtil.AddToCache(new MessageObject()
+//        {
+//            Code = message.Code,
+//            Language = message.Lang,
+//            Message = message.Value
+//        });
+//    }
+//}
+
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
@@ -155,23 +164,22 @@ app.UseSwaggerUI(options =>
 TransferObjectExtension.SetHttpContextAccessor(app.Services.GetRequiredService<IHttpContextAccessor>());
 app.EnableRequestBodyRewind();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+
 
 app.UseRouting();
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapControllers();
 
 app.UseMiddleware<ActionLoggingMiddleware>();
 app.MapHub<SystemTraceServiceHub>("/SystemTrace");
 app.MapHub<RefreshServiceHub>("/Refresh");
-//app.MapHub<GatewayHub>("/GatewayHub");
-//app.MapHub<Scale1Hub>("/Scale1Hub");
-//app.MapHub<Scale2Hub>("/Scale2Hub");
 
-app.UseCors("CorsPolicy");
+app.UseStaticFiles();
 
+app.MapControllers();
 app.Run();

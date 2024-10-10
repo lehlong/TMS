@@ -16,21 +16,8 @@ namespace DMS.BUSINESS.Dtos.AD
 
         public string Notes { get; set; }
 
-        public string RoleCode { get; set; }
+        public int TotalAccount => Account_AccountGroups?.Count ?? 0;
 
-        public int TotalAccount => Account_AccountGroups?.SelectMany(x => x.UserName)?.Distinct()?.Count() ?? 0;
-
-        public Roles Role
-        {
-            get
-            {
-                if (Enum.TryParse(RoleCode, out Roles r))
-                {
-                    return r;
-                }
-                return Roles.KHONG_XAC_DINH;
-            }
-        }
 
         public List<TblAccount_AccountGroupLiteAccountDto> Account_AccountGroups { get; set; }
 
@@ -53,7 +40,6 @@ namespace DMS.BUSINESS.Dtos.AD
 
         public string? Notes { get; set; }
 
-        public string RoleCode { get; set; }
 
         public List<AccountGroupRightCreateDto> ListAccountGroupRight { get; set; }
 
@@ -71,7 +57,6 @@ namespace DMS.BUSINESS.Dtos.AD
 
         public string Notes { get; set; }
 
-        public string RoleCode { get; set; }
 
         public void Mapping(Profile profile)
         {
@@ -99,7 +84,6 @@ namespace DMS.BUSINESS.Dtos.AD
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Notes { get; set; }
-        public string RoleCode { get; set; }
         public void Mapping(Profile profile)
         {
             profile.CreateMap<TblAdAccountGroup, AccountGroupLiteDto>().ReverseMap();

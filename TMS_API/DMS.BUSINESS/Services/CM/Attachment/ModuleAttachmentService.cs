@@ -13,9 +13,9 @@ namespace DMS.BUSINESS.Services.BU
 {
     public interface IModuleAttachmentService : IGenericService<TblCmModuleAttachment, ModuleAttachmentDto>
     {
-        Task<object> Upload(IFormFile file, string moduleType, Guid? referenceId, int? deleteAttachmentId = null);
+        Task<object> Upload(IFormFile file, string moduleType, Guid? referenceId, Guid? deleteAttachmentId = null);
         Task<List<ModuleAttachmentDto>> GetByReferenceId(Guid refId);
-        Task<object> UploadList(List<IFormFile> files, string moduleType, Guid? referenceId, List<int>? deleteAttachmentId = null);
+        Task<object> UploadList(List<IFormFile> files, string? moduleType, Guid? referenceId, List<Guid>? deleteAttachmentId = null);
     }
     public class ModuleAttachmentService(AppDbContext dbContext, IMapper mapper, IAttachmentManagerService attachmentManager) : GenericService<TblCmModuleAttachment, ModuleAttachmentDto>(dbContext, mapper), IModuleAttachmentService
     {
@@ -26,7 +26,7 @@ namespace DMS.BUSINESS.Services.BU
             try
             {
                 var data = await _dbContext.TblBuModuleAttachment.Include(x => x.Attachment)
-                    .FirstOrDefaultAsync(x => x.Id == (int)id);
+                    .FirstOrDefaultAsync(x => x.Id == (Guid)id);
 
                 return _mapper.Map<ModuleAttachmentDto>(data);
             }
@@ -55,7 +55,7 @@ namespace DMS.BUSINESS.Services.BU
             }
         }
 
-        public async Task<object> Upload(IFormFile file, string moduleType, Guid? referenceId, int? deleteAttachmentId)
+        public async Task<object> Upload(IFormFile file, string? moduleType, Guid? referenceId, Guid? deleteAttachmentId)
         {
             if (deleteAttachmentId != null)
             {
@@ -66,7 +66,8 @@ namespace DMS.BUSINESS.Services.BU
             {
                 this.Status = false;
                 this.MessageObject.Code = "2005";
-                return null;
+                mdType = ModuleType.PARTNER;
+                //return null;
             }
 
             if (file.Length < 0)
@@ -98,7 +99,7 @@ namespace DMS.BUSINESS.Services.BU
             return uploadResult.Data;
         }
 
-        public async Task<object> UploadList(List<IFormFile> files, string moduleType, Guid? referenceId, List<int>? deleteAttachmentIds)
+        public async Task<object> UploadList(List<IFormFile> files, string? moduleType, Guid? referenceId, List<Guid>? deleteAttachmentIds)
         {
             if(deleteAttachmentIds != null && deleteAttachmentIds.Count != 0)
             {
@@ -109,7 +110,8 @@ namespace DMS.BUSINESS.Services.BU
             {
                 this.Status = false;
                 this.MessageObject.Code = "2005";
-                return null;
+                mdType = ModuleType.PARTNER;
+                //return null;
             }
 
             List<BatchUploadDto> datas = [];

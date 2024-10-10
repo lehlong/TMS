@@ -1,6 +1,5 @@
-<div class="container-list" >
+<div class="container-list" [appPermission]="ACCOUNT_GROUP_RIGHTS.LIST">
   <!-- cấp quyền cho phép sử dụng chức năng nhóm tài khoản -->
-  <!-- [appPermission]="ACCOUNT_GROUP_RIGHTS.LIST" -->
   <div class="site-page-header-ghost-wrapper">
     <nz-page-header nzBackIcon nzTitle="Nhóm tài khoản" nzSubtitle="Danh sách nhóm tài khoản" class="site-page-header">
       <nz-page-header-extra>
@@ -21,24 +20,30 @@
             [appPermission]="ACCOUNT_GROUP_RIGHTS.ADD">
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
-          <button (click)="exportExcel()" class="!flex !items-center" nz-button nzType="primary" nzDanger
-            [appPermission]="ACCOUNT_GROUP_RIGHTS.EXCEL">
+          <!-- <button
+            (click)="exportExcel()"
+            class="!flex !items-center"
+            nz-button
+            nzType="primary"
+            nzDanger
+            [appPermission]="ACCOUNT_GROUP_RIGHTS.EXCEL"
+          >
             <span nz-icon nzType="file-excel"></span>Tải Excel
-          </button>
+          </button> -->
         </nz-space>
       </nz-page-header-extra>
     </nz-page-header>
   </div>
   <div class="px-[10px] overflow-scroll flex-grow">
-    <nz-table [nzScroll]="{x: 'max-content'}" nzTableLayout="fixed" [nzShowPagination]="false"
+    <nz-table [nzScroll]="{ x: 'max-content' }" nzTableLayout="fixed" [nzShowPagination]="false"
       [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data">
       <thead>
         <tr>
           <th nzWidth="80px">STT</th>
           <th nzWidth="150px" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)">
-            Tên nhóm tài khoản
+            Mã nhóm tài khoản
           </th>
-          <th>Ghi chú</th>
+          <th>Tên nhóm tài khoản</th>
 
           <th nzWidth="100px" nzAlign="right">Số lượng tài khoản</th>
           <th nzWidth="100px" nzAlign="center" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('isActive', $event)">
@@ -49,7 +54,13 @@
       </thead>
       <tbody>
         <tr *ngFor="let data of headerTable.data; let i = index">
-          <td>{{ (paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1 }}</td>
+          <td>
+            {{
+            (paginationResult.currentPage - 1) * paginationResult.pageSize +
+            i +
+            1
+            }}
+          </td>
           <td>
             <a (click)="openEdit(data.id)">{{ data.name }}</a>
           </td>
@@ -62,8 +73,8 @@
           </td>
           <td nzAlign="center">
             <span nz-popconfirm nzPopconfirmTitle="Bạn muốn xoá loại hàng hóa này ?" nzPopconfirmPlacement="bottom"
-              (nzOnConfirm)="deleteItem(data.id)" [appPermission]="ACCOUNT_GROUP_RIGHTS.DELETE"
-              class="!text-red-500 cursor-pointer" nz-icon nzType="delete" nzTheme="outline"></span>
+              (nzOnConfirm)="deleteItem(data.id)" class="!text-red-500 cursor-pointer" nz-icon nzType="delete"
+              nzTheme="outline" [appPermission]="ACCOUNT_GROUP_RIGHTS.DELETE"></span>
           </td>
         </tr>
       </tbody>

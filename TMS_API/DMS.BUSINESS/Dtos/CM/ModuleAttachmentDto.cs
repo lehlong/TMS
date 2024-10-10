@@ -6,13 +6,13 @@ namespace DMS.BUSINESS.Dtos.BU
 {
     public class ModuleAttachmentDto : IMapFrom, IDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Guid ReferenceId { get; set; }
 
         public string ModuleType { get; set; }
 
-        public int AttachmentId { get; set; }
+        public Guid AttachmentId { get; set; }
 
         public virtual AttachmentDto Attachment { get; set; }
 

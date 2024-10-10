@@ -21,13 +21,13 @@ namespace DMS.BUSINESS.Services.AD
         public async Task<RightDto> BuildDataForTree()
         {
             var lstNode = new List<RightDto>();
-            RightDto rootNode = new() { Id = "R", PId = "-R", Name = "Danh sách quyền trong hệ thống", Title = "R. Danh sách quyền trong hệ thống", Key = "R", Expanded = true };
+            RightDto rootNode = new() { Id = "R", PId = "-R", Name = "Danh sách quyền trong hệ thống", Title = "R. Danh sách quyền trong hệ thống", Key = "R", Expanded = true, IsActive = true };
             lstNode.Add(rootNode);
 
             var lstAllRight = (await GetAll()).OrderBy(x => x.OrderNumber).ToList();
             foreach (var right in lstAllRight.Where(x => x.Id != "R"))
             {
-                var node = new RightDto() { Id = right.Id, PId = right.PId, Name = right.Name, OrderNumber = right.OrderNumber, Title = $"{right.Id} {right.Name}", Key = right.Id };
+                var node = new RightDto() { Id = right.Id, PId = right.PId, Name = right.Name, OrderNumber = right.OrderNumber, Title = $"{right.Id} {right.Name}", Key = right.Id, IsActive = right.IsActive };
                 lstNode.Add(node);
             }
             var nodeDict = lstNode.ToDictionary(n => n.Id);

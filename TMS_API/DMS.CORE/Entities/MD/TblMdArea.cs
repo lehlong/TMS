@@ -9,11 +9,10 @@ namespace DMS.CORE.Entities.MD
     public class TblMdArea : BaseEntity
     {
         [Key]
-        [Column("ID")]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
+        [Column("CODE", TypeName= "VARCHAR(50)")]
+        public string Code { get; set; }
 
-        [Column("NAME", TypeName = "NVARCHAR2(255)")]
+        [Column("NAME", TypeName = "NVARCHAR(255)")]
         public string Name { get; set; }
 
     

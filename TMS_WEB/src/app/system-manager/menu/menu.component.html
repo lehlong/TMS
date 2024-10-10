@@ -5,8 +5,9 @@
         <nz-space [nzWrap]="true" class="gap-[5px]">
           <nz-space class="gap-[5px]">
             <div>
-              <nz-input-group [nzSuffix]="suffixIcon" style="width: auto;">
-                <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue" />
+              <nz-input-group [nzSuffix]="suffixIcon" style="width: auto">
+                <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue"
+                  (ngModelChange)="searchTables(searchValue)" />
               </nz-input-group>
               <ng-template #suffixIcon>
                 <span nz-icon nzType="search"></span>
@@ -17,7 +18,8 @@
               </button>
             </div>
             <button (click)="updateOrderTree()" class="!flex !items-center btn_success" nz-button>
-              <span nz-icon nzType="check" nzTheme="outline"></span> Cập nhật thứ tự
+              <span nz-icon nzType="check" nzTheme="outline"></span> Cập nhật
+              thứ tự
             </button>
           </nz-space>
         </nz-space>
@@ -33,12 +35,8 @@
         <div class="flex-1" (click)="onClick(node)">{{ node.title }}</div>
         <div>
           <span nz-icon (click)="openCreateChild(node)" nzType="plus-circle" nzTheme="twotone"></span>
-          <nz-divider nzType="vertical"></nz-divider>
-          <span nz-popconfirm nzPopconfirmTitle="Bạn có muốn xóa menu?" nzPopconfirmPlacement="bottom"
-            (nzOnConfirm)="deleteItem(node)" class="!text-red-500 cursor-pointer" nz-icon nzType="delete"
-            nzTheme="outline"></span>
-        </div>
 
+        </div>
       </div>
     </ng-template>
     <ng-template #multiExpandedIconTpl let-node let-origin="origin">
@@ -47,8 +45,6 @@
     </ng-template>
   </nz-tree>
 </div>
-
-
 
 <!--Create Update-->
 <nz-drawer [nzMask]="!edit" [nzVisible]="visible" nzPlacement="right" [nzTitle]="edit ? 'Chỉnh sửa ' : 'Tạo mới '"
@@ -80,9 +76,11 @@
 
 <ng-template #extra>
   <nz-space>
-    <button *nzSpaceItem nz-button nzType="primary" class="!flex !items-center" (click)="submitForm()"><span nz-icon
-        nzType="save" nzTheme="outline"></span>Lưu</button>
-    <button *nzSpaceItem nz-button nzType="primary" class="!flex !items-center" nzDanger (click)="close()"><span nz-icon
-        nzType="close-circle" nzTheme="outline"></span>Huỷ</button>
+    <button *nzSpaceItem nz-button nzType="primary" class="!flex !items-center" (click)="submitForm()">
+      <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+    </button>
+    <button *nzSpaceItem nz-button nzType="primary" class="!flex !items-center" nzDanger (click)="close()">
+      <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
+    </button>
   </nz-space>
 </ng-template>

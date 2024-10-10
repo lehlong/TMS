@@ -5,7 +5,7 @@ using Common;
 
 namespace DMS.BUSINESS.Dtos.AD
 {
-    public class MenuDto : IMapFrom, IDto
+    public class MenuDto : BaseMdDto,IMapFrom, IDto
     {
         [Key]
         public string Id { get; set; }
@@ -38,7 +38,7 @@ namespace DMS.BUSINESS.Dtos.AD
         }
     }
 
-    public class MenuUpdateDto : IMapFrom, IDto
+    public class MenuUpdateDto : BaseMdDto, IMapFrom, IDto
     {
         [Key]
         public string Id { get; set; }
@@ -71,7 +71,7 @@ namespace DMS.BUSINESS.Dtos.AD
         }
     }
 
-    public class MenuDetailDto : IMapFrom, IDto
+    public class MenuDetailDto : BaseMdDto, IMapFrom, IDto
     {
         [Key]
         public string Id { get; set; }

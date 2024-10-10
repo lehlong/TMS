@@ -4,36 +4,28 @@
 
     <div nz-row [nzGutter]="16" nzJustify="end">
       <div nz-col>
-        <button nz-button nzType="default" (click)="closeDrawer()">Cancel</button>
+        <button nz-button nzType="default" (click)="closeDrawer()">
+          Cancel
+        </button>
       </div>
       <div nz-col>
-        <button nz-button nzType="primary" [disabled]="!validateForm.valid">Submit</button>
+        <button nz-button nzType="primary" [disabled]="!validateForm.valid">
+          Submit
+        </button>
       </div>
     </div>
   </form>
 </nz-drawer>
 
-<nz-drawer [nzMask]="false" nzSize="large" [nzVisible]="visible" nzPlacement="right" nzTitle="Chỉnh sửa"
+<nz-drawer [nzMask]="false" nzWidth="60%" [nzVisible]="visible" nzPlacement="right" nzTitle="Chỉnh sửa"
   [nzExtra]="extra" (nzOnClose)="closeDrawer()">
   <nz-tabset *nzDrawerContent>
     <nz-tab nzTitle="Thông tin">
       <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-        <app-input-clear placeholder="Nhập tên nhóm tài khoản" [required]="true" label="Tên nhóm tài khoản"
+        <app-input-clear placeholder="Nhập mã nhóm tài khoản" [required]="true" label="Mã nhóm tài khoản"
           [control]="$any(validateForm).controls['name']">
         </app-input-clear>
-
-        <nz-form-item>
-          <nz-form-label>Vai trò</nz-form-label>
-          <nz-form-control nzErrorTip="Không được để trống">
-            <nz-select nzShowSearch nzAllowClear placeholder="Chọn vai trò" formControlName="roleCode">
-              <nz-option cdkScrollable *ngFor="let item of optionsRoleCode" [nzLabel]="item.name"
-                [nzValue]="item.value">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-
-        <app-input-clear type="textarea" placeholder="Ghi chú" label="Ghi chú"
+        <app-input-clear type="textarea" placeholder="Nhập tên nhóm tài khoản" label="Tên nhóm tài khoản"
           [control]="$any(validateForm).controls['notes']">
         </app-input-clear>
 
@@ -49,13 +41,15 @@
       </form>
     </nz-tab>
     <nz-tab nzTitle="Phân quyền">
-      <nz-tree #treeCom nzCheckable nzMultiple [nzData]="nodes" [nzShowExpand]="true" nzBlockNode
-        (nzOnDrop)="nzEvent($event)" [nzSearchValue]="searchValue" (nzSearchValueChange)="nzEvent($event)"
-        (nzOnDrop)="onDrop($event)" (nzCheckBoxChange)="nzEvent($event)" (nzClick)="onClick($event)"></nz-tree>
+      <nz-tree #treeCom nzCheckable nzMultiple [nzData]="nodes" [nzShowExpand]="true" [nzCheckStrictly]="true"
+        nzBlockNode (nzOnDrop)="nzEvent($event)" [nzSearchValue]="searchValue" (nzSearchValueChange)="nzEvent($event)"
+        (nzOnDrop)="onDrop($event)" [nzCheckedKeys]="initialCheckedNodes" (nzCheckBoxChange)="onCheckBoxChange($event)"
+        (nzClick)="onClick($event)"></nz-tree>
     </nz-tab>
     <nz-tab nzTitle="Thành viên">
-      <nz-transfer [nzTitles]="['Nhóm khác', 'Nhóm ' + nameShow]" [nzDataSource]="listAccount" [nzShowSearch]="true"
-        [nzShowSelectAll]="false" [nzRenderList]="[renderList, renderList]" (nzChange)="change($event)">
+      <nz-transfer [nzTitles]="['Tài khoản chưa gán nhóm', 'Nhóm ' + nameShow]" [nzDataSource]="listAccount"
+        [nzShowSearch]="true" [nzShowSelectAll]="false" [nzRenderList]="[renderList, renderList]"
+        (nzChange)="change($event)">
         <ng-template #renderList let-items let-direction="direction" let-stat="stat"
           let-onItemSelectAll="onItemSelectAll" let-onItemSelect="onItemSelect">
           <nz-table #t [nzData]="items" nzSize="small">
@@ -74,8 +68,9 @@
                 <td>{{ data.userName }}</td>
                 <td>{{ data.fullName }}</td>
                 <td nzAlign="center">
-                  <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
-                    nzTheme="outline"></span>
+                  <span [ngClass]="
+                      data?.isActive ? '!text-green-500' : '!text-red-500'
+                    " nz-icon nzType="check-circle" nzTheme="outline"></span>
                 </td>
               </tr>
             </tbody>
@@ -87,7 +82,9 @@
 </nz-drawer>
 <ng-template #extra>
   <nz-space>
-    <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center" (click)="submitForm()"  [appPermission]="ACCOUNT_GROUP_RIGHTS.EDIT">
+    <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+      (click)="submitForm()">
+      <!-- [appPermission]="ACCOUNT_GROUP_RIGHTS.EDIT" -->
       <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
     </button>
     <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger

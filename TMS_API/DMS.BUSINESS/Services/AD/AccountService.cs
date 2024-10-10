@@ -34,7 +34,7 @@ namespace DMS.BUSINESS.Services.AD
                 var query = _dbContext.TblAdAccount
                 .Include(x => x.Account_AccountGroups)
                 .ThenInclude(x => x.AccountGroup)
-               // .Include(x => x.Partner)
+               // .Include(x => x.OrganizeCode)
                 .AsQueryable();
 
                 if (!string.IsNullOrWhiteSpace(filter.KeyWord))
@@ -55,9 +55,9 @@ namespace DMS.BUSINESS.Services.AD
                     query = query.Where(x => x.AccountType == filter.AccountType);
                 }
 
-                //if (filter.PartnerId.HasValue)
+                //if (!string.IsNullOrWhiteSpace(filter.OrganizeCode))
                 //{
-                //    query = query.Where(x => x.PartnerId == filter.PartnerId);
+                //    query = query.Where(x => x.OrganizeCode == filter.OrganizeCode);
                 //}
 
                 if (filter.IsActive.HasValue)
@@ -65,7 +65,7 @@ namespace DMS.BUSINESS.Services.AD
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
 
-                if (filter.GroupId.HasValue)
+                  if (filter.GroupId.HasValue)
                 {
                     query = query.Where(x => x.Account_AccountGroups.Any(x => x.GroupId == filter.GroupId));
                 }

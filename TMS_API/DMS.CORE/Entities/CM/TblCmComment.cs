@@ -23,7 +23,7 @@ namespace DMS.CORE.Entities.BU
         public string Content { get; set; }
 
         [Column("ATTACHMENT_ID")]
-        public int? AttachmentId { get; set; }
+        public Guid? AttachmentId { get; set; }
 
         [ForeignKey("PId")]
         public virtual TblCmComment PComment { get; set; }

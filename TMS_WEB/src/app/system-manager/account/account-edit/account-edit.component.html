@@ -1,4 +1,4 @@
-<nz-drawer [nzMask]="true" nzSize="large" [nzVisible]="visible" nzPlacement="right" nzTitle="Chỉnh sửa tài khoản"
+<nz-drawer [nzMask]="true" nzWidth="60%" [nzVisible]="visible" nzPlacement="right" nzTitle="Chỉnh sửa tài khoản"
   [nzExtra]="extra" (nzOnClose)="closeDrawer()">
   <nz-tabset *nzDrawerContent>
     <nz-tab nzTitle="Thông tin">
@@ -28,27 +28,45 @@
             <nz-form-item>
               <nz-form-label>Kiểu người dùng</nz-form-label>
               <nz-form-control nzErrorTip="Không được để trống">
-                <nz-select nzShowSearch nzAllowClear placeholder="Chọn kiểu người dùng" formControlName="accountType"
-                  (ngModelChange)="onUserTypeChange($event)">
-                  <nz-option cdkScrollable *ngFor="let item of UserTypeCodes" [nzLabel]="item.name"
-                    [nzValue]="item.value">
+                <nz-select nzShowSearch nzAllowClear placeholder="Chọn kiểu người dùng" formControlName="accountType">
+                  <nz-option cdkScrollable *ngFor="let item of accountType" [nzLabel]="item.name" [nzValue]="item.id">
                   </nz-option>
                 </nz-select>
               </nz-form-control>
             </nz-form-item>
           </div>
-          <div nz-col [nzXs]="24" [nzMd]="12" *ngIf="isShowSelectPartner">
+          <div nz-col [nzXs]="24" [nzMd]="12">
+            <nz-form-item>
+              <nz-form-label>Đơn vị</nz-form-label>
+              <nz-form-control nzErrorTip="Không được để trống">
+                <nz-select nzShowSearch nzAllowClear placeholder="Chọn đơn vị" formControlName="organizeCode">
+                  <nz-option cdkScrollable *ngFor="let item of orgList" [nzLabel]="item.name" [nzValue]="item.id">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <!-- <div nz-col [nzXs]="24" [nzMd]="12" *ngIf="isShowSelectPartner">
             <nz-form-item>
               <nz-form-label>Chọn đối tác</nz-form-label>
               <nz-form-control nzErrorTip="Không được để trống">
-                <nz-select nzShowSearch nzAllowClear placeholder="Chọn kiểu người dùng" formControlName="partnerId">
-                  <nz-option cdkScrollable *ngFor="let item of listPartnerCustomer" [nzLabel]="item.name"
-                    [nzValue]="item.id">
+                <nz-select
+                  nzShowSearch
+                  nzAllowClear
+                  placeholder="Chọn kiểu người dùng"
+                  formControlName="partnerId"
+                >
+                  <nz-option
+                    cdkScrollable
+                    *ngFor="let item of listPartnerCustomer"
+                    [nzLabel]="item.name"
+                    [nzValue]="item.id"
+                  >
                   </nz-option>
                 </nz-select>
               </nz-form-control>
             </nz-form-item>
-          </div>
+          </div> -->
           <div nz-col [nzXs]="24">
             <nz-form-item>
               <nz-form-label>Trạng thái</nz-form-label>
@@ -61,23 +79,28 @@
             </nz-form-item>
           </div>
         </div>
-
       </form>
     </nz-tab>
     <nz-tab nzTitle="Nhóm người dùng">
-      <div style="overflow: auto;">
-        <nz-transfer [nzTitles]="['Không chứa tài khoản ' + userName, 'Chứa tài khoản ' + userName]"
-          [nzListStyle]="{width: widthDeault, 'height.px': heightDeault}" [nzDataSource]="optionsGroup"
+      <div style="overflow: auto">
+        <nz-transfer [nzTitles]="[
+            'Không chứa tài khoản ' + userName,
+            'Chứa tài khoản ' + userName,
+          ]" [nzListStyle]="{ width: widthDeault, 'height.px': heightDeault }" [nzDataSource]="optionsGroup"
           nzShowSearch></nz-transfer>
       </div>
     </nz-tab>
     <nz-tab nzTitle="Phân quyền">
-      <nz-tree #treeCom nzCheckable nzMultiple [nzData]="nodes" nzBlockNode (nzOnDrop)="nzEvent($event)"
-        [nzSearchValue]="searchValue" (nzSearchValueChange)="nzEvent($event)" (nzOnDrop)="onDrop($event)"
+      <nz-tree #treeCom nzCheckable nzMultiple [nzData]="nodes" [nzCheckStrictly]="true" nzBlockNode
+        [nzCheckStrictly]="true" (nzOnDrop)="nzEvent($event)" [nzSearchValue]="searchValue"
+        (nzSearchValueChange)="nzEvent($event)" (nzOnDrop)="onDrop($event)"
         (nzCheckBoxChange)="onCheckBoxChange($event)" (nzClick)="onClick($event)"
         [nzExpandedIcon]="multiExpandedIconTpl">
         <ng-template #nzTreeTemplate let-node>
-          <span [ngClass]="{'in-checked': node.origin.InChecked , 'out-checked' : node.origin.OutChecked}">
+          <span [ngClass]="{
+              'in-checked': node.origin.InChecked,
+              'out-checked': node.origin.OutChecked,
+            }">
             {{ node.title }}
           </span>
         </ng-template>

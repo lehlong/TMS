@@ -40,7 +40,7 @@ export class LoginComponent {
       try {
         const credentials = {
           userName: this.validateForm.get('userName')?.value,
-          password: this.validateForm.get('password')?.value,   
+          password: this.validateForm.get('password')?.value,
         }
 
         this.authService.login(credentials).subscribe({
@@ -48,6 +48,10 @@ export class LoginComponent {
             localStorage.setItem('token', response.accessToken)
             localStorage.setItem('refreshToken', response.refreshToken)
             this.globalService.setUserInfo(response.accountInfo)
+            const userName = response?.accountInfo?.userName;
+            if (userName) {
+              this.globalService.setUserName(userName); // Lưu userName
+            }
             this.authService
               .getRightOfUser({ userName: response?.accountInfo?.userName })
               .subscribe({

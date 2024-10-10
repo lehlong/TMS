@@ -5,6 +5,7 @@
         VEHICLE,
         DRIVER,
         CARE_STORE,
-        PARTNER
+        PARTNER,
+        REPORT
     }
 }

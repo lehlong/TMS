@@ -17,7 +17,7 @@ namespace DMS.BUSINESS.Dtos.BU
 
         public string Content { get; set; }
 
-        public int? AttachmentId { get; set; }
+        public Guid? AttachmentId { get; set; }
 
         public virtual List<CommentDto> Replies { get; set; }
 
@@ -45,7 +45,7 @@ namespace DMS.BUSINESS.Dtos.BU
 
         public string Content { get; set; }
 
-        public int? AttachmentId { get; set; }
+        public Guid? AttachmentId { get; set; }
 
         public Guid ReferenceId { get; set; }
 
@@ -63,7 +63,7 @@ namespace DMS.BUSINESS.Dtos.BU
 
         public string Content { get; set; }
 
-        public int? AttachmentId { get; set; }
+        public Guid? AttachmentId { get; set; }
 
         public void Mapping(Profile profile)
         {

@@ -1,4 +1,4 @@
-import {BaseFilter} from '../base.model';
+import { BaseFilter } from '../base.model';
 
 export class AccountGroupFilter extends BaseFilter {
   id?: string;
@@ -14,7 +14,6 @@ export class AccountGroupFilter extends BaseFilter {
   listAccountGroupRight?: listAccountGroupRight[];
   account_AccountGroups?: account_AccountGroups[];
   treeRight?: rightOfGroup[];
-  roleCode?: string;
   SortColumn: string = '';
   IsDescending: boolean = true;
 }

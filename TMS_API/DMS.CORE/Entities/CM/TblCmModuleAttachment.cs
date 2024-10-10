@@ -10,16 +10,16 @@ namespace DMS.CORE.Entities.BU
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("ID")]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Column("REFERENCE_ID")]
         public Guid? ReferenceId { get; set; }
 
-        [Column("MODULE_TYPE", TypeName = "VARCHAR2(50)")]
+        [Column("MODULE_TYPE", TypeName = "VARCHAR(50)")]
         public string ModuleType { get; set; }
 
         [Column("ATTACHMENT_ID")]
-        public int AttachmentId { get; set; }
+        public Guid AttachmentId { get; set; }
 
         [ForeignKey("AttachmentId")]
         public virtual TblCmAttachment Attachment { get; set; }

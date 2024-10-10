@@ -45,6 +45,8 @@ import { NzCollapseModule } from 'ng-zorro-antd/collapse'
 import { NzTimelineModule } from 'ng-zorro-antd/timeline'
 import { CommentComponent } from '../components/comment/comment.component'
 import { PermissionDirective } from '../directives/permission.directive'
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown'
+import { NzCardModule } from 'ng-zorro-antd/card'
 @NgModule({
   providers: [{ provide: NZ_ICONS, useValue: [UserOutline, LockOutline] }],
   imports: [
@@ -100,6 +102,8 @@ import { PermissionDirective } from '../directives/permission.directive'
     NzTimelineModule,
     NzPopoverModule,
     NzInputNumberModule,
+    NzDropDownModule,
+    NzCardModule,
   ],
 })
 export class ShareModule {}

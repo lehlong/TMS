@@ -12,7 +12,7 @@ namespace DMS.CORE
 {
     public class AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor) : DbContext(options)
     {
-        private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+        public IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,8 +44,7 @@ namespace DMS.CORE
             TrackChanges();
             return await base.SaveChangesAsync(cancellationToken);
         }
-
-        private void TrackChanges()
+        public string GetUserRequest()
         {
             var tokens = _httpContextAccessor?.HttpContext?.Request?.Headers.Authorization.ToString()?.Split(" ")?.ToList();
             string? user = null;
@@ -55,12 +54,18 @@ namespace DMS.CORE
                 if (!string.IsNullOrWhiteSpace(token) && token != "null")
                 {
                     JwtSecurityTokenHandler tokenHandler = new();
-                    JwtSecurityToken securityToken =  tokenHandler.ReadToken(token) as JwtSecurityToken;
+                    JwtSecurityToken securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
                     var claim = securityToken.Claims;
                     var result = claim.FirstOrDefault(x => x.Type == ClaimTypes.Name);
                     user = result?.Value;
                 }
             }
+            return user;
+        }
+
+        private void TrackChanges()
+        {
+            var user = GetUserRequest();
 
             foreach (var entry in ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Modified))
             {
@@ -115,16 +120,45 @@ namespace DMS.CORE
         public DbSet<TblAdAccount_AccountGroup> TblAdAccount_AccountGroup { get; set; }
         public DbSet<TblActionLog> TblActionLogs {get; set;}
         public DbSet<TblAdSystemTrace> TblAdSystemTrace { get; set; }
+        public DbSet<tblAdOrganize> tblAdOrganize { get; set; }
         #endregion
 
         #region Master Data
-       
+
+        public DbSet<TblMdTypeOfGoods> TblMdTypeOfGoods { get; set; }
+
         public DbSet<TblMdArea> TblMdArea { get; set; }
       
+        public DbSet<TblMdCurrency> tblMdCurrency { get; set; }
+        public DbSet<TblMdUnit> tblMdUnit { get; set; }
+
+        public DbSet<TblMdLocal> tblMdLocal { get; set; }
+
+        public DbSet<TblMdPeriodTime> tblMdPeriodTime { get; set; }
+       
+        public DbSet<TblMdOpinionType> tblMdOpinionType { get; set; }
+        public DbSet<TblMdTemplateListTables> tblMdTemplateListTables { get; set; }
+        public DbSet<TblMdTemplateListTablesGroups> tblMdTemplateListTablesGroups { get; set; }
+        public DbSet<TblMdTemplateListTablesData> tblMdTemplateListTablesData { get; set; }
+        public DbSet<TblMdAuditPeriod> tblMdAuditPeriods { get; set; }
+        public DbSet<TblMdMgListTablesGroups> tblMdMgListTablesGroup { get; set; }
+        public DbSet<TblMdMgListTables> tblMdMgListTables { get; set; }
+        public DbSet<TblMdMgOpinionList> tblMdMgOpinionList { get; set; }
+        public DbSet<TblMdAccountType> tblMdAccountType { get; set; }
+        public DbSet<TblMdListAudit> tblMdListAudit { get; set; }
+        public DbSet<tblMdListAuditHistory> tblMdListAuditHistory { get; set; }
+        public DbSet<TblMdAuditTemplateHistory> tblMdAuditTemplateHistory { get; set; }
+        public DbSet<TblMdOpinionListOrganize> tblMdOpinionListOrganize { get; set; }
+        public DbSet<TblMdAuditPeriodListTables> tblMdAuditPeriodListTables { get; set; }
+        public DbSet<TblMdAuditTemplateListTablesData> tblMdAuditTemplateListTablesData { get; set; }
+
+        public DbSet<TblMdTemplateReport> tblMdTemplateReport { get; set; }
+        public DbSet<TblMdTemplateReportElement> tblMdTemplateReportElement { get; set; }
+        public DbSet<TblMdTemplateReportMapping> tblMdTemplateReportMapping { get; set; }
 
         #endregion
 
-       
+
 
         #region Common
         public DbSet<TblCmAttachment> TblBuAttachment { get; set; }
@@ -133,6 +167,12 @@ namespace DMS.CORE
         public DbSet<TblCmModuleComment> TblCmModuleComment { get; set; }
 
         #endregion
-
+        #region Business
+        public DbSet<tblBuOpinionList> TblBuOpinionLists { get; set; }
+        public DbSet<TblBuListTables> TblBuListTables { get; set; }
+        public DbSet<tblBuOpinionDetail> tblBuOpinionDetail { get; set; }
+        public DbSet<tblBuOpinionDetailHistory> tblBuOpinionDetailHistory { get; set; }
+        public DbSet<tblBuPendingOpinionMapping> tblBuPendingOpinionMappings { get; set; }
+        #endregion
     }
 }

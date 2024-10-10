@@ -4,11 +4,12 @@ import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
 import { DropdownService } from '../../../services/dropdown/dropdown.service'
 import { AccountService } from '../../../services/system-manager/account.service'
 import { RightService } from '../../../services/system-manager/right.service'
-import { NzFormatEmitEvent } from 'ng-zorro-antd/tree'
+import { NzFormatEmitEvent, NzTreeNode } from 'ng-zorro-antd/tree'
 import { UserTypeCodes } from '../../../shared/constants/account.constants'
 import { ActivatedRoute } from '@angular/router'
 import { AuthService } from '../../../services/auth.service'
 import { GlobalService } from '../../../services/global.service'
+import { AccountGroupService } from '../../../services/system-manager/account-group.service'
 
 @Component({
   selector: 'app-account-edit',
@@ -26,9 +27,9 @@ export class AccountEditComponent {
         : `${window.innerWidth * 0.7}px`
   }
 
-  @Input() reset: () => void = () => {}
+  @Input() reset: () => void = () => { }
   @Input() visible: boolean = false
-  @Input() close: () => void = () => {}
+  @Input() close: () => void = () => { }
   @Input() userName: string | number = ''
 
   optionsGroup: any[] = []
@@ -39,26 +40,30 @@ export class AccountEditComponent {
     userName: ['', [Validators.required]],
     fullName: ['', [Validators.required]],
     address: [''],
-    phoneNumber: ['', [Validators.pattern('^0\\d{9,10}$')]],
+    phoneNumber: ['', [Validators.pattern('^0\\d{8,9}$')]],
     email: ['', [Validators.email]],
     isActive: [true],
     accountType: ['', [Validators.required]],
-    partnerId: [''],
+    organizeCode: ['', [Validators.required]],
+    //partnerId: [''],
   })
 
   nodes: any[] = []
   nodesConstant: any[] = []
   initialCheckedNodes: any[] = []
   searchValue = ''
-  listPartnerCustomer: any[] = []
-  UserTypeCodes = UserTypeCodes
-  isShowSelectPartner: boolean = false
+  // listPartnerCustomer: any[] = []
+  // UserTypeCodes = UserTypeCodes
+  // isShowSelectPartner: boolean = false
+  accountType: any[] = []
+  orgList: any[] = []
 
   constructor(
     private _service: AccountService,
     private fb: NonNullableFormBuilder,
     private dropdownService: DropdownService,
     private rightService: RightService,
+    private accountGroupService: AccountGroupService,
     private route: ActivatedRoute,
     private authService: AuthService,
     private globalService: GlobalService,
@@ -75,11 +80,24 @@ export class AccountEditComponent {
   }
 
   loadInit() {
-    this.getAllPartner()
+    this.getAllAccountType()
     this.getRight()
+    this.getAllOrg()
   }
 
-  changeSaleType(value: string) {}
+  getAllOrg() {
+    this.dropdownService.getAllOrg().subscribe({
+      next: (data) => {
+        this.orgList = data
+        console.log("đơn vị", this.orgList);
+
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
+  }
+  changeSaleType(value: string) { }
   getRight() {
     this.rightService.GetRightTree().subscribe((res) => {
       this.nodes = this.mapTreeNodes(res)
@@ -88,18 +106,24 @@ export class AccountEditComponent {
   mapTreeNodes(data: any): any[] {
     return data.children
       ? data.children.map((node: any) => ({
-          title: node.id + '-' + node.name,
-          key: node.id,
-          checked: node.isChecked,
-          expanded: true,
-          children: this.mapTreeNodes(node),
-        }))
+        title: node.id + '-' + node.name,
+        key: node.id,
+        checked: node.isChecked,
+        expanded: true,
+        children: this.mapTreeNodes(node),
+        origin: {
+          // Add this line
+          InChecked: false, // Initialize with a default value
+          OutChecked: false, // Initialize with a default value
+        },
+      }))
       : []
   }
 
   onCheckBoxChange(event: any): void {
     const checkedNode = event.node
     const nodes = this.flattenKeys(this.nodesConstant)
+
     if (checkedNode.isChecked) {
       if (nodes.includes(checkedNode.key)) {
         checkedNode.origin.InChecked = false
@@ -107,6 +131,9 @@ export class AccountEditComponent {
       } else {
         checkedNode.origin.InChecked = true
       }
+      // Thêm logic mới: check parents và children
+      this.checkParents(checkedNode)
+      this.checkChildren(checkedNode)
     } else {
       if (nodes.includes(checkedNode.key)) {
         checkedNode.origin.OutChecked = true
@@ -115,6 +142,8 @@ export class AccountEditComponent {
         checkedNode.origin.OutChecked = false
         checkedNode.origin.InChecked = false
       }
+      // Thêm logic mới: uncheck children
+      this.uncheckChildren(checkedNode)
     }
   }
 
@@ -128,6 +157,34 @@ export class AccountEditComponent {
       }
       return keys
     }, [])
+  }
+
+  private checkParents(node: NzTreeNode): void {
+    const parentNode = node.parentNode
+    if (parentNode) {
+      parentNode.isChecked = true
+      this.checkParents(parentNode)
+    }
+  }
+
+  private checkChildren(node: NzTreeNode): void {
+    if (node.children) {
+      node.children.forEach((child) => {
+        child.isChecked = true
+
+        this.checkChildren(child)
+      })
+    }
+  }
+
+  private uncheckChildren(node: NzTreeNode): void {
+    if (node.children) {
+      node.children.forEach((child) => {
+        child.isChecked = false
+
+        this.uncheckChildren(child)
+      })
+    }
   }
 
   onNodeCheckChange(node: any): void {
@@ -188,42 +245,91 @@ export class AccountEditComponent {
             email: data.email,
             isActive: data.isActive,
             accountType: data.accountType,
-            partnerId: data.partnerId || '',
+            organizeCode: data.organizeCode,
+            //partnerId: data.partnerId || '',
           })
-          this.isShowSelectPartner = data.accountType === 'KH' ? true : false
+          //this.isShowSelectPartner = data.accountType === 'KH' ? true : false
           this.initialCheckedNodes = data?.listAccountGroupRight?.map(
             (node: any) => node.rightId,
           )
           this.nodes = this.mapTreeNodes(data.treeRight)
           this.nodesConstant = [...this.mapTreeNodes(data.treeRight)]
+          this.loadGroupRights(data.account_AccountGroups)
+          console.log('detai Data', data)
         },
         error: (response) => {
           console.log(response)
         },
       })
   }
-  onUserTypeChange(value: string) {
-    let partnerIdControl = this.validateForm.get('partnerId')
-    if (value === 'KH') {
-      this.isShowSelectPartner = true
-      partnerIdControl!.setValidators([Validators.required])
-    } else {
-      this.isShowSelectPartner = false
-      partnerIdControl!.setValidators([])
-    }
-    partnerIdControl!.updateValueAndValidity()
+  loadGroupRights(accountGroups: any[]) {
+    const groupIds = accountGroups.map((group) => group.groupId)
+
+    // Fetch rights for all groups
+    Promise.all(
+      groupIds.map((id) => this.accountGroupService.GetDetail(id).toPromise()),
+    )
+      .then((groups) => {
+        let allGroupRights: string[] = []
+        groups.forEach((group) => {
+          if (group && group.listAccountGroupRight) {
+            allGroupRights = [
+              ...allGroupRights,
+              ...group.listAccountGroupRight.map(
+                (right: { rightId: any }) => right.rightId,
+              ),
+            ]
+          }
+        })
+
+        // Remove duplicates
+        allGroupRights = [...new Set(allGroupRights)]
+
+        // Update the tree with these rights
+        this.updateTreeWithGroupRights(allGroupRights)
+      })
+      .catch((error) => {
+        console.error('Error loading group rights:', error)
+      })
   }
 
-  getAllPartner() {
+  updateTreeWithGroupRights(groupRights: string[]) {
+    const updateNode = (node: any) => {
+      if (groupRights.includes(node.key)) {
+        node.checked = true
+        node.origin.InChecked = true // This line is causing the error
+        this.checkParents(node)
+      }
+      if (node.children) {
+        node.children.forEach(updateNode)
+      }
+    }
+
+    this.nodes.forEach(updateNode)
+    this.nodesConstant = JSON.parse(JSON.stringify(this.nodes))
+  }
+  // onUserTypeChange(value: string) {
+  //   let partnerIdControl = this.validateForm.get('partnerId')
+  //   if (value === 'KH') {
+  //     this.isShowSelectPartner = true
+  //     partnerIdControl!.setValidators([Validators.required])
+  //   } else {
+  //     this.isShowSelectPartner = false
+  //     partnerIdControl!.setValidators([])
+  //   }
+  //   partnerIdControl!.updateValueAndValidity()
+  // }
+
+  getAllAccountType() {
     this.dropdownService
-      .getAllPartner({
+      .getAllAccountType({
         IsCustomer: true,
         SortColumn: 'name',
         IsDescending: true,
       })
       .subscribe({
         next: (data) => {
-          this.listPartnerCustomer = data
+          this.accountType = data
         },
         error: (response) => {
           console.log(response)
@@ -253,21 +359,24 @@ export class AccountEditComponent {
     )
     if (this.validateForm.valid) {
       const formValue = this.validateForm.value
-      const { partnerId, ...rest } = formValue
-      let insertObj = {}
-      if (this.isShowSelectPartner) {
-        insertObj = formValue
-      } else {
-        insertObj = rest
-      }
+      // const { partnerId, ...rest } = formValue
+      // let insertObj = {}
+      // if (this.isShowSelectPartner) {
+      //   insertObj = formValue
+      // } else {
+      //   insertObj = rest
+      // }
+
       this._service
         .update({
-          ...insertObj,
+          ...formValue,
           accountRights: listAccountGroupRight,
           account_AccountGroups,
         })
         .subscribe({
           next: (data) => {
+            console.log('data', data)
+
             if (this.globalService.getUserInfo().userName) {
               this.authService
                 .getRightOfUser({
@@ -275,12 +384,17 @@ export class AccountEditComponent {
                 })
                 .subscribe({
                   next: (rights) => {
+                    console.log('rights', rights)
+
                     this.globalService.setRightData(
                       JSON.stringify(rights || []),
                     )
                   },
                   error: (error) => {
                     console.error('Get right of user failed:', error)
+                    console.log('formValue', formValue)
+                    console.log('accountRights', listAccountGroupRight)
+                    console.log('account_AccountGroups', account_AccountGroups)
                   },
                 })
             }
@@ -302,7 +416,7 @@ export class AccountEditComponent {
   onDrop(event: any): void {
     // Handle drop event
   }
-  onClick(event: any): void {}
+  onClick(event: any): void { }
   closeDrawer() {
     this.close()
     this.resetForm()
@@ -310,7 +424,7 @@ export class AccountEditComponent {
 
   resetForm() {
     this.validateForm.reset()
-    const partnerIdControl = this.validateForm.get('partnerId')
-    partnerIdControl!.setValidators([])
+    // const partnerIdControl = this.validateForm.get('partnerId')
+    // partnerIdControl!.setValidators([])
   }
 }

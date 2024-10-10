@@ -5,7 +5,7 @@ using Common;
 
 namespace DMS.BUSINESS.Dtos.AD
 {
-    public class RightDto : IMapFrom, IDto
+    public class RightDto : BaseMdDto, IMapFrom, IDto
     {
         [Key]
         public string Id { get; set; }

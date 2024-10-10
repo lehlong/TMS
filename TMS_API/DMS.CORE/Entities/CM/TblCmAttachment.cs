@@ -10,21 +10,21 @@ namespace DMS.CORE.Entities.BU
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("ID")]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        [Column("NAME",TypeName = "nvarchar2(255)")]
+        [Column("NAME",TypeName = "nvarchar(255)")]
         public string Name { get; set; }
 
-        [Column("URL", TypeName = "varchar2(255)")]
+        [Column("URL", TypeName = "varchar(255)")]
         public string Url { get; set; }
 
-        [Column("EXTENSION", TypeName = "varchar2(50)")]
+        [Column("EXTENSION", TypeName = "varchar(50)")]
         public string Extension { get; set; }
 
         [Column("SIZE")]
         public double Size { get; set; }
 
-        [Column("TYPE", TypeName = "varchar2(50)")]
+        [Column("TYPE", TypeName = "varchar(50)")]
         public string Type { get; set; }
     }
 }

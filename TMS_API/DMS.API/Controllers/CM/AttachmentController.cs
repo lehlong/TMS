@@ -35,7 +35,7 @@ namespace DMS.API.Controllers.BU
         }
 
         [HttpGet("Download")]
-        public async Task<IActionResult> Download([FromQuery] int attachmentId)
+        public async Task<IActionResult> Download([FromQuery] Guid attachmentId)
         {
             var transferObject = new TransferObject();
             var result = await _service.Download(attachmentId);

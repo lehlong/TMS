@@ -2,10 +2,11 @@
   <nz-sider class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
     [nzTrigger]="null">
     <div class="sidebar-logo">
-      <a href="#" target="_blank">
+      <h3>TMS</h3>
+      <!-- <a href="#" target="_blank">
         <img *ngIf="!isCollapsed" src="assets/img/logo.png" class="w-full" alt="logo" />
         <img *ngIf="isCollapsed" src="assets/img/favicon.png" class="w-full img-isCollapsed" alt="logo" />
-      </a>
+      </a> -->
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
       <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: dataSidebarMenu }"></ng-container>
@@ -25,7 +26,10 @@
               [nzTitle]="menu.title" [nzIcon]="menu.level == 1 && menu?.icon ? menu.icon : ''"
               [nzDisabled]="menu.disabled">
               <ul>
-                <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: menu.children }"></ng-container>
+                <ng-container *ngTemplateOutlet="
+                    menuTpl;
+                    context: { $implicit: menu.children }
+                  "></ng-container>
               </ul>
             </li>
           </ng-template>
@@ -51,7 +55,7 @@
         </div>
         <div>
           <button nz-button nz-dropdown [nzDropdownMenu]="menu" nzPlacement="topLeft">
-            <nz-avatar nzIcon="user"></nz-avatar><span class="ml-[7px] text-base">{{ userName }}</span>
+            <nz-avatar nzIcon="user"></nz-avatar><span class="ml-[7px] text-base">{{ getAccountName(userName) }}</span>
           </button>
           <nz-dropdown-menu #menu="nzDropdownMenu" class="w-[240px]">
             <ul nz-menu class="w-[200px]">
