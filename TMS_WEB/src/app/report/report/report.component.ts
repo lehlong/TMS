@@ -46,7 +46,7 @@ export class ReportComponent {
     //   this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(this.reportUrl);
     // }
   }
-  
+
 
   getTimeYear() {
     this.dropDownService.getAllPeriodTime().subscribe({
@@ -71,7 +71,7 @@ export class ReportComponent {
   viewTemplate(){
     if(this.yearValue != '' && this.auditValue != ''){
       this.getListTemplate(this.yearValue, this.auditValue)
-    } 
+    }
   }
   getListTemplate(yearValue: string, auditValue: string) {
     if(this.idTemplate != ''){
@@ -91,7 +91,7 @@ export class ReportComponent {
       })
     }
   }
-  
+
 
   downloadTemplate() {
     const link = document.createElement('a');
@@ -121,12 +121,12 @@ export class ReportComponent {
       params: params,
     }).subscribe({
           next:(res: any) =>{
-            this.reportUrl = `https://docs.google.com/gview?url=${environment.thisUrl}/${res.data}&embedded=true`
+            this.reportUrl = `https://docs.google.com/gview?url=${environment.baseApiUrl}/${res.data}&embedded=true`
             console.log(this.reportUrl)
             if(res.data != ''){
               this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(this.reportUrl);
             }
-            this.urlDownload = `${environment.thisUrl}/${res.data}`
+            this.urlDownload = `${environment.baseApiUrl}/${res.data}`
           },
         });
   }

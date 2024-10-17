@@ -23,6 +23,21 @@ export enum TYPE_OF_GOODS {
   DELETE = 'R0',
 }
 
+export enum MARKET_RIGHTS {
+  LIST = 'R1.1.1',
+  EXCEL = 'R0',
+  ADD = 'R1.1.2',
+  EDIT = 'R1.1.2',
+  DELETE = 'R0',
+}
+
+export enum RETAIL_PRICE_RIGHTS {
+  LIST = 'R1.1.1',
+  EXCEL = 'R0',
+  ADD = 'R1.1.2',
+  EDIT = 'R1.1.2',
+  DELETE = 'R0',
+}
 export enum LOCAL_RIGHTS {
   LIST = 'R1.4.1',
   EXCEL = 'R0',

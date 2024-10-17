@@ -30,7 +30,7 @@ namespace DMS.API.Controllers.BU
             {
                 transferObject.Status = false;
                 transferObject.MessageObject.MessageType = MessageType.Error;
-                transferObject.GetMessage("2000", _service);
+                //transferObject.GetMessage("2000", _service);
             }
             return Ok(transferObject);
         }

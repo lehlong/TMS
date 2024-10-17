@@ -151,10 +151,17 @@ namespace DMS.CORE
         public DbSet<TblMdOpinionListOrganize> tblMdOpinionListOrganize { get; set; }
         public DbSet<TblMdAuditPeriodListTables> tblMdAuditPeriodListTables { get; set; }
         public DbSet<TblMdAuditTemplateListTablesData> tblMdAuditTemplateListTablesData { get; set; }
+        public DbSet<TblMdSalesMethod> TblMdSalesMethod { get; set; }
+        public DbSet<TblMdRetailPrice> TblMdRetailPrice { get; set; }
+        public DbSet<TblMdMarket> TblMdMarket { get; set; }
+
 
         public DbSet<TblMdTemplateReport> tblMdTemplateReport { get; set; }
         public DbSet<TblMdTemplateReportElement> tblMdTemplateReportElement { get; set; }
         public DbSet<TblMdTemplateReportMapping> tblMdTemplateReportMapping { get; set; }
+
+
+
 
         #endregion
 
