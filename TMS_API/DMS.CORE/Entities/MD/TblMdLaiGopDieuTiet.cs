@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace DMS.CORE.Entities.MD
 {
-    [Table("T_MD_RETAIL_PRICE")]
-    public class TblMdRetailPrice : SoftDeleteEntity
+    [Table("T_MD_LAI_GOP_DIEU_TIET")]
+    public class TblMdLaiGopDieuTiet : SoftDeleteEntity
     {
         [Key]
         [Column("CODE", TypeName = "VARCHAR(50)")]
         public string Code { set; get; }
 
-        [Column("GOODS_CODE", TypeName = "VARCHAR(50)")]    
+        [Column("GOODS_CODE", TypeName = "VARCHAR(50)")]
         public string GoodsCode { set; get; }
 
-        [Column("LOCAL_CODE", TypeName = "VARCHAR(50)")]
-        public string LocalCode { set; get; }
+        [Column("MARKET_CODE", TypeName = "VARCHAR(50)")]
+        public string MarketCode { set; get; }
 
         [Column("TO_DATE", TypeName = "DATETIME")]
         public DateTime ToDate { set; get; }
@@ -28,11 +28,8 @@ namespace DMS.CORE.Entities.MD
         [Column("CREATE_DATE", TypeName = "DATETIME")]
         public DateTime? CreateDate { set; get; }
 
-        [Column("OLD_PRICE", TypeName = "FLOAT")]
-        public float OldPrice { set; get; }
-
-        [Column("NEW_PRICE", TypeName = "FLOAT")]
-        public float NewPrice { set; get; }
+        [Column("PRICE", TypeName = "FLOAT")]
+        public float Price { set; get; }
 
     }
 }

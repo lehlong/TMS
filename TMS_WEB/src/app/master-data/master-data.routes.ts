@@ -22,6 +22,8 @@ import { TypeOfGoodsComponent } from './type-of-goods/type-of-goods.component'
 import { MarketComponent } from './market/market.component'
 import { SalesMethodComponent } from './sales-method/sales-method.component'
 import { RetailPriceComponent } from './retail-price/retail-price.component'
+import { GoodsComponent } from './goods/goods.component'
+import { LaiGopDieuTietComponent } from './laigopdieutiet/laigopdieutiet.component'
 export const masterDataRoutes: Routes = [
   { path: 'currency', component: CurrencyComponent },
   { path: 'unit', component: UnitComponent },
@@ -52,9 +54,9 @@ export const masterDataRoutes: Routes = [
     component: AuditPeriodListTablesComponent,
   },
   {path: 'report', component: ReportComponent,},
-  {path: 'type-of-goods', component: TypeOfGoodsComponent,},
+  {path: 'goods', component: GoodsComponent,},
   {path: 'market', component: MarketComponent,},
-  {path: 'retail-price', component: RetailPriceComponent,}
-
+  {path: 'retail-price', component: RetailPriceComponent,},
+  {path: 'lai-gop-dieu-tiet', component: LaiGopDieuTietComponent}
 
 ]

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DMS.BUSINESS.Dtos.MD
 {
-    public class RetailPriceDto : BaseMdDto, IDto, IMapFrom
+    public class LaiGopDieuTietDto : BaseMdDto, IDto, IMapFrom
     {
         [Description("STT")]
         public int OrdinalNumber { get; set; }
@@ -20,31 +20,27 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Mã")]
         public string Code { get; set; }
 
-        [Description("Tên")]
+        [Description("Mã mặt hàng")]
         public string GoodsCode { get; set; }
 
-        [Description("Mã Vùng")]
-        public string LocalCode { get; set; }
+        [Description("Mã thị trường")]
+        public string MarketCode { get; set; }
 
         [Description("Ngày bắt đầu")]
         public DateTime? CreateDate { get; set; }
 
-
         [Description("Đến ngày")]
         public DateTime ToDate { get; set; }
 
-        [Description("Giá cũ")]
-        public float OldPrice { get; set; }
-
-        [Description("Giá mới")]
-        public float NewPrice { get; set; }
+        [Description("Giá bán")]
+        public float Price { get; set; }
 
         [Description("Trạng thái")]
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<TblMdRetailPrice, RetailPriceDto>().ReverseMap();
+            profile.CreateMap<TblMdLaiGopDieuTiet, LaiGopDieuTietDto>().ReverseMap();
         }
     }
 }

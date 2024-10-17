@@ -7,40 +7,41 @@ import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
 import { LOCAL_RIGHTS, GOODS_RIGHTS } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
-import { SalesMethodFilter } from '../../models/master-data/sales-method.model'
-import { SalesMethodService } from '../../services/master-data/sales-method.service'
+import { GoodsFilter } from '../../models/master-data/goods.model'
+import { GoodsService } from '../../services/master-data/goods.service'
 @Component({
   selector: 'app-local',
   standalone: true,
   imports: [ShareModule],
-  templateUrl: './sales-method.component.html',
-  styleUrl: './sales-method.component.scss',
+  templateUrl: './goods.component.html',
+  styleUrl: './goods.component.scss',
 })
-export class SalesMethodComponent {
+export class GoodsComponent {
   validateForm: FormGroup = this.fb.group({
     code: ['', [Validators.required]],
     name: ['', [Validators.required]],
+    thueBvmt: ['', [Validators.required]],
+    createDate: [new Date(), [Validators.required]],
     isActive: [true, [Validators.required]],
   })
 
   isSubmit: boolean = false
   visible: boolean = false
   edit: boolean = false
-  filter = new SalesMethodFilter()
+  filter = new GoodsFilter()
   paginationResult = new PaginationResult()
   loading: boolean = false
-  TYPE_OF_GOODS = GOODS_RIGHTS
-  
+  GOODS_RIGHTS = GOODS_RIGHTS
   constructor(
-    private _service: SalesMethodService,
+    private _service: GoodsService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService,
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách phương thức bán',
-        path: 'master-data/sales-method',
+        name: 'Danh sách loại hàng hoá',
+        path: 'master-data/goods',
       },
     ])
     this.globalService.getLoading().subscribe((value) => {
@@ -67,7 +68,7 @@ export class SalesMethodComponent {
 
   search() {
     this.isSubmit = false
-    this._service.searchSalesMethod(this.filter).subscribe({
+    this._service.searchGoods(this.filter).subscribe({
       next: (data) => {
         this.paginationResult = data
       },
@@ -79,7 +80,7 @@ export class SalesMethodComponent {
 
   exportExcel() {
     return this._service
-      .exportExcelSalesMethod(this.filter)
+      .exportExcelGoods(this.filter)
       .subscribe((result: Blob) => {
         const blob = new Blob([result], {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -99,7 +100,7 @@ export class SalesMethodComponent {
     if (this.validateForm.valid) {
       const formData = this.validateForm.getRawValue()
       if (this.edit) {
-        this._service.updateSalesMethod(formData).subscribe({
+        this._service.updateGoods(formData).subscribe({
           next: (data) => {
             this.search()
           },
@@ -114,7 +115,7 @@ export class SalesMethodComponent {
           )
           return
         }
-        this._service.createSalesMethod(formData).subscribe({
+        this._service.createGoods(formData).subscribe({
           next: (data) => {
             this.search()
           },
@@ -139,7 +140,7 @@ export class SalesMethodComponent {
   }
 
   reset() {
-    this.filter = new SalesMethodFilter()
+    this.filter = new GoodsFilter()
     this.search()
   }
 
@@ -154,7 +155,7 @@ export class SalesMethodComponent {
   }
 
   deleteItem(code: string | number) {
-    this._service.deleteSalesMethod(code).subscribe({
+    this._service.deleteGoods(code).subscribe({
       next: (data) => {
         this.search()
       },
@@ -164,10 +165,11 @@ export class SalesMethodComponent {
     })
   }
 
-  openEdit(data: { code: string; name: string; isActive: boolean }) {
+  openEdit(data: { code: string; name: string; thueBvmt: number; isActive: boolean }) {
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
+      thueBvmt: data.thueBvmt,
       isActive: data.isActive,
     })
     setTimeout(() => {

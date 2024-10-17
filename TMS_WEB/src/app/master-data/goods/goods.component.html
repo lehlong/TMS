@@ -1,6 +1,6 @@
-<div class="container-list" [appPermission]="RETAIL_PRICE_RIGHTS.LIST">
+<div class="container-list" [appPermission]="GOODS_RIGHTS.LIST">
   <div class="site-page-header-ghost-wrapper">
-    <nz-page-header nzBackIcon nzTitle="Giá bán lẻ" nzSubtitle="Danh sách giá bán lẻ" class="site-page-header">
+    <nz-page-header nzBackIcon nzTitle="Loại hàng hoá" nzSubtitle="Danh sách loại hàng hoá" class="site-page-header">
       <nz-page-header-extra>
         <nz-space [nzWrap]="true" class="gap-[5px]">
           <nz-space>
@@ -16,7 +16,7 @@
             </button>
           </nz-space>
           <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
-            [appPermission]="RETAIL_PRICE_RIGHTS.ADD">
+            [appPermission]="GOODS_RIGHTS.ADD">
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
           <!-- <button
@@ -39,58 +39,59 @@
       <thead>
         <tr>
           <th nzWidth="30px">STT</th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" nzWidth="150px">
             Mã
           </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('typeOfGoodsCode', $event)">
-            Mặt hàng
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)">
+            Tên
           </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('localCode', $event)">
-            Vùng
-          </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('oldPrice', $event)">
-            Giá cũ
-          </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('newPrice', $event)">
-            Giá mới
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('thueBvmt', $event)" nzAlign="center">
+            Mã số thuế
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('createDate', $event)" nzAlign="center">
-            Ngày bắt đầu
-          </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('toDate', $event)" nzAlign="center">
-            Ngày kết thúc
+            Ngày tạo
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('isActive', $event)" nzAlign="center">
             Trạng thái
           </th>
+          <!-- <th
+            nzAlign="center"
+            [appPermission]="LOCAL_RIGHTS.DELETE"
+          >
+            Hành động
+          </th> -->
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let data of headerTable.data; let i = index" (dblclick)="openEdit(data)">
           <td>
-            {{ (paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1 }}
+            {{
+            (paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1
+            }}
           </td>
           <td>
             <a (click)="openEdit(data)">{{ data.code }}</a>
           </td>
-          <td>
-            <span *ngFor="let item of goodsResult" >
-              <span *ngIf="item.code == data.goodsCode">{{ item.code + ' - ' + item.name }}</span>
-            </span>
-          </td>
-          <td>
-            <span *ngFor="let item of localResult" >
-              <span *ngIf="item.code == data.localCode">{{ item.name }}</span>
-            </span>
-          </td>
-          <td>{{ data.oldPrice }}</td>
-          <td>{{ data.newPrice }}</td>
-          <td>{{ data.createDate | date: 'dd/MM/yyyy HH:mm'}}</td>
-          <td>{{ data.toDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+          <td nzAlign="center">{{ data.name }}</td>
+          <td nzAlign="center">{{ data.thueBvmt }}</td>
+          <td nzAlign="center">{{ data.createDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
               nzTheme="outline"></span>
           </td>
+          <!-- <td nzAlign="center">
+            <span
+              nz-popconfirm
+              nzPopconfirmTitle="Bạn muốn xoá loại địa phương này ?"
+              nzPopconfirmPlacement="bottom"
+              (nzOnConfirm)="deleteItem(data.code)"
+              class="!text-red-500 cursor-pointer"
+              nz-icon
+              nzType="delete"
+              nzTheme="outline"
+              [appPermission]="LOCAL_RIGHTS.DELETE"
+            ></span>
+          </td> -->
         </tr>
       </tbody>
     </nz-table>
@@ -103,7 +104,7 @@
 </div>
 
 <!--Create Update-->
-<nz-drawer nzWidth="40%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+<nz-drawer [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
@@ -111,50 +112,11 @@
         [control]="$any(validateForm).controls['code']" [required]="true"
         [disabled]="edit ? true : false"></app-input-clear>
 
-      <nz-form-item>
-        <nz-form-label [nzRequired]="true">Mặt hàng</nz-form-label>
-        <nz-form-control nzErrorTip="Không được để trống">
-          <nz-select nzShowSearch nzAllowClear placeholder="Chọn vùng" formControlName="goodsCode">
-            <nz-option cdkScrollable *ngFor="let item of goodsResult" [nzLabel]="item.code + ' - ' + item.name"
-              [nzValue]="item.code">
-            </nz-option>
-          </nz-select>
-        </nz-form-control>
-      </nz-form-item>
+      <app-input-clear placeholder="Nhập tên" [required]="true" label="Tên "
+        [control]="$any(validateForm).controls['name']"></app-input-clear>
 
-      <nz-form-item>
-        <nz-form-label [nzRequired]="true">Vùng</nz-form-label>
-        <nz-form-control nzErrorTip="Không được để trống">
-          <nz-select nzShowSearch nzAllowClear placeholder="Chọn vùng" formControlName="localCode">
-            <nz-option cdkScrollable *ngFor="let item of localResult" [nzLabel]="item.code + ' - ' + item.name"
-              [nzValue]="item.code">
-            </nz-option>
-          </nz-select>
-        </nz-form-control>
-      </nz-form-item>
-
-      <div nz-col style=" display: flex;">
-        <nz-form-item style="padding-right: 16px;">
-          <nz-form-label>Ngày bắt đầu</nz-form-label>
-          <nz-form-control>
-            <nz-date-picker [disabled]="true" style="width: 100%" formControlName="createDate" ></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label [nzRequired]="true">Ngày kết thúc</nz-form-label>
-          <nz-form-control nzErrorTip="Không đươc để trống">
-            <nz-date-picker style="width: 100%" formControlName="toDate"
-              nzPlaceHolder="Chọn ngày bắt đầu"></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <app-input-clear placeholder="Giá cũ" [required]="true" label="Giá cũ"
-        [control]="$any(validateForm).controls['oldPrice']"></app-input-clear>
-
-      <app-input-clear placeholder="Giá mới" [required]="true" label="Giá mới"
-        [control]="$any(validateForm).controls['newPrice']"></app-input-clear>
+      <app-input-clear placeholder="Nhập thuế bảo vệ môi trường" [required]="true" label="Thuế bảo vệ môi trường"
+        [control]="$any(validateForm).controls['thueBvmt']"></app-input-clear>
 
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>
@@ -171,13 +133,13 @@
 <ng-template #extra>
   <nz-space>
     <ng-container *ngIf="edit">
-      <button [nzLoading]="loading" [appPermission]="RETAIL_PRICE_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
+      <button [nzLoading]="loading" [appPermission]="GOODS_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>
     <ng-container *ngIf="!edit">
-      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="RETAIL_PRICE_RIGHTS.ADD" nz-button nzType="primary"
+      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="GOODS_RIGHTS.ADD" nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>

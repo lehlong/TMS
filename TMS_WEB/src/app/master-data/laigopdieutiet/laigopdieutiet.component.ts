@@ -7,40 +7,52 @@ import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
 import { LOCAL_RIGHTS, GOODS_RIGHTS } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
-import { SalesMethodFilter } from '../../models/master-data/sales-method.model'
-import { SalesMethodService } from '../../services/master-data/sales-method.service'
+import { LaiGopDieuTietFilter } from '../../models/master-data/lai-gop-dieu-tiet.model'
+import { LaiGopDieuTietService } from '../../services/master-data/lai-gop-dieu-tiet.service'
+import { MarketService } from '../../services/master-data/market.service'
+import { GoodsService } from '../../services/master-data/goods.service'
 @Component({
   selector: 'app-local',
   standalone: true,
   imports: [ShareModule],
-  templateUrl: './sales-method.component.html',
-  styleUrl: './sales-method.component.scss',
+  templateUrl: './laigopdieutiet.component.html',
+  styleUrl: './laigopdieutiet.component.scss',
 })
-export class SalesMethodComponent {
+export class LaiGopDieuTietComponent {
   validateForm: FormGroup = this.fb.group({
     code: ['', [Validators.required]],
-    name: ['', [Validators.required]],
+    goodsCode: ['', [Validators.required]],
+    marketCode: ['', [Validators.required]],
+    price: ['', [Validators.required]],
+    createDate:  [new Date(), [Validators.required]],
+    toDate: ['', [Validators.required]],
     isActive: [true, [Validators.required]],
   })
 
   isSubmit: boolean = false
   visible: boolean = false
   edit: boolean = false
-  filter = new SalesMethodFilter()
+  filter = new LaiGopDieuTietFilter()
   paginationResult = new PaginationResult()
+  goodsResult: any[] = []
+  marketResult: any[] = []
+
   loading: boolean = false
-  TYPE_OF_GOODS = GOODS_RIGHTS
-  
+  GOODS_RIGHTS = GOODS_RIGHTS
+
   constructor(
-    private _service: SalesMethodService,
+    private _service: LaiGopDieuTietService,
+    private _marketService: MarketService,
+    private _goodsService: GoodsService,
+
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService,
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách phương thức bán',
-        path: 'master-data/sales-method',
+        name: 'Danh sách loại hàng hoá',
+        path: 'master-data/laigopdieutiet',
       },
     ])
     this.globalService.getLoading().subscribe((value) => {
@@ -53,7 +65,10 @@ export class SalesMethodComponent {
   }
 
   ngOnInit(): void {
+    this.getAllGoods()
+    this.getAllMarket()
     this.search()
+
   }
 
   onSortChange(name: string, value: any) {
@@ -67,7 +82,7 @@ export class SalesMethodComponent {
 
   search() {
     this.isSubmit = false
-    this._service.searchSalesMethod(this.filter).subscribe({
+    this._service.searchLaiGopDieuTiet(this.filter).subscribe({
       next: (data) => {
         this.paginationResult = data
       },
@@ -77,9 +92,32 @@ export class SalesMethodComponent {
     })
   }
 
+  getAllGoods(){
+    this.isSubmit = false
+    this._goodsService.getall().subscribe({
+      next: (data) => {
+        this.goodsResult = data
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
+  }
+  getAllMarket(){
+    this.isSubmit = false
+    this._marketService.getall().subscribe({
+      next: (data) => {
+        this.marketResult = data
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
+  }
+
   exportExcel() {
     return this._service
-      .exportExcelSalesMethod(this.filter)
+      .exportExcelLaiGopDieuTiet(this.filter)
       .subscribe((result: Blob) => {
         const blob = new Blob([result], {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -99,7 +137,7 @@ export class SalesMethodComponent {
     if (this.validateForm.valid) {
       const formData = this.validateForm.getRawValue()
       if (this.edit) {
-        this._service.updateSalesMethod(formData).subscribe({
+        this._service.updateLaiGopDieuTiet(formData).subscribe({
           next: (data) => {
             this.search()
           },
@@ -114,7 +152,7 @@ export class SalesMethodComponent {
           )
           return
         }
-        this._service.createSalesMethod(formData).subscribe({
+        this._service.createLaiGopDieuTiet(formData).subscribe({
           next: (data) => {
             this.search()
           },
@@ -139,7 +177,7 @@ export class SalesMethodComponent {
   }
 
   reset() {
-    this.filter = new SalesMethodFilter()
+    this.filter = new LaiGopDieuTietFilter()
     this.search()
   }
 
@@ -154,7 +192,7 @@ export class SalesMethodComponent {
   }
 
   deleteItem(code: string | number) {
-    this._service.deleteSalesMethod(code).subscribe({
+    this._service.deleteLaiGopDieuTiet(code).subscribe({
       next: (data) => {
         this.search()
       },
@@ -164,10 +202,13 @@ export class SalesMethodComponent {
     })
   }
 
-  openEdit(data: { code: string; name: string; isActive: boolean }) {
+  openEdit(data: any) {
     this.validateForm.setValue({
       code: data.code,
-      name: data.name,
+      price: data.price,
+      goodsCode: data.goodsCode,
+      marketCode: data.marketCode,
+      toDate: data.toDate,
       isActive: data.isActive,
     })
     setTimeout(() => {

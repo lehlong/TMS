@@ -3,11 +3,11 @@ import { ShareModule } from '../../shared/share-module'
 import { GlobalService } from '../../services/global.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { LOCAL_RIGHTS, TYPE_OF_GOODS, RETAIL_PRICE_RIGHTS } from '../../shared/constants'
+import { LOCAL_RIGHTS, GOODS_RIGHTS, RETAIL_PRICE_RIGHTS } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { RetailPriceFilter } from '../../models/master-data/retail-price.model'
 import { RetailPriceService } from '../../services/master-data/retail-price.service'
-import { TypeOfGoodsService } from '../../services/master-data/type-of-goods.service'
+import { GoodsService } from '../../services/master-data/goods.service'
 import { LocalService } from '../../services/master-data/local.service'
 
 @Component({
@@ -20,7 +20,7 @@ import { LocalService } from '../../services/master-data/local.service'
 export class RetailPriceComponent {
   validateForm: FormGroup = this.fb.group({
     code: ['', [Validators.required]],
-    typeOfGoodsCode: ['', [Validators.required]],
+    goodsCode: ['', [Validators.required]],
     localCode: ['', [Validators.required]],
     createDate: new Date(),
     toDate: ['', [Validators.required]],
@@ -35,15 +35,15 @@ export class RetailPriceComponent {
   filter = new RetailPriceFilter()
   paginationResult = new PaginationResult()
   localResult : any[] = []
-  typeOfGoodsResult : any[] = []
+  goodsResult : any[] = []
   loading: boolean = false
-  TYPE_OF_GOODS = TYPE_OF_GOODS
+  GOODS_RIGHTS = GOODS_RIGHTS
   RETAIL_PRICE_RIGHTS = RETAIL_PRICE_RIGHTS
 
   constructor(
     private _service: RetailPriceService,
     private _serviceLocal: LocalService,
-    private _serviceTypeOfGoods: TypeOfGoodsService,
+    private _serviceGoods: GoodsService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService,
@@ -66,7 +66,7 @@ export class RetailPriceComponent {
   ngOnInit(): void {
     this.search()
     this.getAllLocal()
-    this.getAllTypeOfGoods()
+    this.getAllGoods()
   }
 
   onSortChange(code: string, value: any) {
@@ -81,7 +81,6 @@ export class RetailPriceComponent {
   getAllLocal(){
     this._serviceLocal.getall().subscribe({
       next: (data) => {
-
         this.localResult = data
       },
       error: (resp) => {
@@ -90,12 +89,10 @@ export class RetailPriceComponent {
     })
   }
 
-  getAllTypeOfGoods(){
-    this._serviceTypeOfGoods.getall().subscribe({
+  getAllGoods(){
+    this._serviceGoods.getall().subscribe({
       next: (data) => {
-        console.log(data);
-
-        this.typeOfGoodsResult = data
+        this.goodsResult = data
       },
       error: (resp) => {
         console.log(resp)
@@ -216,7 +213,7 @@ export class RetailPriceComponent {
 
     this.validateForm.patchValue({
       code: data.code,
-      typeOfGoodsCode: data.typeOfGoodsCode,
+      goodsCode: data.goodsCode,
       localCode: data.localCode,
       startDate: data.createDate,
       toDate: data.toDate,

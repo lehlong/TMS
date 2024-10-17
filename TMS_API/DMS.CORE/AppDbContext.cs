@@ -126,6 +126,8 @@ namespace DMS.CORE
         #region Master Data
 
         public DbSet<TblMdTypeOfGoods> TblMdTypeOfGoods { get; set; }
+        public DbSet<TblMdGoods> TblMdGoods { get; set; }
+        public DbSet<TblMdLaiGopDieuTiet> TblMdLaiGopDieuTiet { get; set; }
 
         public DbSet<TblMdArea> TblMdArea { get; set; }
       
