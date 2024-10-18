@@ -24,6 +24,7 @@ import { SalesMethodComponent } from './sales-method/sales-method.component'
 import { RetailPriceComponent } from './retail-price/retail-price.component'
 import { GoodsComponent } from './goods/goods.component'
 import { LaiGopDieuTietComponent } from './laigopdieutiet/laigopdieutiet.component'
+import { CustomerComponent } from './customer/customer.component'
 export const masterDataRoutes: Routes = [
   { path: 'currency', component: CurrencyComponent },
   { path: 'unit', component: UnitComponent },
@@ -57,6 +58,7 @@ export const masterDataRoutes: Routes = [
   {path: 'goods', component: GoodsComponent,},
   {path: 'market', component: MarketComponent,},
   {path: 'retail-price', component: RetailPriceComponent,},
-  {path: 'lai-gop-dieu-tiet', component: LaiGopDieuTietComponent}
+  {path: 'lai-gop-dieu-tiet', component: LaiGopDieuTietComponent},
+  {path: 'customer', component: CustomerComponent}
 
 ]
