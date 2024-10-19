@@ -215,7 +215,7 @@ export class GiaGiaoTapDoanComponent {
     this.validateForm.patchValue({
       code: data.code,
       goodsCode: data.goodsCode,
-      customerCode: data.localCode,
+      customerCode: data.customerCode,
       startDate: data.createDate,
       toDate: data.toDate,
       oldPrice: data.oldPrice,

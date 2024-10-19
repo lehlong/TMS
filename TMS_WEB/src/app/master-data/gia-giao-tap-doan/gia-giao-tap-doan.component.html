@@ -114,7 +114,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true">Mặt hàng</nz-form-label>
         <nz-form-control nzErrorTip="Không được để trống">
-          <nz-select nzShowSearch nzAllowClear placeholder="Chọn vùng" formControlName="goodsCode">
+          <nz-select nzShowSearch nzAllowClear formControlName="goodsCode">
             <nz-option cdkScrollable *ngFor="let item of goodsResult" [nzLabel]="item.code + ' - ' + item.name"
               [nzValue]="item.code">
             </nz-option>
@@ -125,7 +125,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true">Khách hàng</nz-form-label>
         <nz-form-control nzErrorTip="Không được để trống">
-          <nz-select nzShowSearch nzAllowClear placeholder="Chọn vùng" formControlName="customerCode">
+          <nz-select nzShowSearch nzAllowClear formControlName="customerCode">
             <nz-option cdkScrollable *ngFor="let item of customerResult" [nzLabel]="item.code + ' - ' + item.name"
               [nzValue]="item.code">
             </nz-option>

@@ -16,8 +16,8 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
   selector: 'app-local',
   standalone: true,
   imports: [ShareModule],
-  templateUrl: './laigopdieutiet.component.html',
-  styleUrl: './laigopdieutiet.component.scss',
+  templateUrl: './lai-gop-dieu-tiet.component.html',
+  styleUrl: './lai-gop-dieu-tiet.component.scss',
 })
 export class LaiGopDieuTietComponent {
   validateForm: FormGroup = this.fb.group({

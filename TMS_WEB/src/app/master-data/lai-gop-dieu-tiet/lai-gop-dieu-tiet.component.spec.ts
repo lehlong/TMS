@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LaigopdieutietComponent } from './laigopdieutiet.component';
+import { LaiGopDieuTietComponent } from './lai-gop-dieu-tiet.component';
 
-describe('LaigopdieutietComponent', () => {
-  let component: LaigopdieutietComponent;
-  let fixture: ComponentFixture<LaigopdieutietComponent>;
+describe('LaiGopDieuTietComponent', () => {
+  let component: LaiGopDieuTietComponent;
+  let fixture: ComponentFixture<LaiGopDieuTietComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LaigopdieutietComponent]
+      imports: [LaiGopDieuTietComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(LaigopdieutietComponent);
+
+    fixture = TestBed.createComponent(LaiGopDieuTietComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
