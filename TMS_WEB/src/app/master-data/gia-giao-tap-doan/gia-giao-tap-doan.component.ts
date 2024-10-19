@@ -1,46 +1,58 @@
 import { Component } from '@angular/core'
 import { ShareModule } from '../../shared/share-module'
-import { LocalFilter } from '../../models/master-data/local.model'
 import { GlobalService } from '../../services/global.service'
-import { LocalService } from '../../services/master-data/local.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { LOCAL_RIGHTS, GOODS_RIGHTS } from '../../shared/constants'
+import { GOODS_RIGHTS, GIA_GIAO_TAP_DOAN_RIGHTS } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
-import { SalesMethodFilter } from '../../models/master-data/sales-method.model'
-import { SalesMethodService } from '../../services/master-data/sales-method.service'
+import { GiaGiaoTapDoanFilter } from '../../models/master-data/gia-giao-tap-doan.model'
+import { GiaGiaoTapDoanService } from '../../services/master-data/gia-giao-tap-doan.service'
+import { GoodsService } from '../../services/master-data/goods.service'
+import { LocalService } from '../../services/master-data/local.service'
+import { CustomerService } from '../../services/master-data/customer.service'
+
 @Component({
   selector: 'app-local',
   standalone: true,
   imports: [ShareModule],
-  templateUrl: './sales-method.component.html',
-  styleUrl: './sales-method.component.scss',
+  templateUrl: './gia-giao-tap-doan.component.html',
+  styleUrl: './gia-giao-tap-doan.component.scss',
 })
-export class SalesMethodComponent {
+export class GiaGiaoTapDoanComponent {
   validateForm: FormGroup = this.fb.group({
     code: ['', [Validators.required]],
-    name: ['', [Validators.required]],
+    goodsCode: ['', [Validators.required]],
+    customerCode: ['', [Validators.required]],
+    createDate: new Date(),
+    toDate: ['', [Validators.required]],
+    oldPrice: ['', [Validators.required]],
+    newPrice: ['', [Validators.required]],
     isActive: [true, [Validators.required]],
   })
 
   isSubmit: boolean = false
   visible: boolean = false
   edit: boolean = false
-  filter = new SalesMethodFilter()
+  filter = new GiaGiaoTapDoanFilter()
   paginationResult = new PaginationResult()
+  customerResult : any[] = []
+  goodsResult : any[] = []
   loading: boolean = false
-  TYPE_OF_GOODS = GOODS_RIGHTS
+  GOODS_RIGHTS = GOODS_RIGHTS
+  GIA_GIAO_TAP_DOAN_RIGHTS = GIA_GIAO_TAP_DOAN_RIGHTS
 
   constructor(
-    private _service: SalesMethodService,
+    private _service: GiaGiaoTapDoanService,
+    private _goodsService: GoodsService,
+    private _customerService: CustomerService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService,
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách phương thức bán',
-        path: 'master-data/sales-method',
+        name: 'Danh sách giá bán lẻ',
+        path: 'master-data/gia-giao-tap-doan',
       },
     ])
     this.globalService.getLoading().subscribe((value) => {
@@ -54,20 +66,44 @@ export class SalesMethodComponent {
 
   ngOnInit(): void {
     this.search()
+    this.getAllCustomer()
+    this.getAllGoods()
   }
 
-  onSortChange(name: string, value: any) {
+  onSortChange(code: string, value: any) {
     this.filter = {
       ...this.filter,
-      SortColumn: name,
+      SortColumn: code,
       IsDescending: value === 'descend',
     }
     this.search()
   }
 
+  getAllCustomer(){
+    this._customerService.getall().subscribe({
+      next: (data) => {
+        this.customerResult = data
+      },
+      error: (resp) => {
+        console.log(resp)
+      }
+    })
+  }
+
+  getAllGoods(){
+    this._goodsService.getall().subscribe({
+      next: (data) => {
+        this.goodsResult = data
+      },
+      error: (resp) => {
+        console.log(resp)
+      }
+    })
+  }
+
   search() {
     this.isSubmit = false
-    this._service.searchSalesMethod(this.filter).subscribe({
+    this._service.searchGiaGiaoTapDoan(this.filter).subscribe({
       next: (data) => {
         this.paginationResult = data
       },
@@ -79,7 +115,7 @@ export class SalesMethodComponent {
 
   exportExcel() {
     return this._service
-      .exportExcelSalesMethod(this.filter)
+      .exportExcelGiaGiaoTapDoan(this.filter)
       .subscribe((result: Blob) => {
         const blob = new Blob([result], {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -91,15 +127,17 @@ export class SalesMethodComponent {
         anchor.click()
       })
   }
+
   isCodeExist(code: string): boolean {
     return this.paginationResult.data?.some((local: any) => local.code === code)
   }
+
   submitForm(): void {
     this.isSubmit = true
     if (this.validateForm.valid) {
       const formData = this.validateForm.getRawValue()
       if (this.edit) {
-        this._service.updateSalesMethod(formData).subscribe({
+        this._service.updateGiaGiaoTapDoan(formData).subscribe({
           next: (data) => {
             this.search()
           },
@@ -114,7 +152,7 @@ export class SalesMethodComponent {
           )
           return
         }
-        this._service.createSalesMethod(formData).subscribe({
+        this._service.createGiaGiaoTapDoan(formData).subscribe({
           next: (data) => {
             this.search()
           },
@@ -139,7 +177,7 @@ export class SalesMethodComponent {
   }
 
   reset() {
-    this.filter = new SalesMethodFilter()
+    this.filter = new GiaGiaoTapDoanFilter()
     this.search()
   }
 
@@ -154,7 +192,7 @@ export class SalesMethodComponent {
   }
 
   deleteItem(code: string | number) {
-    this._service.deleteSalesMethod(code).subscribe({
+    this._service.deleteGiaGiaoTapDoan(code).subscribe({
       next: (data) => {
         this.search()
       },
@@ -164,10 +202,24 @@ export class SalesMethodComponent {
     })
   }
 
-  openEdit(data: { code: string; name: string; isActive: boolean }) {
-    this.validateForm.setValue({
+  // openEdit(data: any){
+  //   console.log(data);
+
+  //   this.edit = true
+  //   this.visible = true
+  // }
+
+  openEdit(data: any) {
+    console.log(data);
+
+    this.validateForm.patchValue({
       code: data.code,
-      name: data.name,
+      goodsCode: data.goodsCode,
+      customerCode: data.localCode,
+      startDate: data.createDate,
+      toDate: data.toDate,
+      oldPrice: data.oldPrice,
+      newPrice: data.newPrice,
       isActive: data.isActive,
     })
     setTimeout(() => {

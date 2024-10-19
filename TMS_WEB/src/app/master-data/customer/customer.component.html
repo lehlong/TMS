@@ -126,6 +126,10 @@
         <app-input-clear nz-col nzSpan="12" placeholder="email123@gmail.com " [required]="true" label="Email "
           [control]="$any(validateForm).controls['email']"
           ></app-input-clear>
+          <!-- <div *ngIf="validateForm.get('email')?.invalid && validateForm.get('email')?.touched">
+            <div *ngIf="validateForm.get('email')?.errors?.required">Email is required.</div>
+            <div *ngIf="validateForm.get('email')?.errors?.email">Email is invalid.</div>
+        </div> -->
       </div>
 
       <div >

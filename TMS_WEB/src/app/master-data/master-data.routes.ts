@@ -26,6 +26,7 @@ import { GoodsComponent } from './goods/goods.component'
 import { LaiGopDieuTietComponent } from './laigopdieutiet/laigopdieutiet.component'
 import { CustomerComponent } from './customer/customer.component'
 import { DeliveryPointComponent } from './delivery-point/delivery-point.component'
+import { GiaGiaoTapDoanComponent } from './gia-giao-tap-doan/gia-giao-tap-doan.component'
 export const masterDataRoutes: Routes = [
   { path: 'currency', component: CurrencyComponent },
   { path: 'unit', component: UnitComponent },
@@ -61,6 +62,7 @@ export const masterDataRoutes: Routes = [
   {path: 'retail-price', component: RetailPriceComponent,},
   {path: 'lai-gop-dieu-tiet', component: LaiGopDieuTietComponent},
   {path: 'customer', component: CustomerComponent},
-  {path: 'delivery-point', component: DeliveryPointComponent}
+  {path: 'delivery-point', component: DeliveryPointComponent},
+  {path: 'gia-giao-tap-doan', component: GiaGiaoTapDoanComponent},
 
 ]

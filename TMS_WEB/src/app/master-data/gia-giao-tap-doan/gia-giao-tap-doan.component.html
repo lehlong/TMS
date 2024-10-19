@@ -1,4 +1,4 @@
-<div class="container-list" [appPermission]="RETAIL_PRICE_RIGHTS.LIST">
+<div class="container-list" [appPermission]="GIA_GIAO_TAP_DOAN_RIGHTS.LIST">
   <div class="site-page-header-ghost-wrapper">
     <nz-page-header nzBackIcon nzTitle="Giá bán lẻ" nzSubtitle="Danh sách giá bán lẻ" class="site-page-header">
       <nz-page-header-extra>
@@ -16,7 +16,7 @@
             </button>
           </nz-space>
           <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
-            [appPermission]="RETAIL_PRICE_RIGHTS.ADD">
+            [appPermission]="GIA_GIAO_TAP_DOAN_RIGHTS.ADD">
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
           <!-- <button
@@ -45,8 +45,8 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('goodsCode', $event)">
             Mặt hàng
           </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('localCode', $event)">
-            Vùng
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('customerCode', $event)">
+            Khách hàng
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('oldPrice', $event)">
             Giá cũ
@@ -79,8 +79,8 @@
             </span>
           </td>
           <td>
-            <span *ngFor="let item of localResult" >
-              <span *ngIf="item.code == data.localCode">{{ item.name }}</span>
+            <span *ngFor="let item of customerResult" >
+              <span *ngIf="item.code == data.customerCode">{{ item.name }}</span>
             </span>
           </td>
           <td>{{ data.oldPrice }}</td>
@@ -123,10 +123,10 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzRequired]="true">Vùng</nz-form-label>
+        <nz-form-label [nzRequired]="true">Khách hàng</nz-form-label>
         <nz-form-control nzErrorTip="Không được để trống">
-          <nz-select nzShowSearch nzAllowClear placeholder="Chọn vùng" formControlName="localCode">
-            <nz-option cdkScrollable *ngFor="let item of localResult" [nzLabel]="item.code + ' - ' + item.name"
+          <nz-select nzShowSearch nzAllowClear placeholder="Chọn vùng" formControlName="customerCode">
+            <nz-option cdkScrollable *ngFor="let item of customerResult" [nzLabel]="item.code + ' - ' + item.name"
               [nzValue]="item.code">
             </nz-option>
           </nz-select>
@@ -171,13 +171,13 @@
 <ng-template #extra>
   <nz-space>
     <ng-container *ngIf="edit">
-      <button [nzLoading]="loading" [appPermission]="RETAIL_PRICE_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
+      <button [nzLoading]="loading" [appPermission]="GIA_GIAO_TAP_DOAN_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>
     <ng-container *ngIf="!edit">
-      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="RETAIL_PRICE_RIGHTS.ADD" nz-button nzType="primary"
+      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="GIA_GIAO_TAP_DOAN_RIGHTS.ADD" nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>

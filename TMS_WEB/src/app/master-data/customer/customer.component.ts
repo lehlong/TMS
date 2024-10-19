@@ -23,7 +23,7 @@ export class CustomerComponent {
     code: ['', [Validators.required]],
     name: ['', [Validators.required]],
     phone: ['', [Validators.required]],
-    email: ['', [Validators.required]],
+    email: ['', [Validators.required], Validators.email],
     address: ['', [Validators.required]],
     buyInfo: ['', [Validators.required]],
     bankLoanInterest: ['', [Validators.required]],
