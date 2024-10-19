@@ -35,12 +35,12 @@ namespace DMS.CORE.Entities.MD
         public float BankLoanInterest { set; get; }
 
         [Column("SALES_METHOD_CODE", TypeName = "VARCHAR(50)")]
-        public string SaleMethodCode { set; get; }
+        public string SalesMethodCode { set; get; }
 
         [Column("LOCAL_CODE", TypeName = "VARCHAR(50)")]
         public string LocalCode { set; get; }
 
-        [Column("MARKER_CODE", TypeName = "VARCHAR(50)")]
+        [Column("MARKET_CODE", TypeName = "VARCHAR(50)")]
         public string MarketCode { set; get; }
 
 

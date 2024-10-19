@@ -23,6 +23,24 @@ export enum GOODS_RIGHTS {
   DELETE = 'R0',
 }
 
+export enum LAIGOPDIEUTIET_RIGHTS {
+  LIST = 'R1.1.1',
+  EXCEL = 'R0',
+  ADD = 'R1.1.2',
+  EDIT = 'R1.1.2',
+  DELETE = 'R0',
+}
+
+
+
+export enum CUSTOMER_RIGHTS {
+  LIST = 'R1.1.1',
+  EXCEL = 'R0',
+  ADD = 'R1.1.2',
+  EDIT = 'R1.1.2',
+  DELETE = 'R0',
+}
+
 export enum TYPE_OF_GOODS {
 }
 

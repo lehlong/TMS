@@ -28,7 +28,7 @@ namespace DMS.BUSINESS.Services.MD
                 if (!string.IsNullOrWhiteSpace(filter.KeyWord))
                 {
                     query = query.Where(x =>
-                    x.Name.Contains(filter.KeyWord));
+                    x.Name.Contains(filter.KeyWord) || x.LocalCode.Contains(filter.KeyWord));
                 }
                 if (filter.IsActive.HasValue)
                 {

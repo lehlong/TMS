@@ -5,12 +5,13 @@ import { GlobalService } from '../../services/global.service'
 import { LocalService } from '../../services/master-data/local.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { LOCAL_RIGHTS, GOODS_RIGHTS } from '../../shared/constants'
+import { LAIGOPDIEUTIET_RIGHTS } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { LaiGopDieuTietFilter } from '../../models/master-data/lai-gop-dieu-tiet.model'
 import { LaiGopDieuTietService } from '../../services/master-data/lai-gop-dieu-tiet.service'
 import { MarketService } from '../../services/master-data/market.service'
 import { GoodsService } from '../../services/master-data/goods.service'
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 @Component({
   selector: 'app-local',
   standalone: true,
@@ -24,21 +25,23 @@ export class LaiGopDieuTietComponent {
     goodsCode: ['', [Validators.required]],
     marketCode: ['', [Validators.required]],
     price: ['', [Validators.required]],
-    createDate:  [new Date(), [Validators.required]],
     toDate: ['', [Validators.required]],
     isActive: [true, [Validators.required]],
   })
-
+  validateCreateDate: FormGroup = this.fb.group({
+    startDate:  new Date()
+  })
   isSubmit: boolean = false
   visible: boolean = false
   edit: boolean = false
   filter = new LaiGopDieuTietFilter()
   paginationResult = new PaginationResult()
   goodsResult: any[] = []
+  createDate: any
   marketResult: any[] = []
 
   loading: boolean = false
-  GOODS_RIGHTS = GOODS_RIGHTS
+  LAIGOPDIEUTIET_RIGHTS = LAIGOPDIEUTIET_RIGHTS
 
   constructor(
     private _service: LaiGopDieuTietService,
@@ -68,6 +71,8 @@ export class LaiGopDieuTietComponent {
     this.getAllGoods()
     this.getAllMarket()
     this.search()
+    this.createDate = new Date()
+    console.log(this.createDate)
 
   }
 

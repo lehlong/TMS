@@ -20,7 +20,6 @@ export class MarketComponent {
     code: ['', [Validators.required]],
     name: ['', [Validators.required]],
     localCode: ['', [Validators.required]],
-    createDate: new Date(),
     isActive: [true, [Validators.required]],
   })
 
@@ -184,10 +183,11 @@ export class MarketComponent {
     })
   }
 
-  openEdit(data: { code: string; name: string; isActive: boolean }) {
+  openEdit(data: { code: string; name: string; isActive: boolean; localCode: string }) {
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
+      localCode: data.localCode,
       isActive: data.isActive,
     })
     setTimeout(() => {

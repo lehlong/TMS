@@ -10,7 +10,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { CustomerFilter } from '../../models/master-data/customer.model'
 import { CustomerService } from '../../services/master-data/customer.service'
 import { MarketService } from '../../services/master-data/market.service'
-import { GoodsService } from '../../services/master-data/goods.service'
+import { SalesMethodService } from '../../services/master-data/sales-method.service'
 @Component({
   selector: 'app-local',
   standalone: true,
@@ -21,12 +21,18 @@ import { GoodsService } from '../../services/master-data/goods.service'
 export class CustomerComponent {
   validateForm: FormGroup = this.fb.group({
     code: ['', [Validators.required]],
-    goodsCode: ['', [Validators.required]],
+    name: ['', [Validators.required]],
+    phone: ['', [Validators.required]],
+    email: ['', [Validators.required]],
+    address: ['', [Validators.required]],
+    buyInfo: ['', [Validators.required]],
+    bankLoanInterest: ['', [Validators.required]],
+
+    salesMethodCode: ['', [Validators.required]],
+    localCode: ['', [Validators.required]],
     marketCode: ['', [Validators.required]],
-    price: ['', [Validators.required]],
-    createDate:  [new Date(), [Validators.required]],
-    toDate: ['', [Validators.required]],
     isActive: [true, [Validators.required]],
+
   })
 
   isSubmit: boolean = false
@@ -34,8 +40,10 @@ export class CustomerComponent {
   edit: boolean = false
   filter = new CustomerFilter()
   paginationResult = new PaginationResult()
-  goodsResult: any[] = []
+  localResult: any[] = []
   marketResult: any[] = []
+  marketList: any[] = []
+  salesMethodResult: any[] = []
 
   loading: boolean = false
   CUSTOMER_RIGHTS = CUSTOMER_RIGHTS
@@ -43,7 +51,8 @@ export class CustomerComponent {
   constructor(
     private _service: CustomerService,
     private _marketService: MarketService,
-    private _goodsService: GoodsService,
+    private _localService: LocalService,
+    private _salesMethodService: SalesMethodService,
 
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
@@ -65,10 +74,10 @@ export class CustomerComponent {
   }
 
   ngOnInit(): void {
-    this.getAllGoods()
-    this.getAllMarket()
+    this.getAllLocal()
+    this.getAllSalesMethod()
     this.search()
-
+    this.getAllMarket()
   }
 
   onSortChange(name: string, value: any) {
@@ -84,6 +93,8 @@ export class CustomerComponent {
     this.isSubmit = false
     this._service.searchCustomer(this.filter).subscribe({
       next: (data) => {
+        console.log(data);
+
         this.paginationResult = data
       },
       error: (response) => {
@@ -92,22 +103,42 @@ export class CustomerComponent {
     })
   }
 
-  getAllGoods(){
+  getAllLocal(){
     this.isSubmit = false
-    this._goodsService.getall().subscribe({
+    this._localService.getall().subscribe({
       next: (data) => {
-        this.goodsResult = data
+        this.localResult = data
       },
       error: (response) => {
         console.log(response)
       },
     })
   }
+
   getAllMarket(){
     this.isSubmit = false
     this._marketService.getall().subscribe({
       next: (data) => {
-        this.marketResult = data
+        this.marketList= data
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
+  }
+
+  searchMarket() {
+    this.isSubmit = false
+    console.log(this.validateForm.get('localCode')?.value as string);
+
+    this.marketResult = this.marketList.filter(market => market.localCode === this.validateForm.get('localCode')?.value)
+  }
+
+  getAllSalesMethod(){
+    this.isSubmit = false
+    this._salesMethodService.getall().subscribe({
+      next: (data) => {
+        this.salesMethodResult = data
       },
       error: (response) => {
         console.log(response)
@@ -205,10 +236,15 @@ export class CustomerComponent {
   openEdit(data: any) {
     this.validateForm.setValue({
       code: data.code,
-      price: data.price,
-      goodsCode: data.goodsCode,
+      name: data.name,
+      phone: data.phone,
+      email: data.email,
+      address: data.address,
+      buyInfo: data.buyInfo,
+      bankLoanInterest: data.bankLoanInterest,
+      salesMethodCode: data.salesMethodCode,
+      localCode: data.localCode,
       marketCode: data.marketCode,
-      toDate: data.toDate,
       isActive: data.isActive,
     })
     setTimeout(() => {

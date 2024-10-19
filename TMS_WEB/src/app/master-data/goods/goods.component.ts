@@ -165,11 +165,12 @@ export class GoodsComponent {
     })
   }
 
-  openEdit(data: { code: string; name: string; thueBvmt: number; isActive: boolean }) {
+  openEdit(data: { code: string; name: string; thueBvmt: number; isActive: boolean ; createDate: Date}) {
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
       thueBvmt: data.thueBvmt,
+      createDate: data.createDate,
       isActive: data.isActive,
     })
     setTimeout(() => {

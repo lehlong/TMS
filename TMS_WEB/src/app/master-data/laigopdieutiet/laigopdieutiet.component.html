@@ -1,4 +1,4 @@
-<div class="container-list" [appPermission]="GOODS_RIGHTS.LIST">
+<div class="container-list" [appPermission]="LAIGOPDIEUTIET_RIGHTS.LIST">
   <div class="site-page-header-ghost-wrapper">
     <nz-page-header nzBackIcon nzTitle="Loại hàng hoá" nzSubtitle="Danh sách loại hàng hoá" class="site-page-header">
       <nz-page-header-extra>
@@ -16,7 +16,7 @@
             </button>
           </nz-space>
           <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
-            [appPermission]="GOODS_RIGHTS.ADD">
+            [appPermission]="LAIGOPDIEUTIET_RIGHTS.ADD">
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
           <!-- <button
@@ -123,7 +123,7 @@
 </div>
 
 <!--Create Update-->
-<nz-drawer [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+<nz-drawer nzWidth="40%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
@@ -134,7 +134,7 @@
         <nz-form-item>
           <nz-form-label [nzRequired]="true">Thị Trường</nz-form-label>
           <nz-form-control nzErrorTip="Không được để trống">
-            <nz-select nzShowSearch nzAllowClear placeholder="Chọn thị trường" formControlName="marketCode">
+            <nz-select nzShowSearch nzAllowClear ngModel="Chọn thị trường" placeholder="Chọn thị trường" formControlName="marketCode">
               <nz-option cdkScrollable *ngFor="let item of marketResult" [nzLabel]="item.code + ' - ' + item.name"
                 [nzValue]="item.code">
               </nz-option>
@@ -160,7 +160,7 @@
           <nz-form-item style="padding-right: 16px;">
             <nz-form-label>Ngày bắt đầu</nz-form-label>
             <nz-form-control>
-              <nz-date-picker [disabled]="true" style="width: 100%" formControlName="createDate" ></nz-date-picker>
+              <app-input-clear style="width: 100%" >{{ this.createDate }}</app-input-clear>
             </nz-form-control>
           </nz-form-item>
 
@@ -188,13 +188,13 @@
 <ng-template #extra>
   <nz-space>
     <ng-container *ngIf="edit">
-      <button [nzLoading]="loading" [appPermission]="GOODS_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
+      <button [nzLoading]="loading" [appPermission]="LAIGOPDIEUTIET_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>
     <ng-container *ngIf="!edit">
-      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="GOODS_RIGHTS.ADD" nz-button nzType="primary"
+      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="LAIGOPDIEUTIET_RIGHTS.ADD" nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>

@@ -79,19 +79,6 @@
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
               nzTheme="outline"></span>
           </td>
-          <!-- <td nzAlign="center">
-            <span
-              nz-popconfirm
-              nzPopconfirmTitle="Bạn muốn xoá loại địa phương này ?"
-              nzPopconfirmPlacement="bottom"
-              (nzOnConfirm)="deleteItem(data.code)"
-              class="!text-red-500 cursor-pointer"
-              nz-icon
-              nzType="delete"
-              nzTheme="outline"
-              [appPermission]="LOCAL_RIGHTS.DELETE"
-            ></span>
-          </td> -->
         </tr>
       </tbody>
     </nz-table>

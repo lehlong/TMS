@@ -16,7 +16,7 @@ namespace DMS.CORE.Entities.MD
         [Column("CODE", TypeName = "VARCHAR(50)")]
         public string Code { set; get; }
 
-        [Column("GOODS_CODE", TypeName = "VARCHAR(50)")]
+        [Column("GOODS_CODE", TypeName = "VARCHAR(50)")]    
         public string GoodsCode { set; get; }
 
         [Column("MARKET_CODE", TypeName = "VARCHAR(50)")]
@@ -24,9 +24,6 @@ namespace DMS.CORE.Entities.MD
 
         [Column("TO_DATE", TypeName = "DATETIME")]
         public DateTime ToDate { set; get; }
-
-        [Column("CREATE_DATE", TypeName = "DATETIME")]
-        public DateTime? CreateDate { set; get; }
 
         [Column("PRICE", TypeName = "FLOAT")]
         public float Price { set; get; }

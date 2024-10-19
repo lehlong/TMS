@@ -38,37 +38,21 @@
       [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data">
       <thead>
         <tr>
-          <th nzWidth="30px">STT</th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" nzWidth="150px">
-            Mã
-          </th>
+          <th nzWidth="15px">STT</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" nzWidth="100px">Mã</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)">Khách hàng</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('phone', $event)">Số điện thoại</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('email', $event)">Email</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('address', $event)">Địa chỉ</th>
 
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('market', $event)">
-            Thị trường
-          </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('goods', $event)">
-            Mặt hàng
-          </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('price', $event)">
-            Giá bán
-          </th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('salesMethodCode', $event)" nzAlign="center">Phương thức bán</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('localCode', $event)" nzAlign="center">Vùng</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('marketCode', $event)" nzAlign="center">Thị trường</th>
 
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('createDate', $event)" nzAlign="center">
-            Ngày tạo
-          </th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('buyInfo', $event)">Thông tin mua hàng</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('bankLoanInterest', $event)">Lãi vay ngân hàng</th>
 
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('toDate', $event)" nzAlign="center">
-            Đến ngày
-          </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('isActive', $event)" nzAlign="center">
-            Trạng thái
-          </th>
-          <!-- <th
-            nzAlign="center"
-            [appPermission]="LOCAL_RIGHTS.DELETE"
-          >
-            Hành động
-          </th> -->
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('isActive', $event)" nzAlign="center">Trạng thái</th>
         </tr>
       </thead>
       <tbody>
@@ -79,38 +63,35 @@
           <td>
             <a (click)="openEdit(data)">{{ data.code }}</a>
           </td>
+          <td nzAlign="center">{{ data.name }}</td>
+          <td nzAlign="center">{{ data.phone }}</td>
+          <td nzAlign="center">{{ data.email }}</td>
+          <td nzAlign="center">{{ data.address }}</td>
+
           <td>
-            <span *ngFor="let item of marketResult" >
-              <span *ngIf="item.code == data.marketCode">{{ item.code + ' - ' + item.name }}</span>
+            <span *ngFor="let item of salesMethodResult" >
+              <span *ngIf="item.code == data.salesMethodCode">{{ item.name }}</span>
             </span>
           </td>
           <td>
-            <span *ngFor="let item of goodsResult" >
-              <span *ngIf="item.code == data.goodsCode">{{ item.code + ' - ' + item.name }}</span>
+            <span *ngFor="let item of localResult" >
+              <span *ngIf="item.code == data.localCode">{{ item.code + ' - ' + item.name }}</span>
             </span>
           </td>
+          <td>
+            <span *ngFor="let item of marketList" >
+              <span *ngIf="item.code == data.marketCode">{{ item.name }}</span>
+            </span>
+          </td>
+          <td nzAlign="center">{{ data.bankLoanInterest }}</td>
+          <td nzAlign="center">{{ data.buyInfo }}</td>
 
-          <td nzAlign="center">{{ data.price }}</td>
 
-          <td nzAlign="center">{{ data.createDate | date: 'dd/MM/yyyy HH:mm'}}</td>
-          <td nzAlign="center">{{ data.toDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
               nzTheme="outline"></span>
           </td>
-          <!-- <td nzAlign="center">
-            <span
-              nz-popconfirm
-              nzPopconfirmTitle="Bạn muốn xoá loại địa phương này ?"
-              nzPopconfirmPlacement="bottom"
-              (nzOnConfirm)="deleteItem(data.code)"
-              class="!text-red-500 cursor-pointer"
-              nz-icon
-              nzType="delete"
-              nzTheme="outline"
-              [appPermission]="LOCAL_RIGHTS.DELETE"
-            ></span>
-          </td> -->
+
         </tr>
       </tbody>
     </nz-table>
@@ -123,55 +104,91 @@
 </div>
 
 <!--Create Update-->
-<nz-drawer [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+<nz-drawer  nzWidth="60%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-      <app-input-clear placeholder="Nhập mã " [required]="true" label="Mã "
-        [control]="$any(validateForm).controls['code']" [required]="true"
-        [disabled]="edit ? true : false"></app-input-clear>
+      <div nz-row  nzJustify="space-evenly">
+        <app-input-clear nz-col nzSpan="8" placeholder="Nhập mã " [required]="true" label="Mã "
+          [control]="$any(validateForm).controls['code']"
+          [disabled]="edit ? true : false"></app-input-clear>
 
-        <nz-form-item>
-          <nz-form-label [nzRequired]="true">Thị Trường</nz-form-label>
+        <app-input-clear nz-col nzSpan="15" placeholder="Nhập khách hàng " [required]="true" label="Tên khách hàng "
+          [control]="$any(validateForm).controls['name']"
+          ></app-input-clear>
+
+      </div>
+      <div nz-row  nzJustify="space-evenly">
+        <app-input-clear nz-col nzSpan="11" placeholder="098... " [required]="true" label="Số điện thoại "
+          [control]="$any(validateForm).controls['phone']"
+          ></app-input-clear>
+
+        <app-input-clear nz-col nzSpan="12" placeholder="email123@gmail.com " [required]="true" label="Email "
+          [control]="$any(validateForm).controls['email']"
+          ></app-input-clear>
+      </div>
+
+      <div >
+        <app-input-clear placeholder="Quận / Huyện / Thành Phố" [required]="true" label="Địa chỉ "
+          [control]="$any(validateForm).controls['address']"
+          ></app-input-clear>
+          </div>
+
+      <div nz-row nzJustify="space-evenly" >
+        <nz-form-item nz-col nzSpan="11">
+          <nz-form-label [nzRequired]="true">Vùng</nz-form-label>
           <nz-form-control nzErrorTip="Không được để trống">
-            <nz-select nzShowSearch nzAllowClear placeholder="Chọn thị trường" formControlName="marketCode">
-              <nz-option cdkScrollable *ngFor="let item of marketResult" [nzLabel]="item.code + ' - ' + item.name"
-                [nzValue]="item.code">
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn Vùng" formControlName="localCode" (ngModelChange)="searchMarket()">
+              <nz-option cdkScrollable
+                *ngFor="let item of localResult"
+                [nzLabel]="item.code + ' - ' + item.name"
+                [nzValue]="item.code"
+
+                >
+
               </nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
 
-        <nz-form-item>
-          <nz-form-label [nzRequired]="true">Mặt hàng</nz-form-label>
-          <nz-form-control nzErrorTip="Không được để trống">
-            <nz-select nzShowSearch nzAllowClear placeholder="Chọn mặt hàng" formControlName="goodsCode">
-              <nz-option cdkScrollable *ngFor="let item of goodsResult" [nzLabel]="item.code + ' - ' + item.name"
-                [nzValue]="item.code">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-
-      <app-input-clear placeholder="Nhập giá bán" [required]="true" label="Giá bán "
-        [control]="$any(validateForm).controls['price']"></app-input-clear>
-
-        <div nz-col style=" display: flex;">
-          <nz-form-item style="padding-right: 16px;">
-            <nz-form-label>Ngày bắt đầu</nz-form-label>
-            <nz-form-control>
-              <nz-date-picker [disabled]="true" style="width: 100%" formControlName="createDate" ></nz-date-picker>
+        <nz-form-item nz-col nzSpan="12">
+            <nz-form-label [nzRequired]="true">Thị Trường</nz-form-label>
+            <nz-form-control nzErrorTip="Không được để trống">
+              <nz-select nzShowSearch nzAllowClear placeholder="Chọn thị trường" formControlName="marketCode">
+                <nz-option cdkScrollable *ngFor="let item of marketResult" [nzLabel]="item.code + ' - ' + item.name"
+                  [nzValue]="item.code">
+                </nz-option>
+              </nz-select>
             </nz-form-control>
           </nz-form-item>
+      </div>
 
-          <nz-form-item>
-            <nz-form-label [nzRequired]="true">Ngày kết thúc</nz-form-label>
-            <nz-form-control nzErrorTip="Không đươc để trống">
-              <nz-date-picker style="width: 100%" formControlName="toDate"
-                nzPlaceHolder="Chọn ngày bắt đầu"></nz-date-picker>
-            </nz-form-control>
+      <div nz-row nzWidth="100%" nzJustify="space-evenly">
+        <nz-form-item nz-col nzSpan="12">
+          <nz-form-label [nzRequired]="true">Phương thức bán</nz-form-label>
+          <nz-form-control nzErrorTip="Không được để trống">
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn Phương thức bán" formControlName="salesMethodCode">
+              <nz-option cdkScrollable *ngFor="let item of salesMethodResult" [nzLabel]="item.code + ' - ' + item.name"
+                [nzValue]="item.code">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <app-input-clear nz-col nzSpan="11" placeholder="Nhập lãi vay" [required]="true" label="Lãi vay ngân hàng"
+          [control]="$any(validateForm).controls['bankLoanInterest']"
+          ></app-input-clear>
+      </div>
+      <!-- <div class="" nzWidth="100%"> -->
+
+        <div  nzJustify="space-evenly" >
+          <nz-form-item nzSpan="12" >
+            <nz-form-label  >Thông tin mua hàng</nz-form-label>
+            <textarea nz-input [nzAutosize]="{ minRows: 3, maxRows: 5 }" placeholder="Thông tin mua hàng"  label="Thông tin mua hàng"
+            formControlName="buyInfo"></textarea >
           </nz-form-item>
         </div>
+      <!-- </div> -->
 
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>
@@ -182,6 +199,7 @@
           </nz-radio-group>
         </nz-form-control>
       </nz-form-item>
+
     </form>
   </ng-container>
 </nz-drawer>
