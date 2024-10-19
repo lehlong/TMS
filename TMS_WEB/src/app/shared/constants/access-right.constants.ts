@@ -67,6 +67,13 @@ export enum LOCAL_RIGHTS {
   DELETE = 'R0',
 }
 
+export enum DELIVERY_POINT_RIGHTS {
+  LIST = 'R1.4.1',
+  EXCEL = 'R0',
+  ADD = 'R1.4.2',
+  EDIT = 'R1.4.2',
+  DELETE = 'R0',
+}
 export enum AREA_RIGHTS {
   LIST = 'R1.3.1',
   EXCEL = 'R0',

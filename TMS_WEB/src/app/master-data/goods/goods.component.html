@@ -42,7 +42,7 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" nzWidth="150px">
             Mã
           </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)">
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)" >
             Tên
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('thueBvmt', $event)" nzAlign="center">
@@ -72,7 +72,7 @@
           <td>
             <a (click)="openEdit(data)">{{ data.code }}</a>
           </td>
-          <td nzAlign="center">{{ data.name }}</td>
+          <td >{{ data.name }}</td>
           <td nzAlign="center">{{ data.thueBvmt }}</td>
           <td nzAlign="center">{{ data.createDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">

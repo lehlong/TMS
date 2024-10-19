@@ -54,8 +54,8 @@ export class LaiGopDieuTietComponent {
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách loại hàng hoá',
-        path: 'master-data/laigopdieutiet',
+        name: 'Danh sách lãi gộp điều tiết',
+        path: 'master-data/lai-gop-dieu-tiet',
       },
     ])
     this.globalService.getLoading().subscribe((value) => {
