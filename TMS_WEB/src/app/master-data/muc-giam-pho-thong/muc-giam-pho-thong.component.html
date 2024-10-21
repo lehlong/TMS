@@ -1,0 +1,162 @@
+<div class="container-list" [appPermission]="LAIGOPDIEUTIET_RIGHTS.LIST">
+  <div class="site-page-header-ghost-wrapper">
+    <nz-page-header nzBackIcon nzTitle="Lãi gộp điều tiết" nzSubtitle="Danh sách lãi gộp điều tiết" class="site-page-header">
+      <nz-page-header-extra>
+        <nz-space [nzWrap]="true" class="gap-[5px]">
+          <nz-space>
+            <app-input-clear placeholder="Tìm kiếm" (enterEvent)="search()"
+              [(value)]="filter.keyWord"></app-input-clear>
+            <button (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+              nzType="default">
+              <span nz-icon nzType="search"></span>
+            </button>
+            <button (click)="reset()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+              nzType="default">
+              <span nz-icon nzType="redo"></span>
+            </button>
+          </nz-space>
+          <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
+            [appPermission]="LAIGOPDIEUTIET_RIGHTS.ADD">
+            <span nz-icon nzType="plus-circle"></span> Thêm mới
+          </button>
+        </nz-space>
+      </nz-page-header-extra>
+    </nz-page-header>
+  </div>
+  <div class="overflow-auto flex-grow">
+    <nz-table [nzScroll]="{ x: 'max-content' }" nzTableLayout="fixed" [nzShowPagination]="false"
+      [nzFrontPagination]="false" nzBordered nzSize="middle" #headerTable [nzData]="paginationResult.data">
+      <thead>
+        <tr>
+          <th rowspan="4" nzLeft >STT</th>
+          <th rowspan="4">Thị trường</th>
+          <th rowspan="4">Cự ly BQ (Km)</th>
+          <th colspan="{{ goodsLength }}">Lãi gộp chưa VAT</th>
+          <th colspan="3">Chi phí phát sinh chưa có VAT</th>
+          <th colspan="2">CK điều tiết</th>
+          <th colspan="{{ goodsLength * 2 }}">Đề xuất mức giảm giá tại kho khách hàng</th>
+          <th colspan="{{ goodsLength }}">Lợi nhuận chưa VAT</th>
+
+          <th colspan="2" *ngFor="let item of goodsResult; let i = index" (dblclick)="openEdit(item)">{{ item.name }}</th>
+        </tr>
+        <tr>
+          <th rowspan="2" *ngFor="let item of goodsResult; let i = index" (dblclick)="openEdit(item)">{{ item.name }}</th>
+          <th rowspan="2" >CP chung chưa cước VC</th>
+          <th rowspan="2" >Cước VC bình quân</th>
+          <th rowspan="2" >Tổng chi phí</th>
+
+          <th rowspan="2">Xăng có VAT</th>
+          <th rowspan="2">Dầu có VAT</th>
+
+          <th colspan="2" *ngFor="let item of goodsResult; let i = index" (dblclick)="openEdit(item)">{{ item.name }}</th>
+
+          <th rowspan="2" *ngFor="let item of goodsResult; let i = index" (dblclick)="openEdit(item)">{{ item.name }}</th>
+
+          @for (i of goodsResult; track i){
+            <th rowspan="2">Chưa VAT, BVMT</th>
+            <th rowspan="2">Có VAT, BVMT</th>
+          }
+
+        </tr>
+        <tr>
+          @for (i of goodsResult; track i){
+            <th rowspan="2">Chưa VAT</th>
+            <th rowspan="2">Có VAT</th>
+          }
+
+        </tr>
+
+      </thead>
+
+    </nz-table>
+  </div>
+  <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
+    <nz-pagination nzShowSizeChanger [nzPageIndex]="filter.currentPage" [nzTotal]="paginationResult.totalRecord"
+      [nzPageSize]="filter.pageSize" (nzPageIndexChange)="pageIndexChange($event)"
+      (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+  </div>
+</div>
+
+<!--Create Update-->
+<nz-drawer nzWidth="35%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+  [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
+  <ng-container *nzDrawerContent>
+    <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+      <app-input-clear placeholder="Nhập mã " [required]="true" label="Mã "
+        [control]="$any(validateForm).controls['code']" [required]="true"
+        [disabled]="true"></app-input-clear>
+
+        <nz-form-item>
+          <nz-form-label [nzRequired]="true">Thị Trường</nz-form-label>
+          <nz-form-control nzErrorTip="Không được để trống">
+            <nz-select nzShowSearch nzAllowClear ngModel="Chọn thị trường" placeholder="Chọn thị trường" formControlName="marketCode">
+              <nz-option cdkScrollable *ngFor="let item of marketResult" [nzLabel]="item.code + ' - ' + item.name"
+                [nzValue]="item.code">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzRequired]="true">Mặt hàng</nz-form-label>
+          <nz-form-control nzErrorTip="Không được để trống">
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn mặt hàng" formControlName="goodsCode">
+              <nz-option cdkScrollable *ngFor="let item of goodsResult" [nzLabel]="item.code + ' - ' + item.name"
+                [nzValue]="item.code">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+      <app-input-clear placeholder="Nhập giá bán" [required]="true" label="Giá bán "
+        [control]="$any(validateForm).controls['price']"></app-input-clear>
+
+        <div nz-row nzJustify="space-between">
+          <nz-form-item nzSpan="12">
+            <nz-form-label >Từ ngày </nz-form-label>
+            <nz-form-control nzErrorTip="Không đươc để trống">
+              <nz-date-picker style="width: 100%" formControlName="fromDate" nzPlaceHolder="Từ ngày" ></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item nzSpan="12">
+            <nz-form-label [nzRequired]="true">Đến ngày</nz-form-label>
+            <nz-form-control [nzErrorTip]="this.errorDate">
+              <nz-date-picker style="width: 100%" formControlName="toDate"
+                nzPlaceHolder="đến ngày"></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+      <nz-form-item>
+        <nz-form-label>Trạng thái</nz-form-label>
+        <nz-form-control>
+          <nz-radio-group formControlName="isActive">
+            <label nz-radio [nzValue]="true">Kích hoạt</label>
+            <label nz-radio [nzValue]="false">Khoá</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-drawer>
+<ng-template #extra>
+  <nz-space>
+    <ng-container *ngIf="edit">
+      <button [nzLoading]="loading" [appPermission]="LAIGOPDIEUTIET_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
+        class="!flex !items-center" (click)="submitForm()">
+        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+      </button>
+    </ng-container>
+    <ng-container *ngIf="!edit">
+      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="LAIGOPDIEUTIET_RIGHTS.ADD" nz-button nzType="primary"
+        class="!flex !items-center" (click)="submitForm()">
+        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+      </button>
+    </ng-container>
+    <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger
+      (click)="close()">
+      <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
+    </button>
+  </nz-space>
+</ng-template>
