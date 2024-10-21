@@ -23,7 +23,7 @@ export class CustomerComponent {
     code: ['', [Validators.required]],
     name: ['', [Validators.required]],
     phone: ['', [Validators.required]],
-    email: ['', [Validators.required], Validators.email],
+    email: ['', [Validators.required]],//, Validators.email
     address: ['', [Validators.required]],
     buyInfo: ['', [Validators.required]],
     bankLoanInterest: ['', [Validators.required]],
@@ -248,6 +248,8 @@ export class CustomerComponent {
     setTimeout(() => {
       this.edit = true
       this.visible = true
+      console.log(this.validateForm);
+
     }, 200)
   }
 
