@@ -26,8 +26,9 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Mã khách hàng")]
         public string CustomerCode { get; set; }
 
-        [Description("Ngày bắt đầu")]
-        public DateTime? CreateDate { get; set; }
+
+        [Description("Từ ngày")]
+        public DateTime? FromDate { get; set; }
 
 
         [Description("Đến ngày")]
@@ -38,6 +39,9 @@ namespace DMS.BUSINESS.Dtos.MD
 
         [Description("Giá mới")]
         public float NewPrice { get; set; }
+
+        [Description("Ngày bắt tạo")]
+        public DateTime? CreateDate { get; set; }
 
         [Description("Trạng thái")]
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }

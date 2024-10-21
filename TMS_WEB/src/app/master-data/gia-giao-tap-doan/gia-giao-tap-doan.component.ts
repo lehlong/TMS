@@ -23,7 +23,7 @@ export class GiaGiaoTapDoanComponent {
     code: ['', [Validators.required]],
     goodsCode: ['', [Validators.required]],
     customerCode: ['', [Validators.required]],
-    createDate: new Date(),
+    fromDate: ['', [Validators.required]],
     toDate: ['', [Validators.required]],
     oldPrice: ['', [Validators.required]],
     newPrice: ['', [Validators.required]],
@@ -35,8 +35,8 @@ export class GiaGiaoTapDoanComponent {
   edit: boolean = false
   filter = new GiaGiaoTapDoanFilter()
   paginationResult = new PaginationResult()
-  customerResult : any[] = []
-  goodsResult : any[] = []
+  customerResult: any[] = []
+  goodsResult: any[] = []
   loading: boolean = false
   GOODS_RIGHTS = GOODS_RIGHTS
   GIA_GIAO_TAP_DOAN_RIGHTS = GIA_GIAO_TAP_DOAN_RIGHTS
@@ -51,7 +51,7 @@ export class GiaGiaoTapDoanComponent {
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách giá bán lẻ',
+        name: 'Danh sách giá giao tập đoàn',
         path: 'master-data/gia-giao-tap-doan',
       },
     ])
@@ -79,7 +79,7 @@ export class GiaGiaoTapDoanComponent {
     this.search()
   }
 
-  getAllCustomer(){
+  getAllCustomer() {
     this._customerService.getall().subscribe({
       next: (data) => {
         this.customerResult = data
@@ -90,7 +90,7 @@ export class GiaGiaoTapDoanComponent {
     })
   }
 
-  getAllGoods(){
+  getAllGoods() {
     this._goodsService.getall().subscribe({
       next: (data) => {
         this.goodsResult = data
@@ -132,42 +132,57 @@ export class GiaGiaoTapDoanComponent {
     return this.paginationResult.data?.some((local: any) => local.code === code)
   }
 
+  checkDate() {
+    if (this.validateForm.get('toDate')?.value > this.validateForm.get('fromDate')?.value) {
+
+      return;
+    } else {
+      this.message.error("Ngày kết thúc phải lớn hơn ngày tạo")
+    }
+  }
+
+
   submitForm(): void {
     this.isSubmit = true
-    if (this.validateForm.valid) {
-      const formData = this.validateForm.getRawValue()
-      if (this.edit) {
-        this._service.updateGiaGiaoTapDoan(formData).subscribe({
-          next: (data) => {
-            this.search()
-          },
-          error: (response) => {
-            console.log(response)
-          },
-        })
-      } else {
-        if (this.isCodeExist(formData.code)) {
-          this.message.error(
-            `Mã khu vục ${formData.code} đã tồn tại, vui lòng nhập lại`,
-          )
-          return
+    if (this.validateForm.get('toDate')?.value > this.validateForm.get('fromDate')?.value) {
+
+      if (this.validateForm.valid) {
+        const formData = this.validateForm.getRawValue()
+        if (this.edit) {
+          this._service.updateGiaGiaoTapDoan(formData).subscribe({
+            next: (data) => {
+              this.search()
+            },
+            error: (response) => {
+              console.log(response)
+            },
+          })
+        } else {
+          if (this.isCodeExist(formData.code)) {
+            this.message.error(
+              `Mã khu vục ${formData.code} đã tồn tại, vui lòng nhập lại`,
+            )
+            return
+          }
+          this._service.createGiaGiaoTapDoan(formData).subscribe({
+            next: (data) => {
+              this.search()
+            },
+            error: (response) => {
+              console.log(response)
+            },
+          })
         }
-        this._service.createGiaGiaoTapDoan(formData).subscribe({
-          next: (data) => {
-            this.search()
-          },
-          error: (response) => {
-            console.log(response)
-          },
+      } else {
+        Object.values(this.validateForm.controls).forEach((control) => {
+          if (control.invalid) {
+            control.markAsDirty()
+            control.updateValueAndValidity({ onlySelf: true })
+          }
         })
       }
     } else {
-      Object.values(this.validateForm.controls).forEach((control) => {
-        if (control.invalid) {
-          control.markAsDirty()
-          control.updateValueAndValidity({ onlySelf: true })
-        }
-      })
+      this.message.error("Ngày kết thúc phải lớn hơn ngày tạo")
     }
   }
 
@@ -216,7 +231,7 @@ export class GiaGiaoTapDoanComponent {
       code: data.code,
       goodsCode: data.goodsCode,
       customerCode: data.customerCode,
-      startDate: data.createDate,
+      formDate: data.fromDate,
       toDate: data.toDate,
       oldPrice: data.oldPrice,
       newPrice: data.newPrice,

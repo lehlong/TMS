@@ -22,7 +22,7 @@ export class RetailPriceComponent {
     code: ['', [Validators.required]],
     goodsCode: ['', [Validators.required]],
     localCode: ['', [Validators.required]],
-    createDate: new Date(),
+    fromDate: ['', [Validators.required]],
     toDate: ['', [Validators.required]],
     oldPrice: ['', [Validators.required]],
     newPrice: ['', [Validators.required]],
@@ -34,8 +34,8 @@ export class RetailPriceComponent {
   edit: boolean = false
   filter = new RetailPriceFilter()
   paginationResult = new PaginationResult()
-  localResult : any[] = []
-  goodsResult : any[] = []
+  localResult: any[] = []
+  goodsResult: any[] = []
   loading: boolean = false
   GOODS_RIGHTS = GOODS_RIGHTS
   RETAIL_PRICE_RIGHTS = RETAIL_PRICE_RIGHTS
@@ -78,7 +78,7 @@ export class RetailPriceComponent {
     this.search()
   }
 
-  getAllLocal(){
+  getAllLocal() {
     this._serviceLocal.getall().subscribe({
       next: (data) => {
         this.localResult = data
@@ -89,7 +89,7 @@ export class RetailPriceComponent {
     })
   }
 
-  getAllGoods(){
+  getAllGoods() {
     this._serviceGoods.getall().subscribe({
       next: (data) => {
         this.goodsResult = data
@@ -131,42 +131,57 @@ export class RetailPriceComponent {
     return this.paginationResult.data?.some((local: any) => local.code === code)
   }
 
+  checkDate() {
+    if (this.validateForm.get('toDate')?.value > this.validateForm.get('fromDate')?.value) {
+
+      return;
+    } else {
+      this.message.error("Ngày kết thúc phải lớn hơn ngày tạo")
+    }
+  }
+
   submitForm(): void {
     this.isSubmit = true
-    if (this.validateForm.valid) {
-      const formData = this.validateForm.getRawValue()
-      if (this.edit) {
-        this._service.updateRetailPrice(formData).subscribe({
-          next: (data) => {
-            this.search()
-          },
-          error: (response) => {
-            console.log(response)
-          },
-        })
-      } else {
-        if (this.isCodeExist(formData.code)) {
-          this.message.error(
-            `Mã khu vục ${formData.code} đã tồn tại, vui lòng nhập lại`,
-          )
-          return
+
+    if (this.validateForm.get('toDate')?.value > this.validateForm.get('fromDate')?.value) {
+
+      if (this.validateForm.valid) {
+        const formData = this.validateForm.getRawValue()
+        if (this.edit) {
+          this._service.updateRetailPrice(formData).subscribe({
+            next: (data) => {
+              this.search()
+            },
+            error: (response) => {
+              console.log(response)
+            },
+          })
+        } else {
+          if (this.isCodeExist(formData.code)) {
+            this.message.error(
+              `Mã khu vục ${formData.code} đã tồn tại, vui lòng nhập lại`,
+            )
+            return
+          }
+          this._service.createRetailPrice(formData).subscribe({
+            next: (data) => {
+              this.search()
+            },
+            error: (response) => {
+              console.log(response)
+            },
+          })
         }
-        this._service.createRetailPrice(formData).subscribe({
-          next: (data) => {
-            this.search()
-          },
-          error: (response) => {
-            console.log(response)
-          },
+      } else {
+        Object.values(this.validateForm.controls).forEach((control) => {
+          if (control.invalid) {
+            control.markAsDirty()
+            control.updateValueAndValidity({ onlySelf: true })
+          }
         })
       }
     } else {
-      Object.values(this.validateForm.controls).forEach((control) => {
-        if (control.invalid) {
-          control.markAsDirty()
-          control.updateValueAndValidity({ onlySelf: true })
-        }
-      })
+      this.message.error("Ngày kết thúc phải lớn hơn ngày tạo")
     }
   }
 
@@ -209,13 +224,11 @@ export class RetailPriceComponent {
   // }
 
   openEdit(data: any) {
-    console.log(data);
-
     this.validateForm.patchValue({
       code: data.code,
       goodsCode: data.goodsCode,
       localCode: data.localCode,
-      startDate: data.createDate,
+      fromDate: data.fromDate,
       toDate: data.toDate,
       oldPrice: data.oldPrice,
       newPrice: data.newPrice,

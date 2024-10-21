@@ -25,8 +25,8 @@ namespace DMS.CORE.Entities.MD
         [Column("TO_DATE", TypeName = "DATETIME")]
         public DateTime ToDate { set; get; }
 
-        [Column("CREATE_DATE", TypeName = "DATETIME")]
-        public DateTime? CreateDate { set; get; }
+        [Column("FROM_DATE", TypeName = "DATETIME")]
+        public DateTime? FromDate { set; get; }
 
         [Column("OLD_PRICE", TypeName = "FLOAT")]
         public float OldPrice { set; get; }

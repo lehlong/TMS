@@ -13,7 +13,7 @@ namespace DMS.CORE.Entities.MD
     public class TblMdLaiGopDieuTiet : SoftDeleteEntity
     {
         [Key]
-        [Column("CODE", TypeName = "VARCHAR(50)")]
+        [Column("CODE", TypeName = "VARCHAR(1000)")]
         public string Code { set; get; }
 
         [Column("GOODS_CODE", TypeName = "VARCHAR(50)")]    
@@ -21,6 +21,9 @@ namespace DMS.CORE.Entities.MD
 
         [Column("MARKET_CODE", TypeName = "VARCHAR(50)")]
         public string MarketCode { set; get; }
+
+        [Column("FROM_DATE", TypeName = "DATETIME")]
+        public DateTime? FromDate { set; get; }
 
         [Column("TO_DATE", TypeName = "DATETIME")]
         public DateTime ToDate { set; get; }

@@ -128,7 +128,7 @@
           ></app-input-clear>
 
       </div>
-      <div >
+      <div style="padding: 0 12px;">
         <app-input-clear placeholder="Quận / Huyện / Thành Phố" [required]="true" label="Địa chỉ "
           [control]="$any(validateForm).controls['address']"
           ></app-input-clear>
@@ -178,7 +178,7 @@
       </div>
       <!-- <div class="" nzWidth="100%"> -->
 
-        <div  nzJustify="space-evenly" >
+        <div  nzJustify="space-evenly" style="padding: 0 12px;">
           <nz-form-item nzSpan="12" >
             <nz-form-label  >Thông tin mua hàng</nz-form-label>
             <textarea nz-input [nzAutosize]="{ minRows: 3, maxRows: 5 }" placeholder="Thông tin mua hàng"  label="Thông tin mua hàng"
@@ -187,7 +187,7 @@
         </div>
       <!-- </div> -->
 
-      <nz-form-item>
+      <nz-form-item style="padding: 0 12px;">
         <nz-form-label>Trạng thái</nz-form-label>
         <nz-form-control>
           <nz-radio-group formControlName="isActive">

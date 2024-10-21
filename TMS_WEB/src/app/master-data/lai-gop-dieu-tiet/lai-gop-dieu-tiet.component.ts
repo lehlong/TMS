@@ -21,25 +21,26 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 })
 export class LaiGopDieuTietComponent {
   validateForm: FormGroup = this.fb.group({
-    code: ['', [Validators.required]],
+    code: [''],
     goodsCode: ['', [Validators.required]],
     marketCode: ['', [Validators.required]],
     price: ['', [Validators.required]],
+    fromDate: ['', [Validators.required]],
     toDate: ['', [Validators.required]],
     isActive: [true, [Validators.required]],
   })
-  validateCreateDate: FormGroup = this.fb.group({
-    startDate:  new Date()
-  })
+
   isSubmit: boolean = false
   visible: boolean = false
   edit: boolean = false
   filter = new LaiGopDieuTietFilter()
   paginationResult = new PaginationResult()
   goodsResult: any[] = []
-  createDate: any
   marketResult: any[] = []
-
+  marketList: any[] = []
+  createDate: string = ''
+  errorDate: string = ''
+  today = new Date()
   loading: boolean = false
   LAIGOPDIEUTIET_RIGHTS = LAIGOPDIEUTIET_RIGHTS
 
@@ -61,6 +62,7 @@ export class LaiGopDieuTietComponent {
     this.globalService.getLoading().subscribe((value) => {
       this.loading = value
     })
+    this.createDate = `${this.today.getDate().toString().padStart(2, '0')}/${(this.today.getMonth() + 1).toString().padStart(2, '0')}/${this.today.getFullYear()}`
   }
 
   ngOnDestroy() {
@@ -71,7 +73,7 @@ export class LaiGopDieuTietComponent {
     this.getAllGoods()
     this.getAllMarket()
     this.search()
-    this.createDate = new Date()
+
   }
 
   onSortChange(name: string, value: any) {
@@ -95,7 +97,7 @@ export class LaiGopDieuTietComponent {
     })
   }
 
-  getAllGoods(){
+  getAllGoods() {
     this.isSubmit = false
     this._goodsService.getall().subscribe({
       next: (data) => {
@@ -106,7 +108,7 @@ export class LaiGopDieuTietComponent {
       },
     })
   }
-  getAllMarket(){
+  getAllMarket() {
     this.isSubmit = false
     this._marketService.getall().subscribe({
       next: (data) => {
@@ -116,6 +118,14 @@ export class LaiGopDieuTietComponent {
         console.log(response)
       },
     })
+  }
+
+  //V1_01-201004-17/10/1024
+  autoCreateCode(): void {
+    const marketCode = this.validateForm.get('marketCode')?.value
+    const goodsCode = this.validateForm.get('goodsCode')?.value
+    const newCode = `${marketCode}-${goodsCode}-${this.createDate}`
+    this.validateForm.patchValue({ code: newCode })
   }
 
   exportExcel() {
@@ -132,45 +142,63 @@ export class LaiGopDieuTietComponent {
         anchor.click()
       })
   }
+
   isCodeExist(code: string): boolean {
     return this.paginationResult.data?.some((local: any) => local.code === code)
   }
+
+  checkDate() {
+    if (this.validateForm.get('toDate')?.value > this.validateForm.get('fromDate')?.value) {
+
+      return;
+    } else {
+      this.message.error("Ngày kết thúc phải lớn hơn ngày tạo")
+    }
+  }
+
   submitForm(): void {
+    this.autoCreateCode()
     this.isSubmit = true
-    if (this.validateForm.valid) {
-      const formData = this.validateForm.getRawValue()
-      if (this.edit) {
-        this._service.updateLaiGopDieuTiet(formData).subscribe({
-          next: (data) => {
-            this.search()
-          },
-          error: (response) => {
-            console.log(response)
-          },
-        })
-      } else {
-        if (this.isCodeExist(formData.code)) {
-          this.message.error(
-            `Mã khu vục ${formData.code} đã tồn tại, vui lòng nhập lại`,
-          )
-          return
+    if (this.validateForm.get('toDate')?.value > this.validateForm.get('fromDate')?.value) {
+
+      if (this.validateForm.valid) {
+        const formData = this.validateForm.getRawValue()
+        console.log(formData);
+        if (this.edit) {
+          this._service.updateLaiGopDieuTiet(formData).subscribe({
+            next: (data) => {
+              this.search()
+            },
+            error: (response) => {
+              console.log(response)
+            },
+          })
+        } else {
+          if (this.isCodeExist(formData.code)) {
+            this.message.error(
+              `Mã khu vục ${formData.code} đã tồn tại, vui lòng nhập lại`,
+            )
+            return
+          }
+          this._service.createLaiGopDieuTiet(formData).subscribe({
+            next: (data) => {
+              this.search()
+            },
+            error: (response) => {
+              console.log(response)
+            },
+          })
         }
-        this._service.createLaiGopDieuTiet(formData).subscribe({
-          next: (data) => {
-            this.search()
-          },
-          error: (response) => {
-            console.log(response)
-          },
+      } else {
+        Object.values(this.validateForm.controls).forEach((control) => {
+          if (control.invalid) {
+            control.markAsDirty()
+            control.updateValueAndValidity({ onlySelf: true })
+          }
         })
       }
     } else {
-      Object.values(this.validateForm.controls).forEach((control) => {
-        if (control.invalid) {
-          control.markAsDirty()
-          control.updateValueAndValidity({ onlySelf: true })
-        }
-      })
+      this.message.error("Ngày kết thúc phải lớn hơn ngày tạo")
     }
   }
 
@@ -211,6 +239,7 @@ export class LaiGopDieuTietComponent {
       price: data.price,
       goodsCode: data.goodsCode,
       marketCode: data.marketCode,
+      fromDate: data.fromDate,
       toDate: data.toDate,
       isActive: data.isActive,
     })

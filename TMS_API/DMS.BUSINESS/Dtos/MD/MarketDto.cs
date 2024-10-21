@@ -23,6 +23,9 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Tên thị trường")]
         public string Name { get; set; }
 
+        [Description("Khoảng cách")]
+        public decimal? Gap { get; set; }
+
         [Description("Mã vùng")]
         public string LocalCode { get; set; }
 

@@ -19,6 +19,9 @@ namespace DMS.CORE.Entities.MD
         [Column("NAME", TypeName = "NVARCHAR(255)")]
         public string Name { get; set; }
 
+        [Column("GAP", TypeName = "DECIMAL(18,0)")]
+        public decimal? Gap { get; set; }
+
         [Column("LOCAL_CODE", TypeName = "VARCHAR(50)")]
         public string LocalCode { get; set; }
 

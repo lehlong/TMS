@@ -19,6 +19,7 @@ export class MarketComponent {
   validateForm: FormGroup = this.fb.group({
     code: ['', [Validators.required]],
     name: ['', [Validators.required]],
+    gap: ['', [Validators.required]],
     localCode: ['', [Validators.required]],
     isActive: [true, [Validators.required]],
   })
@@ -183,10 +184,11 @@ export class MarketComponent {
     })
   }
 
-  openEdit(data: { code: string; name: string; isActive: boolean; localCode: string }) {
+  openEdit(data: any) {
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
+      gap: data.gap,
       localCode: data.localCode,
       isActive: data.isActive,
     })

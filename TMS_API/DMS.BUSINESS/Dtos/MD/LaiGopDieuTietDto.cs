@@ -26,14 +26,17 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Mã thị trường")]
         public string MarketCode { get; set; }
 
-        [Description("Ngày bắt đầu")]
-        public DateTime? CreateDate { get; set; }
+        [Description("Ngày tạo")]
+        public DateTime? FromDate { get; set; }
 
         [Description("Đến ngày")]
         public DateTime ToDate { get; set; }
 
         [Description("Giá bán")]
         public float Price { get; set; }
+
+        [Description("Ngày tạo")]
+        public DateTime? CreateDate { get; set; }
 
         [Description("Trạng thái")]
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }

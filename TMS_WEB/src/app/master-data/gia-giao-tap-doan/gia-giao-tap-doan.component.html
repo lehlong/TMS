@@ -1,6 +1,6 @@
 <div class="container-list" [appPermission]="GIA_GIAO_TAP_DOAN_RIGHTS.LIST">
   <div class="site-page-header-ghost-wrapper">
-    <nz-page-header nzBackIcon nzTitle="Giá bán lẻ" nzSubtitle="Danh sách giá bán lẻ" class="site-page-header">
+    <nz-page-header nzBackIcon nzTitle="Giá giao tập đoàn" nzSubtitle="Danh sách giá giao tập đoàn" class="site-page-header">
       <nz-page-header-extra>
         <nz-space [nzWrap]="true" class="gap-[5px]">
           <nz-space>
@@ -54,11 +54,11 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('newPrice', $event)">
             Giá mới
           </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('createDate', $event)" nzAlign="center">
-            Ngày bắt đầu
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('formDate', $event)" nzAlign="center">
+            Từ ngày
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('toDate', $event)" nzAlign="center">
-            Ngày kết thúc
+            Đến ngày
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('isActive', $event)" nzAlign="center">
             Trạng thái
@@ -85,7 +85,7 @@
           </td>
           <td>{{ data.oldPrice }}</td>
           <td>{{ data.newPrice }}</td>
-          <td>{{ data.createDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+          <td>{{ data.fromDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td>{{ data.toDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
@@ -135,17 +135,17 @@
 
       <div nz-col style=" display: flex;">
         <nz-form-item style="padding-right: 16px;">
-          <nz-form-label>Ngày bắt đầu</nz-form-label>
-          <nz-form-control>
-            <nz-date-picker [disabled]="true" style="width: 100%" formControlName="createDate" ></nz-date-picker>
+          <nz-form-label [nzRequired]="true">Từ ngày</nz-form-label>
+          <nz-form-control nzErrorTip="Không đươc để trống">
+            <nz-date-picker style="width: 100%" formControlName="fromDate" ></nz-date-picker>
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzRequired]="true">Ngày kết thúc</nz-form-label>
+          <nz-form-label [nzRequired]="true">Đến ngày</nz-form-label>
           <nz-form-control nzErrorTip="Không đươc để trống">
             <nz-date-picker style="width: 100%" formControlName="toDate"
-              nzPlaceHolder="Chọn ngày bắt đầu"></nz-date-picker>
+              nzPlaceHolder="Đến ngày"></nz-date-picker>
           </nz-form-control>
         </nz-form-item>
       </div>

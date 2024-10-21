@@ -43,8 +43,8 @@
             Giá bán
           </th>
 
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('createDate', $event)" nzAlign="center">
-            Ngày tạo
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('fromDate', $event)" nzAlign="center">
+            Từ ngày
           </th>
 
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('toDate', $event)" nzAlign="center">
@@ -82,7 +82,7 @@
 
           <td nzAlign="center">{{ data.price }}</td>
 
-          <td nzAlign="center">{{ data.createDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+          <td nzAlign="center">{{ data.fromDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">{{ data.toDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
@@ -113,13 +113,13 @@
 </div>
 
 <!--Create Update-->
-<nz-drawer nzWidth="40%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+<nz-drawer nzWidth="35%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
       <app-input-clear placeholder="Nhập mã " [required]="true" label="Mã "
         [control]="$any(validateForm).controls['code']" [required]="true"
-        [disabled]="edit ? true : false"></app-input-clear>
+        [disabled]="true"></app-input-clear>
 
         <nz-form-item>
           <nz-form-label [nzRequired]="true">Thị Trường</nz-form-label>
@@ -146,19 +146,19 @@
       <app-input-clear placeholder="Nhập giá bán" [required]="true" label="Giá bán "
         [control]="$any(validateForm).controls['price']"></app-input-clear>
 
-        <div nz-col style=" display: flex;">
-          <nz-form-item style="padding-right: 16px;">
-            <nz-form-label>Ngày bắt đầu</nz-form-label>
-            <nz-form-control>
-              <app-input-clear style="width: 100%" >{{ this.createDate }}</app-input-clear>
+        <div nz-row nzJustify="space-between">
+          <nz-form-item nzSpan="12">
+            <nz-form-label >Từ ngày </nz-form-label>
+            <nz-form-control nzErrorTip="Không đươc để trống">
+              <nz-date-picker style="width: 100%" formControlName="fromDate" nzPlaceHolder="Từ ngày" ></nz-date-picker>
             </nz-form-control>
           </nz-form-item>
 
-          <nz-form-item>
-            <nz-form-label [nzRequired]="true">Ngày kết thúc</nz-form-label>
-            <nz-form-control nzErrorTip="Không đươc để trống">
+          <nz-form-item nzSpan="12">
+            <nz-form-label [nzRequired]="true">Đến ngày</nz-form-label>
+            <nz-form-control [nzErrorTip]="this.errorDate">
               <nz-date-picker style="width: 100%" formControlName="toDate"
-                nzPlaceHolder="Chọn ngày bắt đầu"></nz-date-picker>
+                nzPlaceHolder="đến ngày"></nz-date-picker>
             </nz-form-control>
           </nz-form-item>
         </div>
