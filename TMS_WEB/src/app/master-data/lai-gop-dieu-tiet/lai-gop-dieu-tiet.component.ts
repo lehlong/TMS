@@ -72,8 +72,6 @@ export class LaiGopDieuTietComponent {
     this.getAllMarket()
     this.search()
     this.createDate = new Date()
-    console.log(this.createDate)
-
   }
 
   onSortChange(name: string, value: any) {

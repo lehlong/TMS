@@ -62,7 +62,7 @@
               <span *ngIf="item.code == data.localCode">{{ item.name }}</span>
             </span>
           </td>
-          <td>{{ data.createDate }}</td>
+          <td>{{ data.createDate | date: 'dd/MM/yyyy HH:mm' }}</td>
 
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"

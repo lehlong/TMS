@@ -93,8 +93,6 @@ export class CustomerComponent {
     this.isSubmit = false
     this._service.searchCustomer(this.filter).subscribe({
       next: (data) => {
-        console.log(data);
-
         this.paginationResult = data
       },
       error: (response) => {
