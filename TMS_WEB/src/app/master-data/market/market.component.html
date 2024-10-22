@@ -41,10 +41,10 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('localCode', $event)">
             Vùng
           </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('gap', $event)">
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('cpChungChuaCuocVCs', $event)">
             CP chung chưa cước VC
           </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('gap', $event)">
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('cuocVCBQ', $event)">
             Cước VC BQ
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('createDate', $event)">
@@ -72,8 +72,8 @@
               <span *ngIf="item.code == data.localCode">{{ item.name }}</span>
             </span>
           </td>
+          <td>{{ data.cpChungChuaCuocVC }}</td>
           <td>{{ data.cuocVCBQ }}</td>
-          <td>{{ data.cPChungChuaCuocVC }}</td>
           <td>{{ data.createDate | date: 'dd/MM/yyyy HH:mm' }}</td>
 
           <td nzAlign="center">
@@ -121,7 +121,7 @@
       [control]="$any(validateForm).controls['cuocVCBQ']"></app-input-clear>
 
       <app-input-clear placeholder="CP chung chưa cước VC" [required]="true" label="CP chung chưa cước VC"
-      [control]="$any(validateForm).controls['cPChungChuaCuocVC']"></app-input-clear>
+      [control]="$any(validateForm).controls['cpChungChuaCuocVC']"></app-input-clear>
 
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>
