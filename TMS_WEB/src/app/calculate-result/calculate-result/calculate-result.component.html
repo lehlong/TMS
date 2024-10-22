@@ -30,11 +30,11 @@
                     <thead>
                         <tr>
                             <th rowspan="4">STT</th>
-                            <th rowspan="4">Thị trường</th>
-                            <th rowspan="4">Cự ly BQ (Km)</th>
+                            <th rowspan="4" class="align-center">Thị trường</th>
+                            <th rowspan="4" class="align-center">Cự ly <br> BQ (Km)</th>
                             <th colspan="{{ data.lstGoods.length }}">Lãi gộp chưa VAT</th>
                             <th colspan="3">Chi phí phát sinh chưa có VAT</th>
-                            <th colspan="2">CK điều tiết</th>
+                            <th colspan="2">CK điều tiết (-/+)</th>
                             <th colspan="{{ data.lstGoods.length * 2 }}">Đề xuất mức giảm giá tại kho khách hàng</th>
                             <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
     
@@ -44,10 +44,10 @@
                         <tr>
                             <th rowspan="2" *ngFor="let item of data.lstGoods; let i = index">{{
                                 item.name }}</th>
-                            <th rowspan="2">CP chung chưa cước VC</th>
-                            <th rowspan="2">Cước VC bình quân</th>
                             <th rowspan="2">Tổng chi phí</th>
-    
+                            <th rowspan="2" class="align-center">CP chung <br> chưa cước VC</th>
+                            <th rowspan="2" class="align-center">Cước VC <br> bình quân</th>
+
                             <th rowspan="2">Xăng có VAT</th>
                             <th rowspan="2">Dầu có VAT</th>
     
@@ -80,15 +80,9 @@
                             @for (g of data.lstGoods; track g) {
                                 <td></td>
                             }
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td class="align-right">{{ t.col3 }}</td>
+                            <td class="align-right">{{ t.col4 }}</td>
+                            <td class="align-right">{{ t.col5 }}</td>
                             <td></td>
                             <td></td>
                           </tr>
@@ -99,6 +93,11 @@
                             @for (l of t.lg; track l) {
                                 <td class="align-right">{{l}}</td>
                             }
+                            <td class="align-right">{{ t.col3 }}</td>
+                            <td class="align-right">{{ t.col4 }}</td>
+                            <td class="align-right">{{ t.col5 }}</td>
+                            <td></td>
+                            <td></td>
                           </tr>
                         }
                       </tbody>

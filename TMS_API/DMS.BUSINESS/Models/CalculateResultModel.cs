@@ -19,6 +19,9 @@ namespace DMS.BUSINESS.Models
         public string ColB { get; set; }
         public decimal? Col1 { get; set; }
         public List<decimal?> LG { get; set; } = new List<decimal?>();
+        public decimal? Col3 { get; set; }
+        public decimal? Col4 { get; set; }
+        public decimal? Col5 { get; set; }
         public int Order { get; set; }
         public bool IsBold { get; set; }
 

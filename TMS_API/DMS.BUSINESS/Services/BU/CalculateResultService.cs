@@ -51,8 +51,11 @@ namespace DMS.BUSINESS.Services.BU
                             ColA = orderPT.ToString(),
                             ColB = m.Name,
                             Col1 = m.Gap,
+                            Col3 = m.CPChungChuaCuocVC + m.CuocVCBQ,
+                            Col4 = m.CPChungChuaCuocVC,
+                            Col5 = m.CuocVCBQ,
                         };
-                        foreach(var _l in lstGoods)
+                        foreach (var _l in lstGoods)
                         {
                             var _c = lstLGDT.Where(x => x.MarketCode == m.Code && x.GoodsCode == _l.Code);
                             i.LG.Add(_c == null || _c.Count() == 0 ? 0 : _c.Sum(x => x.Price));
