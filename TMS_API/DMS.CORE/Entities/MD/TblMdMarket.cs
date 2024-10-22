@@ -25,5 +25,11 @@ namespace DMS.CORE.Entities.MD
         [Column("LOCAL_CODE", TypeName = "VARCHAR(50)")]
         public string LocalCode { get; set; }
 
+        [Column("CUOC_VC_BQ", TypeName = "DECIMAL(18,0)")]
+        public decimal? CuocVCBQ { get; set; }
+
+        [Column("CP_CHUNG_CHUA_CUOC_VC", TypeName = "DECIMAL(18,0)")]
+        public decimal? CPChungChuaCuocVC { get; set; }
+
     }
 }

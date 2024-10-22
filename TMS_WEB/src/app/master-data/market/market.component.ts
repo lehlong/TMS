@@ -20,6 +20,8 @@ export class MarketComponent {
     code: ['', [Validators.required]],
     name: ['', [Validators.required]],
     gap: ['', [Validators.required]],
+    cuocVCBQ: ['', [Validators.required]],
+    cPChungChuaCuocVC: ['', [Validators.required]],
     localCode: ['', [Validators.required]],
     isActive: [true, [Validators.required]],
   })
@@ -189,6 +191,8 @@ export class MarketComponent {
       code: data.code,
       name: data.name,
       gap: data.gap,
+      cuocVCBQ: data.cuocVCBQ,
+      cPChungChuaCuocVC: data.cPChungChuaCuocVC,
       localCode: data.localCode,
       isActive: data.isActive,
     })

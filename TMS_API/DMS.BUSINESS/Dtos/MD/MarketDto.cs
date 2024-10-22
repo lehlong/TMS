@@ -26,6 +26,12 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Khoảng cách")]
         public decimal? Gap { get; set; }
 
+        [Description("Cước VC bình quân")]
+        public decimal? CuocVCBQ { get; set; }
+
+        [Description("CP chung chưa Cước VC")]
+        public decimal? CPChungChuaCuocVC { get; set; }
+
         [Description("Mã vùng")]
         public string LocalCode { get; set; }
 
