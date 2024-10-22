@@ -1,0 +1,159 @@
+<div class="container-list">
+    <div class="site-page-header-ghost-wrapper">
+        <nz-page-header nzTitle="KẾT QUẢ TÍNH TOÁN ĐẦU RA" class="site-page-header">
+            <nz-page-header-extra>
+                <nz-space [nzWrap]="true" class="gap-[5px]">
+                    <nz-space>
+                        <nz-range-picker [nzShowTime]="true" [(ngModel)]="date"
+                            (ngModelChange)="onChangeDate($event)"></nz-range-picker><br />
+                        <button class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+                            nzType="default">
+                            <span nz-icon nzType="search"></span>
+                        </button>
+                        <button class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+                            nzType="default">
+                            <span nz-icon nzType="redo"></span>
+                        </button>
+                    </nz-space>
+                    <button class="!flex !items-center" nzType="primary" nz-button>
+                        <span nz-icon nzType="plus-circle"></span> Xuất Excel
+                    </button>
+                </nz-space>
+            </nz-page-header-extra>
+        </nz-page-header>
+    </div>
+
+    <nz-tabset>
+        <nz-tab nzTitle="PT">
+            <div style="overflow: auto; height: calc(100vh - 210px);">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered  #ptTable [nzData]="data.pt">
+                    <thead>
+                        <tr>
+                            <th rowspan="4">STT</th>
+                            <th rowspan="4">Thị trường</th>
+                            <th rowspan="4">Cự ly BQ (Km)</th>
+                            <th colspan="{{ data.lstGoods.length }}">Lãi gộp chưa VAT</th>
+                            <th colspan="3">Chi phí phát sinh chưa có VAT</th>
+                            <th colspan="2">CK điều tiết</th>
+                            <th colspan="{{ data.lstGoods.length * 2 }}">Đề xuất mức giảm giá tại kho khách hàng</th>
+                            <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
+    
+                            <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">{{
+                                item.name }}</th>
+                        </tr>
+                        <tr>
+                            <th rowspan="2" *ngFor="let item of data.lstGoods; let i = index">{{
+                                item.name }}</th>
+                            <th rowspan="2">CP chung chưa cước VC</th>
+                            <th rowspan="2">Cước VC bình quân</th>
+                            <th rowspan="2">Tổng chi phí</th>
+    
+                            <th rowspan="2">Xăng có VAT</th>
+                            <th rowspan="2">Dầu có VAT</th>
+    
+                            <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">{{
+                                item.name }}</th>
+    
+                            <th rowspan="2" *ngFor="let item of data.lstGoods; let i = index">{{
+                                item.name }}</th>
+    
+                            @for (i of data.lstGoods; track i){
+                            <th rowspan="2">Chưa VAT, BVMT</th>
+                            <th rowspan="2">Có VAT, BVMT</th>
+                            }
+    
+                        </tr>
+                        <tr>
+                            @for (i of data.lstGoods; track i){
+                            <th rowspan="2">Chưa VAT</th>
+                            <th rowspan="2">Có VAT</th>
+                            }
+                        </tr>
+    
+                    </thead>
+                    <tbody>
+                        @for (t of ptTable.data; track t) {
+                          <tr *ngIf="t.isBold == true" style="font-weight: bold;">
+                            <td>{{ t.colA }}</td>
+                            <td>{{ t.colB }}</td>
+                            <td class="align-right">{{ t.col1 }}</td>
+                            @for (g of data.lstGoods; track g) {
+                                <td></td>
+                            }
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr *ngIf="t.isBold == false">
+                            <td >{{ t.colA }}</td>
+                            <td>{{ t.colB }}</td>
+                            <td class="align-right">{{ t.col1 }}</td>
+                            @for (l of t.lg; track l) {
+                                <td class="align-right">{{l}}</td>
+                            }
+                          </tr>
+                        }
+                      </tbody>
+    
+                </nz-table>
+            </div>
+            
+        </nz-tab>
+        <nz-tab nzTitle="ĐB">
+
+        </nz-tab>
+        <nz-tab nzTitle="FOB">
+
+        </nz-tab>
+        <nz-tab nzTitle="PT09">
+
+        </nz-tab>
+        <nz-tab nzTitle="BB DO">
+
+        </nz-tab>
+        <nz-tab nzTitle="BB FO">
+
+        </nz-tab>
+        <nz-tab nzTitle="PL1">
+
+        </nz-tab>
+        <nz-tab nzTitle="PL2">
+
+        </nz-tab>
+        <nz-tab nzTitle="PL3">
+
+        </nz-tab>
+        <nz-tab nzTitle="PL4">
+
+        </nz-tab>
+        <nz-tab nzTitle="VK11 PT">
+
+        </nz-tab>
+        <nz-tab nzTitle="VK11 ĐB">
+
+        </nz-tab>
+        <nz-tab nzTitle="VK11-FOB">
+
+        </nz-tab>
+        <nz-tab nzTitle="VK11-TNPP">
+
+        </nz-tab>
+        <nz-tab nzTitle="PTS">
+
+        </nz-tab>
+        <nz-tab nzTitle="VK11 BB">
+
+        </nz-tab>
+        <nz-tab nzTitle="Tổng hợp">
+
+        </nz-tab>
+    </nz-tabset>
+</div>

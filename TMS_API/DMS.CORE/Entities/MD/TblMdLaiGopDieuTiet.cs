@@ -28,8 +28,8 @@ namespace DMS.CORE.Entities.MD
         [Column("TO_DATE", TypeName = "DATETIME")]
         public DateTime ToDate { set; get; }
 
-        [Column("PRICE", TypeName = "FLOAT")]
-        public float Price { set; get; }
+        [Column("PRICE", TypeName = "DECIMAL(18,0)")]
+        public decimal? Price { set; get; }
 
     }
 }
