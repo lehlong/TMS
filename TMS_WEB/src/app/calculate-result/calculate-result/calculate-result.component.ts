@@ -25,6 +25,10 @@ export class CalculateResultComponent {
   date: any = null
   data: any = {
     lstGoods: [],
+    dlg: {
+      dlg_1: [],
+      dlg_2: [],
+    },
     pt: [],
   }
 

@@ -33,6 +33,32 @@ namespace DMS.BUSINESS.Services.BU
                 data.lstGoods = lstGoods;
                 var lstMarket = await _dbContext.TblMdMarket.OrderBy(x => x.Code).ToListAsync();
                 var lstLGDT = await _dbContext.TblMdLaiGopDieuTiet.ToListAsync();
+                var dataVCL = await _dbContext.TblInVinhCuaLo.ToListAsync();
+                #region DLG
+                foreach(var g in lstGoods)
+                {
+                    var vcl = dataVCL.Where(x => x.GoodsCode == g.Code).ToList();
+                    data.DLG.Dlg_1.Add(new DLG_1
+                    {
+                        Code = g.Code,
+                        Col1 = g.Name,
+                        Col2 = vcl.Sum(x => x.GblcsV1),
+                        Col3 = vcl.Sum(x => x.GblV2),
+                        Col4 = vcl.Sum(x => x.V2_V1),
+                        Col5 = vcl.Sum(x => x.MtsV1),
+                        Col6 = vcl.Sum(x => x.Gny),
+                        Col7 = vcl.Sum(x => x.Clgblv),
+                    });
+                    data.DLG.Dlg_2.Add(new DLG_2
+                    {
+                        Code = g.Code,
+                        Col1 = g.Name,
+                        Col2 = vcl.Sum(x => x.GblV2),
+                    });
+                }
+
+                #endregion
+
                 #region PT
                 var orderPT = 1;
                 foreach (var l in lstMarket.Select(x => x.LocalCode).Distinct().ToList())

@@ -11,6 +11,30 @@ namespace DMS.BUSINESS.Models
     {
         public List<PT> PT { get; set; } = new List<PT>();
         public List<TblMdGoods> lstGoods { get; set; }
+        public DLG DLG { get; set; } = new DLG();
+    }
+    public class DLG
+    {
+        public List<DLG_1> Dlg_1 { get; set; } = new List<DLG_1>();
+        public List<DLG_2> Dlg_2 { get; set; } = new List<DLG_2>();
+
+    }
+    public class DLG_1
+    {
+        public string Code { get; set; }
+        public string Col1 { get; set; }
+        public decimal? Col2 { get; set; }
+        public decimal? Col3 { get; set; }
+        public decimal? Col4 { get; set; }
+        public decimal? Col5 { get; set; }
+        public decimal? Col6 { get; set; }
+        public decimal? Col7 { get; set; }
+    }
+    public class DLG_2
+    {
+        public string Code { get; set; }
+        public string Col1 { get; set; }
+        public decimal? Col2 { get; set; }
     }
     public class PT
     {

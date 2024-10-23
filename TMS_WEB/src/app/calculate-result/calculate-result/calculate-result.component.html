@@ -25,54 +25,88 @@
 
     <nz-tabset>
         <nz-tab nzTitle="Dữ liệu gốc">
-            <div>
-                <p>1. Thị trường thành phố Vinh, TX Cửa Lò</p>
-            <nz-table #dlgTable_1 [nzData]="data" nzBordered nzSize="small">
-                <thead>
-                    <tr>
-                        <th class="align-center" rowspan="2">MĂT HÀNG</th>
-                        <th class="align-center" rowspan="2">GIÁ BÁN LẺ CƠ SỞ <br> (Giá vùng 1 TĐ công bố)</th>
-                        <th class="align-center" rowspan="2">GIÁ BÁN LẺ VÙNG 2 <br> (TĐ công bố)</th>
-                        <th class="align-center" rowspan="2">CHỆNH LỆCH <br> GIÁ V2-V1</th>
-                        <th class="align-center" colspan="2">ĐỀ XUẤT GIÁ BÁN LẺ <br> VÙNG TT TRUNG TÂM</th>
-                        <th class="align-center" rowspan="2">CHÊNH LỆCH GIÁ BÁN LẺ <br> VÙNG TT VÀ CÒN LẠI</th>
-                        <th class="align-center" rowspan="2">ĐÁNH GIÁ</th>
-                    </tr>
-                    <tr>
-                        <th class="align-center">Mức tăng so VÙNG 1</th>
-                        <th class="align-center">Giá niêm yết</th>
-                    </tr>
-                </thead>
-                <tbody>
-            
-                </tbody>
-            </nz-table>
+            <div style="overflow-y: auto !important; height: calc(100vh - 206px) !important;">
+                <div nz-row [nzGutter]="16">
+                    <div nz-col class="gutter-row" [nzSpan]="16">
+                        <div class="inner-box">
+                            <p>1. Thị trường thành phố Vinh, TX Cửa Lò</p>
+                            <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered
+                                #dlgTable_1 [nzData]="data.dlg.dlg_1">
+                                <thead>
+                                    <tr>
+                                        <th class="align-center" rowspan="2">MẶT HÀNG</th>
+                                        <th class="align-center" rowspan="2">GIÁ BÁN LẺ CƠ SỞ <br> (Giá vùng 1 TĐ công
+                                            bố)</th>
+                                        <th class="align-center" rowspan="2">GIÁ BÁN LẺ VÙNG 2 <br> (TĐ công bố)</th>
+                                        <th class="align-center" rowspan="2">CHỆNH LỆCH <br> GIÁ V2-V1</th>
+                                        <th class="align-center" colspan="2">ĐỀ XUẤT GIÁ BÁN LẺ <br> VÙNG TT TRUNG TÂM
+                                        </th>
+                                        <th class="align-center" rowspan="2">CHÊNH LỆCH GIÁ BÁN LẺ <br> VÙNG TT VÀ CÒN
+                                            LẠI</th>
+                                        <th class="align-center" rowspan="2">ĐÁNH GIÁ</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="align-center">Mức tăng so VÙNG 1</th>
+                                        <th class="align-center">Giá niêm yết</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (d of dlgTable_1.data; track d) {
+                                    <tr>
+                                        <td>{{d.col1}}</td>
+                                        <td class="align-right">{{d.col2 | number}}</td>
+                                        <td class="align-right">{{d.col3 | number}}</td>
+                                        <td class="align-right">{{d.col4 | number}}</td>
+                                        <td class="align-right">{{d.col5 | number}}</td>
+                                        <td class="align-right">{{d.col6 | number}}</td>
+                                        <td class="align-right">{{d.col7 | number}}</td>
+                                        <td></td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </nz-table>
+                        </div>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="8">
+                        <div class="inner-box">
+                            <p>2. Các huyện thị còn lại trên địa bàn Nghệ An + địa bàn Hà Tĩnh</p>
+                            <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered
+                                #dlgTable_2 [nzData]="data.dlg.dlg_2">
+                                <thead>
+                                    <tr>
+                                        <th class="align-center">MẶT HÀNG</th>
+                                        <th class="align-center">GIÁ BÁN LẺ <br>(Bằng giá bán lẻ vùng 2 TĐ
+                                            công bố)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (d of dlgTable_2.data; track d) {
+                                        <tr>
+                                            <td>{{d.col1}}</td>
+                                            <td class="align-right">{{d.col2 | number}}</td>
+                                        </tr>
+                                        }
+                                </tbody>
+                            </nz-table>
+                        </div>
+                    </div>
+                </div>
 
-            <p class="p-m">2. Các huyện thị còn lại trên địa bàn Nghệ An + địa bàn Hà Tĩnh</p>
-            <nz-table #dlgTable_2 [nzData]="data" nzBordered nzSize="small" nzWidth="40%">
-                <thead>
-                    <tr>
-                        <th class="align-center" rowspan="2">MẶT HÀNG</th>
-                        <th class="align-center" rowspan="2">GIÁ BÁN LẺ <br>(Bằng giá bán lẻ vùng 2 TĐ công bố)</th>
-                    </tr>
-                </thead>
-                <tbody>
-            
-                </tbody>
-            </nz-table>
 
 
 
-            <p class="p-m">BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (PT bán lẻ - V2)</p>
-            <p class="p-m">BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (ngoài bán lẻ)</p>
-            <p class="p-m">BIỂU TÍNH GIÁ XUẤT NỘI DỤNG</p>
-            <p class="p-m">BIỂU TÍNH GIÁ BÁN CHO CÔNG TY CP VẬN TẢI VÀ DỊCH VỤ PETROLIMEX NGHỆ TĨNH</p>
+
+                <p class="p-m">BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (PT bán lẻ - V2)</p>
+                <p class="p-m">BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (ngoài bán lẻ)</p>
+                <p class="p-m">BIỂU TÍNH GIÁ XUẤT NỘI DỤNG</p>
+                <p class="p-m">BIỂU TÍNH GIÁ BÁN CHO CÔNG TY CP VẬN TẢI VÀ DỊCH VỤ PETROLIMEX NGHỆ TĨNH</p>
             </div>
-            
+
         </nz-tab>
         <nz-tab nzTitle="PT">
             <div style="overflow: auto; height: calc(100vh - 210px);">
-                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered  #ptTable [nzData]="data.pt">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #ptTable
+                    [nzData]="data.pt">
                     <thead>
                         <tr>
                             <th rowspan="4">STT</th>
@@ -119,34 +153,34 @@
                     </thead>
                     <tbody>
                         @for (t of ptTable.data; track t) {
-                          <tr *ngIf="t.isBold == true" style="font-weight: bold;">
+                        <tr *ngIf="t.isBold == true" style="font-weight: bold;">
                             <td>{{ t.colA }}</td>
                             <td>{{ t.colB }}</td>
-                            <td class="align-right">{{ t.col1 }}</td>
+                            <td class="align-right">{{ t.col1}}</td>
                             @for (g of data.lstGoods; track g) {
-                                <td></td>
+                            <td></td>
                             }
                             <td class="align-right">{{ t.col3 }}</td>
                             <td class="align-right">{{ t.col4 }}</td>
                             <td class="align-right">{{ t.col5 }}</td>
                             <td></td>
                             <td></td>
-                          </tr>
-                          <tr *ngIf="t.isBold == false">
-                            <td >{{ t.colA }}</td>
+                        </tr>
+                        <tr *ngIf="t.isBold == false">
+                            <td>{{ t.colA }}</td>
                             <td>{{ t.colB }}</td>
-                            <td class="align-right">{{ t.col1 }}</td>
+                            <td class="align-right">{{ t.col1 | number}}</td>
                             @for (l of t.lg; track l) {
-                                <td class="align-right">{{l}}</td>
+                            <td class="align-right">{{l | number}}</td>
                             }
-                            <td class="align-right">{{ t.col3 }}</td>
-                            <td class="align-right">{{ t.col4 }}</td>
-                            <td class="align-right">{{ t.col5 }}</td>
+                            <td class="align-right">{{ t.col3 | number}}</td>
+                            <td class="align-right">{{ t.col4 | number }}</td>
+                            <td class="align-right">{{ t.col5 | number }}</td>
                             <td></td>
                             <td></td>
-                          </tr>
+                        </tr>
                         }
-                      </tbody>
+                    </tbody>
 
                 </nz-table>
             </div>
