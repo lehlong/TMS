@@ -16,7 +16,7 @@ namespace DMS.BUSINESS.Dtos.IN
 
         [Key]
         [Description("Mã")]
-        public string Code { get; set; }
+        public string? Code { get; set; }
 
         [Description("Mã mặt hàng")]
         public string GoodsCode { get; set; }

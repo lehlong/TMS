@@ -48,10 +48,10 @@ namespace DMS.API.Controllers.IN
             return Ok(transferObject);
         }
         [HttpPost("Insert")]
-        public async Task<IActionResult> Insert([FromBody] HeSoMatHangDto HeSoMatHang)
+        public async Task<IActionResult> Insert([FromBody] HeSoMatHangDto heSoMatHang)
         {
             var transferObject = new TransferObject();
-            await _service.Add(HeSoMatHang);
+            await _service.AddHeSoMatHang(heSoMatHang);
             if (_service.Status)
             {
                 //transferObject.Data = result;

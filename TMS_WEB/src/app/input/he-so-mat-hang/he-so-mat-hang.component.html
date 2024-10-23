@@ -35,18 +35,14 @@
           <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('goodsCode', $event)" >
             Mặt hàng
           </th>
-          <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('GblcsV1', $event)" nzAlign="center">
-            Giá bán lẻ CS <br> (giá V1 TĐ công bố)
+          <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('heSoVcf', $event)" nzAlign="center">
+            Hệ số VFC BQ mùa miền
           </th>
-          <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('GblV2', $event)" nzAlign="center">
-            Giá bán lẻ V2 <br> (TĐ công bố)
+          <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('l15ChuaVatBvmt', $event)" nzAlign="center">
+            Thuế BVMT
           </th>
-          <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('V2_V1', $event)" nzAlign="center">
-            Chênh lệch giá <br> V2-V1
-          </th>
-          <th colspan="2">Đề xuất giá bán lẻ vùng trung tâm </th>
-          <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('Clgblv', $event)" nzAlign="center">
-            Chênh lệch giá bán lẻ <br> vùng Trung tâm và còn lại
+          <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('thueBvmt', $event)" nzAlign="center">
+            L15 chưa VAT
           </th>
           <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('FromDate', $event)" nzAlign="center">
             Từ ngày
@@ -64,14 +60,7 @@
             Hành động
           </th> -->
         </tr>
-        <tr>
-          <th rowspan="1" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('MtsV1', $event)" nzAlign="center">
-            Mức Tăng so V1
-          </th>
-          <th rowspan="1" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('Gny', $event)" nzAlign="center">
-            Giá niêm yết
-          </th>
-        </tr>
+
       </thead>
       <tbody>
         <tr *ngFor="let data of headerTable.data; let i = index" (dblclick)="openEdit(data)">
@@ -86,12 +75,9 @@
               <span *ngIf="item.code == data.goodsCode">{{ item.code + ' - ' + item.name }}</span>
             </span>
           </td>
-          <td class="align-right">{{ data.gblcsV1 | number }}</td>
-          <td class="align-right">{{ data.gblV2 | number }}</td>
-          <td class="align-right">{{ data.v2_V1 | number }}</td>
-          <td class="align-right">{{ data.mtsV1 | number }}</td>
-          <td class="align-right">{{ data.gny | number }}</td>
-          <td class="align-right">{{ data.clgblv | number }}</td>
+          <td class="align-right">{{ data.heSoVcf | number }}</td>
+          <td class="align-right">{{ data.thueBvmt | number }}</td>
+          <td class="align-right">{{ data.l15ChuaVatBvmt | number }}</td>
           <td class="align-right">{{ data.fromDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td class="align-right">{{ data.toDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">
@@ -129,15 +115,14 @@
         </nz-form-control>
       </nz-form-item>
 
-      <app-input-clear placeholder="Nhập giá bán lẻ V1" [required]="true" label="Giá bán lẻ V1"
-      [control]="$any(validateForm).controls['GblcsV1']"></app-input-clear>
+      <app-input-clear placeholder="Nhập giá hệ số VCF" [required]="true" label="Hệ số VCF0"
+      [control]="$any(validateForm).controls['heSoVcf']"></app-input-clear>
 
-      <app-input-clear placeholder="Nhập giá bán lẻ v2" [required]="true" label="Giá bán lẻ v2 "
-      [control]="$any(validateForm).controls['GblV2']"></app-input-clear>
+      <app-input-clear placeholder="Nhập giá Thuế BVMT" [required]="true" label="Thuế BVMT "
+      [control]="$any(validateForm).controls['thueBvmt']"></app-input-clear>
 
-      <nz-form-label [nzRequired]="true">Đề xuất giá bán vùng Trung Tâm</nz-form-label>
-      <app-input-clear placeholder="Mức tăng so với V1" [required]="true" label="Mức tăng so với V1 "
-      [control]="$any(validateForm).controls['MtsV1']"></app-input-clear>
+      <app-input-clear placeholder="L15 chưa VAT và BVMT" [required]="true" label="L15 chưa VAT và BVMT"
+      [control]="$any(validateForm).controls['l15ChuaVatBvmt']"></app-input-clear>
 
       <nz-form-label [nzRequired]="true">Từ ngày -> Đến ngày</nz-form-label>
       <nz-range-picker [nzShowTime]="true" formControlName="date" (ngModelChange)="onChangeDate($event)"></nz-range-picker>

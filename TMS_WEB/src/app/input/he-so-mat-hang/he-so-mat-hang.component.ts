@@ -1,15 +1,12 @@
 import { Component } from '@angular/core'
 import { ShareModule } from '../../shared/share-module'
-import { LocalFilter } from '../../models/master-data/local.model'
 import { GlobalService } from '../../services/global.service'
-import { LocalService } from '../../services/master-data/local.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
 import { HE_SO_MAT_HANG_RIGHTS } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { HeSoMatHangFilter } from '../../models/input/he-so-mat-hang.model'
 import { HeSoMatHangService } from '../../services/input/he-so-mat-hang.service'
-import { GoodsComponent } from '../../master-data/goods/goods.component'
 import { GoodsService } from '../../services/master-data/goods.service'
 @Component({
   selector: 'app-local',
@@ -22,11 +19,11 @@ export class HeSoMatHangComponent {
   validateForm: FormGroup = this.fb.group({
     code: [''],
     goodsCode: ['', [Validators.required]],
-    GblcsV1: ['', [Validators.required]],
-    GblV2: ['', [Validators.required]],
-    MtsV1: ['', [Validators.required]],
-    FromDate: ['', [Validators.required]],
-    ToDate: ['', [Validators.required]],
+    heSoVcf: ['', [Validators.required]],
+    l15ChuaVatBvmt: ['', [Validators.required]],
+    thueBvmt: ['', [Validators.required]],
+    fromDate: ['', [Validators.required]],
+    toDate: ['', [Validators.required]],
     date: null,
     isActive: [true, [Validators.required]],
   })
@@ -103,8 +100,8 @@ export class HeSoMatHangComponent {
   onChangeDate(result: Date[]): void {
     if (result) {
       this.validateForm.patchValue({
-        FromDate: new Date(result[0].setHours(result[0].getHours() + 7)),
-        ToDate: new Date(result[1].setHours(result[1].getHours() + 7)),
+        fromDate: new Date(result[0].setHours(result[0].getHours() + 7)),
+        toDate: new Date(result[1].setHours(result[1].getHours() + 7)),
       })
     }else{
       return
@@ -132,6 +129,7 @@ export class HeSoMatHangComponent {
 
   submitForm(): void {
     this.isSubmit = true
+    console.log(this.validateForm.getRawValue());
 
     if (this.validateForm.valid) {
       const formData = this.validateForm.getRawValue()
@@ -198,9 +196,9 @@ export class HeSoMatHangComponent {
     this.validateForm.setValue({
       code : data.code,
       goodsCode: data.goodsCode,
-      GblcsV1: data.gblcsV1,
-      GblV2: data.gblV2,
-      MtsV1: data.mtsV1,
+      heSoVcf: data.heSoVcf,
+      thueBvmt: data.thueBvmt,
+      l15ChuaVatBvmt: data.l15ChuaVatBvmt,
       FromDate: data.fromDate,
       ToDate: data.toDate,
       isActive: data.isActive,

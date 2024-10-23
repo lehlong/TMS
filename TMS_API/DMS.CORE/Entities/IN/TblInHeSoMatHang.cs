@@ -10,7 +10,7 @@ namespace DMS.CORE.Entities.IN
     {
         [Key]
         [Column("CODE", TypeName = "VARCHAR(50)")]
-        public string Code { get; set; }
+        public string? Code { get; set; }
 
         [Column("GOODS_CODE", TypeName = "NVARCHAR(255)")]
         public string GoodsCode { get; set; }

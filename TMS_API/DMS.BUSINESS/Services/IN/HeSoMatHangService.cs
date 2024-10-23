@@ -15,6 +15,7 @@ namespace DMS.BUSINESS.Services.IN
     public interface IHeSoMatHangService : IGenericService<TblInHeSoMatHang, HeSoMatHangDto>
     {
         Task<IList<HeSoMatHangDto>> GetAll(BaseMdFilter filter);
+        Task AddHeSoMatHang(HeSoMatHangDto heSoMatHang);
         Task<byte[]> Export(BaseMdFilter filter);
     }
     public class HeSoMatHangService(AppDbContext dbContext, IMapper mapper) : GenericService<TblInHeSoMatHang, HeSoMatHangDto>(dbContext, mapper), IHeSoMatHangService
@@ -62,6 +63,31 @@ namespace DMS.BUSINESS.Services.IN
             }
         }
 
+
+        public async Task AddHeSoMatHang(HeSoMatHangDto heSoMatHang)
+        {
+            try
+            {
+                var lstHeSoMatHang = new TblInHeSoMatHang()
+                {
+                    Code = heSoMatHang.GoodsCode + "-" + DateTime.Now.ToString("ddMMyyyy"),
+                    GoodsCode = heSoMatHang.GoodsCode,
+                    HeSoVcf = heSoMatHang.HeSoVcf,
+                    ThueBvmt = heSoMatHang.ThueBvmt,
+                    L15ChuaVatBvmt = heSoMatHang.L15ChuaVatBvmt,
+                    FromDate = heSoMatHang.FromDate,
+                    ToDate = heSoMatHang.ToDate,
+                    IsActive = heSoMatHang.IsActive,
+                };
+                this._dbContext.TblInHeSoMatHang.Add(lstHeSoMatHang);
+                await this._dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+            }
+        }
 
         public async Task<byte[]> Export(BaseMdFilter filter)
         {
