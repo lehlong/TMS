@@ -199,8 +199,8 @@ export class HeSoMatHangComponent {
       heSoVcf: data.heSoVcf,
       thueBvmt: data.thueBvmt,
       l15ChuaVatBvmt: data.l15ChuaVatBvmt,
-      FromDate: data.fromDate,
-      ToDate: data.toDate,
+      fromDate: data.fromDate,
+      toDate: data.toDate,
       isActive: data.isActive,
       date: ''
     })

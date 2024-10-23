@@ -98,7 +98,7 @@ namespace DMS.BUSINESS.Services.IN
             {
                 var lstVinhCuaLo = new TblInVinhCuaLo()
                 {
-                    Code = vinhCuaLo.GoodsCode + "-" + DateTime.Now.ToString("ddMMyyyy"),
+                    Code = vinhCuaLo.Code,
                     GoodsCode = vinhCuaLo.GoodsCode,
                     GblcsV1 = vinhCuaLo.GblcsV1,
                     GblV2 = vinhCuaLo.GblV2,

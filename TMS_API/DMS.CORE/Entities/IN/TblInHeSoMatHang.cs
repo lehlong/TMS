@@ -15,7 +15,7 @@ namespace DMS.CORE.Entities.IN
         [Column("GOODS_CODE", TypeName = "NVARCHAR(255)")]
         public string GoodsCode { get; set; }
 
-        [Column("HE_SO_VCF", TypeName = "DECIMAL(18,0)")]
+        [Column("HE_SO_VCF", TypeName = "DECIMAL(18,4)")]
         public decimal HeSoVcf { get; set; }
 
         [Column("THUE_BVMT", TypeName = "DECIMAL(18,0)")]
