@@ -67,7 +67,7 @@ namespace DMS.BUSINESS.Services.IN
         {
             try
             {
-                var lstVinhCuaLo = new VinhCuaLoDto() 
+                var lstVinhCuaLo = new TblInVinhCuaLo()
                 {
                     Code = vinhCuaLo.Code,
                     GoodsCode = vinhCuaLo.GoodsCode,
