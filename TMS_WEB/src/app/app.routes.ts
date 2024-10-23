@@ -14,6 +14,7 @@ import {NotFoundComponent} from './not-found/not-found.component';
 import {MainLayoutComponent} from './layouts/main-layout/main-layout.component';
 import {BlankLayoutComponent} from './layouts/blank-layout/blank-layout.component';
 import { calculateResultRoutes } from './calculate-result/calculate-result.route';
+import { inputRoutes } from './input/input.routes';
 
 
 export const routes: Routes = [
@@ -23,11 +24,12 @@ export const routes: Routes = [
     children: [
       {path: '', component: HomeComponent, canActivate: [AuthGuard]},
       {path: 'master-data', children: masterDataRoutes, canActivate: [AuthGuard]},
+      {path: 'input', children: inputRoutes, canActivate: [AuthGuard]},
       {path: 'report', children: reportRoutes, canActivate: [AuthGuard]},
       {path: 'system-manager', children: systemManagerRoutes, canActivate: [AuthGuard]},
       {path: 'business', children: businessRoutes, canActivate: [AuthGuard]},
       {path: 'calculate-result', children: calculateResultRoutes, canActivate: [AuthGuard]},
-      
+
     ],
   },
   {

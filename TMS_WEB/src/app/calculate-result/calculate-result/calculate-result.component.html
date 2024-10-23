@@ -37,7 +37,7 @@
                             <th colspan="2">CK điều tiết (-/+)</th>
                             <th colspan="{{ data.lstGoods.length * 2 }}">Đề xuất mức giảm giá tại kho khách hàng</th>
                             <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
-    
+
                             <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">{{
                                 item.name }}</th>
                         </tr>
@@ -50,18 +50,18 @@
 
                             <th rowspan="2">Xăng có VAT</th>
                             <th rowspan="2">Dầu có VAT</th>
-    
+
                             <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">{{
                                 item.name }}</th>
-    
+
                             <th rowspan="2" *ngFor="let item of data.lstGoods; let i = index">{{
                                 item.name }}</th>
-    
+
                             @for (i of data.lstGoods; track i){
                             <th rowspan="2">Chưa VAT, BVMT</th>
                             <th rowspan="2">Có VAT, BVMT</th>
                             }
-    
+
                         </tr>
                         <tr>
                             @for (i of data.lstGoods; track i){
@@ -69,7 +69,7 @@
                             <th rowspan="2">Có VAT</th>
                             }
                         </tr>
-    
+
                     </thead>
                     <tbody>
                         @for (t of ptTable.data; track t) {
@@ -101,10 +101,10 @@
                           </tr>
                         }
                       </tbody>
-    
+
                 </nz-table>
             </div>
-            
+
         </nz-tab>
         <nz-tab nzTitle="ĐB">
 

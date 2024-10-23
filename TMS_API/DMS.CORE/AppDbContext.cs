@@ -1,6 +1,7 @@
 ﻿using DMS.CORE.Common;
 using DMS.CORE.Entities.AD;
 using DMS.CORE.Entities.BU;
+using DMS.CORE.Entities.IN;
 using DMS.CORE.Entities.MD;
 
 using Microsoft.AspNetCore.Http;
@@ -170,6 +171,10 @@ namespace DMS.CORE
 
         #endregion
 
+        #region Input
+        public DbSet<TblInVinhCuaLo> TblInVinhCuaLo { get; set; }
+
+        #endregion
 
 
         #region Common

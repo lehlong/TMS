@@ -1,4 +1,5 @@
 ﻿using Common;
+using DMS.BUSINESS.Dtos.IN;
 using DMS.CORE.Common;
 
 namespace DMS.BUSINESS.Common
@@ -13,5 +14,6 @@ namespace DMS.BUSINESS.Common
         Task Update(IDto dto);
         Task Delete(object code);
         Task<PagedResponseDto> Paging(IQueryable<TEntity> query, BaseFilter filter);
+        Task AddVinhCuaLo(VinhCuaLoDto vinhCuaLo);
     }
 }
