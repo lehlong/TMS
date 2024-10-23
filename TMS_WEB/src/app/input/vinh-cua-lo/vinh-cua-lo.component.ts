@@ -49,7 +49,7 @@ export class VinhCuaLoComponent {
     this.globalService.setBreadcrumb([
       {
         name: 'Hệ số Vinh - Cửa lò',
-        path: 'master-data/vinh-cua-lo',
+        path: 'input/vinh-cua-lo',
       },
     ])
     this.globalService.getLoading().subscribe((value) => {

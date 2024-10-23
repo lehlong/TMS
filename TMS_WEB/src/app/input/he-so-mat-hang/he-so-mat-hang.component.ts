@@ -46,7 +46,7 @@ export class HeSoMatHangComponent {
     this.globalService.setBreadcrumb([
       {
         name: 'Hệ số mặt hàng',
-        path: 'master-data/he-so-mat-hang',
+        path: 'input/he-so-mat-hang',
       },
     ])
     this.globalService.getLoading().subscribe((value) => {
