@@ -81,13 +81,17 @@
             }}
           </td>
           <td><a (click)="openEdit(data)">{{ data.code }}</a></td>
-          <td class="align-right">{{ data.goodsCode }}</td>
-          <td class="align-right">{{ data.gblcsV1 }}</td>
-          <td class="align-right">{{ data.gblV2 }}</td>
-          <td class="align-right">{{ data.v2_V1 }}</td>
-          <td class="align-right">{{ data.mtsV1 }}</td>
-          <td class="align-right">{{ data.gny }}</td>
-          <td class="align-right">{{ data.clgblv }}</td>
+          <td>
+            <span *ngFor="let item of goodsResult" >
+              <span *ngIf="item.code == data.goodsCode">{{ item.code + ' - ' + item.name }}</span>
+            </span>
+          </td>
+          <td class="align-right">{{ data.gblcsV1 | number }}</td>
+          <td class="align-right">{{ data.gblV2 | number }}</td>
+          <td class="align-right">{{ data.v2_V1 | number }}</td>
+          <td class="align-right">{{ data.mtsV1 | number }}</td>
+          <td class="align-right">{{ data.gny | number }}</td>
+          <td class="align-right">{{ data.clgblv | number }}</td>
           <td class="align-right">{{ data.fromDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td class="align-right">{{ data.toDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">
