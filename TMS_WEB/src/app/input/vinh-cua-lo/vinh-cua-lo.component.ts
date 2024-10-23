@@ -20,12 +20,11 @@ import { GoodsService } from '../../services/master-data/goods.service'
 })
 export class VinhCuaLoComponent {
   validateForm: FormGroup = this.fb.group({
-    code: ['', [Validators.required]],
+    code: [''],
     goodsCode: ['', [Validators.required]],
     GblcsV1: ['', [Validators.required]],
     GblV2: ['', [Validators.required]],
     MtsV1: ['', [Validators.required]],
-    Clgblv: ['', [Validators.required]],
     FromDate: ['', [Validators.required]],
     ToDate: ['', [Validators.required]],
     date: null,
@@ -102,11 +101,15 @@ export class VinhCuaLoComponent {
     })
   }
   onChangeDate(result: Date[]): void {
-    console.log('onChange: ', result[1])
-    this.validateForm.patchValue({
-      FromDate: result[0],
-      ToDate: result[1],
-    })
+    if (result) {
+      console.log('onChange: ', result[1])
+      this.validateForm.patchValue({
+        FromDate: result[0],
+        ToDate: result[1],
+      })
+    }else{
+      return
+    }
   }
 
   exportExcel() {
@@ -135,31 +138,31 @@ export class VinhCuaLoComponent {
       const formData = this.validateForm.getRawValue()
       console.log(formData);
 
-      // if (this.edit) {
-      //   this._service.updateVinhCuaLo(formData).subscribe({
-      //     next: (data) => {
-      //       this.search()
-      //     },
-      //     error: (response) => {
-      //       console.log(response)
-      //     },
-      //   })
-      // } else {
-      //   if (this.isCodeExist(formData.code)) {
-      //     this.message.error(
-      //       `Mã khu vục ${formData.code} đã tồn tại, vui lòng nhập lại`,
-      //     )
-      //     return
-      //   }
-      //   this._service.createVinhCuaLo(formData).subscribe({
-      //     next: (data) => {
-      //       this.search()
-      //     },
-      //     error: (response) => {
-      //       console.log(response)
-      //     },
-      //   })
-      // }
+      if (this.edit) {
+        this._service.updateVinhCuaLo(formData).subscribe({
+          next: (data) => {
+            this.search()
+          },
+          error: (response) => {
+            console.log(response)
+          },
+        })
+      } else {
+        if (this.isCodeExist(formData.code)) {
+          this.message.error(
+            `Mã khu vục ${formData.code} đã tồn tại, vui lòng nhập lại`,
+          )
+          return
+        }
+        this._service.createVinhCuaLo(formData).subscribe({
+          next: (data) => {
+            this.search()
+          },
+          error: (response) => {
+            console.log(response)
+          },
+        })
+      }
     } else {
       Object.values(this.validateForm.controls).forEach((control) => {
         if (control.invalid) {
@@ -191,16 +194,18 @@ export class VinhCuaLoComponent {
   }
 
   openEdit(data: any) {
+    console.log(data);
+
     this.validateForm.setValue({
-      code: data.code,
+      code : data.code,
       goodsCode: data.goodsCode,
-      GblcsV1: data.GblcsV1,
-      GblV2: data.GblV2,
-      MtsV1: data.MtsV1,
-      Clgblv: data.Clgblv,
-      FromDate: data.date[0],
-      ToDate: data.date[1],
+      GblcsV1: data.gblcsV1,
+      GblV2: data.gblV2,
+      MtsV1: data.mtsV1,
+      FromDate: data.fromDate,
+      ToDate: data.toDate,
       isActive: data.isActive,
+      date: ''
     })
     setTimeout(() => {
       this.edit = true

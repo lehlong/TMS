@@ -82,14 +82,14 @@
           </td>
           <td><a (click)="openEdit(data)">{{ data.code }}</a></td>
           <td >{{ data.goodsCode }}</td>
-          <td >{{ data.GblcsV1 }}</td>
-          <td >{{ data.GblV2 }}</td>
-          <td >{{ data.V2V1 }}</td>
-          <td >{{ data.MtsV1 }}</td>
-          <td >{{ data.Gny }}</td>
-          <td >{{ data.Clgblv }}</td>
-          <td >{{ data.FromDate }}</td>
-          <td >{{ data.ToDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+          <td >{{ data.gblcsV1 }}</td>
+          <td >{{ data.gblV2 }}</td>
+          <td >{{ data.v2_V1 }}</td>
+          <td >{{ data.mtsV1 }}</td>
+          <td >{{ data.gny }}</td>
+          <td >{{ data.clgblv }}</td>
+          <td >{{ data.fromDate }}</td>
+          <td >{{ data.toDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
               nzTheme="outline"></span>
@@ -112,7 +112,7 @@
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
       <app-input-clear placeholder="Nhập mã " [required]="true" label="Mã "
         [control]="$any(validateForm).controls['code']" [required]="true"
-        [disabled]="edit ? true : false"></app-input-clear>
+        [disabled]="true"></app-input-clear>
 
       <nz-form-item>
         <nz-form-label [nzRequired]="true">Mặt hàng</nz-form-label>
@@ -135,9 +135,7 @@
       <app-input-clear placeholder="Mức tăng so với V1" [required]="true" label="Mức tăng so với V1 "
       [control]="$any(validateForm).controls['MtsV1']"></app-input-clear>
 
-      <app-input-clear placeholder="Chênh lệch vùng Trung tâm và còn lại" [required]="true" label="Mức tăng so với V1 "
-      [control]="$any(validateForm).controls['Clgblv']"></app-input-clear>
-
+      <nz-form-label [nzRequired]="true">Từ ngày -> Đến ngày</nz-form-label>
       <nz-range-picker [nzShowTime]="true" formControlName="date" (ngModelChange)="onChangeDate($event)"></nz-range-picker>
 
       <!-- <nz-range-picker [nzShowTime]="true" [(ngModel)]="date"

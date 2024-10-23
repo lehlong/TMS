@@ -16,6 +16,7 @@ namespace DMS.BUSINESS.Services.IN
     {
         Task<IList<VinhCuaLoDto>> GetAll(BaseMdFilter filter);
         Task AddVinhCuaLo(VinhCuaLoDto vinhCuaLo);
+        Task UpdateVinhCuaLo(VinhCuaLoDto vinhCuaLo);
         Task<byte[]> Export(BaseMdFilter filter);
     }
     public class VinhCuaLoService(AppDbContext dbContext, IMapper mapper) : GenericService<TblInVinhCuaLo, VinhCuaLoDto>(dbContext, mapper), IVinhCuaLoService
@@ -69,14 +70,14 @@ namespace DMS.BUSINESS.Services.IN
             {
                 var lstVinhCuaLo = new TblInVinhCuaLo()
                 {
-                    Code = vinhCuaLo.Code,
+                    Code = vinhCuaLo.GoodsCode + "-" + DateTime.Now.ToString("ddMMyyyy"),
                     GoodsCode = vinhCuaLo.GoodsCode,
                     GblcsV1 = vinhCuaLo.GblcsV1,
                     GblV2 = vinhCuaLo.GblV2,
                     V2_V1 = vinhCuaLo.GblV2 - vinhCuaLo.GblcsV1,
                     MtsV1 = vinhCuaLo.MtsV1,
                     Gny = vinhCuaLo.GblcsV1 + vinhCuaLo.MtsV1,
-                    Clgblv = vinhCuaLo.Clgblv,
+                    Clgblv = vinhCuaLo.GblV2 - (vinhCuaLo.GblcsV1 + vinhCuaLo.MtsV1),
                     FromDate = vinhCuaLo.FromDate,
                     ToDate = vinhCuaLo.ToDate,
                     IsActive = vinhCuaLo.IsActive,
@@ -84,9 +85,38 @@ namespace DMS.BUSINESS.Services.IN
                 this._dbContext.TblInVinhCuaLo.Add(lstVinhCuaLo);
                 await this._dbContext.SaveChangesAsync();
             }
-            catch
+            catch (Exception ex)
             {
+                Status = false;
+                Exception = ex;
+            }
+        }
 
+        public async Task UpdateVinhCuaLo(VinhCuaLoDto vinhCuaLo)
+        {
+            try
+            {
+                var lstVinhCuaLo = new TblInVinhCuaLo()
+                {
+                    Code = vinhCuaLo.GoodsCode + "-" + DateTime.Now.ToString("ddMMyyyy"),
+                    GoodsCode = vinhCuaLo.GoodsCode,
+                    GblcsV1 = vinhCuaLo.GblcsV1,
+                    GblV2 = vinhCuaLo.GblV2,
+                    V2_V1 = vinhCuaLo.GblV2 - vinhCuaLo.GblcsV1,
+                    MtsV1 = vinhCuaLo.MtsV1,
+                    Gny = vinhCuaLo.GblcsV1 + vinhCuaLo.MtsV1,
+                    Clgblv = vinhCuaLo.GblV2 - (vinhCuaLo.GblcsV1 + vinhCuaLo.MtsV1),
+                    FromDate = vinhCuaLo.FromDate,
+                    ToDate = vinhCuaLo.ToDate,
+                    IsActive = vinhCuaLo.IsActive,
+                };
+                this._dbContext.TblInVinhCuaLo.Update(lstVinhCuaLo);
+                await this._dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
             }
         }
 

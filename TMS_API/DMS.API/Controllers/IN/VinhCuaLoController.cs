@@ -71,7 +71,7 @@ namespace DMS.API.Controllers.IN
         public async Task<IActionResult> Update([FromBody] VinhCuaLoDto VinhCuaLo)
         {
             var transferObject = new TransferObject();
-            await _service.Update(VinhCuaLo);
+            await _service.UpdateVinhCuaLo(VinhCuaLo);
             if (_service.Status)
             {
                 transferObject.Status = true;
