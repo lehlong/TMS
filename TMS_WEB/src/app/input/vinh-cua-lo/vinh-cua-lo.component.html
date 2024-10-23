@@ -29,24 +29,24 @@
       <thead>
         <tr>
           <th rowspan="2" >STT</th>
-          <th rowspan="2"  [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" >
+          <th class="align-center" rowspan="2"  [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" >
             Mã
           </th>
           <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('goodsCode', $event)" >
             Mặt hàng
           </th>
           <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('GblcsV1', $event)" nzAlign="center">
-            Giá bán lẻ CS(giá V1 TĐ công bố)
+            Giá bán lẻ CS <br> (giá V1 TĐ công bố)
           </th>
           <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('GblV2', $event)" nzAlign="center">
-            Giá bán lẻ V2(TĐ công bố)
+            Giá bán lẻ V2 <br> (TĐ công bố)
           </th>
           <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('V2_V1', $event)" nzAlign="center">
-            Chênh lệch giá V2-V1
+            Chênh lệch giá <br> V2-V1
           </th>
           <th colspan="2">Đề xuất giá bán lẻ vùng trung tâm </th>
           <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('Clgblv', $event)" nzAlign="center">
-            Chênh lệch giá bán lẻ vùng Trung tâm và còn lại
+            Chênh lệch giá bán lẻ <br> vùng Trung tâm và còn lại
           </th>
           <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('FromDate', $event)" nzAlign="center">
             Từ ngày
@@ -81,15 +81,15 @@
             }}
           </td>
           <td><a (click)="openEdit(data)">{{ data.code }}</a></td>
-          <td >{{ data.goodsCode }}</td>
-          <td >{{ data.gblcsV1 }}</td>
-          <td >{{ data.gblV2 }}</td>
-          <td >{{ data.v2_V1 }}</td>
-          <td >{{ data.mtsV1 }}</td>
-          <td >{{ data.gny }}</td>
-          <td >{{ data.clgblv }}</td>
-          <td >{{ data.fromDate }}</td>
-          <td >{{ data.toDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+          <td class="align-right">{{ data.goodsCode }}</td>
+          <td class="align-right">{{ data.gblcsV1 }}</td>
+          <td class="align-right">{{ data.gblV2 }}</td>
+          <td class="align-right">{{ data.v2_V1 }}</td>
+          <td class="align-right">{{ data.mtsV1 }}</td>
+          <td class="align-right">{{ data.gny }}</td>
+          <td class="align-right">{{ data.clgblv }}</td>
+          <td class="align-right">{{ data.fromDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+          <td class="align-right">{{ data.toDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
               nzTheme="outline"></span>

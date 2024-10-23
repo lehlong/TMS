@@ -102,10 +102,9 @@ export class VinhCuaLoComponent {
   }
   onChangeDate(result: Date[]): void {
     if (result) {
-      console.log('onChange: ', result[1])
       this.validateForm.patchValue({
-        FromDate: result[0],
-        ToDate: result[1],
+        FromDate: new Date(result[0].setHours(result[0].getHours() + 7)),
+        ToDate: new Date(result[1].setHours(result[1].getHours() + 7)),
       })
     }else{
       return
