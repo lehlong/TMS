@@ -173,6 +173,7 @@ namespace DMS.CORE
 
         #region Input
         public DbSet<TblInVinhCuaLo> TblInVinhCuaLo { get; set; }
+        public DbSet<TblInHeSoMatHang> TblInHeSoMatHang { get; set; }
 
         #endregion
 

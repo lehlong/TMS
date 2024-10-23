@@ -31,6 +31,14 @@ export enum VINH_CUA_LO_RIGHTS {
   DELETE = 'R0',
 }
 
+export enum HE_SO_MAT_HANG_RIGHTS {
+  LIST = 'R1.1.1',
+  EXCEL = 'R0',
+  ADD = 'R1.1.2',
+  EDIT = 'R1.1.2',
+  DELETE = 'R0',
+}
+
 export enum GIA_GIAO_TAP_DOAN_RIGHTS {
   LIST = 'R1.1.1',
   EXCEL = 'R0',

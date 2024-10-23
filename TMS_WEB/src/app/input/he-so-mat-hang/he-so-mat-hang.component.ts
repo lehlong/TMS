@@ -5,20 +5,20 @@ import { GlobalService } from '../../services/global.service'
 import { LocalService } from '../../services/master-data/local.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { VINH_CUA_LO_RIGHTS } from '../../shared/constants'
+import { HE_SO_MAT_HANG_RIGHTS } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
-import { VinhCuaLoFilter } from '../../models/input/vinh-cua-lo.model'
-import { VinhCuaLoService } from '../../services/input/vinh-cua-lo.service'
+import { HeSoMatHangFilter } from '../../models/input/he-so-mat-hang.model'
+import { HeSoMatHangService } from '../../services/input/he-so-mat-hang.service'
 import { GoodsComponent } from '../../master-data/goods/goods.component'
 import { GoodsService } from '../../services/master-data/goods.service'
 @Component({
   selector: 'app-local',
   standalone: true,
   imports: [ShareModule],
-  templateUrl: './vinh-cua-lo.component.html',
-  styleUrl: './vinh-cua-lo.component.scss',
+  templateUrl: './he-so-mat-hang.component.html',
+  styleUrl: './he-so-mat-hang.component.scss',
 })
-export class VinhCuaLoComponent {
+export class HeSoMatHangComponent {
   validateForm: FormGroup = this.fb.group({
     code: [''],
     goodsCode: ['', [Validators.required]],
@@ -34,13 +34,13 @@ export class VinhCuaLoComponent {
   isSubmit: boolean = false
   visible: boolean = false
   edit: boolean = false
-  filter = new VinhCuaLoFilter()
+  filter = new HeSoMatHangFilter()
   paginationResult = new PaginationResult()
   goodsResult: any[] = []
   loading: boolean = false
-  VINH_CUA_LO_RIGHTS = VINH_CUA_LO_RIGHTS
+  HE_SO_MAT_HANG_RIGHTS = HE_SO_MAT_HANG_RIGHTS
   constructor(
-    private _service: VinhCuaLoService,
+    private _service: HeSoMatHangService,
     private _goodsService: GoodsService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
@@ -48,8 +48,8 @@ export class VinhCuaLoComponent {
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Hệ số Vinh - Cửa lò',
-        path: 'master-data/vinh-cua-lo',
+        name: 'Hệ số mặt hàng',
+        path: 'master-data/he-so-mat-hang',
       },
     ])
     this.globalService.getLoading().subscribe((value) => {
@@ -79,7 +79,7 @@ export class VinhCuaLoComponent {
 
   search() {
     this.isSubmit = false
-    this._service.searchVinhCuaLo(this.filter).subscribe({
+    this._service.searchHeSoMatHang(this.filter).subscribe({
       next: (data) => {
         this.paginationResult = data
       },
@@ -113,7 +113,7 @@ export class VinhCuaLoComponent {
 
   exportExcel() {
     return this._service
-      .exportExcelVinhCuaLo(this.filter)
+      .exportExcelHeSoMatHang(this.filter)
       .subscribe((result: Blob) => {
         const blob = new Blob([result], {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -138,7 +138,7 @@ export class VinhCuaLoComponent {
       console.log(formData);
 
       if (this.edit) {
-        this._service.updateVinhCuaLo(formData).subscribe({
+        this._service.updateHeSoMatHang(formData).subscribe({
           next: (data) => {
             this.search()
           },
@@ -153,7 +153,7 @@ export class VinhCuaLoComponent {
           )
           return
         }
-        this._service.createVinhCuaLo(formData).subscribe({
+        this._service.createHeSoMatHang(formData).subscribe({
           next: (data) => {
             this.search()
           },
@@ -178,7 +178,7 @@ export class VinhCuaLoComponent {
   }
 
   reset() {
-    this.filter = new VinhCuaLoFilter()
+    this.filter = new HeSoMatHangFilter()
     this.search()
   }
 
