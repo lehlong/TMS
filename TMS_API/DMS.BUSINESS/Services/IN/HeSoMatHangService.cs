@@ -77,6 +77,7 @@ namespace DMS.BUSINESS.Services.IN
                     L15ChuaVatBvmt = heSoMatHang.L15ChuaVatBvmt,
                     FromDate = heSoMatHang.FromDate,
                     ToDate = heSoMatHang.ToDate,
+                    GiamGiaFob = heSoMatHang.GiamGiaFob,
                     IsActive = heSoMatHang.IsActive,
                 };
                 this._dbContext.TblInHeSoMatHang.Add(lstHeSoMatHang);

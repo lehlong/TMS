@@ -22,28 +22,39 @@ export class CalculateResultComponent {
       },
     ])
   }
-  date: any = null
+  title: string = 'DỮ LIỆU GỐC'
+  date = new Date()
+  model = {
+    fDate: '',
+  }
   data: any = {
     lstGoods: [],
     dlg: {
       dlg_1: [],
       dlg_2: [],
+      dlg_3: [],
+      dlg_4: [],
+      dlg_5: [],
+      dlg_6: [],
     },
     pt: [],
+    db: [],
   }
 
   ngOnInit() {
-    this.GetData()
+    this.GetData(this.model)
   }
 
   ngOnDestroy() {
     this.globalService.setBreadcrumb([])
   }
-  onChangeDate(result: Date[]): void {
+  onChangeDate(result: any): void {
     console.log('onChange: ', result)
   }
-  GetData() {
-    this._service.GetResult().subscribe({
+  GetData(model : any) {
+    var _fd = new Date(this.date)
+    model.fDate = _fd.toLocaleString();
+    this._service.GetResult(this.model).subscribe({
       next: (data) => {
         this.data = data
         console.log(data)
@@ -52,5 +63,8 @@ export class CalculateResultComponent {
         console.log(e)
       },
     })
+  }
+  changeTitle(value: string) {
+    this.title = value
   }
 }

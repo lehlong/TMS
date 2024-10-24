@@ -19,29 +19,29 @@ namespace DMS.CORE.Entities.MD
         [Column("NAME", TypeName = "NVARCHAR(255)")]
         public string Name { set; get; }
 
-        [Column("PHONE", TypeName = "FLOAT")]
-        public float Phone { set; get; }
+        [Column("PHONE", TypeName = "VARCHAR(50)")]
+        public string? Phone { set; get; }
 
         [Column("EMAIL", TypeName = "NVARCHAR(255)")]
-        public string Email { set; get; }
+        public string? Email { set; get; }
 
         [Column("ADDRESS", TypeName = "NVARCHAR(255)")]
-        public string Address { set; get; }
+        public string? Address { set; get; }
 
         [Column("BUY_INFO", TypeName = "NVARCHAR(500)")]
-        public string BuyInfo { set; get; }
+        public string? BuyInfo { set; get; }
 
-        [Column("BANK_LOAN_INTEREST", TypeName = "FLOAT")]
-        public float BankLoanInterest { set; get; }
+        [Column("BANK_LOAN_INTEREST", TypeName = "DECIMAL(18,0)")]
+        public decimal? BankLoanInterest { set; get; }
 
         [Column("SALES_METHOD_CODE", TypeName = "VARCHAR(50)")]
-        public string SalesMethodCode { set; get; }
+        public string? SalesMethodCode { set; get; }
 
         [Column("LOCAL_CODE", TypeName = "VARCHAR(50)")]
-        public string LocalCode { set; get; }
+        public string? LocalCode { set; get; }
 
         [Column("MARKET_CODE", TypeName = "VARCHAR(50)")]
-        public string MarketCode { set; get; }
+        public string? MarketCode { set; get; }
 
 
     }

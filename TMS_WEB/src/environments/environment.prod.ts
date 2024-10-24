@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
- // baseApiUrl: 'http://sso.d2s.com.vn/api',
+ //baseApiUrl: 'http://sso.d2s.com.vn:1001/api',
   baseApiUrl: 'https://localhost:4008/api',
   // thisUrl: 'https://localhost:',
   // http://sso.d2s.com.vn
