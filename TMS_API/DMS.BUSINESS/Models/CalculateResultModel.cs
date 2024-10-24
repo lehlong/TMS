@@ -153,6 +153,11 @@ namespace DMS.BUSINESS.Models
         public string Code { get; set; }
         public string ColA { get; set; }
         public string ColB { get; set; }
+        public List<decimal?> LG { get; set; } = new List<decimal?>();
+        public decimal? Col3 { get; set; }
+        public decimal? Col4 { get; set; }
+        public decimal? Col5 { get; set; }
+        public decimal? Col6 { get; set; }
     }
     public class BBDO
     {

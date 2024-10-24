@@ -463,8 +463,8 @@
                         </tr>
                         <tr>
                             @for (i of data.lstGoods; track i){
-                            <th rowspan="2">Chưa VAT</th>
                             <th rowspan="2">Có VAT</th>
+                            <th rowspan="2">Chưa VAT</th>
                             }
                         </tr>
 
@@ -699,6 +699,15 @@
                         <tr >
                             <td>{{ t.colA }}</td>
                             <td>{{ t.colB }}</td>
+                            @for (i of t.lg; track i){
+                            <td class="align-right">{{i | number}}</td>
+                            }
+                            <td class="align-right">{{ t.col3 }}</td>
+                            <td class="align-right">{{ t.col4 }}</td>
+                            <td class="align-right">{{ t.col5 }}</td>
+                            <td class="align-right">{{ t.col6 }}</td>
+                            <td class="align-right"></td>
+                            <td class="align-right"></td>
                         </tr>
                         }
                     </tbody>
