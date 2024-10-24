@@ -35,6 +35,12 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Cự ly BQ")]
         public decimal? Gap { get; set; }
 
+        [Description("Mức giảm xăng")]
+        public decimal? MgglhXang { get; set; }
+
+        [Description("Mức giảm dầu")]
+        public decimal? MgglhDau { get; set; }
+
         [Description("thông tin mua hàng")]
         public string? BuyInfo { get; set; }
 

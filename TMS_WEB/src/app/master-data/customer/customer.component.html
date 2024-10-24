@@ -44,6 +44,8 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('email', $event)">Email</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('address', $event)">Địa chỉ</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('gap', $event)">Cự ly BQ  (Km)</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('mgglhXang', $event)">Mức giảm linh hoạt xăng</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('mgglhDau', $event)">Mức giảm linh hoạt dầu</th>
 
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('salesMethodCode', $event)" nzAlign="center">Phương thức bán</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('localCode', $event)" nzAlign="center">Vùng</th>
@@ -66,6 +68,8 @@
           <td nzAlign="right">{{ data.email }}</td>
           <td nzAlign="right">{{ data.address }}</td>
           <td nzAlign="right">{{ data.gap }}</td>
+          <td nzAlign="right">{{ data.mgglhXang }}</td>
+          <td nzAlign="right">{{ data.mgglhDau }}</td>
 
           <td nzAlign="right">
             <span *ngFor="let item of salesMethodResult" >
@@ -132,6 +136,17 @@
           [control]="$any(validateForm).controls['address']"
           ></app-input-clear>
           </div>
+
+      <div nz-row  nzJustify="space-evenly">
+        <app-input-clear nz-col nzSpan="11" placeholder="Nhập mức giảm dầu" label="Mức giảm xăng "
+          [control]="$any(validateForm).controls['mgglhXang']"
+          ></app-input-clear>
+
+        <app-input-clear nz-col nzSpan="12" placeholder="Nhập mức giảm xăng"  label="Mức giảm dầu"
+          [control]="$any(validateForm).controls['mgglhDau']"
+          ></app-input-clear>
+
+      </div>
 
       <div nz-row nzJustify="space-evenly" >
         <nz-form-item nz-col nzSpan="11">

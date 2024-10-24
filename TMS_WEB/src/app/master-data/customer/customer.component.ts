@@ -26,6 +26,8 @@ export class CustomerComponent {
     email: [''],//, Validators.email
     address: [''],
     gap: ['', [Validators.required]],
+    mgglhXang: ['', [Validators.required]],
+    mgglhDau: ['', [Validators.required]],
     buyInfo: [''],
     bankLoanInterest: [''],
 
@@ -244,6 +246,8 @@ export class CustomerComponent {
       email: data.email,
       address: data.address,
       gap: data.gap,
+      mgglhXang: data.mgglhXang,
+      mgglhDau: data.mgglhDau,
       buyInfo: data.buyInfo,
       bankLoanInterest: data.bankLoanInterest,
       salesMethodCode: data.salesMethodCode,
