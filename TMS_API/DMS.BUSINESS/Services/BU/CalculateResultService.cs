@@ -28,7 +28,7 @@ namespace DMS.BUSINESS.Services.BU
         {
             try
             {
-                var fDate = DateTime.Parse(model.FDate);
+                //var fDate = DateTime.Parse(model.FDate);
                 var data = new CalculateResultModel();
                 var lstGoods = await _dbContext.TblMdGoods.OrderBy(x => x.Code).ToListAsync();
                 data.lstGoods = lstGoods;
