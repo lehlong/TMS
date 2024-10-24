@@ -334,8 +334,19 @@ namespace DMS.BUSINESS.Services.BU
                         Col4 = lstMarket.FirstOrDefault()?.CPChungChuaCuocVC,
                         Col7 = c.MgglhXang,
                         Col8 = c.MgglhDau,
+                        Col18 = 0,
                     };
                     _i.Col3 = _i.Col4 + _i.Col5 + _i.Col6;
+
+                    var _pl4 = new PL4
+                    {
+                        Code = c.Code,
+                        ColA = _oPt09.ToString(),
+                        ColB = c.Name,
+                    };
+                    data.PL4.Add(_pl4);
+
+
                     foreach (var g in lstGoods)
                     {
                         var _2 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col13) ?? 0);
@@ -349,25 +360,11 @@ namespace DMS.BUSINESS.Services.BU
                             VAT = Math.Round(vat ?? 0),
                             NonVAT = Math.Round(nonVat ?? 0),
                         });
-
+                        _i.LN.Add(Math.Round(_2 - _i.Col3 - nonVat - _i.Col18 ?? 0));
+                        _pl4.GG.Add(Math.Round(vat ?? 0));
                     }
                     _oPt09++;
                     data.PT09.Add(_i);
-                }
-                #endregion
-
-                #region PL4
-                var _oPl4 = 1;
-                foreach (var c in lstCustomer.Where(x => x.SalesMethodCode == "TNPP").ToList())
-                {
-                    var _i = new PL4
-                    {
-                        Code = c.Code,
-                        ColA = _oPl4.ToString(),
-                        ColB = c.Name,
-                    };
-                    _oPl4++;
-                    data.PL4.Add(_i);
                 }
                 #endregion
 

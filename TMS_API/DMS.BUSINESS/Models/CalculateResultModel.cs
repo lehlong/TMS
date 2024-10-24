@@ -161,6 +161,8 @@ namespace DMS.BUSINESS.Models
         public decimal? Col7 { get; set; }
         public decimal? Col8 { get; set; }
         public List<PT09_GG> GG { get; set; } = new List<PT09_GG>();
+        public decimal? Col18 { get; set; }
+        public List<decimal?> LN { get; set; } = new List<decimal?>();
     }
     public class PT09_GG
     {
@@ -192,6 +194,7 @@ namespace DMS.BUSINESS.Models
         public string Code { get; set; }
         public string ColA { get; set; }
         public string ColB { get; set; }
+        public List<decimal?> GG { get; set; } = new List<decimal?>();
     }
     public class VK11PT
     {

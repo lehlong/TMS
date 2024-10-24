@@ -696,7 +696,7 @@
                     </thead>
                     <tbody>
                         @for (t of pt09Table.data; track t) {
-                        <tr >
+                        <tr>
                             <td>{{ t.colA }}</td>
                             <td>{{ t.colB }}</td>
                             @for (i of t.lg; track i){
@@ -709,9 +709,13 @@
                             <td class="align-right">{{ t.col7 }}</td>
                             <td class="align-right">{{ t.col8 }}</td>
                             @for (i of t.gg; track i){
-                                <td class="align-right">{{i.vat | number}}</td>
-                                <td class="align-right">{{i.nonVAT | number}}</td>
-                                }
+                            <td class="align-right">{{i.vat | number}}</td>
+                            <td class="align-right">{{i.nonVAT | number}}</td>
+                            }
+                            <td class="align-right">{{ t.col18 }}</td>
+                            @for (i of t.ln; track i){
+                            <td class="align-right">{{i | number}}</td>
+                            }
                         </tr>
                         }
                     </tbody>
@@ -891,6 +895,9 @@
                             <tr >
                                 <td>{{ t.colA }}</td>
                                 <td>{{ t.colB }}</td>
+                                @for (i of t.gg; track i){
+                                    <td class="align-right">{{i | number}}</td>
+                                 }
                             </tr>
                             }
                     </tbody>
