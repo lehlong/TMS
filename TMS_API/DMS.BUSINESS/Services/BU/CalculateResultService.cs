@@ -320,6 +320,36 @@ namespace DMS.BUSINESS.Services.BU
                 }
                 #endregion
 
+                #region PT09
+                var _oPt09 = 1;
+                foreach(var c in lstCustomer.Where(x => x.SalesMethodCode == "TNPP").ToList())
+                {
+                    var _i = new PT09
+                    {
+                        Code = c.Code,
+                        ColA = _oPt09.ToString(),
+                        ColB = c.Name,
+                    };
+                    _oPt09++;
+                    data.PT09.Add(_i);
+                }
+                #endregion
+
+                #region PL4
+                var _oPl4 = 1;
+                foreach (var c in lstCustomer.Where(x => x.SalesMethodCode == "TNPP").ToList())
+                {
+                    var _i = new PL4
+                    {
+                        Code = c.Code,
+                        ColA = _oPl4.ToString(),
+                        ColB = c.Name,
+                    };
+                    _oPl4++;
+                    data.PL4.Add(_i);
+                }
+                #endregion
+
                 return await RoundNumberData(data);
             }
             catch (Exception ex)

@@ -655,8 +655,8 @@
             (nzClick)="changeTitle('CƠ SỞ TÍNH MỨC GIẢM GIÁ CHO CÁC KHÁCH HÀNG GIAO TẠI KHO BÊN BÁN CHO TNPP')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
-                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #fobTable
-                    [nzData]="data.db">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pt09Table
+                    [nzData]="data.pT09">
                     <thead>
                         <tr>
                             <th rowspan="3">STT</th>
@@ -695,13 +695,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for (t of dbTable.data; track t) {
-                        <tr *ngIf="t.isBold == true" style="font-weight: bold;">
-                            <td>{{ t.colA }}</td>
-                            <td>{{ t.colB }}</td>
-
-                        </tr>
-                        <tr *ngIf="t.isBold == false">
+                        @for (t of pt09Table.data; track t) {
+                        <tr >
                             <td>{{ t.colA }}</td>
                             <td>{{ t.colB }}</td>
                         </tr>
@@ -859,8 +854,8 @@
         <nz-tab nzTitle="PL4" (nzClick)="changeTitle('ÁP DỤNG CHO THƯƠNG NHÂN PHÂN PHỐI')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
-                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #fobTable
-                    [nzData]="data.db">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl4Table
+                    [nzData]="data.pL4">
                     <thead>
                         <tr>
                             <th rowspan="3" class="align-center">STT</th>
@@ -879,7 +874,12 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                        @for (t of pl4Table.data; track t) {
+                            <tr >
+                                <td>{{ t.colA }}</td>
+                                <td>{{ t.colB }}</td>
+                            </tr>
+                            }
                     </tbody>
 
                 </nz-table>

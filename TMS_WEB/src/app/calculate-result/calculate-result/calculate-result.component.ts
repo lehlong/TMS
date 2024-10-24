@@ -39,6 +39,8 @@ export class CalculateResultComponent {
     },
     pt: [],
     db: [],
+    pT09: [],
+    pL4: [],
   }
 
   ngOnInit() {
@@ -51,9 +53,9 @@ export class CalculateResultComponent {
   onChangeDate(result: any): void {
     console.log('onChange: ', result)
   }
-  GetData(model : any) {
+  GetData(model: any) {
     var _fd = new Date(this.date)
-    model.fDate = _fd.toLocaleString();
+    model.fDate = _fd.toLocaleString()
     this._service.GetResult(this.model).subscribe({
       next: (data) => {
         this.data = data

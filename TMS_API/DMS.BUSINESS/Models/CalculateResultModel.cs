@@ -13,6 +13,8 @@ namespace DMS.BUSINESS.Models
         public List<TblMdGoods> lstGoods { get; set; }
         public DLG DLG { get; set; } = new DLG();
         public List<DB> DB { get; set; } = new List<DB>();
+        public List<PT09> PT09 { get; set; } = new List<PT09>();
+        public List<PL4> PL4 { get; set; } = new List<PL4>();
     }
     public class DLG
     {
@@ -148,7 +150,9 @@ namespace DMS.BUSINESS.Models
     }
     public class PT09
     {
-
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public string ColB { get; set; }
     }
     public class BBDO
     {
@@ -172,7 +176,9 @@ namespace DMS.BUSINESS.Models
     }
     public class PL4
     {
-
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public string ColB { get; set; }
     }
     public class VK11PT
     {
