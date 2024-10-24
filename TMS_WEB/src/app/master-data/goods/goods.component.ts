@@ -20,6 +20,7 @@ export class GoodsComponent {
   validateForm: FormGroup = this.fb.group({
     code: ['', [Validators.required]],
     name: ['', [Validators.required]],
+    type: [''],
     thueBvmt: ['', [Validators.required]],
     createDate: [new Date(), [Validators.required]],
     isActive: [true, [Validators.required]],
@@ -32,6 +33,8 @@ export class GoodsComponent {
   paginationResult = new PaginationResult()
   loading: boolean = false
   GOODS_RIGHTS = GOODS_RIGHTS
+  lstType: any[] = []
+
   constructor(
     private _service: GoodsService,
     private fb: NonNullableFormBuilder,
@@ -55,6 +58,10 @@ export class GoodsComponent {
 
   ngOnInit(): void {
     this.search()
+    this.lstType = [
+      {code:'X', name: 'Xăng'},
+      {code:'D', name: 'Dầu'}
+    ]
   }
 
   onSortChange(name: string, value: any) {
@@ -77,6 +84,8 @@ export class GoodsComponent {
       },
     })
   }
+
+
 
   exportExcel() {
     return this._service
@@ -165,10 +174,11 @@ export class GoodsComponent {
     })
   }
 
-  openEdit(data: { code: string; name: string; thueBvmt: number; isActive: boolean ; createDate: Date}) {
+  openEdit(data: any) {
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
+      type: data.type,
       thueBvmt: data.thueBvmt,
       createDate: data.createDate,
       isActive: data.isActive,

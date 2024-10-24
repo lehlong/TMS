@@ -45,6 +45,9 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)" >
             Tên
           </th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('Type', $event)" >
+            Loại mặt hàng
+          </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('thueBvmt', $event)" nzAlign="center">
             Mã số thuế
           </th>
@@ -73,6 +76,12 @@
             <a (click)="openEdit(data)">{{ data.code }}</a>
           </td>
           <td >{{ data.name }}</td>
+
+          <td nzAlign="right">
+            <span *ngFor="let item of lstType" >
+              <span *ngIf="item.code == data.type">{{ item.name }}</span>
+            </span>
+          </td>
           <td nzAlign="center">{{ data.thueBvmt }}</td>
           <td nzAlign="center">{{ data.createDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">
@@ -101,6 +110,19 @@
 
       <app-input-clear placeholder="Nhập tên" [required]="true" label="Tên "
         [control]="$any(validateForm).controls['name']"></app-input-clear>
+
+        <nz-form-item >
+          <nz-form-label [nzRequired]="true">Loại mặt hàng</nz-form-label>
+          <nz-form-control nzErrorTip="Không được để trống">
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn Vùng" formControlName="type">
+              <nz-option cdkScrollable
+                *ngFor="let item of lstType"
+                [nzLabel]="item.name"
+                [nzValue]="item.code">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
 
       <app-input-clear placeholder="Nhập thuế bảo vệ môi trường" [required]="true" label="Thuế bảo vệ môi trường"
         [control]="$any(validateForm).controls['thueBvmt']"></app-input-clear>
