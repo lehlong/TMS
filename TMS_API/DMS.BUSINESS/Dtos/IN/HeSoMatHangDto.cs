@@ -27,8 +27,14 @@ namespace DMS.BUSINESS.Dtos.IN
         [Description("Thuế BVMT")]
         public decimal ThueBvmt { get; set; }
 
-        [Description("L15 chưa VAT và BVMT ")]
-        public decimal L15ChuaVatBvmt { get; set; }
+        [Description("L15 chưa VAT và BVMT (PT bán lẻ - V2) ")]
+        public decimal? L15ChuaVatBvmt { get; set; }
+
+        [Description("L15 chưa VAT và BVMT (ngoài bán lẻ)")]
+        public decimal? L15ChuaVatBvmtNbl { get; set; }
+
+        [Description("Giảm giá FOB có VAT & BVMT")]
+        public decimal? GiamGiaFob { get; set; }
 
         [Description("Từ ngày")]
         public DateTime? FromDate { get; set; }

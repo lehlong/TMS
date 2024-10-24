@@ -8,7 +8,7 @@ import { Observable } from 'rxjs'
 export class CalculateResultService {
   constructor(private commonService: CommonService) {}
 
-  GetResult(): Observable<any> {
-    return this.commonService.get('CalculateResult/GetCalculateResult')
+  GetResult(model : any): Observable<any> {
+    return this.commonService.post('CalculateResult/GetCalculateResult', model)
   }
 }

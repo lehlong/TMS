@@ -18,8 +18,8 @@ namespace DMS.API.Controllers.BU
         {
             _service = service;
         }
-        [HttpGet("GetCalculateResult")]
-        public async Task<IActionResult> GetCalculateResult(QueryModel? model)
+        [HttpPost("GetCalculateResult")]
+        public async Task<IActionResult> GetCalculateResult([FromBody] QueryModel model)
         {
             var transferObject = new TransferObject();
             var result = await _service.GetResult(model);

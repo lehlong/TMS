@@ -24,28 +24,28 @@ namespace DMS.BUSINESS.Dtos.MD
         public string Name { get; set; }
 
         [Description("Số điện thoại")]
-        public float Phone { get; set; }
+        public string? Phone { get; set; }
 
         [Description("email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Description("địa chỉ")]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         [Description("thông tin mua hàng")]
-        public string BuyInfo { get; set; }
+        public string? BuyInfo { get; set; }
 
         [Description("Lãi vay ngân hàng")]
-        public float BankLoanInterest { get; set; }
+        public decimal? BankLoanInterest { get; set; }
 
         [Description("Mã phương thức mua hàng")]
-        public string SalesMethodCode { get; set; }
+        public string? SalesMethodCode { get; set; }
 
         [Description("Mã Vùng")]
-        public string LocalCode { get; set; }
+        public string? LocalCode { get; set; }
 
         [Description("Mã thị trường")]
-        public string MarketCode { get; set; }
+        public string? MarketCode { get; set; }
 
 
         [Description("Trạng thái")]

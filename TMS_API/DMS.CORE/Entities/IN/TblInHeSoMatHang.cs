@@ -22,7 +22,11 @@ namespace DMS.CORE.Entities.IN
         public decimal ThueBvmt { get; set; }
 
         [Column("L15_CHUA_VAT_BVMT", TypeName = "DECIMAL(18,0)")]
-        public decimal L15ChuaVatBvmt { get; set; }
+        public decimal? L15ChuaVatBvmt { get; set; }
+        [Column("L15_CHUA_VAT_BVMT_NBL", TypeName = "DECIMAL(18,0)")]
+        public decimal L15ChuaVatBvmtNbl { get; set; }
+        [Column("GIAM_GIA_FOB", TypeName = "DECIMAL(18,0)")]
+        public decimal? GiamGiaFob { get; set; }
 
         [Column("FROM_DATE", TypeName = "DATETIME")]
         public DateTime? FromDate { get; set; }
