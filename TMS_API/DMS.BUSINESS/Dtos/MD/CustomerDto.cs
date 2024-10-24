@@ -18,7 +18,7 @@ namespace DMS.BUSINESS.Dtos.MD
 
         [Key]
         [Description("Mã")]
-        public string Code { get; set; }
+        public string? Code { get; set; }
 
         [Description("Tên")]
         public string Name { get; set; }
@@ -31,6 +31,9 @@ namespace DMS.BUSINESS.Dtos.MD
 
         [Description("địa chỉ")]
         public string? Address { get; set; }
+
+        [Description("Cự ly BQ")]
+        public decimal? Gap { get; set; }
 
         [Description("thông tin mua hàng")]
         public string? BuyInfo { get; set; }

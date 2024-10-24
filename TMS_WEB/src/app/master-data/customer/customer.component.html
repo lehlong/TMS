@@ -38,12 +38,12 @@
       [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data">
       <thead>
         <tr>
-          <th nzWidth="15px">STT</th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" nzWidth="100px">Mã</th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)">Khách hàng</th>
+          <th  nzWidth="15px">STT</th>
+          <th [nzSortFn]="true" nzWidth="70px" (nzSortOrderChange)="onSortChange('name', $event)">Khách hàng</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('phone', $event)">Số điện thoại</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('email', $event)">Email</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('address', $event)">Địa chỉ</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('gap', $event)">Cự ly BQ  (Km)</th>
 
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('salesMethodCode', $event)" nzAlign="center">Phương thức bán</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('localCode', $event)" nzAlign="center">Vùng</th>
@@ -57,37 +57,36 @@
       </thead>
       <tbody>
         <tr *ngFor="let data of headerTable.data; let i = index" (dblclick)="openEdit(data)">
-          <td> {{
+          <td nzAlign="right"> {{
             (paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1
             }} </td>
-          <td>
-            <a (click)="openEdit(data)">{{ data.code }}</a>
-          </td>
-          <td nzAlign="center">{{ data.name }}</td>
-          <td nzAlign="center">{{ data.phone }}</td>
-          <td nzAlign="center">{{ data.email }}</td>
-          <td nzAlign="center">{{ data.address }}</td>
 
-          <td>
+          <td nzAlign="right" >{{ data.name }}</td>
+          <td nzAlign="right">{{ data.phone }}</td>
+          <td nzAlign="right">{{ data.email }}</td>
+          <td nzAlign="right">{{ data.address }}</td>
+          <td nzAlign="right">{{ data.gap }}</td>
+
+          <td nzAlign="right">
             <span *ngFor="let item of salesMethodResult" >
               <span *ngIf="item.code == data.salesMethodCode">{{ item.name }}</span>
             </span>
           </td>
-          <td>
+          <td nzAlign="right">
             <span *ngFor="let item of localResult" >
               <span *ngIf="item.code == data.localCode">{{ item.code + ' - ' + item.name }}</span>
             </span>
           </td>
-          <td>
+          <td nzAlign="right">
             <span *ngFor="let item of marketList" >
               <span *ngIf="item.code == data.marketCode">{{ item.name }}</span>
             </span>
           </td>
-          <td nzAlign="center">{{ data.bankLoanInterest }}</td>
-          <td nzAlign="center">{{ data.buyInfo }}</td>
+          <td  nzAlign="right">{{ data.bankLoanInterest }}</td>
+          <td  nzAlign="right">{{ data.buyInfo }}</td>
 
 
-          <td nzAlign="center">
+          <td  nzAlign="right">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
               nzTheme="outline"></span>
           </td>
@@ -108,28 +107,28 @@
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-      <div nz-row  nzJustify="space-evenly">
-        <app-input-clear nz-col nzSpan="8" placeholder="Nhập mã " [required]="true" label="Mã "
-          [control]="$any(validateForm).controls['code']"
-          [disabled]="edit ? true : false"></app-input-clear>
-
-        <app-input-clear nz-col nzSpan="15" placeholder="Nhập khách hàng " [required]="true" label="Tên khách hàng "
+      <div nz-row nzJustify="space-evenly" >
+        <app-input-clear nzWidth="100%" nz-col nzSpan="18" placeholder="Nhập khách hàng " [required]="true" label="Tên khách hàng "
           [control]="$any(validateForm).controls['name']"
           ></app-input-clear>
 
+        <app-input-clear nz-col nzSpan="5" placeholder="Nhập Cự ly" [required]="true" label="Cự ly BQ"
+        [control]="$any(validateForm).controls['gap']"
+        ></app-input-clear>
       </div>
+
       <div nz-row  nzJustify="space-evenly">
-        <app-input-clear nz-col nzSpan="11" placeholder="098... " [required]="true" label="Số điện thoại "
+        <app-input-clear nz-col nzSpan="11" placeholder="098... " label="Số điện thoại "
           [control]="$any(validateForm).controls['phone']"
           ></app-input-clear>
 
-        <app-input-clear nz-col nzSpan="12" placeholder="email123@gmail.com " [required]="true" label="Email "
+        <app-input-clear nz-col nzSpan="12" placeholder="email123@gmail.com "  label="Email "
           [control]="$any(validateForm).controls['email']"
           ></app-input-clear>
 
       </div>
       <div style="padding: 0 12px;">
-        <app-input-clear placeholder="Quận / Huyện / Thành Phố" [required]="true" label="Địa chỉ "
+        <app-input-clear placeholder="Quận / Huyện / Thành Phố"  label="Địa chỉ "
           [control]="$any(validateForm).controls['address']"
           ></app-input-clear>
           </div>
@@ -162,7 +161,7 @@
 
       <div nz-row nzWidth="100%" nzJustify="space-evenly">
         <nz-form-item nz-col nzSpan="12">
-          <nz-form-label [nzRequired]="true">Phương thức bán</nz-form-label>
+          <nz-form-label >Phương thức bán</nz-form-label>
           <nz-form-control nzErrorTip="Không được để trống">
             <nz-select nzShowSearch nzAllowClear placeholder="Chọn Phương thức bán" formControlName="salesMethodCode">
               <nz-option cdkScrollable *ngFor="let item of salesMethodResult" [nzLabel]="item.code + ' - ' + item.name"

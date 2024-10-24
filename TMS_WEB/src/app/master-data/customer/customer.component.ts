@@ -20,15 +20,16 @@ import { SalesMethodService } from '../../services/master-data/sales-method.serv
 })
 export class CustomerComponent {
   validateForm: FormGroup = this.fb.group({
-    code: ['', [Validators.required]],
+    code: [''],
     name: ['', [Validators.required]],
-    phone: ['', [Validators.required]],
-    email: ['', [Validators.required]],//, Validators.email
-    address: ['', [Validators.required]],
-    buyInfo: ['', [Validators.required]],
-    bankLoanInterest: ['', [Validators.required]],
+    phone: [''],
+    email: [''],//, Validators.email
+    address: [''],
+    gap: ['', [Validators.required]],
+    buyInfo: [''],
+    bankLoanInterest: [''],
 
-    salesMethodCode: ['', [Validators.required]],
+    salesMethodCode: [''],
     localCode: ['', [Validators.required]],
     marketCode: ['', [Validators.required]],
     isActive: [true, [Validators.required]],
@@ -163,8 +164,12 @@ export class CustomerComponent {
   }
   submitForm(): void {
     this.isSubmit = true
+    console.log(this.validateForm.getRawValue());
+
     if (this.validateForm.valid) {
       const formData = this.validateForm.getRawValue()
+      console.log(formData);
+
       if (this.edit) {
         this._service.updateCustomer(formData).subscribe({
           next: (data) => {
@@ -238,6 +243,7 @@ export class CustomerComponent {
       phone: data.phone,
       email: data.email,
       address: data.address,
+      gap: data.gap,
       buyInfo: data.buyInfo,
       bankLoanInterest: data.bankLoanInterest,
       salesMethodCode: data.salesMethodCode,
@@ -248,7 +254,6 @@ export class CustomerComponent {
     setTimeout(() => {
       this.edit = true
       this.visible = true
-      console.log(this.validateForm);
 
     }, 200)
   }

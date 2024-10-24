@@ -28,6 +28,9 @@ namespace DMS.CORE.Entities.MD
         [Column("ADDRESS", TypeName = "NVARCHAR(255)")]
         public string? Address { set; get; }
 
+        [Column("GAP", TypeName = "DECIMAL(18,0)")]
+        public decimal? Gap { set; get; }
+
         [Column("BUY_INFO", TypeName = "NVARCHAR(500)")]
         public string? BuyInfo { set; get; }
 

@@ -42,7 +42,10 @@
             Thuế BVMT
           </th>
           <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('thueBvmt', $event)" nzAlign="center">
-            L15 chưa VAT
+            L15 chưa VAT và BVMT
+          </th>
+          <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('thueBvmt', $event)" nzAlign="center">
+            L15 chưa VAT và BVMT NBL
           </th>
           <th rowspan="2" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('FromDate', $event)" nzAlign="center">
             Từ ngày
@@ -78,6 +81,7 @@
           <td class="align-right">{{ data.heSoVcf | number }}</td>
           <td class="align-right">{{ data.thueBvmt | number }}</td>
           <td class="align-right">{{ data.l15ChuaVatBvmt | number }}</td>
+          <td class="align-right">{{ data.l15ChuaVatBvmtNbl | number }}</td>
           <td class="align-right">{{ data.fromDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td class="align-right">{{ data.toDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">
@@ -122,6 +126,9 @@
       [control]="$any(validateForm).controls['thueBvmt']"></app-input-clear>
 
       <app-input-clear placeholder="L15 chưa VAT và BVMT" [required]="true" label="L15 chưa VAT và BVMT"
+      [control]="$any(validateForm).controls['l15ChuaVatBvmt']"></app-input-clear>
+
+      <app-input-clear placeholder="L15 chưa VAT và BVMT NBL" [required]="true" label="L15 chưa VAT và BVMT"
       [control]="$any(validateForm).controls['l15ChuaVatBvmt']"></app-input-clear>
 
       <nz-form-label [nzRequired]="true">Từ ngày -> Đến ngày</nz-form-label>

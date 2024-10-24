@@ -15,6 +15,7 @@ namespace DMS.BUSINESS.Services.MD
     public interface ICustomerService : IGenericService<TblMdCustomer, CustomerDto>
     {
         Task<IList<CustomerDto>> GetAll(BaseMdFilter filter);
+        Task<PagedResponseDto> Search(BaseFilter filter);
         Task<byte[]> Export(BaseMdFilter filter);
     }
     public class CustomerService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdCustomer, CustomerDto>(dbContext, mapper), ICustomerService
