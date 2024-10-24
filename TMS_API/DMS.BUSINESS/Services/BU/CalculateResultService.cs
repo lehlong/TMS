@@ -298,8 +298,9 @@ namespace DMS.BUSINESS.Services.BU
                 #endregion
 
                 #region ĐB
+                
                 var _oDb = 1;
-                foreach(var v in lstCustomer.OrderBy(x => x.LocalCode).Select(x => x.LocalCode).Distinct().ToList())
+                foreach (var v in lstCustomer.OrderBy(x => x.LocalCode).Select(x => x.LocalCode).Distinct().ToList())
                 {
                     var _v = _dbContext.tblMdLocal.Find(v);
                     data.DB.Add(new DB
@@ -307,13 +308,30 @@ namespace DMS.BUSINESS.Services.BU
                         ColB = _v.Name,
                         IsBold = true,
                     });
-                    foreach(var c in lstCustomer.Where(x => x.LocalCode == v).ToList())
+                    foreach (var c in lstCustomer.Where(x => x.LocalCode == v).ToList())
                     {
+
                         var _c = new DB
                         {
                             ColA = _oDb.ToString(),
                             ColB = c.Name,
+                            Col1 = lstMarket.FirstOrDefault(x => x.Code == c.MarketCode).Name,
+                            Col2 = c.Gap,
+                        
                         };
+                        foreach(var g in lstGoods)
+                        {
+                            _c.LG.Add(Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col13) ?? 0));
+                        };
+                        _c.Col4 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4);
+                        _c.Col5 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col5);
+                        _c.Col6 = 0;
+                        _c.Col3 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4 + x.Col5 + x.Col6);
+
+                        _c.Col9 = c.MgglhXang;
+                        _c.Col10 = c.MgglhDau;
+                        
+
                         data.DB.Add(_c);
                         _oDb++;
                     }
