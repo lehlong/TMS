@@ -331,13 +331,25 @@ namespace DMS.BUSINESS.Services.BU
                         ColB = c.Name,
                         Col5 = 0,
                         Col6 = 0,
-                        Col4 = lstMarket.FirstOrDefault()?.CPChungChuaCuocVC
+                        Col4 = lstMarket.FirstOrDefault()?.CPChungChuaCuocVC,
+                        Col7 = c.MgglhXang,
+                        Col8 = c.MgglhDau,
                     };
                     _i.Col3 = _i.Col4 + _i.Col5 + _i.Col6;
                     foreach (var g in lstGoods)
                     {
                         var _2 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col13) ?? 0);
                         _i.LG.Add(_2);
+
+                        var _x_d = g.Type == "X" ? _i.Col7 : _i.Col8;
+                        var vat = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col14) ?? 0) + _x_d;
+                        var nonVat = vat != 0 ? vat / 1.1M : 0;
+                        _i.GG.Add(new PT09_GG
+                        {
+                            VAT = Math.Round(vat ?? 0),
+                            NonVAT = Math.Round(nonVat ?? 0),
+                        });
+
                     }
                     _oPt09++;
                     data.PT09.Add(_i);

@@ -158,6 +158,14 @@ namespace DMS.BUSINESS.Models
         public decimal? Col4 { get; set; }
         public decimal? Col5 { get; set; }
         public decimal? Col6 { get; set; }
+        public decimal? Col7 { get; set; }
+        public decimal? Col8 { get; set; }
+        public List<PT09_GG> GG { get; set; } = new List<PT09_GG>();
+    }
+    public class PT09_GG
+    {
+        public decimal? VAT { get; set; }
+        public decimal? NonVAT { get; set; }
     }
     public class BBDO
     {

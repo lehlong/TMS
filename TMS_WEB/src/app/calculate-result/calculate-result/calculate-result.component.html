@@ -706,8 +706,12 @@
                             <td class="align-right">{{ t.col4 }}</td>
                             <td class="align-right">{{ t.col5 }}</td>
                             <td class="align-right">{{ t.col6 }}</td>
-                            <td class="align-right"></td>
-                            <td class="align-right"></td>
+                            <td class="align-right">{{ t.col7 }}</td>
+                            <td class="align-right">{{ t.col8 }}</td>
+                            @for (i of t.gg; track i){
+                                <td class="align-right">{{i.vat | number}}</td>
+                                <td class="align-right">{{i.nonVAT | number}}</td>
+                                }
                         </tr>
                         }
                     </tbody>
