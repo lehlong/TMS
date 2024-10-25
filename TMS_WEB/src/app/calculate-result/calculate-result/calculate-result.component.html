@@ -580,8 +580,8 @@
                             <td></td>
                             <td></td>
                             @for (i of data.lstGoods; track i){
-                              <td></td>
-                              }
+                            <td></td>
+                            }
                             <td></td>
                             <td></td>
                             <td></td>
@@ -590,7 +590,14 @@
                             <td></td>
                             <td></td>
                             <td></td>
-
+                            @for (i of data.lstGoods; track i){
+                            <td></td>
+                            <td></td>
+                            }
+                            <td></td>
+                            @for (i of data.lstGoods; track i){
+                                <td></td>
+                            }
                         </tr>
                         <tr *ngIf="t.isBold == false">
                             <td>{{ t.colA }}</td>
@@ -598,8 +605,8 @@
                             <td>{{ t.col1 }}</td>
                             <td>{{ t.col2 }}</td>
                             @for (i of t.lg; track i){
-                              <td class="align-right">{{i | number}}</td>
-                              }
+                            <td class="align-right">{{i | number}}</td>
+                            }
                             <td>{{ t.col3 }}</td>
                             <td>{{ t.col4 }}</td>
                             <td>{{ t.col5 }}</td>
@@ -610,10 +617,13 @@
                             <td>{{ t.col10 }}</td>
 
                             @for (i of t.gg; track i){
-                              <td class="align-right">{{i.vat | number}}</td>
-                              <td class="align-right">{{i.nonVAT | number}}</td>
-                              }
-
+                            <td class="align-right">{{i.vat | number}}</td>
+                            <td class="align-right">{{i.nonVAT | number}}</td>
+                            }
+                            <td></td>
+                            @for (i of t.ln; track i){
+                            <td class="align-right">{{i | number}}</td>
+                            }
                         </tr>
                         }
                     </tbody>
@@ -924,14 +934,14 @@
                     </thead>
                     <tbody>
                         @for (t of pl4Table.data; track t) {
-                            <tr >
-                                <td>{{ t.colA }}</td>
-                                <td>{{ t.colB }}</td>
-                                @for (i of t.gg; track i){
-                                    <td class="align-right">{{i | number}}</td>
-                                 }
-                            </tr>
+                        <tr>
+                            <td>{{ t.colA }}</td>
+                            <td>{{ t.colB }}</td>
+                            @for (i of t.gg; track i){
+                            <td class="align-right">{{i | number}}</td>
                             }
+                        </tr>
+                        }
                     </tbody>
 
                 </nz-table>

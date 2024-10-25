@@ -62,7 +62,7 @@ namespace DMS.BUSINESS.Models
     public class DLG_4
     {
         public string Code { get; set; }
-        public string Type { get; set; }   
+        public string Type { get; set; }
         public string ColA { get; set; }
         public string ColB { get; set; }
         public decimal? Col1 { get; set; }
@@ -129,6 +129,7 @@ namespace DMS.BUSINESS.Models
     }
     public class PT_GG
     {
+        public string Code { get; set; }
         public decimal? VAT { get; set; }
         public decimal? NonVAT { get; set; }
     }
@@ -153,10 +154,17 @@ namespace DMS.BUSINESS.Models
         public decimal? Col8 { get; set; }
         public decimal? Col9 { get; set; }
         public decimal? Col10 { get; set; }
-        public List<PT_GG> GG { get; set; } = new List<PT_GG>();
-
+        public List<DB_GG> GG { get; set; } = new List<DB_GG>();
+        public List<decimal?> LN { get; set; } = new List<decimal?>();
         public bool IsBold { get; set; } = false;
     }
+
+    public class DB_GG
+    {
+        public decimal? VAT { get; set; }
+        public decimal? NonVAT { get; set; }
+    }
+   
     public class FOB
     {
 

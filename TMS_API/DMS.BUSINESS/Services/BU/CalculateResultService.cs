@@ -242,6 +242,7 @@ namespace DMS.BUSINESS.Services.BU
                                 var p = data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "TT").Sum(x => x.Col14);
                                 var d = new PT_GG
                                 {
+                                    Code = _l.Code,
                                     VAT = p - i.Col5 * 1.1M + i.Col6
                                 };
                                 d.VAT = Math.Round(d.VAT == null ? 0M : d.VAT / 10 ?? 0) * 10;
@@ -270,6 +271,7 @@ namespace DMS.BUSINESS.Services.BU
                                 var p = data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "OTHER").Sum(x => x.Col14);
                                 var d = new PT_GG
                                 {
+                                    Code = _l.Code, 
                                     VAT = p - i.Col5 * 1.1M + i.Col6
                                 };
                                 d.VAT = Math.Round(d.VAT == null ? 0M : d.VAT / 10 ?? 0) * 10;
@@ -318,20 +320,32 @@ namespace DMS.BUSINESS.Services.BU
                             ColB = c.Name,
                             Col1 = lstMarket.FirstOrDefault(x => x.Code == c.MarketCode).Name,
                             Col2 = c.Gap,
-                        
-                        };
-                        foreach(var g in lstGoods)
-                        {
-                            _c.LG.Add(Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col13) ?? 0));
-                           
-                        };
-                        _c.Col4 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4);
-                        _c.Col5 = c.CuocVcBq ?? 0;
-                        _c.Col6 = 0;
-                        _c.Col3 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4 + x.Col5 + x.Col6);
+                            Col4 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4),
+                            Col5 = c.CuocVcBq ?? 0,
+                            Col6 = 0,
+                            Col3 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4 + x.Col5 + x.Col6),
+                            Col8 = 0,
+                            Col9 = c.MgglhXang,
+                            Col10 = c.MgglhDau,
 
-                        _c.Col9 = c.MgglhXang;
-                        _c.Col10 = c.MgglhDau;
+                        };
+                        var _rPt = data.PT.FirstOrDefault(x => x.Code == c.MarketCode);
+                        foreach (var g in lstGoods)
+                        {
+                            var _lg = c.LocalCode == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col13) : data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col13);
+                            _c.LG.Add(Math.Round(_lg ?? 0));
+                            var vat = g.Type == "X" ? _rPt.GG.Where(x => x.Code == g.Code).Sum(x => x.VAT) + _c.Col9 + _c.Col8 : _rPt.GG.Where(x => x.Code == g.Code).Sum(x => x.VAT) + _c.Col10 + _c.Col8;
+                            var nonVat = vat == 0 ? 0 : vat / 1.1M;
+                            _c.GG.Add(new DB_GG
+                            {
+                                VAT = Math.Round(vat ?? 0),
+                                NonVAT = Math.Round(nonVat ?? 0),
+                            });
+
+                            var _ln = _lg - _c.Col3 - nonVat - 0;
+                            _c.LN.Add(_ln == 0 ? 0 : Math.Round(_ln / 1.1M ?? 0));
+
+                        };
 
 
                         data.DB.Add(_c);
