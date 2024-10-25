@@ -29,6 +29,7 @@ import { DeliveryPointComponent } from './delivery-point/delivery-point.componen
 import { GiaGiaoTapDoanComponent } from './gia-giao-tap-doan/gia-giao-tap-doan.component'
 import { MucGiamPhoThongComponent } from './muc-giam-pho-thong/muc-giam-pho-thong.component'
 import { TinhToanDauRaComponent } from './tinh-toan-dau-ra/tinh-toan-dau-ra.component'
+import { CustomerTypeComponent } from './customer-type/customer-type.component'
 export const masterDataRoutes: Routes = [
   { path: 'currency', component: CurrencyComponent },
   { path: 'unit', component: UnitComponent },
@@ -68,5 +69,6 @@ export const masterDataRoutes: Routes = [
   {path: 'gia-giao-tap-doan', component: GiaGiaoTapDoanComponent},
   {path: 'muc-giam-pho-thong', component: MucGiamPhoThongComponent},
   {path: 'tinh-toan-dau-ra', component: TinhToanDauRaComponent},
+  {path: 'customer-type', component: CustomerTypeComponent},
 
 ]
