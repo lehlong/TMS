@@ -249,6 +249,7 @@ namespace DMS.BUSINESS.Services.BU
                                 d.NonVAT = Math.Round(d.NonVAT ?? 0);
                                 i.GG.Add(d);
 
+
                                 var _3 = d.NonVAT;
                                 i.LN.Add(_1 - _2 - _3);
 
@@ -322,20 +323,27 @@ namespace DMS.BUSINESS.Services.BU
                         foreach(var g in lstGoods)
                         {
                             _c.LG.Add(Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col13) ?? 0));
+                           
                         };
                         _c.Col4 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4);
-                        _c.Col5 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col5);
+                        _c.Col5 = c.CuocVcBq ?? 0;
                         _c.Col6 = 0;
                         _c.Col3 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4 + x.Col5 + x.Col6);
 
                         _c.Col9 = c.MgglhXang;
                         _c.Col10 = c.MgglhDau;
-                        
+
 
                         data.DB.Add(_c);
                         _oDb++;
                     }
                 }
+                #endregion
+
+                #region FOB
+
+
+
                 #endregion
 
                 #region PT09

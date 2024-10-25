@@ -26,6 +26,7 @@ export class CustomerComponent {
     email: [''],//, Validators.email
     address: [''],
     gap: ['', [Validators.required]],
+    cuocVcBq: [''],
     mgglhXang: ['', [Validators.required]],
     mgglhDau: ['', [Validators.required]],
     buyInfo: [''],
@@ -96,6 +97,7 @@ export class CustomerComponent {
     this.isSubmit = false
     this._service.searchCustomer(this.filter).subscribe({
       next: (data) => {
+        // console.log(data);
         this.paginationResult = data
       },
       error: (response) => {
@@ -246,6 +248,7 @@ export class CustomerComponent {
       email: data.email,
       address: data.address,
       gap: data.gap,
+      cuocVcBq: data.cuocVcBq,
       mgglhXang: data.mgglhXang,
       mgglhDau: data.mgglhDau,
       buyInfo: data.buyInfo,

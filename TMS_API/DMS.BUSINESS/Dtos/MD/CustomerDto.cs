@@ -35,6 +35,12 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Cự ly BQ")]
         public decimal? Gap { get; set; }
 
+        [Description("Cước vận chuyển bình quân")]
+        public decimal? CuocVcBq { get; set; }
+
+        [Description("Hỗ trợ cước Vân chuyển")]
+        public decimal? HoTroCuocVc { get; set; }
+
         [Description("Mức giảm xăng")]
         public decimal? MgglhXang { get; set; }
 

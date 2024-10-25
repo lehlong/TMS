@@ -609,6 +609,11 @@
                             <td>{{ t.col9 }}</td>
                             <td>{{ t.col10 }}</td>
 
+                            @for (i of t.gg; track i){
+                              <td class="align-right">{{i.vat | number}}</td>
+                              <td class="align-right">{{i.nonVAT | number}}</td>
+                              }
+
                         </tr>
                         }
                     </tbody>

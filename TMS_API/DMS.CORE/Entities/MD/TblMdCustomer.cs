@@ -31,6 +31,12 @@ namespace DMS.CORE.Entities.MD
         [Column("GAP", TypeName = "DECIMAL(18,0)")]
         public decimal? Gap { set; get; }
 
+        [Column("HO_TRO_CUOC_VC", TypeName = "DECIMAL(18,0)")]
+        public decimal? HoTroCuocVc { set; get; }
+
+        [Column("CUOC_VC_BQ", TypeName = "DECIMAL(18,0)")]
+        public decimal? CuocVcBq { set; get; }
+
         [Column("BUY_INFO", TypeName = "NVARCHAR(500)")]
         public string? BuyInfo { set; get; }
 
