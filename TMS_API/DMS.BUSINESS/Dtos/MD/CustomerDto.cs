@@ -59,6 +59,9 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Mã Vùng")]
         public string? LocalCode { get; set; }
 
+        [Description("Mã kiểu khách hàng")]
+        public string? CustomerTypeCode { get; set; }
+
         [Description("Mã thị trường")]
         public string? MarketCode { get; set; }
 

@@ -11,6 +11,8 @@ import { CustomerFilter } from '../../models/master-data/customer.model'
 import { CustomerService } from '../../services/master-data/customer.service'
 import { MarketService } from '../../services/master-data/market.service'
 import { SalesMethodService } from '../../services/master-data/sales-method.service'
+import { CustomerTypeComponent } from '../customer-type/customer-type.component'
+import { CustomerTypeService } from '../../services/master-data/customer-type.service'
 @Component({
   selector: 'app-local',
   standalone: true,
@@ -33,6 +35,7 @@ export class CustomerComponent {
     bankLoanInterest: [''],
 
     salesMethodCode: [''],
+    customerTypeCode: [''],
     localCode: ['', [Validators.required]],
     marketCode: ['', [Validators.required]],
     isActive: [true, [Validators.required]],
@@ -48,13 +51,14 @@ export class CustomerComponent {
   marketResult: any[] = []
   marketList: any[] = []
   salesMethodResult: any[] = []
-
+  customerTypeList: any[] = []
   loading: boolean = false
   CUSTOMER_RIGHTS = CUSTOMER_RIGHTS
 
   constructor(
     private _service: CustomerService,
     private _marketService: MarketService,
+    private _customerTypeService: CustomerTypeService,
     private _localService: LocalService,
     private _salesMethodService: SalesMethodService,
 
@@ -82,6 +86,7 @@ export class CustomerComponent {
     this.getAllSalesMethod()
     this.search()
     this.getAllMarket()
+    this.getAllCustomerType()
   }
 
   onSortChange(name: string, value: any) {
@@ -123,6 +128,18 @@ export class CustomerComponent {
     this._marketService.getall().subscribe({
       next: (data) => {
         this.marketList= data
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
+  }
+
+  getAllCustomerType(){
+    this.isSubmit = false
+    this._customerTypeService.getall().subscribe({
+      next: (data) => {
+        this.customerTypeList= data
       },
       error: (response) => {
         console.log(response)
@@ -254,6 +271,7 @@ export class CustomerComponent {
       buyInfo: data.buyInfo,
       bankLoanInterest: data.bankLoanInterest,
       salesMethodCode: data.salesMethodCode,
+      customerTypeCode: data.customerTypeCode,
       localCode: data.localCode,
       marketCode: data.marketCode,
       isActive: data.isActive,

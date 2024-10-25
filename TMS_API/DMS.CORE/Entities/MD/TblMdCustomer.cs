@@ -52,6 +52,9 @@ namespace DMS.CORE.Entities.MD
         [Column("MARKET_CODE", TypeName = "VARCHAR(50)")]
         public string? MarketCode { set; get; }
 
+        [Column("CUSTOMER_TYPE_CODE", TypeName = "VARCHAR(50)")]
+        public string? CustomerTypeCode { set; get; }
+
         [Column("MGGLH_XANG", TypeName = "DECIMAL(18,0)")]
         public decimal? MgglhXang { set; get; }
         [Column("MGGLH_DAU", TypeName = "DECIMAL(18,0)")]

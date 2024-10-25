@@ -51,6 +51,7 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('mgglhDau', $event)">Mức giảm <br> linh hoạt dầu</th>
 
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('salesMethodCode', $event)" nzAlign="center">Phương thức bán</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('customerTypeCode', $event)" nzAlign="center">Kiểu khách hàng</th>
 
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('bankLoanInterest', $event)">Lãi vay <br> ngân hàng</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('buyInfo', $event)">Thông tin mua hàng</th>
@@ -88,6 +89,11 @@
           <td nzAlign="right">
             <span *ngFor="let item of salesMethodResult" >
               <span *ngIf="item.code == data.salesMethodCode">{{ item.name }}</span>
+            </span>
+          </td>
+          <td nzAlign="right">
+            <span *ngFor="let item of customerTypeList" >
+              <span *ngIf="item.code == data.customerTypeCode">{{ item.name }}</span>
             </span>
           </td>
           <td  nzAlign="right">{{ data.bankLoanInterest }}</td>
@@ -181,9 +187,8 @@
       </div>
 
 
-
       <div nz-row nzWidth="100%" nzJustify="space-evenly">
-        <nz-form-item nz-col nzSpan="12">
+        <nz-form-item nz-col nzSpan="10">
           <nz-form-label >Phương thức bán</nz-form-label>
           <nz-form-control nzErrorTip="Không được để trống">
             <nz-select nzShowSearch nzAllowClear placeholder="Chọn Phương thức bán" formControlName="salesMethodCode">
@@ -194,7 +199,19 @@
           </nz-form-control>
         </nz-form-item>
 
-        <app-input-clear nz-col nzSpan="11" placeholder="Nhập lãi vay" [required]="true" label="Lãi vay ngân hàng"
+
+        <nz-form-item nz-col nzSpan="7">
+          <nz-form-label >Kiểu khách hàng</nz-form-label>
+          <nz-form-control nzErrorTip="Không được để trống">
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn kiểu khách hàng" formControlName="customerTypeCode">
+              <nz-option cdkScrollable *ngFor="let item of customerTypeList" [nzLabel]="item.name"
+                [nzValue]="item.code">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <app-input-clear nz-col nzSpan="6" placeholder="Nhập lãi vay"  label="Lãi vay ngân hàng"
           [control]="$any(validateForm).controls['bankLoanInterest']"
           ></app-input-clear>
       </div>
