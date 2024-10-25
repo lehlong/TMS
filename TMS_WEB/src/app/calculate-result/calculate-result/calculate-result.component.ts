@@ -41,6 +41,7 @@ export class CalculateResultComponent {
     db: [],
     pT09: [],
     pL4: [],
+    fob: [],
   }
 
   ngOnInit() {

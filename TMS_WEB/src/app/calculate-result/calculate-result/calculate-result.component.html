@@ -596,7 +596,7 @@
                             }
                             <td></td>
                             @for (i of data.lstGoods; track i){
-                                <td></td>
+                            <td></td>
                             }
                         </tr>
                         <tr *ngIf="t.isBold == false">
@@ -637,7 +637,7 @@
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #fobTable
-                    [nzData]="data.db">
+                    [nzData]="data.fob">
                     <thead>
                         <tr>
                             <th rowspan="3">STT</th>
@@ -676,15 +676,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for (t of dbTable.data; track t) {
+                        @for (t of fobTable.data; track t) {
                         <tr *ngIf="t.isBold == true" style="font-weight: bold;">
                             <td>{{ t.colA }}</td>
                             <td>{{ t.colB }}</td>
-
+                            @for (i of data.lstGoods; track i){
+                            <td></td>
+                            }
                         </tr>
                         <tr *ngIf="t.isBold == false">
                             <td>{{ t.colA }}</td>
                             <td>{{ t.colB }}</td>
+                            @for (i of t.lg; track i){
+                            <td class="align-right">{{i | number}}</td>
+                            }
                         </tr>
                         }
                     </tbody>

@@ -30,7 +30,7 @@ namespace DMS.BUSINESS.Services.BU
             {
                 //var fDate = DateTime.Parse(model.FDate);
                 var data = new CalculateResultModel();
-                var lstGoods = await _dbContext.TblMdGoods.OrderBy(x => x.Code).ToListAsync();
+                var lstGoods = await _dbContext.TblMdGoods.OrderBy(x => x.CreateDate).ToListAsync();
                 data.lstGoods = lstGoods;
                 var lstMarket = await _dbContext.TblMdMarket.OrderBy(x => x.Code).ToListAsync();
                 var lstLGDT = await _dbContext.TblMdLaiGopDieuTiet.ToListAsync();
@@ -303,7 +303,7 @@ namespace DMS.BUSINESS.Services.BU
                 #region ĐB
                 
                 var _oDb = 1;
-                foreach (var v in lstCustomer.OrderBy(x => x.LocalCode).Select(x => x.LocalCode).Distinct().ToList())
+                foreach (var v in lstCustomer.Where(x => x.CustomerTypeCode == "KBM").OrderBy(x => x.LocalCode).Select(x => x.LocalCode).Distinct().ToList())
                 {
                     var _v = _dbContext.tblMdLocal.Find(v);
                     data.DB.Add(new DB
@@ -311,7 +311,7 @@ namespace DMS.BUSINESS.Services.BU
                         ColB = _v.Name,
                         IsBold = true,
                     });
-                    foreach (var c in lstCustomer.Where(x => x.LocalCode == v).ToList())
+                    foreach (var c in lstCustomer.Where(x => x.LocalCode == v && x.CustomerTypeCode == "KBM").ToList())
                     {
 
                         var _c = new DB
@@ -356,13 +356,39 @@ namespace DMS.BUSINESS.Services.BU
 
                 #region FOB
 
+                foreach(var l in lstCustomer.Where(x => x.CustomerTypeCode == "KBB").OrderBy(x => x.LocalCode).Select(x => x.LocalCode).Distinct().ToList())
+                {
+                    var local = _dbContext.tblMdLocal.Find(l);
+                    data.FOB.Add(new FOB
+                    {
+                        ColB = local.Name,
+                        IsBold = true,
+                    });
+                    var _oFob = 1;
+                    foreach(var c in lstCustomer.Where(x => x.CustomerTypeCode == "KBB" && x.LocalCode == l))
+                    {
+                        var _fob = new FOB
+                        {
+                            ColA = _oFob.ToString(),
+                            ColB = c.Name,
+                        };
+                        data.FOB.Add(_fob);
+                        _oFob++;
 
+                        foreach (var _l in lstGoods)
+                        {
+                            var lg = l == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "TT").Sum(x => x.Col13) : data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "OTHER").Sum(x => x.Col13);
+                            _fob.LG.Add(Math.Round(lg ?? 0));
+
+                        }
+                    }
+                }
 
                 #endregion
 
                 #region PT09
                 var _oPt09 = 1;
-                foreach(var c in lstCustomer.Where(x => x.SalesMethodCode == "TNPP").ToList())
+                foreach(var c in lstCustomer.Where(x => x.CustomerTypeCode == "TNPP").ToList())
                 {
                     var _i = new PT09
                     {
