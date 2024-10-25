@@ -40,6 +40,7 @@ export class CalculateResultComponent {
     pt: [],
     db: [],
     pT09: [],
+    pL2: [],
     pL4: [],
     fob: [],
   }

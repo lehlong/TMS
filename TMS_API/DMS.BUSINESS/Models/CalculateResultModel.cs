@@ -14,6 +14,7 @@ namespace DMS.BUSINESS.Models
         public DLG DLG { get; set; } = new DLG();
         public List<DB> DB { get; set; } = new List<DB>();
         public List<PT09> PT09 { get; set; } = new List<PT09>();
+        public List<PL2> PL2 { get; set; } = new List<PL2>();
         public List<PL4> PL4 { get; set; } = new List<PL4>();
         public List<FOB> FOB { get; set; } = new List<FOB>();
     }
@@ -209,7 +210,10 @@ namespace DMS.BUSINESS.Models
     }
     public class PL2
     {
-
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public string ColB { get; set; }
+        public List<decimal?> GG { get; set; } = new List<decimal?>();
     }
     public class PL3
     {

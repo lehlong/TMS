@@ -316,6 +316,7 @@ namespace DMS.BUSINESS.Services.BU
 
                         var _c = new DB
                         {
+                            Code = c.Code,
                             ColA = _oDb.ToString(),
                             ColB = c.Name,
                             Col1 = lstMarket.FirstOrDefault(x => x.Code == c.MarketCode).Name,
@@ -432,6 +433,28 @@ namespace DMS.BUSINESS.Services.BU
                     _oPt09++;
                     data.PT09.Add(_i);
                 }
+                #endregion
+
+                #region PL2
+                var _oPl2 = 1;
+                foreach (var c in lstCustomer.Where(x => x.CustomerTypeCode == "KBM").ToList())
+                {
+                    var pl2 = new PL2
+                    {
+                        Code = c.Code,
+                        ColA = _oPl2.ToString(),
+                        ColB = c.Name,
+                    };
+                    var _db = data.DB.FirstOrDefault(x => x.Code == c.Code);
+                    _oPl2++;
+                    if (_db == null) continue;
+                    foreach (var gg in _db.GG)
+                    {
+                        pl2.GG.Add(gg.VAT);
+                    }
+                    data.PL2.Add(pl2);
+                }
+
                 #endregion
 
                 return await RoundNumberData(data);

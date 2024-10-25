@@ -857,8 +857,8 @@
             (nzClick)="changeTitle('MỨC GIẢM GIÁ ĐẶC BIỆT HÀNG GIAO TRÊN PHƯƠNG TIỆN BÊN BÁN TẠI KHO BÊN MUA')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
-                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #fobTable
-                    [nzData]="data.db">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl2Table
+                    [nzData]="data.pL2">
                     <thead>
                         <tr>
                             <th rowspan="3" class="align-center">STT</th>
@@ -877,7 +877,15 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                        @for (t of pl2Table.data; track t) {
+                        <tr>
+                            <td>{{ t.colA }}</td>
+                            <td>{{ t.colB }}</td>
+                            @for (i of t.gg; track i){
+                            <td class="align-right">{{i | number}}</td>
+                            }
+                        </tr>
+                        }
                     </tbody>
 
                 </nz-table>
