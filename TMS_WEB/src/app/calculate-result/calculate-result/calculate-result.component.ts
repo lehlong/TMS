@@ -41,6 +41,7 @@ export class CalculateResultComponent {
     db: [],
     pT09: [],
     pL2: [],
+    pL3: [],
     pL4: [],
     fob: [],
   }

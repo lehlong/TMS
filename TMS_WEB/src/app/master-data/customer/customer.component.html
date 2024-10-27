@@ -91,9 +91,9 @@
               <span *ngIf="item.code == data.salesMethodCode">{{ item.name }}</span>
             </span>
           </td>
-          <td nzAlign="right">
+          <td nzAlign="right" style="padding: 5px">
             <span *ngFor="let item of customerTypeList" >
-              <span *ngIf="item.code == data.customerTypeCode">{{ item.name }}</span>
+              <span  *ngIf="item.code == data.customerTypeCode">{{ item.name }}</span>
             </span>
           </td>
           <td  nzAlign="right">{{ data.bankLoanInterest }}</td>

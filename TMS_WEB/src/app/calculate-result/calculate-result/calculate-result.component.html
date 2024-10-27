@@ -924,8 +924,8 @@
             (nzClick)="changeTitle('MỨC GIẢM GIÁ GIAO TẠI KHO BÊN BÁN (KHO XĂNG DẦU BẾN THỦY/ NGHI HƯƠNG)')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
-                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #fobTable
-                    [nzData]="data.db">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl3Table
+                    [nzData]="data.pL3">
                     <thead>
                         <tr>
                             <th rowspan="3" class="align-center">STT</th>
@@ -944,7 +944,16 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                      @for (i of pl3Table.data; track i)
+                      {
+                        <tr>
+                            <td class="align-right">{{ i.colA }}</td>
+                            <td class="align-right">{{ i.colB }}</td>
+                            @for (g of i.gg; track g) {
+                              <td class="align-right">{{ g | number }}</td>
+                            }
+                          </tr>
+                        }
                     </tbody>
 
                 </nz-table>

@@ -370,6 +370,7 @@ namespace DMS.BUSINESS.Services.BU
                     {
                         var _fob = new FOB
                         {
+                            Code = c.Code,
                             ColA = _oFob.ToString(),
                             ColB = c.Name,
                             Col2 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4) ?? 0,
@@ -476,6 +477,28 @@ namespace DMS.BUSINESS.Services.BU
 
                 #endregion
 
+                #region PL3
+                var _oPl3 = 1;
+                foreach (var c in lstCustomer.Where(x => x.CustomerTypeCode == "KBB").ToList())
+                {
+                    var pl3 = new PL3
+                    {
+                        Code = c.Code,
+                        ColA = _oPl3.ToString(),
+                        ColB = c.Name,
+                    };
+                    var dataFob = data.FOB.FirstOrDefault(x => x.Code == c.Code);
+                    _oPl3++;
+                    if (dataFob == null) continue;
+                    foreach (var gg in dataFob.GG)
+                    {
+                        pl3.GG.Add(gg.VAT);
+                    }
+
+                    data.PL3.Add(pl3);
+                }
+
+                #endregion
                 return await RoundNumberData(data);
             }
             catch (Exception ex)
