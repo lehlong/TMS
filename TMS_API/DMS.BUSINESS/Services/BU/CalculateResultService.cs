@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using DMS.BUSINESS.Models;
 using DocumentFormat.OpenXml.VariantTypes;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -324,7 +325,7 @@ namespace DMS.BUSINESS.Services.BU
                             Col4 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4),
                             Col5 = c.CuocVcBq ?? 0,
                             Col6 = 0,
-                            Col3 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4 + x.Col5 + x.Col6),
+                            Col3 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4 + x.Col6) + c.CuocVcBq,
                             Col8 = 0,
                             Col9 = c.MgglhXang,
                             Col10 = c.MgglhDau,
@@ -343,8 +344,7 @@ namespace DMS.BUSINESS.Services.BU
                                 NonVAT = Math.Round(nonVat ?? 0),
                             });
 
-                            var _ln = _lg - _c.Col3 - nonVat - 0;
-                            _c.LN.Add(_ln == 0 ? 0 : Math.Round(_ln / 1.1M ?? 0));
+                            _c.LN.Add(Math.Round(_lg - _c.Col3 - nonVat - 0 / 1.1M ?? 0));
 
                         };
 
@@ -372,16 +372,35 @@ namespace DMS.BUSINESS.Services.BU
                         {
                             ColA = _oFob.ToString(),
                             ColB = c.Name,
+                            Col2 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4) ?? 0,
+                            Col3 = c.CuocVcBq ?? 0,
+                            Col4 = 0,
+                            Col1 = c.CuocVcBq ?? 0 + data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4),
+                            Col5 = 0,
+                            Col6 = c.MgglhXang ?? 0,
+                            Col7 = c.MgglhDau ?? 0,
+                            Col8 = 0,
                         };
-                        data.FOB.Add(_fob);
                         _oFob++;
-
-                        foreach (var _l in lstGoods)
+                        var lPT = data.PT.FirstOrDefault(x => x.Code == c.MarketCode);
+                        foreach (var g in lstGoods)
                         {
-                            var lg = l == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "TT").Sum(x => x.Col13) : data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "OTHER").Sum(x => x.Col13);
+                            var lg = l == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col13) : data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col13);
                             _fob.LG.Add(Math.Round(lg ?? 0));
 
+                            var gg = l == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col14) : data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col14);
+                            var vat = g.Type == "X" ? gg + _fob.Col6 + _fob.Col5 : gg + _fob.Col7 + _fob.Col5;
+                            var nonVat = vat == 0 ? 0 : vat / 1.1M;
+
+                            _fob.GG.Add(new FOB_GG
+                            {
+                                VAT = Math.Round(vat ?? 0),
+                                NonVAT = Math.Round(nonVat ?? 0),
+                            });
+                            _fob.LN.Add(Math.Round(lg - _fob.Col1 - nonVat - _fob.Col8 / 1.1M ?? 0));
                         }
+                        data.FOB.Add(_fob);
+
                     }
                 }
 

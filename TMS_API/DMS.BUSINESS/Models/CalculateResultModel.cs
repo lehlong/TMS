@@ -173,8 +173,25 @@ namespace DMS.BUSINESS.Models
         public string ColA { get; set; }
         public string ColB { get; set; }
         public List<decimal?> LG { get; set; } = new List<decimal?>();
+        public decimal? Col1 { get; set; }
+        public decimal? Col2 { get; set; }
+        public decimal? Col3 { get; set; }
+        public decimal? Col4 { get; set; }
+        public decimal? Col5 { get; set; }
+        public decimal? Col6 { get; set; }
+        public decimal? Col7 { get; set; }
+        public List<FOB_GG?> GG { get; set; } = new List<FOB_GG>();
+        public decimal? Col8 { get; set; }
+        public List<decimal?> LN { get; set; } = new List<decimal?>();
         public bool IsBold { get; set; } = false;
     }
+
+    public class FOB_GG
+    {
+        public decimal? VAT { get; set; }
+        public decimal? NonVAT { get; set; }
+    }
+
     public class PT09
     {
         public string Code { get; set; }

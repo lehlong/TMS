@@ -27,10 +27,10 @@ export class CustomerComponent {
     phone: [''],
     email: [''],//, Validators.email
     address: [''],
-    gap: ['', [Validators.required]],
+    gap: [''],
     cuocVcBq: [''],
-    mgglhXang: ['', [Validators.required]],
-    mgglhDau: ['', [Validators.required]],
+    mgglhXang: [''],
+    mgglhDau: [''],
     buyInfo: [''],
     bankLoanInterest: [''],
 
