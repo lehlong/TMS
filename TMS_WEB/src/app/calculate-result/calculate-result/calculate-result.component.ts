@@ -44,6 +44,7 @@ export class CalculateResultComponent {
     pL3: [],
     pL4: [],
     fob: [],
+    vK11PT: [],
   }
 
   ngOnInit() {

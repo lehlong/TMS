@@ -998,7 +998,67 @@
             </div>
         </nz-tab>
         <nz-tab nzTitle="VK11 PT" (nzClick)="changeTitle('VK11 PT')">
+            <div style="overflow: auto; height: calc(100vh - 210px);">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #vk11ptTable
+                    [nzData]="data.vK11PT">
+                    <thead>
+                        <tr>
+                            <th class="align-center">STT</th>
+                            <th class="align-center">Tên Khách hàng đại lý</th>
+                            <th class="align-center">Vùng CHXD</th>
+                            <th class="align-center">Cự ly <br> V/c km</th>
+                            <th class="align-center">Đơn giá <br> Cước đ/l</th>
+                            <th class="align-center">P thức</th>
+                            <th class="align-center">Mã khách</th>
+                            <th class="align-center">Mã hàng hoá</th>
+                            <th class="align-center">ĐVT</th>
+                            <th class="align-center">Thời hạn TT</th>
+                            <th class="align-center">Giá chưa <br> VAT&BVMT</th>
+                            <th class="align-center">Unit</th>
+                            <th class="align-center">Per</th>
+                            <th class="align-center">ĐVT</th>
+                            <th class="align-center">#</th>
+                            <th class="align-center">Hiệu lực từ</th>
+                            <th class="align-center">Thời gian</th>
+                            <th class="align-center">đến</th>
+                            <th class="align-center">Lower limit</th>
+                            <th class="align-center">Upper limit</th>
+                        </tr>
+                        
+                    </thead>
+                    <tbody>
+                        @for (t of vk11ptTable.data; track t) {
+                        <tr *ngIf="t.isBold" style="font-weight: bold;">
+                            <td></td>
+                            <td colspan="19">{{ t.colB }}</td>
+                        </tr>
+                        <tr *ngIf="!t.isBold">
+                            <td>{{ t.colA }}</td>
+                            <td>{{ t.colB }}</td>
+                            <td>{{ t.col1 }}</td>
+                            <td>{{ t.col2 }}</td>
+                            <td>{{ t.col3 }}</td>
+                            <td>{{ t.col4 }}</td>
+                            <td>{{ t.col5 }}</td>
+                            <td>{{ t.col6 }}</td>
+                            <td>{{ t.col7 }}</td>
+                            <td>{{ t.col8 }}</td>
+                            <td>{{ t.col9 }}</td>
+                            <td>{{ t.col10 }}</td>
+                            <td>{{ t.col11 }}</td>
+                            <td>{{ t.col12 }}</td>
+                            <td>{{ t.col13 }}</td>
+                            <td>{{ t.col14 }}</td>
+                            <td>{{ t.col15 }}</td>
+                            <td>{{ t.col16 }}</td>
+                            <td>{{ t.col17 }}</td>
+                            <td>{{ t.col18 }}</td>
+                        </tr>
+                        }
+                    </tbody>
 
+                </nz-table>
+            </div>
         </nz-tab>
         <nz-tab nzTitle="VK11 ĐB" (nzClick)="changeTitle('VK11 ĐB')">
 

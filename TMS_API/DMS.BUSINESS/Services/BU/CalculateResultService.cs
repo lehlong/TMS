@@ -499,6 +499,36 @@ namespace DMS.BUSINESS.Services.BU
                 }
 
                 #endregion
+
+                #region VK11 PT
+                foreach(var g in lstGoods)
+                {
+                    data.VK11PT.Add(new VK11PT
+                    {
+                        ColB = g.Name,
+                        IsBold = true,
+                    });
+                    var _o = 1;
+                    foreach(var c in lstCustomer.Where(x => x.CustomerTypeCode == "VK11PT").ToList())
+                    {
+                        var _i = new VK11PT
+                        {
+                            ColA = _o.ToString(),
+                            ColB = c.Name,
+                            Col2 = c.Gap,
+                            Col5 = c.Code,
+                            Col6 = g.Code,
+                            Col7 = "L",
+                            Col10 = "VND",
+                            Col11 = 1,
+                            Col12 = "L",
+                            Col13 = "C"
+                        };
+                        data.VK11PT.Add(_i);
+                        _o++;
+                    }
+                }
+                #endregion
                 return await RoundNumberData(data);
             }
             catch (Exception ex)

@@ -120,7 +120,7 @@
 <nz-drawer  nzWidth="60%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
-    <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitFormCustomer()">
       <div nz-row nzJustify="space-evenly" >
         <app-input-clear nzWidth="100%" nz-col nzSpan="13" placeholder="Nhập khách hàng " [required]="true" label="Tên khách hàng "
           [control]="$any(validateForm).controls['name']"
@@ -243,13 +243,13 @@
   <nz-space>
     <ng-container *ngIf="edit">
       <button [nzLoading]="loading" [appPermission]="CUSTOMER_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
-        class="!flex !items-center" (click)="submitForm()">
+        class="!flex !items-center" (click)="submitFormCustomer()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>
     <ng-container *ngIf="!edit">
       <button [nzLoading]="loading" *nzSpaceItem [appPermission]="CUSTOMER_RIGHTS.ADD" nz-button nzType="primary"
-        class="!flex !items-center" (click)="submitForm()">
+        class="!flex !items-center" (click)="submitFormCustomer()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>

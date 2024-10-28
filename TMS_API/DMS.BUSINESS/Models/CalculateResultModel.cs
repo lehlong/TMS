@@ -18,6 +18,7 @@ namespace DMS.BUSINESS.Models
         public List<PL3> PL3 { get; set; } = new List<PL3>();
         public List<PL4> PL4 { get; set; } = new List<PL4>();
         public List<FOB> FOB { get; set; } = new List<FOB>();
+        public List<VK11PT> VK11PT { get; set; } = new List<VK11PT>();
     }
     public class DLG
     {
@@ -250,7 +251,28 @@ namespace DMS.BUSINESS.Models
     }
     public class VK11PT
     {
-
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public string ColB { get; set; }
+        public bool IsBold { get; set; } = false;
+        public string Col1 { get; set; }
+        public decimal? Col2 { get; set; }
+        public decimal? Col3 { get; set; }
+        public decimal? Col4 { get; set; }
+        public string Col5 { get; set; }
+        public string Col6 { get; set; }
+        public string Col7 { get; set; }
+        public string Col8 { get; set; }
+        public decimal? Col9 { get; set; }
+        public string Col10 { get; set; }
+        public decimal? Col11 { get; set; }
+        public string Col12 { get; set; }
+        public string Col13 { get; set; }
+        public string Col14 { get; set; }
+        public string Col15 { get; set; }
+        public string Col16 { get; set; }
+        public string Col17 { get; set; }
+        public string Col18 { get; set; }
     }
     public class VK11DB
     {

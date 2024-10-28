@@ -182,7 +182,7 @@ export class CustomerComponent {
   isCodeExist(code: string): boolean {
     return this.paginationResult.data?.some((local: any) => local.code === code)
   }
-  submitForm(): void {
+  submitFormCustomer(): void {
     this.isSubmit = true
     // console.log(this.validateForm.getRawValue());
 
