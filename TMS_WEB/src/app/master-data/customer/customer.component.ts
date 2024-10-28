@@ -36,8 +36,8 @@ export class CustomerComponent {
 
     salesMethodCode: [''],
     customerTypeCode: [''],
-    localCode: ['', [Validators.required]],
-    marketCode: ['', [Validators.required]],
+    localCode: [''],
+    marketCode: [''],
     isActive: [true, [Validators.required]],
 
   })

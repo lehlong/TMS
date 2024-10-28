@@ -152,7 +152,7 @@
           </div>
       <div nz-row nzJustify="space-evenly" >
         <nz-form-item nz-col nzSpan="11">
-          <nz-form-label [nzRequired]="true">Vùng</nz-form-label>
+          <nz-form-label >Vùng</nz-form-label>
           <nz-form-control nzErrorTip="Không được để trống">
             <nz-select nzShowSearch nzAllowClear placeholder="Chọn Vùng" formControlName="localCode" (ngModelChange)="searchMarket()">
               <nz-option cdkScrollable
@@ -165,7 +165,7 @@
         </nz-form-item>
 
         <nz-form-item nz-col nzSpan="12">
-            <nz-form-label [nzRequired]="true">Thị Trường</nz-form-label>
+            <nz-form-label >Thị Trường</nz-form-label>
             <nz-form-control nzErrorTip="Không được để trống">
               <nz-select nzShowSearch nzAllowClear placeholder="Chọn thị trường" formControlName="marketCode">
                 <nz-option cdkScrollable *ngFor="let item of marketResult" [nzLabel]="item.code + ' - ' + item.name"
