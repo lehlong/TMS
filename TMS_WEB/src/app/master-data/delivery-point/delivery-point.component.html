@@ -54,10 +54,10 @@
           <td>
             <a (click)="openEdit(data)">{{ data.code }}</a>
           </td>
-          <td nzAlign="center">{{ data.name }}</td>
-          <td nzAlign="center">
+          <td >{{ data.name }}</td>
+          <td >
             <span *ngFor="let item of customerResult" >
-              <span *ngIf="item.code == data.customerCode">{{ item.code + ' - ' + item.name }}</span>
+              <span *ngIf="item.code == data.customerCode">{{ item.name }}</span>
             </span>
           </td>
           <td nzAlign="center">{{ data.createDate | date: 'dd/MM/yyyy HH:mm'}}</td>
@@ -77,7 +77,7 @@
 </div>
 
 <!--Create Update-->
-<nz-drawer [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+<nz-drawer [nzMask]="!edit" nzWidth="40%" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
