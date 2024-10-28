@@ -547,6 +547,9 @@
                                 kho khách hàng</th>
                             <th rowspan="3" class="align-center">CK Vòng 2 <br> đạt được <br> chưa VAT</th>
                             <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
+
+                            <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">{{
+                                item.name }}</th>
                         </tr>
                         <tr>
                             @for (i of data.lstGoods; track i){
@@ -561,6 +564,10 @@
                             }
                             @for (i of data.lstGoods; track i){
                             <th rowspan="2" class="align-center">{{i.name}}</th>
+                            }
+                            @for (i of data.lstGoods; track i){
+                            <th rowspan="2">CHƯA VAT, BVMT</th>
+                            <th rowspan="2">CÓ VAT, BVMT</th>
                             }
                         </tr>
                         <tr>
@@ -598,6 +605,10 @@
                             @for (i of data.lstGoods; track i){
                             <td></td>
                             }
+                            @for (i of data.lstGoods; track i){
+                            <td></td>
+                            <td></td>
+                            }
                         </tr>
                         <tr *ngIf="t.isBold == false">
                             <td>{{ t.colA }}</td>
@@ -623,6 +634,10 @@
                             <td></td>
                             @for (i of t.ln; track i){
                             <td class="align-right">{{i | number}}</td>
+                            }
+                            @for (i of t.bvmt; track i){
+                            <td class="align-right">{{i.nonVAT | number}}</td>
+                            <td class="align-right">{{i.vat | number}}</td>
                             }
                         </tr>
                         }
@@ -650,6 +665,8 @@
                             <th colspan="{{ data.lstGoods.length * 2 }}" class="align-center">Đề xuất mức giảm giá </th>
                             <th rowspan="3" class="align-center">CK Vòng 2 <br> đạt được <br> chưa VAT</th>
                             <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
+                            <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">{{
+                                item.name }}</th>
                         </tr>
                         <tr>
                             @for (i of data.lstGoods; track i){
@@ -664,6 +681,10 @@
                             }
                             @for (i of data.lstGoods; track i){
                             <th rowspan="2" class="align-center">{{i.name}}</th>
+                            }
+                            @for (i of data.lstGoods; track i){
+                            <th rowspan="2">CHƯA VAT, BVMT</th>
+                            <th rowspan="2">CÓ VAT, BVMT</th>
                             }
                         </tr>
                         <tr>
@@ -694,6 +715,10 @@
                             <td></td>
                             <td></td>
                             }
+                            @for (i of data.lstGoods; track i){
+                            <td></td>
+                            <td></td>
+                            }
                         </tr>
                         <tr *ngIf="t.isBold == false">
                             <td>{{ t.colA }}</td>
@@ -710,14 +735,18 @@
                             <td>{{ t.col6 }}</td>
                             <td>{{ t.col7 }}</td>
                             @for (i of t.gg; track i){
-                              <td class="align-right">{{i.vat | number}}</td>
-                              <td class="align-right">{{i.nonVAT | number}}</td>
-                              }
+                            <td class="align-right">{{i.vat | number}}</td>
+                            <td class="align-right">{{i.nonVAT | number}}</td>
+                            }
                             <td class="align-right">{{t.col8 | number}}</td>
 
                             @for (i of t.ln; track i){
-                              <td class="align-right">{{i | number}}</td>
-                              }
+                            <td class="align-right">{{i | number}}</td>
+                            }
+                            @for (i of t.bvmt; track i){
+                            <td class="align-right">{{i.nonVAT | number}}</td>
+                            <td class="align-right">{{i.vat | number}}</td>
+                            }
                         </tr>
                         }
                     </tbody>
@@ -744,6 +773,8 @@
                                 kho Công ty </th>
                             <th rowspan="3" class="align-center">CK Vòng 2 <br> đạt được <br> chưa VAT</th>
                             <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
+                            <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">{{
+                                item.name }}</th>
                         </tr>
                         <tr>
                             @for (i of data.lstGoods; track i){
@@ -759,6 +790,10 @@
                             @for (i of data.lstGoods; track i){
                             <th rowspan="2" class="align-center">{{i.name}}</th>
                             }
+                            @for (i of data.lstGoods; track i){
+                                <th rowspan="2">CHƯA VAT, BVMT</th>
+                                <th rowspan="2">CÓ VAT, BVMT</th>
+                                }
                         </tr>
                         <tr>
                             <th class="align-center">Xăng</th>
@@ -791,6 +826,10 @@
                             @for (i of t.ln; track i){
                             <td class="align-right">{{i | number}}</td>
                             }
+                            @for (i of t.bvmt; track i){
+                                <td class="align-right">{{i.nonVAT | number}}</td>
+                                <td class="align-right">{{i.vat | number}}</td>
+                                }
                         </tr>
                         }
                     </tbody>
@@ -854,8 +893,8 @@
             (nzClick)="changeTitle('MỨC GIẢM GIÁ PHỔ THÔNG HÀNG GIAO TRÊN PHƯƠNG TIỆN BÊN BÁN TẠI KHO BÊN MUA')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
-                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #fobTable
-                    [nzData]="data.db">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl1Table
+                    [nzData]="data.pL1">
                     <thead>
                         <tr>
                             <th rowspan="3" class="align-center">STT</th>
@@ -874,7 +913,15 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                        @for (t of pl1Table.data; track t) {
+                        <tr>
+                            <td>{{ t.colA }}</td>
+                            <td>{{ t.colB }}</td>
+                            @for (i of t.gg; track i){
+                            <td class="align-right">{{i | number}}</td>
+                            }
+                        </tr>
+                        }
                     </tbody>
 
                 </nz-table>
@@ -944,15 +991,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                      @for (i of pl3Table.data; track i)
-                      {
+                        @for (i of pl3Table.data; track i)
+                        {
                         <tr>
                             <td>{{ i.colA }}</td>
                             <td>{{ i.colB }}</td>
                             @for (g of i.gg; track g) {
-                              <td class="align-right">{{ g | number }}</td>
+                            <td class="align-right">{{ g | number }}</td>
                             }
-                          </tr>
+                        </tr>
                         }
                     </tbody>
 
@@ -1024,7 +1071,7 @@
                             <th class="align-center">Lower limit</th>
                             <th class="align-center">Upper limit</th>
                         </tr>
-                        
+
                     </thead>
                     <tbody>
                         @for (t of vk11ptTable.data; track t) {
@@ -1038,12 +1085,12 @@
                             <td>{{ t.col1 }}</td>
                             <td>{{ t.col2 }}</td>
                             <td>{{ t.col3 }}</td>
-                            <td>{{ t.col4 }}</td>
+                            <td class="align-right">{{t.col4 | number }}</td>
                             <td>{{ t.col5 }}</td>
                             <td>{{ t.col6 }}</td>
                             <td>{{ t.col7 }}</td>
                             <td>{{ t.col8 }}</td>
-                            <td>{{ t.col9 }}</td>
+                            <td class="align-right">{{ t.col9 | number }}</td>
                             <td>{{ t.col10 }}</td>
                             <td>{{ t.col11 }}</td>
                             <td>{{ t.col12 }}</td>
@@ -1061,13 +1108,195 @@
             </div>
         </nz-tab>
         <nz-tab nzTitle="VK11 ĐB" (nzClick)="changeTitle('VK11 ĐB')">
+            <div style="overflow: auto; height: calc(100vh - 210px);">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #vk11dbTable
+                    [nzData]="data.vK11DB">
+                    <thead>
+                        <tr>
+                            <th class="align-center">STT</th>
+                            <th class="align-center">Địa chỉ</th>
+                            <th class="align-center">Tên Khách hàng đại lý</th>
+                            <th class="align-center">Vùng CHXD</th>
+                            <th class="align-center">Cự ly <br> V/c km</th>
+                            <th class="align-center">Đơn giá <br> Cước đ/l</th>
+                            <th class="align-center">P thức</th>
+                            <th class="align-center">Mã khách</th>
+                            <th class="align-center">Mã hàng hoá</th>
+                            <th class="align-center">ĐVT</th>
+                            <th class="align-center">Thời hạn TT</th>
+                            <th class="align-center">Giá chưa <br> VAT&BVMT</th>
+                            <th class="align-center">Unit</th>
+                            <th class="align-center">Per</th>
+                            <th class="align-center">ĐVT</th>
+                            <th class="align-center">#</th>
+                            <th class="align-center">Hiệu lực từ</th>
+                            <th class="align-center">Thời gian</th>
+                            <th class="align-center">đến</th>
+                            <th class="align-center">Lower limit</th>
+                            <th class="align-center">Upper limit</th>
+                        </tr>
 
+                    </thead>
+                    <tbody>
+                        @for (t of vk11dbTable.data; track t) {
+                        <tr *ngIf="t.isBold" style="font-weight: bold;">
+                            <td></td>
+                            <td colspan="20">{{ t.colB }}</td>
+                        </tr>
+                        <tr *ngIf="!t.isBold">
+                            <td>{{ t.colA }}</td>
+                            <td>{{ t.colB }}</td>
+                            <td>{{ t.colC }}</td>
+                            <td>{{ t.col1 }}</td>
+                            <td>{{ t.col2 }}</td>
+                            <td>{{ t.col3 }}</td>
+                            <td class="align-right">{{t.col4 | number }}</td>
+                            <td>{{ t.col5 }}</td>
+                            <td>{{ t.col6 }}</td>
+                            <td>{{ t.col7 }}</td>
+                            <td>{{ t.col8 }}</td>
+                            <td class="align-right">{{ t.col9 | number }}</td>
+                            <td>{{ t.col10 }}</td>
+                            <td>{{ t.col11 }}</td>
+                            <td>{{ t.col12 }}</td>
+                            <td>{{ t.col13 }}</td>
+                            <td>{{ t.col14 }}</td>
+                            <td>{{ t.col15 }}</td>
+                            <td>{{ t.col16 }}</td>
+                            <td>{{ t.col17 }}</td>
+                            <td>{{ t.col18 }}</td>
+                        </tr>
+                        }
+                    </tbody>
+
+                </nz-table>
+            </div>
         </nz-tab>
         <nz-tab nzTitle="VK11-FOB" (nzClick)="changeTitle('VK11-FOB')">
+            <div style="overflow: auto; height: calc(100vh - 210px);">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #vk11fobTable
+                    [nzData]="data.vK11FOB">
+                    <thead>
+                        <tr>
+                            <th class="align-center">STT</th>
+                            <th class="align-center">Tên Khách hàng đại lý</th>
+                            <th class="align-center">Vùng CHXD</th>
+                            <th class="align-center">Cự ly <br> V/c km</th>
+                            <th class="align-center">Đơn giá <br> Cước đ/l</th>
+                            <th class="align-center">P thức</th>
+                            <th class="align-center">Mã khách</th>
+                            <th class="align-center">Mã hàng hoá</th>
+                            <th class="align-center">ĐVT</th>
+                            <th class="align-center">Thời hạn TT</th>
+                            <th class="align-center">Giá chưa <br> VAT&BVMT</th>
+                            <th class="align-center">Unit</th>
+                            <th class="align-center">Per</th>
+                            <th class="align-center">ĐVT</th>
+                            <th class="align-center">#</th>
+                            <th class="align-center">Hiệu lực từ</th>
+                            <th class="align-center">Thời gian</th>
+                            <th class="align-center">đến</th>
+                            <th class="align-center">Lower limit</th>
+                            <th class="align-center">Upper limit</th>
+                        </tr>
 
+                    </thead>
+                    <tbody>
+                        @for (t of vk11fobTable.data; track t) {
+                        <tr *ngIf="t.isBold" style="font-weight: bold;">
+                            <td></td>
+                            <td colspan="19">{{ t.colB }}</td>
+                        </tr>
+                        <tr *ngIf="!t.isBold">
+                            <td>{{ t.colA }}</td>
+                            <td>{{ t.colC }}</td>
+                            <td>{{ t.col1 }}</td>
+                            <td>{{ t.col2 }}</td>
+                            <td>{{ t.col3 }}</td>
+                            <td class="align-right">{{t.col4 | number }}</td>
+                            <td>{{ t.col5 }}</td>
+                            <td>{{ t.col6 }}</td>
+                            <td>{{ t.col7 }}</td>
+                            <td>{{ t.col8 }}</td>
+                            <td class="align-right">{{ t.col9 | number }}</td>
+                            <td>{{ t.col10 }}</td>
+                            <td>{{ t.col11 }}</td>
+                            <td>{{ t.col12 }}</td>
+                            <td>{{ t.col13 }}</td>
+                            <td>{{ t.col14 }}</td>
+                            <td>{{ t.col15 }}</td>
+                            <td>{{ t.col16 }}</td>
+                            <td>{{ t.col17 }}</td>
+                            <td>{{ t.col18 }}</td>
+                        </tr>
+                        }
+                    </tbody>
+
+                </nz-table>
+            </div>
         </nz-tab>
         <nz-tab nzTitle="VK11-TNPP" (nzClick)="changeTitle('VK11-TNPP')">
+            <div style="overflow: auto; height: calc(100vh - 210px);">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #vk11tnppTable
+                    [nzData]="data.vK11TNPP">
+                    <thead>
+                        <tr>
+                            <th class="align-center">STT</th>
+                            <th class="align-center">Tên Khách hàng đại lý</th>
+                            <th class="align-center">Vùng CHXD</th>
+                            <th class="align-center">Cự ly <br> V/c km</th>
+                            <th class="align-center">Đơn giá <br> Cước đ/l</th>
+                            <th class="align-center">P thức</th>
+                            <th class="align-center">Mã khách</th>
+                            <th class="align-center">Mã hàng hoá</th>
+                            <th class="align-center">ĐVT</th>
+                            <th class="align-center">Thời hạn TT</th>
+                            <th class="align-center">Giá chưa <br> VAT&BVMT</th>
+                            <th class="align-center">Unit</th>
+                            <th class="align-center">Per</th>
+                            <th class="align-center">ĐVT</th>
+                            <th class="align-center">#</th>
+                            <th class="align-center">Hiệu lực từ</th>
+                            <th class="align-center">Thời gian</th>
+                            <th class="align-center">đến</th>
+                            <th class="align-center">Lower limit</th>
+                            <th class="align-center">Upper limit</th>
+                        </tr>
 
+                    </thead>
+                    <tbody>
+                        @for (t of vk11tnppTable.data; track t) {
+                        <tr *ngIf="t.isBold" style="font-weight: bold;">
+                            <td></td>
+                            <td colspan="19">{{ t.colB }}</td>
+                        </tr>
+                        <tr *ngIf="!t.isBold">
+                            <td>{{ t.colA }}</td>
+                            <td>{{ t.colC }}</td>
+                            <td>{{ t.col1 }}</td>
+                            <td>{{ t.col2 }}</td>
+                            <td>{{ t.col3 }}</td>
+                            <td class="align-right">{{t.col4 | number }}</td>
+                            <td>{{ t.col5 }}</td>
+                            <td>{{ t.col6 }}</td>
+                            <td>{{ t.col7 }}</td>
+                            <td>{{ t.col8 }}</td>
+                            <td class="align-right">{{ t.col9 | number }}</td>
+                            <td>{{ t.col10 }}</td>
+                            <td>{{ t.col11 }}</td>
+                            <td>{{ t.col12 }}</td>
+                            <td>{{ t.col13 }}</td>
+                            <td>{{ t.col14 }}</td>
+                            <td>{{ t.col15 }}</td>
+                            <td>{{ t.col16 }}</td>
+                            <td>{{ t.col17 }}</td>
+                            <td>{{ t.col18 }}</td>
+                        </tr>
+                        }
+                    </tbody>
+
+                </nz-table>
+            </div>
         </nz-tab>
         <nz-tab nzTitle="PTS" (nzClick)="changeTitle('PTS')">
 

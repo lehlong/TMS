@@ -14,11 +14,15 @@ namespace DMS.BUSINESS.Models
         public DLG DLG { get; set; } = new DLG();
         public List<DB> DB { get; set; } = new List<DB>();
         public List<PT09> PT09 { get; set; } = new List<PT09>();
+        public List<PL1> PL1 { get; set; } = new List<PL1>();
         public List<PL2> PL2 { get; set; } = new List<PL2>();
         public List<PL3> PL3 { get; set; } = new List<PL3>();
         public List<PL4> PL4 { get; set; } = new List<PL4>();
         public List<FOB> FOB { get; set; } = new List<FOB>();
         public List<VK11PT> VK11PT { get; set; } = new List<VK11PT>();
+        public List<VK11DB> VK11DB { get; set; } = new List<VK11DB>();
+        public List<VK11FOB> VK11FOB { get; set; } = new List<VK11FOB>();
+        public List<VK11TNPP> VK11TNPP { get; set; } = new List<VK11TNPP>();
     }
     public class DLG
     {
@@ -139,6 +143,7 @@ namespace DMS.BUSINESS.Models
     }
     public class PT_BVMT
     {
+        public string Code { get; set; }
         public decimal? VAT { get; set; }
         public decimal? NonVAT { get; set; }
     }
@@ -161,6 +166,7 @@ namespace DMS.BUSINESS.Models
         public List<DB_GG> GG { get; set; } = new List<DB_GG>();
         public List<decimal?> LN { get; set; } = new List<decimal?>();
         public bool IsBold { get; set; } = false;
+        public List<DB_BVMT> BVMT { get; set; } = new List<DB_BVMT>();
     }
 
     public class DB_GG
@@ -168,7 +174,14 @@ namespace DMS.BUSINESS.Models
         public decimal? VAT { get; set; }
         public decimal? NonVAT { get; set; }
     }
-   
+
+    public class DB_BVMT
+    {
+        public string Code { get; set; }
+        public decimal? VAT { get; set; }
+        public decimal? NonVAT { get; set; }
+    }
+
     public class FOB
     {
         public string Code { get; set; }
@@ -186,6 +199,7 @@ namespace DMS.BUSINESS.Models
         public decimal? Col8 { get; set; }
         public List<decimal?> LN { get; set; } = new List<decimal?>();
         public bool IsBold { get; set; } = false;
+        public List<PT_BVMT> BVMT { get; set; } = new List<PT_BVMT>();
     }
 
     public class FOB_GG
@@ -209,6 +223,7 @@ namespace DMS.BUSINESS.Models
         public List<PT09_GG> GG { get; set; } = new List<PT09_GG>();
         public decimal? Col18 { get; set; }
         public List<decimal?> LN { get; set; } = new List<decimal?>();
+        public List<PT_BVMT> BVMT { get; set; } = new List<PT_BVMT>();
     }
     public class PT09_GG
     {
@@ -225,7 +240,10 @@ namespace DMS.BUSINESS.Models
     }
     public class PL1
     {
-
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public string ColB { get; set; }
+        public List<decimal?> GG { get; set; } = new List<decimal?>();
     }
     public class PL2
     {
@@ -276,15 +294,81 @@ namespace DMS.BUSINESS.Models
     }
     public class VK11DB
     {
-
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public string ColB { get; set; }
+        public string ColC { get; set; }
+        public bool IsBold { get; set; } = false;
+        public string Col1 { get; set; }
+        public decimal? Col2 { get; set; }
+        public decimal? Col3 { get; set; }
+        public decimal? Col4 { get; set; }
+        public string Col5 { get; set; }
+        public string Col6 { get; set; }
+        public string Col7 { get; set; }
+        public string Col8 { get; set; }
+        public decimal? Col9 { get; set; }
+        public string Col10 { get; set; }
+        public decimal? Col11 { get; set; }
+        public string Col12 { get; set; }
+        public string Col13 { get; set; }
+        public string Col14 { get; set; }
+        public string Col15 { get; set; }
+        public string Col16 { get; set; }
+        public string Col17 { get; set; }
+        public string Col18 { get; set; }
     }
     public class VK11FOB
     {
-
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public string ColB { get; set; }
+        public string ColC { get; set; }
+        public bool IsBold { get; set; } = false;
+        public string Col1 { get; set; }
+        public decimal? Col2 { get; set; }
+        public decimal? Col3 { get; set; }
+        public string Col4 { get; set; }
+        public string Col5 { get; set; }
+        public string Col6 { get; set; }
+        public string Col7 { get; set; }
+        public string Col8 { get; set; }
+        public decimal? Col9 { get; set; }
+        public string Col10 { get; set; }
+        public decimal? Col11 { get; set; }
+        public string Col12 { get; set; }
+        public string Col13 { get; set; }
+        public string Col14 { get; set; }
+        public string Col15 { get; set; }
+        public string Col16 { get; set; }
+        public string Col17 { get; set; }
+        public string Col18 { get; set; }
     }
     public class VK11TNPP
     {
-
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public string ColB { get; set; }
+        public string ColC { get; set; }
+        public bool IsBold { get; set; } = false;
+        public string Col1 { get; set; }
+        public decimal? Col2 { get; set; }
+        public decimal? Col3 { get; set; }
+        public string Col4 { get; set; }
+        public string Col5 { get; set; }
+        public string Col6 { get; set; }
+        public string Col7 { get; set; }
+        public string Col8 { get; set; }
+        public decimal? Col9 { get; set; }
+        public string Col10 { get; set; }
+        public decimal? Col11 { get; set; }
+        public string Col12 { get; set; }
+        public string Col13 { get; set; }
+        public string Col14 { get; set; }
+        public string Col15 { get; set; }
+        public string Col16 { get; set; }
+        public string Col17 { get; set; }
+        public string Col18 { get; set; }
     }
     public class PTS
     {

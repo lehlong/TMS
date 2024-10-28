@@ -40,11 +40,15 @@ export class CalculateResultComponent {
     pt: [],
     db: [],
     pT09: [],
+    pL1: [],
     pL2: [],
     pL3: [],
     pL4: [],
     fob: [],
     vK11PT: [],
+    vK11DB: [],
+    vK11FOB: [],
+    vK11TNPP: [],
   }
 
   ngOnInit() {
