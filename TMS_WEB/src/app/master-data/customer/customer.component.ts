@@ -148,8 +148,6 @@ export class CustomerComponent {
 
   searchMarket() {
     this.isSubmit = false
-    console.log(this.validateForm.get('localCode')?.value as string);
-
     this.marketResult = this.marketList.filter(market => market.localCode === this.validateForm.get('localCode')?.value)
   }
 
@@ -277,6 +275,7 @@ export class CustomerComponent {
     setTimeout(() => {
       this.edit = true
       this.visible = true
+      this.searchMarket()
 
     }, 200)
   }
