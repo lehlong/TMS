@@ -27,13 +27,12 @@ export class CustomerComponent {
     phone: [''],
     email: [''],//, Validators.email
     address: [''],
-    gap: [''],
-    cuocVcBq: [''],
-    mgglhXang: [''],
-    mgglhDau: [''],
+    gap: [0],
+    cuocVcBq: [0],
+    mgglhXang: [0],
+    mgglhDau: [0],
     buyInfo: [''],
-    bankLoanInterest: [''],
-
+    bankLoanInterest: [0],
     salesMethodCode: [''],
     customerTypeCode: [''],
     localCode: [''],
@@ -185,12 +184,11 @@ export class CustomerComponent {
   }
   submitForm(): void {
     this.isSubmit = true
-    console.log(this.validateForm.getRawValue());
+    // console.log(this.validateForm.getRawValue());
 
     if (this.validateForm.valid) {
       const formData = this.validateForm.getRawValue()
       console.log(formData);
-
       if (this.edit) {
         this._service.updateCustomer(formData).subscribe({
           next: (data) => {
