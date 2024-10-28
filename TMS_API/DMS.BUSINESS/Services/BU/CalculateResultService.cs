@@ -36,9 +36,12 @@ namespace DMS.BUSINESS.Services.BU
                 var lstMarket = await _dbContext.TblMdMarket.OrderBy(x => x.Code).ToListAsync();
                 var lstLGDT = await _dbContext.TblMdLaiGopDieuTiet.ToListAsync();
                 var lstCustomer = await _dbContext.TblMdCustomer.ToListAsync();
+                var lstDGH = await _dbContext.TblMdDeliveryPoint.ToListAsync();
 
                 var dataVCL = await _dbContext.TblInVinhCuaLo.ToListAsync();
                 var dataHSMH = await _dbContext.TblInHeSoMatHang.ToListAsync();
+
+
                 #region DLG
                 var _oDlg = 1;
                 foreach (var g in lstGoods)
@@ -482,6 +485,28 @@ namespace DMS.BUSINESS.Services.BU
                     data.PT09.Add(_i);
 
                 }
+                #endregion
+
+                #region BB DO
+                var _oBbdo = 1;
+                foreach (var _g in lstGoods.Where(x => x.Code == "0601002").ToList())
+                {
+                    foreach (var _c in lstCustomer.Where(x => x.CustomerTypeCode == "BBDO").ToList())
+                    {
+                        foreach (var _d in lstDGH.Where(x => x.CustomerCode == _c.Code))
+                        {
+                            var bbdo = new BBDO
+                            {
+                                Code = _c.Code,
+                                ColA = _oBbdo.ToString(),
+                                ColB = _c.Name,
+                                ColC = _d.Name,
+                            };
+                            
+                        }
+                    }
+                }
+
                 #endregion
 
                 #region PL2
