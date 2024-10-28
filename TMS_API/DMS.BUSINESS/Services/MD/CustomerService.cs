@@ -29,7 +29,7 @@ namespace DMS.BUSINESS.Services.MD
                 if (!string.IsNullOrWhiteSpace(filter.KeyWord))
                 {
                     query = query.Where(x =>
-                    x.Code.Contains(filter.KeyWord));
+                    x.Code.Contains(filter.KeyWord) || x.Name.Contains(filter.KeyWord));
                 }
                 if (filter.IsActive.HasValue)
                 {
