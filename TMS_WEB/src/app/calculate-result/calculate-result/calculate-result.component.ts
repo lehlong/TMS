@@ -52,6 +52,7 @@ export class CalculateResultComponent {
   }
 
   ngOnInit() {
+    this.model.fDate = this.model.fDate.toLocaleString();
     this.GetData(this.model)
   }
 
@@ -60,7 +61,7 @@ export class CalculateResultComponent {
   }
   onChangeDate(result: any): void {
     var d = new Date(result)
-    this.model.fDate = d.toUTCString()
+    this.model.fDate = d.toUTCString();
     this.GetData(this.model)
   }
   GetData(model: any) {
