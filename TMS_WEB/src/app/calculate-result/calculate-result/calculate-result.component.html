@@ -1,9 +1,9 @@
 <div class="container-list">
     <div class="site-page-header-ghost-wrapper">
-        <nz-page-header [nzTitle]="title" class="site-page-header">
+        <nz-page-header nzBackIcon [nzTitle]="title" class="site-page-header">
             <nz-page-header-extra>
                 <nz-space [nzWrap]="true" class="gap-[5px]">
-                    <nz-space>
+                    <!-- <nz-space>
                         <nz-date-picker [nzShowTime]="true" [(ngModel)]="date"
                             (ngModelChange)="onChangeDate($event)"></nz-date-picker><br />
                         <button class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
@@ -14,10 +14,33 @@
                             nzType="default">
                             <span nz-icon nzType="redo"></span>
                         </button>
-                    </nz-space>
+                    </nz-space> -->
+                    
+                    <button class="!flex !items-center" nzType="default" nz-button (click)="getDataHeader()">
+                        <span nz-icon nzType="right-square"></span> Dữ liệu đầu vào
+                    </button>
+                    <button class="!flex !items-center" nzType="default" nz-button (click)="reCalculate()">
+                        <span nz-icon nzType="calculator"></span> Tính toán lại
+                    </button>
+                    <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('01')">
+                        <span nz-icon nzType="send"></span> Trình duyệt
+                    </button>
+                    <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('02')">
+                        <span nz-icon nzType="undo"></span> Yêu cầu chỉnh sửa
+                    </button>
+                    <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('03')">
+                        <span nz-icon nzType="check"></span> Phê duyệt
+                    </button>
+                    <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('04')">
+                        <span nz-icon nzType="close"></span> Từ chối
+                    </button>
+                    <button class="!flex !items-center" nzType="default" nz-button (click)="showHistoryAction()">
+                        <span nz-icon nzType="history"></span> Lịch sử thực hiện
+                    </button>
                     <button class="!flex !items-center" nzType="primary" nz-button>
                         <span nz-icon nzType="file-excel"></span> Xuất Excel
                     </button>
+                    
                 </nz-space>
             </nz-page-header-extra>
         </nz-page-header>
@@ -421,7 +444,7 @@
             </div>
 
         </nz-tab>
-        <nz-tab nzTitle="PT" (nzClick)="changeTitle('CƠ SỞ TÍNH MỨC GIẢM GIÁ PHỔ THÔNG')">
+        <nz-tab nzTitle="PT" (nzClick)="changeTitle('PT')">
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #ptTable
                     [nzData]="data.pt">
@@ -527,7 +550,7 @@
             </div>
 
         </nz-tab>
-        <nz-tab nzTitle="ĐB" (nzClick)="changeTitle('CƠ SỞ TÍNH MỨC GIẢM GIÁ ĐẶC BIỆT')">
+        <nz-tab nzTitle="ĐB" (nzClick)="changeTitle('ĐB')">
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #dbTable
                     [nzData]="data.db">
@@ -648,7 +671,7 @@
 
         </nz-tab>
         <nz-tab nzTitle="FOB"
-            (nzClick)="changeTitle('CƠ SỞ TÍNH MỨC GIẢM GIÁ CHO CÁC KHÁCH HÀNG GIAO TẠI KHO BÊN BÁN')">
+            (nzClick)="changeTitle('FOB')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #fobTable
@@ -756,7 +779,7 @@
 
         </nz-tab>
         <nz-tab nzTitle="PT09"
-            (nzClick)="changeTitle('CƠ SỞ TÍNH MỨC GIẢM GIÁ CHO CÁC KHÁCH HÀNG GIAO TẠI KHO BÊN BÁN CHO TNPP')">
+            (nzClick)="changeTitle('PT09')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pt09Table
@@ -838,7 +861,7 @@
             </div>
 
         </nz-tab>
-        <nz-tab nzTitle="BB DO" (nzClick)="changeTitle('BẢNG GIÁ BÁN BUÔN ĐIÊZEN CÁC KHÁCH HÀNG MUA BUÔN TRỰC TIẾP')">
+        <nz-tab nzTitle="BB DO" (nzClick)="changeTitle('BB DO')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #fobTable
@@ -864,7 +887,7 @@
             </div>
 
         </nz-tab>
-        <nz-tab nzTitle="BB FO" (nzClick)="changeTitle('BẢNG GIÁ BÁN BUÔN FO 3,5S CÁC KHÁCH HÀNG MUA BUÔN TRỰC TIẾP')">
+        <nz-tab nzTitle="BB FO" (nzClick)="changeTitle('BB FO')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #fobTable
@@ -890,7 +913,7 @@
 
         </nz-tab>
         <nz-tab nzTitle="PL1"
-            (nzClick)="changeTitle('MỨC GIẢM GIÁ PHỔ THÔNG HÀNG GIAO TRÊN PHƯƠNG TIỆN BÊN BÁN TẠI KHO BÊN MUA')">
+            (nzClick)="changeTitle('PL1')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl1Table
@@ -929,7 +952,7 @@
 
         </nz-tab>
         <nz-tab nzTitle="PL2"
-            (nzClick)="changeTitle('MỨC GIẢM GIÁ ĐẶC BIỆT HÀNG GIAO TRÊN PHƯƠNG TIỆN BÊN BÁN TẠI KHO BÊN MUA')">
+            (nzClick)="changeTitle('PL2')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl2Table
@@ -968,7 +991,7 @@
 
         </nz-tab>
         <nz-tab nzTitle="PL3"
-            (nzClick)="changeTitle('MỨC GIẢM GIÁ GIAO TẠI KHO BÊN BÁN (KHO XĂNG DẦU BẾN THỦY/ NGHI HƯƠNG)')">
+            (nzClick)="changeTitle('PL3')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl3Table
@@ -1007,7 +1030,7 @@
             </div>
 
         </nz-tab>
-        <nz-tab nzTitle="PL4" (nzClick)="changeTitle('ÁP DỤNG CHO THƯƠNG NHÂN PHÂN PHỐI')">
+        <nz-tab nzTitle="PL4" (nzClick)="changeTitle('PL4')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl4Table
@@ -1309,3 +1332,65 @@
         </nz-tab>
     </nz-tabset>
 </div>
+
+<!-- History -->
+<nz-modal nzWidth="60%" [(nzVisible)]="isVisibleHistory" nzTitle="LỊCH SỬ THỰC HIỆN" (nzOnCancel)="handleCancel()" nzCancelText="Đóng">
+    <ng-container *nzModalContent>
+        <nz-table #historyTable [nzData]="data.db">
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Hành động</th>
+                <th>Người cập nhật</th>
+                <th>Thời gian cập nhật</th>
+                <th>Nội dung</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- @for (data of historyTable.data; track data) {
+                <tr>
+                  <td>{{ data.name }}</td>
+                  <td>{{ data.age }}</td>
+                  <td>{{ data.address }}</td>
+                  <td>
+                    <a>Action 一 {{ data.name }}</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a>Delete</a>
+                  </td>
+                </tr>
+              } -->
+            </tbody>
+          </nz-table>
+    </ng-container>
+  </nz-modal>
+
+  <!-- Dữ liệu gốc -->
+<nz-drawer [nzWidth]="'60%'" [nzVisible]="visibleDrawer" nzPlacement="right" [nzTitle]="'DỮ LIỆU ĐẦU VÀO (DỮ LIỆU GỐC)'" [nzExtra]="extra"
+    (nzOnClose)="closeDrawer()">
+    <ng-container *nzDrawerContent>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+    </ng-container>
+</nz-drawer>
+<ng-template #extra>
+    <button nz-button nzType="primary" (click)="closeDrawer()">Cập nhật</button>
+</ng-template>
+
+<!-- Thay đổi trạng thái -->
+<nz-modal
+      [(nzVisible)]="isVisibleStatus"
+      [nzTitle]="statusModel.title"
+      (nzOnCancel)="handleCancel()"
+      (nzOnOk)="handleOk()"
+      nzCancelText="Huỷ"
+    >
+      <p *nzModalContent>{{statusModel.des}}</p>
+      <ng-container *nzModalContent>
+        <textarea
+        nz-input
+        placeholder="Autosize height with minimum and maximum number of lines"
+        [nzAutosize]="{ minRows: 2, maxRows: 6 }"
+      ></textarea>
+      </ng-container>
+    </nz-modal>

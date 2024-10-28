@@ -27,6 +27,9 @@ export class CalculateResultComponent {
   model = {
     fDate: '',
   }
+  isVisibleHistory : boolean = false;
+  visibleDrawer : boolean = false;
+  isVisibleStatus: boolean = false;
   data: any = {
     lstGoods: [],
     dlg: {
@@ -49,10 +52,16 @@ export class CalculateResultComponent {
     vK11DB: [],
     vK11FOB: [],
     vK11TNPP: [],
-  }
+  };
+
+  statusModel = {
+    title: '',
+    des: '',
+    value: ''
+  };
 
   ngOnInit() {
-    this.model.fDate = this.model.fDate.toLocaleString();
+    this.model.fDate = this.model.fDate.toLocaleString();    
     this.GetData(this.model)
   }
 
@@ -79,5 +88,47 @@ export class CalculateResultComponent {
   }
   changeTitle(value: string) {
     this.title = value
+  }
+  changeStatus(value: string){
+    switch (value) {
+      case '01':
+        this.statusModel.title = "TRÌNH DUYỆT";
+        this.statusModel.des = "Bạn có muốn Trình duyệt dữ liệu này?";
+        break;
+      case '02':
+        this.statusModel.title = "YÊU CẦU CHỈNH SỬA";
+        this.statusModel.des = "Bạn có muốn Yêu cầu chỉnh sửa lại dữ liệu này?";
+        break;
+      case '03':
+        this.statusModel.title = "PHÊ DUYỆT";
+        this.statusModel.des = "Bạn có muốn Phê duyệt dữ liệu này?";
+        break;
+      case '04':
+        this.statusModel.title = "TỪ CHỐI";
+        this.statusModel.des = "Bạn có muốn Từ chối dữ liệu này?";
+        break;
+    }
+    this.isVisibleStatus = true
+  }
+  showHistoryAction(){
+    this.isVisibleHistory = true;
+  }
+  handleOk(): void {
+    this.isVisibleHistory = false;
+    this.isVisibleStatus = false;
+  }
+
+  handleCancel(): void {
+    this.isVisibleHistory = false;
+    this.isVisibleStatus = false;
+  }
+  reCalculate(){
+    this.GetData(this.model);
+  }
+  closeDrawer(){
+    this.visibleDrawer = false;
+  }
+  getDataHeader(){
+    this.visibleDrawer = true;
   }
 }
