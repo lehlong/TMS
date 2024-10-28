@@ -947,8 +947,8 @@
                       @for (i of pl3Table.data; track i)
                       {
                         <tr>
-                            <td class="align-right">{{ i.colA }}</td>
-                            <td class="align-right">{{ i.colB }}</td>
+                            <td>{{ i.colA }}</td>
+                            <td>{{ i.colB }}</td>
                             @for (g of i.gg; track g) {
                               <td class="align-right">{{ g | number }}</td>
                             }

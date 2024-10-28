@@ -92,7 +92,7 @@
           <nz-form-label [nzRequired]="true">Khách hàng</nz-form-label>
           <nz-form-control nzErrorTip="Không được để trống">
             <nz-select nzShowSearch nzAllowClear placeholder="Chọn khách hàng" formControlName="customerCode">
-              <nz-option cdkScrollable *ngFor="let item of customerResult" [nzLabel]="item.code + ' - ' + item.name"
+              <nz-option cdkScrollable *ngFor="let item of customerResult" [nzLabel]="item.name"
                 [nzValue]="item.code">
               </nz-option>
             </nz-select>

@@ -39,7 +39,7 @@
       <thead>
         <tr>
           <th  nzWidth="15px">STT</th>
-          <th [nzSortFn]="true" nzWidth="70px" (nzSortOrderChange)="onSortChange('name', $event)">Khách hàng</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)">Khách hàng</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('phone', $event)">Số điện thoại</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('email', $event)">Email</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('address', $event)">Địa chỉ</th>
@@ -61,46 +61,46 @@
       </thead>
       <tbody>
         <tr *ngFor="let data of headerTable.data; let i = index" (dblclick)="openEdit(data)">
-          <td nzAlign="right"> {{
+          <td> {{
             (paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1
             }} </td>
 
-          <td nzAlign="right" >
+          <td>
             <a (click)="openEdit(data)">{{ data.name }}</a>
           </td>
-          <td nzAlign="right">{{ data.phone }}</td>
-          <td nzAlign="right">{{ data.email }}</td>
-          <td nzAlign="right">{{ data.address }}</td>
-          <td nzAlign="right">
+          <td>{{ data.phone }}</td>
+          <td>{{ data.email }}</td>
+          <td>{{ data.address }}</td>
+          <td>
             <span *ngFor="let item of localResult" >
               <span *ngIf="item.code == data.localCode">{{ item.code + ' - ' + item.name }}</span>
             </span>
           </td>
-          <td nzAlign="right">
+          <td>
             <span *ngFor="let item of marketList" >
               <span *ngIf="item.code == data.marketCode">{{ item.name }}</span>
             </span>
           </td>
-          <td nzAlign="right">{{ data.gap }}</td>
-          <td nzAlign="right">{{ data.cuocVcBq }}</td>
-          <td nzAlign="right">{{ data.mgglhXang }}</td>
-          <td nzAlign="right">{{ data.mgglhDau }}</td>
+          <td>{{ data.gap }}</td>
+          <td>{{ data.cuocVcBq }}</td>
+          <td>{{ data.mgglhXang }}</td>
+          <td>{{ data.mgglhDau }}</td>
 
-          <td nzAlign="right">
+          <td>
             <span *ngFor="let item of salesMethodResult" >
               <span *ngIf="item.code == data.salesMethodCode">{{ item.name }}</span>
             </span>
           </td>
-          <td nzAlign="right" style="padding: 5px">
+          <td style="padding: 5px">
             <span *ngFor="let item of customerTypeList" >
               <span  *ngIf="item.code == data.customerTypeCode">{{ item.name }}</span>
             </span>
           </td>
-          <td  nzAlign="right">{{ data.bankLoanInterest }}</td>
-          <td  nzAlign="right">{{ data.buyInfo }}</td>
+          <td >{{ data.bankLoanInterest }}</td>
+          <td >{{ data.buyInfo }}</td>
 
 
-          <td  nzAlign="right">
+          <td >
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
               nzTheme="outline"></span>
           </td>
