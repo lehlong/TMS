@@ -14,7 +14,7 @@ namespace DMS.BUSINESS.Models
         public DLG DLG { get; set; } = new DLG();
         public List<DB> DB { get; set; } = new List<DB>();
         public List<PT09> PT09 { get; set; } = new List<PT09>();
-        public List<PL1> PL1 { get; set; } = new List<PL1>();
+        public List<BBDO> BBDO { get; set; } = new List<BBDO>();
         public List<PL2> PL2 { get; set; } = new List<PL2>();
         public List<PL3> PL3 { get; set; } = new List<PL3>();
         public List<PL4> PL4 { get; set; } = new List<PL4>();
@@ -174,14 +174,7 @@ namespace DMS.BUSINESS.Models
         public decimal? VAT { get; set; }
         public decimal? NonVAT { get; set; }
     }
-
-    public class DB_BVMT
-    {
-        public string Code { get; set; }
-        public decimal? VAT { get; set; }
-        public decimal? NonVAT { get; set; }
-    }
-
+    
     public class FOB
     {
         public string Code { get; set; }
@@ -225,6 +218,7 @@ namespace DMS.BUSINESS.Models
         public List<decimal?> LN { get; set; } = new List<decimal?>();
         public List<PT_BVMT> BVMT { get; set; } = new List<PT_BVMT>();
     }
+
     public class PT09_GG
     {
         public decimal? VAT { get; set; }
@@ -232,7 +226,12 @@ namespace DMS.BUSINESS.Models
     }
     public class BBDO
     {
-
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public string ColB { get; set; }
+        public string ColC { get; set; }
+        public string ColD { get; set; }
+        public string Col1 { get; set; }
     }
     public class BBFO
     {
