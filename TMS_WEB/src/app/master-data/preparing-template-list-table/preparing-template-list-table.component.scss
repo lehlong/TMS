@@ -1,0 +1,28 @@
+.editable-cell {
+  position: relative;
+  padding: 5px 12px;
+  cursor: pointer;
+  border: 1px solid transparent; // Thêm border để tạo khoảng cách
+  border-radius: 4px; // Thêm border-radius
+  transition: border-color 0.3s; // Thêm hiệu ứng chuyển tiếp
+}
+
+.editable-cell:hover {
+  border-color: #d9d9d9; // Thay đổi màu border khi hover
+}
+
+.editable-cell:focus-within {
+  border-color: #4a90e2; // Thay đổi màu border khi có focus
+}
+
+input[type='text'] {
+  width: 100%; // Đảm bảo input chiếm toàn bộ chiều rộng
+  padding: 5px; // Thêm padding cho input
+  border: 1px solid #d9d9d9; // Thêm border cho input
+  border-radius: 4px; // Thêm border-radius cho input
+  transition: border-color 0.3s; // Thêm hiệu ứng chuyển tiếp cho input
+}
+
+input[type='text']:focus {
+  border-color: #4a90e2; // Thay đổi màu border khi input có focus
+}

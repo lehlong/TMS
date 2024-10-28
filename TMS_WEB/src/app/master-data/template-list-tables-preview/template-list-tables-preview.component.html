@@ -1,0 +1,78 @@
+<div class="container-list">
+  <!-- [appPermission]="TEMPLATE_LIST_TABLES_RIGHTS.LIST" -->
+  <div class="site-page-header-ghost-wrapper">
+    <nz-page-header nzBackIcon nzTitle="Xem trước Template Bảng biểu" nzSubtitle="Template bảng biểu"
+      class="site-page-header">
+      <nz-page-header-extra>
+        <nz-space [nzWrap]="true" class="gap-[5px]">
+          <button (click)="exportExcel()" class="!flex !items-center" nz-button nzType="primary" nzDanger>
+            <!-- [appPermission]="TEMPLATE_LIST_TABLES_RIGHTS.EXCEL" -->
+            <span nz-icon nzType="file-excel"></span>Tải Excel
+          </button>
+        </nz-space>
+      </nz-page-header-extra>
+    </nz-page-header>
+  </div>
+  <div class="overflow-auto flex-grow">
+    <nz-table [nzScroll]="{ x: 'max-content' }" nzTableLayout="fixed" [nzShowPagination]="false"
+      [nzFrontPagination]="false" #headerTable [nzData]="sortedData">
+      <thead>
+        <tr>
+          <th>Mã đơn vị</th>
+          <th>Tên đơn vị</th>
+          <th>Mã chỉ tiêu</th>
+          <th>Tên chỉ tiêu</th>
+          <th>Đơn vị</th>
+          <th>Giá trị kiểm toán</th>
+          <th>Thuyết minh của kiểm toán</th>
+          <th>Giá trị giải trình</th>
+          <th>Thuyết minh giải trình</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><Strong>Tổng cộng</Strong></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>VND</td>
+          <td>0</td>
+          <td></td>
+          <td>0</td>
+          <td></td>
+        </tr>
+        <tr *ngFor="let data of headerTable.data">
+          <td>
+            {{ data.orgCode }}
+          </td>
+          <td>{{ getOrgName(data.orgCode) }}</td>
+          <td>{{ getIdListTables(data.listTablesCode) }}</td>
+          <td>{{ getNamesListTables(data.listTablesCode) }}</td>
+          <td>VND</td>
+          <td>0</td>
+          <td></td>
+          <td>0</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
+    <nz-pagination nzShowSizeChanger [nzPageIndex]="filter.currentPage" [nzTotal]="paginationResult.totalRecord"
+      [nzPageSize]="filter.pageSize" (nzPageIndexChange)="pageIndexChange($event)"
+      (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+  </div>
+</div>
+
+<!--Create Update-->
+
+<ng-template #extra>
+  <nz-space>
+    <ng-container *ngIf="edit">
+      <!-- [appPermission]="TEMPLATE_LIST_TABLES_RIGHTS.EXCEL" -->
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center">
+        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+      </button>
+    </ng-container>
+  </nz-space>
+</ng-template>

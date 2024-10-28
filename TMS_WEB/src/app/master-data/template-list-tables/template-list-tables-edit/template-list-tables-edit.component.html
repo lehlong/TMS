@@ -1,0 +1,69 @@
+<nz-space>
+  <ng-container>
+    <!-- <button [nzLoading]="loading" *nzSpaceItem [appPermission]="TEMPLATE_LIST_TABLES_RIGHTS.ADD" nz-button
+      nzType="primary" class="!flex !items-center" (click)="updateTemplateData()">
+      <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+    </button> -->
+    <!-- <button
+      [appPermission]="TEMPLATE_LIST_TABLES_RIGHTS.EXCEL"
+      [nzLoading]="loading"
+      *nzSpaceItem
+      nz-button
+      class="!flex !items-center"
+      (click)="exportExcel()"
+    >
+      <span nz-icon nzType="download" nzTheme="outline"></span>Tải xuống mẫu
+    </button> -->
+    <!-- <button [appPermission]="TEMPLATE_LIST_TABLES_RIGHTS.LIST" [nzLoading]="loading" *nzSpaceItem nz-button
+      class="!flex !items-center" (click)="preview()">
+      <span nz-icon nzType="search" nzTheme="outline"></span>Xem trước
+    </button> -->
+  </ng-container>
+</nz-space>
+<div nz-row [nzGutter]="16">
+  <div nz-col nzSpan="12" style="display: block">
+    <div>
+      <nz-input-group [nzSuffix]="suffixIcon">
+        <input type="text" nz-input [(ngModel)]="searchValue" (ngModelChange)="searchOrganize(searchValue)"
+          placeholder="Tìm kiếm đơn vị" />
+      </nz-input-group>
+      <ng-template #suffixIcon>
+        <span nz-icon nzType="search"></span>
+      </ng-template>
+    </div>
+    <div>
+      <nz-tree #treeOrganize [nzData]="organizeNodes" [nzSearchValue]="searchValue" nzCheckable nzBlockNode
+        (nzCheckBoxChange)="onOrganizeCheckChange($event)" (nzClick)="onClickNode($event)"
+        [nzExpandedIcon]="multiExpandedIconTpl" (nzSearchValueChange)="searchOrganize(searchValue)">
+        <ng-template #nzTreeTemplate let-node (click)="onClickNode(node)">
+          <span>{{ node.title }}</span>
+        </ng-template>
+      </nz-tree>
+    </div>
+  </div>
+  <div nz-col nzSpan="12" style="display: block">
+    <div>
+      <nz-input-group [nzSuffix]="suffixIcon">
+        <input type="text" nz-input [(ngModel)]="searchValueListTables"
+          (ngModelChange)="searchListTables(searchValueListTables)" placeholder="Tìm kiếm chỉ tiêu" />
+      </nz-input-group>
+      <ng-template #suffixIcon>
+        <span nz-icon nzType="search"></span>
+      </ng-template>
+    </div>
+    <div>
+      <nz-tree #treeListTables [nzData]="listTablesNodes" [nzSearchValue]="searchValueListTables" nzCheckable
+        nzBlockNode [nzCheckStrictly]="true" [nzExpandAll]="true" (nzOnDrop)="nzEvent($event)"
+        (nzCheckBoxChange)="onCheckboxChange($event.node)" [nzExpandedIcon]="multiExpandedIconTpl"
+        (nzSearchValueChange)="searchOrganize(searchValueListTables)">
+        <ng-template #nzTreeTemplate let-node>
+          <span>{{ node.title }}</span>
+        </ng-template>
+      </nz-tree>
+    </div>
+  </div>
+
+  <ng-template #multiExpandedIconTpl let-node let-origin="origin">
+    <span *ngIf="node.children?.length > 0" nz-icon [nzType]="node.isExpanded ? 'caret-down' : 'caret-right'"
+      nzTheme="outline" class="ant-tree-switcher-line-icon icon-tree"></span>
+  </ng-template>
