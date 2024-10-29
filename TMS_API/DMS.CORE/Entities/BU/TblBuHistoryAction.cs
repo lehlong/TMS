@@ -18,10 +18,13 @@ namespace DMS.CORE.Entities.BU
         public string Code { get; set; }
 
         [Column("ACTION", TypeName = "NVARCHAR(255)")]
-        public string Action { get; set; }
+        public string? Action { get; set; }
 
         [Column("CONTENTS", TypeName = "NVARCHAR(500)")]
-        public string Contents { get; set; }
+        public string? Contents { get; set; }
+
+        [Column("HEADER_CODE", TypeName = "VARCHAR(50)")]
+        public string? HeaderCode { get; set; }
 
     }
 }

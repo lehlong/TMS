@@ -16,12 +16,16 @@ using DMS.BUSINESS.Models;
 using DocumentFormat.OpenXml.VariantTypes;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace DMS.BUSINESS.Services.BU
 {
     public interface ICalculateResultService : IGenericService<TblMdGoods, GoodsDto>
     {
         Task<CalculateResultModel> GetResult(string code);
+        Task<InsertModel> GetDataInput(string code);
+        Task<List<TblBuHistoryAction>> GetHistoryAction(string code);
+        Task UpdateDataInput(InsertModel model);
     }
     public class CalculateResultService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdGoods, GoodsDto>(dbContext, mapper), ICalculateResultService
     {
@@ -730,6 +734,74 @@ namespace DMS.BUSINESS.Services.BU
                 this.Status = false;
                 this.Exception = ex;
                 return new CalculateResultModel();
+            }
+        }
+
+        public async Task<InsertModel> GetDataInput(string code)
+        {
+            try
+            {
+                var data = new InsertModel();
+                data.Header = await _dbContext.TblBuCalculateResultList.FindAsync(code);
+                data.HS1 = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == code).ToListAsync();
+                data.HS2 = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == code).ToListAsync();
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return new InsertModel();
+            }
+        }
+
+        public async Task UpdateDataInput(InsertModel model)
+        {
+            try
+            {
+                _dbContext.TblInHeSoMatHang.UpdateRange(model.HS1);
+                _dbContext.TblInVinhCuaLo.UpdateRange(model.HS2);
+                if(model.Header.Status == model.Status.Code)
+                {
+                    _dbContext.TblBuCalculateResultList.Update(model.Header);
+                    var h = new TblBuHistoryAction()
+                    {
+                        Code = Guid.NewGuid().ToString(),
+                        HeaderCode = model.Header.Code,
+                        Action = "Cập nhật thông tin",
+                    };
+                }
+                else
+                {
+                    model.Header.Status = model.Status.Code;
+                    _dbContext.TblBuCalculateResultList.Update(model.Header);
+                    var h = new TblBuHistoryAction()
+                    {
+                        Code = Guid.NewGuid().ToString(),
+                        HeaderCode = model.Header.Code,
+                        Action = model.Status.Code == "02" ? "Trình duyệt" : model.Status.Code == "03" ? "Yêu cầu chỉnh sửa" : model.Status.Code == "04" ? "Phê duyệt" : "Từ chối",
+                        Contents = model.Status.Contents
+                    };
+                    _dbContext.TblBuHistoryAction.Add(h);
+                }
+                
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                this.Status = false;
+                this.Exception = ex;
+            }
+        }
+
+        public async Task<List<TblBuHistoryAction>> GetHistoryAction(string code)
+        {
+            try
+            {
+                var data = await _dbContext.TblBuHistoryAction.Where(x => x.HeaderCode == code).OrderByDescending(x => x.CreateDate).ToListAsync();
+                return data;
+            }
+            catch(Exception ex)
+            {
+                return new List<TblBuHistoryAction>();
             }
         }
 

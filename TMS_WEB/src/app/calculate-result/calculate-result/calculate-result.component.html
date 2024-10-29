@@ -3,23 +3,23 @@
         <nz-page-header nzBackIcon [nzTitle]="title" class="site-page-header">
             <nz-page-header-extra>
                 <nz-space [nzWrap]="true" class="gap-[5px]">
-                    
+
                     <button class="!flex !items-center" nzType="default" nz-button (click)="getDataHeader()">
                         <span nz-icon nzType="right-square"></span> Dữ liệu đầu vào
                     </button>
                     <button class="!flex !items-center" nzType="default" nz-button (click)="reCalculate()">
                         <span nz-icon nzType="calculator"></span> Tính toán lại
                     </button>
-                    <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('01')">
+                    <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('01', '02')">
                         <span nz-icon nzType="send"></span> Trình duyệt
                     </button>
-                    <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('02')">
+                    <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('02', '03')">
                         <span nz-icon nzType="undo"></span> Yêu cầu chỉnh sửa
                     </button>
-                    <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('03')">
+                    <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('03', '04')">
                         <span nz-icon nzType="check"></span> Phê duyệt
                     </button>
-                    <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('04')">
+                    <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('04', '05')">
                         <span nz-icon nzType="close"></span> Từ chối
                     </button>
                     <button class="!flex !items-center" nzType="default" nz-button (click)="showHistoryAction()">
@@ -28,7 +28,7 @@
                     <button class="!flex !items-center" nzType="primary" nz-button>
                         <span nz-icon nzType="file-excel"></span> Xuất Excel
                     </button>
-                    
+
                 </nz-space>
             </nz-page-header-extra>
         </nz-page-header>
@@ -658,8 +658,7 @@
             </div>
 
         </nz-tab>
-        <nz-tab nzTitle="FOB"
-            (nzClick)="changeTitle('FOB')">
+        <nz-tab nzTitle="FOB" (nzClick)="changeTitle('FOB')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #fobTable
@@ -766,8 +765,7 @@
             </div>
 
         </nz-tab>
-        <nz-tab nzTitle="PT09"
-            (nzClick)="changeTitle('PT09')">
+        <nz-tab nzTitle="PT09" (nzClick)="changeTitle('PT09')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pt09Table
@@ -802,9 +800,9 @@
                             <th rowspan="2" class="align-center">{{i.name}}</th>
                             }
                             @for (i of data.lstGoods; track i){
-                                <th rowspan="2">CHƯA VAT, BVMT</th>
-                                <th rowspan="2">CÓ VAT, BVMT</th>
-                                }
+                            <th rowspan="2">CHƯA VAT, BVMT</th>
+                            <th rowspan="2">CÓ VAT, BVMT</th>
+                            }
                         </tr>
                         <tr>
                             <th class="align-center">Xăng</th>
@@ -838,9 +836,9 @@
                             <td class="align-right">{{i | number}}</td>
                             }
                             @for (i of t.bvmt; track i){
-                                <td class="align-right">{{i.nonVAT | number}}</td>
-                                <td class="align-right">{{i.vat | number}}</td>
-                                }
+                            <td class="align-right">{{i.nonVAT | number}}</td>
+                            <td class="align-right">{{i.vat | number}}</td>
+                            }
                         </tr>
                         }
                     </tbody>
@@ -900,8 +898,7 @@
             </div>
 
         </nz-tab>
-        <nz-tab nzTitle="PL1"
-            (nzClick)="changeTitle('PL1')">
+        <nz-tab nzTitle="PL1" (nzClick)="changeTitle('PL1')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl1Table
@@ -939,8 +936,7 @@
             </div>
 
         </nz-tab>
-        <nz-tab nzTitle="PL2"
-            (nzClick)="changeTitle('PL2')">
+        <nz-tab nzTitle="PL2" (nzClick)="changeTitle('PL2')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl2Table
@@ -978,8 +974,7 @@
             </div>
 
         </nz-tab>
-        <nz-tab nzTitle="PL3"
-            (nzClick)="changeTitle('PL3')">
+        <nz-tab nzTitle="PL3" (nzClick)="changeTitle('PL3')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
                 <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl3Table
@@ -1248,8 +1243,8 @@
         </nz-tab>
         <nz-tab nzTitle="VK11-TNPP" (nzClick)="changeTitle('VK11-TNPP')">
             <div style="overflow: auto; height: calc(100vh - 210px);">
-                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #vk11tnppTable
-                    [nzData]="data.vK11TNPP">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered
+                    #vk11tnppTable [nzData]="data.vK11TNPP">
                     <thead>
                         <tr>
                             <th class="align-center">STT</th>
@@ -1322,55 +1317,158 @@
 </div>
 
 <!-- History -->
-<nz-modal nzWidth="60%" [(nzVisible)]="isVisibleHistory" nzTitle="LỊCH SỬ THỰC HIỆN" (nzOnCancel)="handleCancel()" nzCancelText="Đóng">
+<nz-modal nzWidth="60%" [(nzVisible)]="isVisibleHistory" nzTitle="LỊCH SỬ THỰC HIỆN" (nzOnCancel)="handleCancel()"
+    nzCancelText="Đóng">
     <ng-container *nzModalContent>
-        <nz-table #historyTable [nzData]="data.db">
+        <nz-table #historyTable [nzData]="lstHistory">
             <thead>
-              <tr>
-                <th>STT</th>
-                <th>Hành động</th>
-                <th>Người cập nhật</th>
-                <th>Thời gian cập nhật</th>
-                <th>Nội dung</th>
-              </tr>
+                <tr>
+                    <th>STT</th>
+                    <th>Hành động</th>
+                    <th>Người cập nhật</th>
+                    <th>Thời gian cập nhật</th>
+                    <th>Nội dung</th>
+                </tr>
+            </thead>
+                <tbody>
+                    <tr *ngFor="let data of lstHistory; let i = index">
+                        <td>{{i+1}}</td>
+                        <td>{{data.action}}</td>
+                        <td>{{data.createBy}}</td>
+                        <td>{{data.createDate | date:'dd/MM/yyyy hh:mm:ss'}}</td>
+                        <td>{{data.contents}}</td>
+                    </tr>
+                </tbody>
+        </nz-table>
+    </ng-container>
+</nz-modal>
+
+<!-- Dữ liệu gốc -->
+<nz-drawer [nzWidth]="'60%'" [nzVisible]="visibleDrawer" nzPlacement="right" [nzTitle]="'DỮ LIỆU ĐẦU VÀO (DỮ LIỆU GỐC)'"
+    [nzExtra]="extra" (nzOnClose)="closeDrawer()">
+    <ng-container *nzDrawerContent>
+
+        <nz-divider nzText="THÔNG TIN" nzOrientation="left"></nz-divider>
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+            <div nz-col class="gutter-row" [nzSpan]="18">
+                <div class="inner-box">
+                    <label>Tên đợt nhập</label>
+                    <input nz-input [(ngModel)]="model.header.name" />
+                </div>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="6">
+                <div class="inner-box">
+                    <label>Ngày hiệu lực</label>
+                    <nz-date-picker nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                        [(ngModel)]="model.header.fDate"></nz-date-picker>
+                </div>
+            </div>
+        </div>
+        <nz-divider nzText="HỆ SỐ MẶT HÀNG" nzOrientation="left"></nz-divider>
+
+        <nz-table #hs2Table [nzData]="model.hS2" nzSize="small">
+            <thead>
+                <tr>
+                    <th rowspan="2" [nzAlign]="'center'">Mặt hàng</th>
+                    <th rowspan="2" [nzAlign]="'center'">Giá bán lẻ CS <br>(giá V1 TĐ công bố)</th>
+                    <th rowspan="2" [nzAlign]="'center'">Giá bán lẻ V2<br>(TĐ công bố)</th>
+                    <th rowspan="2" [nzAlign]="'center'">Chênh lệch giá<br>V2-V1</th>
+                    <th colspan="2" [nzAlign]="'center'">Đề xuất giá bán lẻ vùng trung tâm</th>
+                    <th rowspan="2" [nzAlign]="'center'">Chênh lệch giá bán lẻ <br>vùng Trung tâm và còn lại</th>
+                </tr>
+                <tr>
+                    <th>Mức Tăng so V1</th>
+                    <th>Giá niêm yết</th>
+                </tr>
             </thead>
             <tbody>
-              <!-- @for (data of historyTable.data; track data) {
+                @for (data of hs2Table.data; track data) {
                 <tr>
-                  <td>{{ data.name }}</td>
-                  <td>{{ data.age }}</td>
-                  <td>{{ data.address }}</td>
-                  <td>
-                    <a>Action 一 {{ data.name }}</a>
-                    <nz-divider nzType="vertical"></nz-divider>
-                    <a>Delete</a>
-                  </td>
+                    <td style="width: 20%;">
+                        <nz-select nzShowSearch nzAllowClear placeholder="Chọn mặt hàng" [(ngModel)]="data.goodsCode"
+                            [nzDisabled]="true" style="width: 100%;">
+                            <nz-option cdkScrollable *ngFor="let item of goodsResult" [nzLabel]="item.name"
+                                [nzValue]="item.code">
+                            </nz-option>
+                        </nz-select>
+                    </td>
+                    <td>
+                        <input class="input-v" nz-input [(ngModel)]="data.gblcsV1" type="number"
+                            (keyup)="onKeyUpCalculate(data)" />
+                    </td>
+                    <td>
+                        <input class="input-v" nz-input [(ngModel)]="data.gblV2" type="number"
+                            (keyup)="onKeyUpCalculate(data)" />
+                    </td>
+                    <td>
+                        <input class="input-v" nz-input [(ngModel)]="data.v2_V1" type="number" />
+                    </td>
+                    <td>
+                        <input class="input-v" nz-input [(ngModel)]="data.mtsV1" type="number"
+                            (keyup)="onKeyUpCalculate(data)" />
+                    </td>
+                    <td>
+                        <input class="input-v" nz-input [(ngModel)]="data.gny" type="number" />
+                    </td>
+                    <td>
+                        <input class="input-v" nz-input [(ngModel)]="data.clgblv" type="number" />
+                    </td>
                 </tr>
-              } -->
+                }
             </tbody>
-          </nz-table>
-    </ng-container>
-  </nz-modal>
+        </nz-table>
 
-  <!-- Dữ liệu gốc -->
-<nz-drawer [nzWidth]="'60%'" [nzVisible]="visibleDrawer" nzPlacement="right" [nzTitle]="'DỮ LIỆU ĐẦU VÀO (DỮ LIỆU GỐC)'" [nzExtra]="extra"
-    (nzOnClose)="closeDrawer()">
-    <ng-container *nzDrawerContent>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+
+
+        <nz-table #hs1Table [nzData]="model.hS1" nzSize="small">
+            <thead>
+                <tr>
+                    <th [nzAlign]="'center'">Mặt hàng</th>
+                    <th [nzAlign]="'center'">Hệ số VFC BQ mùa miền</th>
+                    <th [nzAlign]="'center'">Thuế BVMT</th>
+                    <th [nzAlign]="'center'">L15 chưa VAT và BVMT <br> (PT bán lẻ - V2)</th>
+                    <th [nzAlign]="'center'">L15 chưa VAT và BVMT <br> (ngoài bán lẻ)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (data of hs1Table.data; track data) {
+                <tr>
+                    <td style="width: 20%;">
+                        <nz-select nzShowSearch nzAllowClear placeholder="Chọn mặt hàng" [(ngModel)]="data.goodsCode"
+                            [nzDisabled]="true" style="width: 100%;">
+                            <nz-option cdkScrollable *ngFor="let item of goodsResult" [nzLabel]="item.name"
+                                [nzValue]="item.code">
+                            </nz-option>
+                        </nz-select>
+                    </td>
+                    <td>
+                        <input class="input-v" nz-input [(ngModel)]="data.heSoVcf" type="number" />
+                    </td>
+                    <td>
+                        <input class="input-v" nz-input [(ngModel)]="data.thueBvmt" type="number" />
+                    </td>
+                    <td>
+                        <input class="input-v" nz-input [(ngModel)]="data.l15ChuaVatBvmt" type="number" />
+                    </td>
+                    <td>
+                        <input class="input-v" nz-input [(ngModel)]="data.l15ChuaVatBvmtNbl" type="number" />
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </nz-table>
     </ng-container>
 </nz-drawer>
 <ng-template #extra>
-    <button nz-button nzType="primary" (click)="closeDrawer()">Cập nhật</button>
+    <button nz-button nzType="primary" (click)="updateDataInput()">Cập nhật</button>
 </ng-template>
 
 <!-- Thay đổi trạng thái -->
 <nz-modal [(nzVisible)]="isVisibleStatus" [nzTitle]="statusModel.title" (nzOnCancel)="handleCancel()"
-    (nzOnOk)="handleOk()" nzCancelText="Huỷ">
+    (nzOnOk)="handleOkStatus()" nzCancelText="Huỷ">
     <ng-container *nzModalContent>
         <p>{{statusModel.des}}</p>
-        <textarea nz-input placeholder="Nội dung, ý kiến..."
-            [nzAutosize]="{ minRows: 2, maxRows: 6 }" [(ngModel)]="statusModel.value"></textarea>
+        <textarea nz-input placeholder="Nội dung, ý kiến..." [nzAutosize]="{ minRows: 2, maxRows: 6 }"
+            [(ngModel)]="statusModel.value"></textarea>
     </ng-container>
 </nz-modal>

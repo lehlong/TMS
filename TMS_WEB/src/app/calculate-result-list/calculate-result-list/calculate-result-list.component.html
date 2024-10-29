@@ -51,7 +51,7 @@
           <td >{{ data.name }}</td>
 
           <td>{{ data.fDate | date: 'dd/MM/yyyy HH:mm'}}</td>
-          <td >{{ data.status == '01' ? 'Khởi tạo' : data.status == '02' ? 'Yêu cầu chỉnh sửa' : data.status == '03' ? 'Phê duyệt' : 'Từ chối' }}</td>
+          <td >{{ data.status == '01' ? 'Khởi tạo' : data.status == '02' ? 'Chờ phê duyệt' : data.status == '03' ? 'Yêu cầu chỉnh sửa' : data.status == '04' ? 'Phê duyệt' : 'Từ chối' }}</td>
         </tr>
       </tbody>
     </nz-table>

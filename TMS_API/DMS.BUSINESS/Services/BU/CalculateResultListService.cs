@@ -37,6 +37,13 @@ namespace DMS.BUSINESS.Services.BU
                 _dbContext.TblBuCalculateResultList.Add(model.Header);
                 _dbContext.TblInHeSoMatHang.AddRange(model.HS1);
                 _dbContext.TblInVinhCuaLo.AddRange(model.HS2);
+                var h = new TblBuHistoryAction()
+                {
+                    Code = Guid.NewGuid().ToString(),
+                    HeaderCode = model.Header.Code,
+                    Action = "Tạo mới",
+                };
+                _dbContext.TblBuHistoryAction.Add(h);
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -172,5 +179,11 @@ namespace DMS.BUSINESS.Services.BU
         public TblBuCalculateResultList Header { get; set; } = new TblBuCalculateResultList();
         public List<TblInHeSoMatHang> HS1 { get; set; } = new List<TblInHeSoMatHang>();
         public List<TblInVinhCuaLo> HS2 { get; set; } = new List<TblInVinhCuaLo>();
+        public Status Status { get; set; } = new Status();
+    }
+    public class Status
+    {
+        public string? Code { get; set; }
+        public string? Contents { get; set; }
     }
 }

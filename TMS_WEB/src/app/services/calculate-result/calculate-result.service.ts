@@ -11,4 +11,13 @@ export class CalculateResultService {
   GetResult(code : any): Observable<any> {
     return this.commonService.get(`CalculateResult/GetCalculateResult?code=${code}`)
   }
+  GetDataInput(code : any): Observable<any> {
+    return this.commonService.get(`CalculateResult/GetDataInput?code=${code}`)
+  }
+  UpdateDataInput(model : any): Observable<any> {
+    return this.commonService.post(`CalculateResult/UpdateDataInput`, model)
+  }
+  GetHistoryAction(code : any): Observable<any> {
+    return this.commonService.get(`CalculateResult/GetHistoryAction?code=${code}`)
+  }
 }
