@@ -3,45 +3,37 @@ import { ShareModule } from '../../shared/share-module'
 import { GlobalService } from '../../services/global.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { MARKET_RIGHTS } from '../../shared/constants'
+import { WAREHOUSE_RIGHTS } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
-import { MarketFilter } from '../../models/master-data/market.model'
-import { MarketService } from '../../services/master-data/market.service'
-import { LocalService } from '../../services/master-data/local.service'
+import { WarehouseFilter } from '../../models/master-data/warehouse.model'
 import { WarehouseService } from '../../services/master-data/warehouse.service'
+import { LocalService } from '../../services/master-data/local.service'
 @Component({
-  selector: 'app-market',
+  selector: 'app-warehouse',
   standalone: true,
   imports: [ShareModule],
-  templateUrl: './market.component.html',
-  styleUrl: './market.component.scss',
+  templateUrl: './warehouse.component.html',
+  styleUrl: './warehouse.component.scss',
 })
-export class MarketComponent {
+export class WarehouseComponent {
   validateForm: FormGroup = this.fb.group({
     code: ['', [Validators.required]],
     name: ['', [Validators.required]],
-    gap: ['', [Validators.required]],
-    cuocVCBQ: ['', [Validators.required]],
-    cpChungChuaCuocVC: ['', [Validators.required]],
-    localCode: ['', [Validators.required]],
-    warehouseCode: ['', [Validators.required]],
     isActive: [true, [Validators.required]],
   })
 
   isSubmit: boolean = false
   visible: boolean = false
   edit: boolean = false
-  filter = new MarketFilter()
+  filter = new WarehouseFilter()
   paginationResult = new PaginationResult()
   loading: boolean = false
   localResult: any[] = []
-  warehouseResult: any[] = []
-  MARKET_RIGHTS = MARKET_RIGHTS
+  WAREHOUSE_RIGHTS = WAREHOUSE_RIGHTS
 
   constructor(
-    private _service: MarketService,
+    private _service: WarehouseService,
     private _localService: LocalService,
-    private _warehouseService: WarehouseService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService,
@@ -64,7 +56,6 @@ export class MarketComponent {
   ngOnInit(): void {
     this.search()
     this.getAllLocal()
-    this.getAllWarehouse()
   }
 
   onSortChange(name: string, value: any) {
@@ -78,7 +69,7 @@ export class MarketComponent {
 
   search() {
     this.isSubmit = false
-    this._service.searchmarket(this.filter).subscribe({
+    this._service.searchWarehouse(this.filter).subscribe({
       next: (data) => {
         this.paginationResult = data
       },
@@ -100,21 +91,9 @@ export class MarketComponent {
     })
   }
 
-  getAllWarehouse() {
-    this.isSubmit = false
-    this._warehouseService.getall().subscribe({
-      next: (data) => {
-        this.warehouseResult = data
-      },
-      error: (response) => {
-        console.log(response)
-      },
-    })
-  }
-
   exportExcel() {
     return this._service
-      .exportExcelmarket(this.filter)
+      .exportExcelWarehouse(this.filter)
       .subscribe((result: Blob) => {
         const blob = new Blob([result], {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -138,7 +117,7 @@ export class MarketComponent {
       console.log(formData);
 
       if (this.edit) {
-        this._service.updatemarket(formData).subscribe({
+        this._service.updateWarehouse(formData).subscribe({
           next: (data) => {
             this.search()
           },
@@ -153,7 +132,7 @@ export class MarketComponent {
           )
           return
         }
-        this._service.createmarket(formData).subscribe({
+        this._service.createWarehouse(formData).subscribe({
           next: (data) => {
             this.search()
           },
@@ -178,7 +157,7 @@ export class MarketComponent {
   }
 
   reset() {
-    this.filter = new MarketFilter()
+    this.filter = new WarehouseFilter()
     this.search()
   }
 
@@ -193,7 +172,7 @@ export class MarketComponent {
   }
 
   deleteItem(code: string | number) {
-    this._service.deletemarket(code).subscribe({
+    this._service.deleteWarehouse(code).subscribe({
       next: (data) => {
         this.search()
       },
@@ -207,12 +186,7 @@ export class MarketComponent {
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
-      gap: data.gap,
-      cuocVCBQ: data.cuocVCBQ,
-      cpChungChuaCuocVC: data.cpChungChuaCuocVC,
-      localCode: data.localCode,
       isActive: data.isActive,
-      warehouseCode: data.warehouseCode
     })
     setTimeout(() => {
       this.edit = true

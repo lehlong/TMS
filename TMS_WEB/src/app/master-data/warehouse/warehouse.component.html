@@ -1,4 +1,4 @@
-<div class="container-list" [appPermission]="MARKET_RIGHTS.LIST">
+<div class="container-list" [appPermission]="WAREHOUSE_RIGHTS.LIST">
   <div class="site-page-header-ghost-wrapper">
     <nz-page-header nzBackIcon nzTitle="Thị trường" nzSubtitle="Danh sách Thị Trường" class="site-page-header">
       <nz-page-header-extra>
@@ -16,7 +16,7 @@
             </button>
           </nz-space>
           <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
-            [appPermission]="MARKET_RIGHTS.ADD">
+            [appPermission]="WAREHOUSE_RIGHTS.ADD">
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
         </nz-space>
@@ -40,9 +40,6 @@
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('localCode', $event)">
             Vùng
-          </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('localCode', $event)">
-            Kho
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('cpChungChuaCuocVCs', $event)">
             CP chung chưa cước VC
@@ -69,20 +66,6 @@
             <a (click)="openEdit(data)">{{ data.code }}</a>
           </td>
           <td>{{ data.name }}</td>
-          <td>{{ data.gap }}</td>
-          <td>
-            <span *ngFor="let item of localResult" >
-              <span *ngIf="item.code == data.localCode">{{ item.name }}</span>
-            </span>
-          </td>
-          <td>
-            <span *ngFor="let item of warehouseResult" >
-              <span *ngIf="item.code == data.warehouseCode">{{ item.name }}</span>
-            </span>
-          </td>
-          <td>{{ data.cpChungChuaCuocVC }}</td>
-          <td>{{ data.cuocVCBQ }}</td>
-          <td>{{ data.createDate | date: 'dd/MM/yyyy HH:mm' }}</td>
 
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
@@ -111,37 +94,6 @@
       <app-input-clear placeholder="Nhập tên" [required]="true" label="Tên"
       [control]="$any(validateForm).controls['name']"></app-input-clear>
 
-      <app-input-clear placeholder="Nhập cự ly BQ" [required]="true" label="Cự ly BQ (Km)"
-      [control]="$any(validateForm).controls['gap']"></app-input-clear>
-
-      <nz-form-item>
-        <nz-form-label [nzRequired]="true">Kho</nz-form-label>
-        <nz-form-control nzErrorTip="Không được để trống">
-          <nz-select nzShowSearch nzAllowClear placeholder="Chọn vùng" formControlName="warehouseCode">
-            <nz-option cdkScrollable *ngFor="let item of warehouseResult" [nzLabel]="item.code + ' - ' + item.name"
-              [nzValue]="item.code">
-            </nz-option>
-          </nz-select>
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-label [nzRequired]="true">Vùng</nz-form-label>
-        <nz-form-control nzErrorTip="Không được để trống">
-          <nz-select nzShowSearch nzAllowClear placeholder="Chọn vùng" formControlName="localCode">
-            <nz-option cdkScrollable *ngFor="let item of localResult" [nzLabel]="item.code + ' - ' + item.name"
-              [nzValue]="item.code">
-            </nz-option>
-          </nz-select>
-        </nz-form-control>
-      </nz-form-item>
-
-      <app-input-clear placeholder="Nhập cước VC bình quân" [required]="true" label="Cước VC bình quân"
-      [control]="$any(validateForm).controls['cuocVCBQ']"></app-input-clear>
-
-      <app-input-clear placeholder="CP chung chưa cước VC" [required]="true" label="CP chung chưa cước VC"
-      [control]="$any(validateForm).controls['cpChungChuaCuocVC']"></app-input-clear>
-
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>
         <nz-form-control>
@@ -157,13 +109,13 @@
 <ng-template #extra>
   <nz-space>
     <ng-container *ngIf="edit">
-      <button [nzLoading]="loading" [appPermission]="MARKET_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
+      <button [nzLoading]="loading" [appPermission]="WAREHOUSE_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>
     <ng-container *ngIf="!edit">
-      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="MARKET_RIGHTS.ADD" nz-button nzType="primary"
+      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="WAREHOUSE_RIGHTS.ADD" nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>

@@ -6,7 +6,7 @@ export enum CALCULATE_RESULT_RIGHT {
   EDIT = 'R01.3',
   UPDATE = 'R01.4',
   HISTORY = 'R01.5',
-  TRINH_DUYET = 'R01.6.1', 
+  TRINH_DUYET = 'R01.6.1',
   YEU_CAU_CHINH_SUA = 'R01.6.2',
   PHE_DUYET = 'R01.6.3',
   TU_CHOI = 'R01.6.4'
@@ -40,6 +40,13 @@ export enum GOODS_RIGHTS {
   DELETE = 'R0',
 }
 
+export enum WAREHOUSE_RIGHTS {
+  LIST = 'R1.1.1',
+  EXCEL = 'R0',
+  ADD = 'R1.1.2',
+  EDIT = 'R1.1.2',
+  DELETE = 'R0',
+}
 export enum CALCULATE_RESULT_LIST_RIGHTS {
   LIST = 'R1.1.1',
   EXCEL = 'R0',

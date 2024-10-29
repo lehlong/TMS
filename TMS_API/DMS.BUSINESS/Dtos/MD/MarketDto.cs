@@ -35,6 +35,9 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Mã vùng")]
         public string LocalCode { get; set; }
 
+        [Description("Mã kho")]
+        public string? WarehouseCode { get; set; }
+
         [Description("Ngày tạo")]
         public DateTime? CreateDate { get; set; }
 

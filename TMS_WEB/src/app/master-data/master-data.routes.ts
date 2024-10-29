@@ -30,6 +30,7 @@ import { GiaGiaoTapDoanComponent } from './gia-giao-tap-doan/gia-giao-tap-doan.c
 import { MucGiamPhoThongComponent } from './muc-giam-pho-thong/muc-giam-pho-thong.component'
 import { TinhToanDauRaComponent } from './tinh-toan-dau-ra/tinh-toan-dau-ra.component'
 import { CustomerTypeComponent } from './customer-type/customer-type.component'
+import { WarehouseComponent } from './warehouse/warehouse.component'
 export const masterDataRoutes: Routes = [
   { path: 'currency', component: CurrencyComponent },
   { path: 'unit', component: UnitComponent },
@@ -70,5 +71,6 @@ export const masterDataRoutes: Routes = [
   {path: 'muc-giam-pho-thong', component: MucGiamPhoThongComponent},
   {path: 'tinh-toan-dau-ra', component: TinhToanDauRaComponent},
   {path: 'customer-type', component: CustomerTypeComponent},
+  {path: 'warehouse', component: WarehouseComponent},
 
 ]
