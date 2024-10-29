@@ -25,19 +25,19 @@ namespace DMS.BUSINESS.Services.BU
     {
         Task<IList<CalculateResultListDto>> GetAll(BaseMdFilter filter);
         Task<byte[]> Export(BaseMdFilter filter);
-        Task InsertData(CalculateResultListDto c);
+        Task InsertData(InsertModel model);
         Task<InsertModel> GetObjectCreate();
     }
     public class CalculateResultListService(AppDbContext dbContext, IMapper mapper) : GenericService<TblBuCalculateResultList, CalculateResultListDto>(dbContext, mapper), ICalculateResultListService
     {
-        public async Task InsertData(CalculateResultListDto c)
+        public async Task InsertData(InsertModel model)
         {
             try
             {
-                c.Code = Guid.NewGuid().ToString();
-                c.Status = "01";
-                await this.Add(c);
-
+                _dbContext.TblBuCalculateResultList.Add(model.Header);
+                _dbContext.TblInHeSoMatHang.AddRange(model.HS1);
+                _dbContext.TblInVinhCuaLo.AddRange(model.HS2);
+                await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -136,6 +136,7 @@ namespace DMS.BUSINESS.Services.BU
                     obj.HS1.Add(new TblInHeSoMatHang
                     {
                         Code = Guid.NewGuid().ToString(),
+                        HeaderCode = obj.Header.Code,
                         GoodsCode = g.Code,
                         IsActive = true,
                         FromDate = DateTime.Now,
@@ -146,6 +147,7 @@ namespace DMS.BUSINESS.Services.BU
                     obj.HS2.Add(new TblInVinhCuaLo
                     {
                         Code = Guid.NewGuid().ToString(),
+                        HeaderCode = obj.Header.Code,
                         GoodsCode = g.Code,
                         IsActive = true,
                         FromDate = DateTime.Now,

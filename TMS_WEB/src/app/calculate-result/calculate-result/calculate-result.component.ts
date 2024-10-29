@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { ShareModule } from '../../shared/share-module'
 import { CalculateResultService } from '../../services/calculate-result/calculate-result.service'
 import { GlobalService } from '../../services/global.service'
+import { ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'app-calculate-result',
@@ -14,6 +15,7 @@ export class CalculateResultComponent {
   constructor(
     private _service: CalculateResultService,
     private globalService: GlobalService,
+    private route: ActivatedRoute
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -60,23 +62,24 @@ export class CalculateResultComponent {
     value: ''
   };
 
+  headerId : any = ''
+
   ngOnInit() {
-    this.model.fDate = this.model.fDate.toLocaleString();    
-    this.GetData(this.model)
+    this.route.paramMap.subscribe({
+      next: (params) => {
+        const code = params.get('code');
+        this.headerId = code;
+        this.GetData(code);
+      }
+    });
   }
 
   ngOnDestroy() {
     this.globalService.setBreadcrumb([])
   }
-  onChangeDate(result: any): void {
-    var d = new Date(result)
-    this.model.fDate = d.toUTCString();
-    this.GetData(this.model)
-  }
-  GetData(model: any) {
-    var _fd = new Date(this.date)
-    model.fDate = _fd.toLocaleString()
-    this._service.GetResult(this.model).subscribe({
+
+  GetData(code: any) {
+    this._service.GetResult(code).subscribe({
       next: (data) => {
         this.data = data
         console.log(data)

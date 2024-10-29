@@ -10,6 +10,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { CalculateResultListFilter } from '../../models/calculate-result-list/calculate-result-list.model'
 import { CalculateResultListService } from '../../services/calculate-result-list/calculate-result-list.service'
 import { GoodsService } from '../../services/master-data/goods.service'
+import { Router } from '@angular/router'
 @Component({
   selector: 'app-local',
   standalone: true,
@@ -41,6 +42,7 @@ export class CalculateResultListComponent {
     private globalService: GlobalService,
     private message: NzMessageService,
     private _goodsService: GoodsService,
+    private router: Router
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -145,17 +147,7 @@ export class CalculateResultListComponent {
   }
 
   openEdit(data: any) {
-    this.validateForm.setValue({
-      code: data.code,
-      name: data.name,
-      fDate: data.fDate,
-      status: data.status,
-      isActive: data.isActive,
-    })
-    setTimeout(() => {
-      this.edit = true
-      this.visible = true
-    }, 200)
+    this.router.navigate([`/calculate-result/detail/${data.code}`])
   }
 
   pageSizeChange(size: number): void {
@@ -179,5 +171,11 @@ export class CalculateResultListComponent {
         console.log(response)
       },
     })
+  }
+
+  onKeyUpCalculate(row : any){
+    row.v2_V1 = row.gblV2 - row.gblcsV1
+    row.gny = row.gblcsV1 + row.mtsV1
+    row.clgblv = row.gblV2 - row.gny
   }
 }

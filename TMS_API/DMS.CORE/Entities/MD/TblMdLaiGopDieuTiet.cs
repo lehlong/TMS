@@ -23,7 +23,7 @@ namespace DMS.CORE.Entities.MD
         public string MarketCode { set; get; }
 
         [Column("HEADER_CODE", TypeName = "VARCHAR(50)")]
-        public string HeaderCode { set; get; }
+        public string HeaderCode { set; get; } = "";
 
         [Column("FROM_DATE", TypeName = "DATETIME")]
         public DateTime? FromDate { set; get; }

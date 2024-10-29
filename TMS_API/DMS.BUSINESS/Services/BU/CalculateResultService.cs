@@ -21,15 +21,14 @@ namespace DMS.BUSINESS.Services.BU
 {
     public interface ICalculateResultService : IGenericService<TblMdGoods, GoodsDto>
     {
-        Task<CalculateResultModel> GetResult(QueryModel model);
+        Task<CalculateResultModel> GetResult(string code);
     }
     public class CalculateResultService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdGoods, GoodsDto>(dbContext, mapper), ICalculateResultService
     {
-        public async Task<CalculateResultModel> GetResult(QueryModel model)
+        public async Task<CalculateResultModel> GetResult(string code)
         {
             try
             {
-                var fDate = DateTime.Parse(model.FDate);
                 var data = new CalculateResultModel();
                 var lstGoods = await _dbContext.TblMdGoods.OrderBy(x => x.CreateDate).ToListAsync();
                 data.lstGoods = lstGoods;
@@ -37,8 +36,8 @@ namespace DMS.BUSINESS.Services.BU
                 var lstLGDT = await _dbContext.TblMdLaiGopDieuTiet.ToListAsync();
                 var lstCustomer = await _dbContext.TblMdCustomer.ToListAsync();
 
-                var dataVCL = await _dbContext.TblInVinhCuaLo.Where(x => x.FromDate.Value.Day == fDate.Day && x.FromDate.Value.Month == fDate.Month && x.FromDate.Value.Year == fDate.Year && x.FromDate.Value.Hour == fDate.Hour && x.FromDate.Value.Minute == fDate.Minute).ToListAsync();
-                var dataHSMH = await _dbContext.TblInHeSoMatHang.Where(x => x.FromDate.Value.Day == fDate.Day && x.FromDate.Value.Month == fDate.Month && x.FromDate.Value.Year == fDate.Year && x.FromDate.Value.Hour == fDate.Hour && x.FromDate.Value.Minute == fDate.Minute).ToListAsync();
+                var dataVCL = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == code).ToListAsync();
+                var dataHSMH = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == code).ToListAsync();
                 if (dataVCL.Count() == 0 || dataHSMH.Count() == 0)
                 {
                     return data;
@@ -247,9 +246,10 @@ namespace DMS.BUSINESS.Services.BU
                         data.PL1.Add(_pl1);
                         foreach (var _l in lstGoods)
                         {
-                            var _c = lstLGDT.Where(x => x.MarketCode == m.Code && x.GoodsCode == _l.Code);
-                            var _1 = _c == null || _c.Count() == 0 ? 0 : _c.Sum(x => x.Price);
-                            i.LG.Add(_1);
+                            //var _c = lstLGDT.Where(x => x.MarketCode == m.Code && x.GoodsCode == _l.Code);
+                            var _1 = m.LocalCode == "V1" ? data.DLG.Dlg_4.Where(x => x.Type == "TT" && x.Code == _l.Code).Sum(x => x.Col13) : data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == _l.Code).Sum(x => x.Col13);
+                            //var _1 = _c == null || _c.Count() == 0 ? 0 : _c.Sum(x => x.Price);
+                            i.LG.Add(Math.Round(_1 ?? 0));
 
                             var p = m.LocalCode == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "TT").Sum(x => x.Col14) : data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "OTHER").Sum(x => x.Col14);
                             var d = new PT_GG

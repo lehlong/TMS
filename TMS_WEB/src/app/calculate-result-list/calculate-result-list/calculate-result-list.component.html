@@ -51,7 +51,7 @@
           <td >{{ data.name }}</td>
 
           <td>{{ data.fDate | date: 'dd/MM/yyyy HH:mm'}}</td>
-          <td >{{ data.status }}</td>
+          <td >{{ data.status == '01' ? 'Khởi tạo' : data.status == '02' ? 'Yêu cầu chỉnh sửa' : data.status == '03' ? 'Phê duyệt' : 'Từ chối' }}</td>
         </tr>
       </tbody>
     </nz-table>
@@ -69,7 +69,20 @@
   <ng-container *nzDrawerContent>
 
     <nz-divider nzText="THÔNG TIN" nzOrientation="left"></nz-divider>
-
+    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+      <div nz-col class="gutter-row" [nzSpan]="18"><div class="inner-box">
+        <label>Tên đợt nhập</label>
+        <input nz-input [(ngModel)]="model.header.name"/>
+      </div></div>
+      <div nz-col class="gutter-row" [nzSpan]="6"><div class="inner-box">
+        <label>Ngày hiệu lực</label>
+        <nz-date-picker
+      nzShowTime
+      nzFormat="dd-MM-yyyy HH:mm:ss"
+      [(ngModel)]="model.header.fDate"
+    ></nz-date-picker>
+      </div></div>
+    </div>
     <nz-divider nzText="HỆ SỐ MẶT HÀNG" nzOrientation="left"></nz-divider>
 
     <nz-table #hs2Table [nzData]="model.hS2" nzSize="small">
@@ -98,16 +111,16 @@
               </nz-select>
             </td>
             <td>
-              <input class="input-v" nz-input [(ngModel)]="data.gblcsV1" type="number" />
+              <input class="input-v" nz-input [(ngModel)]="data.gblcsV1" type="number" (keyup)="onKeyUpCalculate(data)"/>
             </td>
             <td>
-              <input class="input-v" nz-input [(ngModel)]="data.gblV2" type="number" />
+              <input class="input-v" nz-input [(ngModel)]="data.gblV2" type="number" (keyup)="onKeyUpCalculate(data)"/>
             </td>
             <td>
               <input class="input-v" nz-input [(ngModel)]="data.v2_V1" type="number" />
             </td>
             <td>
-              <input class="input-v" nz-input [(ngModel)]="data.mtsV1" type="number" />
+              <input class="input-v" nz-input [(ngModel)]="data.mtsV1" type="number" (keyup)="onKeyUpCalculate(data)" />
             </td>
             <td>
               <input class="input-v" nz-input [(ngModel)]="data.gny" type="number" />
@@ -128,8 +141,8 @@
           <th [nzAlign]="'center'">Mặt hàng</th>
           <th [nzAlign]="'center'">Hệ số VFC BQ mùa miền</th>
           <th [nzAlign]="'center'">Thuế BVMT</th>
-          <th [nzAlign]="'center'">L15 chưa VAT và BVMT</th>
-          <th [nzAlign]="'center'">L15 chưa VAT và BVMT NBL</th>
+          <th [nzAlign]="'center'">L15 chưa VAT và BVMT <br> (PT bán lẻ - V2)</th>
+          <th [nzAlign]="'center'">L15 chưa VAT và BVMT <br> (ngoài bán lẻ)</th>
         </tr>
       </thead>
       <tbody>
@@ -158,8 +171,6 @@
         }
       </tbody>
     </nz-table>
-    <nz-divider nzText="LÃI GỘP ĐIỀU TIẾT" nzOrientation="left"></nz-divider>
-
   </ng-container>
 </nz-drawer>
 <ng-template #extra>

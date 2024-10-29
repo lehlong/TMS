@@ -71,7 +71,7 @@ namespace DMS.API.Controllers.BU
         {
             var transferObject = new TransferObject();
 
-            //await _service.InsertData(CalculateResultList);
+            await _service.InsertData(model);
             if (_service.Status)
             {
                 transferObject.Status = true;
