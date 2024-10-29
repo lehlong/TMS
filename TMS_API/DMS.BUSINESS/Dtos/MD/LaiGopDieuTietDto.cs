@@ -21,6 +21,9 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Mã thị trường")]
         public string MarketCode { get; set; }
 
+        [Description("Mã Header")]
+        public string HeaderCode { get; set; }
+
         [Description("Ngày tạo")]
         public DateTime? FromDate { get; set; }
 

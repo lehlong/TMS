@@ -21,6 +21,9 @@ namespace DMS.BUSINESS.Dtos.IN
         [Description("Mã mặt hàng")]
         public string GoodsCode { get; set; }
 
+        [Description("Mã Header")]
+        public string HeaderCode { get; set; }
+
         [Description("Giá bán lẻ cơ sở v1")]
         public decimal GblcsV1 { get; set; }
 

@@ -21,6 +21,9 @@ namespace DMS.BUSINESS.Dtos.IN
         [Description("Mã mặt hàng")]
         public string GoodsCode { get; set; }
 
+        [Description("Mã Header")]
+        public string HeaderCode { get; set; }
+
         [Description("Hệ số VCF BQ Mùa miền")]
         public decimal HeSoVcf { get; set; }
 

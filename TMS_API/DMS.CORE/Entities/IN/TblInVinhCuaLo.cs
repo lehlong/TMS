@@ -18,6 +18,9 @@ namespace DMS.CORE.Entities.IN
         [Column("GBLCS_V1", TypeName = "DECIMAL(18,0)")]
         public decimal GblcsV1 { get; set; }
 
+        [Column("HEADER_CODE", TypeName = "VARCHAR(50)")]
+        public string HeaderCode { set; get; }
+
         [Column("GBL_V2", TypeName = "DECIMAL(18,0)")]
         public decimal GblV2 { get; set; }
 
