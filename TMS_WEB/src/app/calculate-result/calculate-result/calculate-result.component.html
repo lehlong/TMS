@@ -1428,6 +1428,7 @@
                     <th [nzAlign]="'center'">Thuế BVMT</th>
                     <th [nzAlign]="'center'">L15 chưa VAT và BVMT <br> (PT bán lẻ - V2)</th>
                     <th [nzAlign]="'center'">L15 chưa VAT và BVMT <br> (ngoài bán lẻ)</th>
+                    <th [nzAlign]="'center'">Giảm giá FOB <br> có VAT & BVMT</th>
                 </tr>
             </thead>
             <tbody>
@@ -1453,6 +1454,9 @@
                     <td>
                         <input class="input-v" nz-input [(ngModel)]="data.l15ChuaVatBvmtNbl" type="number" />
                     </td>
+                    <td>
+                        <input class="input-v" nz-input [(ngModel)]="data.giamGiaFob" type="number" />
+                      </td>
                 </tr>
                 }
             </tbody>
