@@ -5,38 +5,37 @@ import { GlobalService } from '../../services/global.service'
 import { LocalService } from '../../services/master-data/local.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { LOCAL_RIGHTS, GOODS_RIGHTS } from '../../shared/constants'
+import { CALCULATE_RESULT_LIST_RIGHTS } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
-import { GoodsFilter } from '../../models/master-data/goods.model'
-import { GoodsService } from '../../services/master-data/goods.service'
+import { CalculateResultListFilter } from '../../models/calculate-result-list/calculate-result-list.model'
+import { CalculateResultListService } from '../../services/calculate-result-list/calculate-result-list.service'
 @Component({
   selector: 'app-local',
   standalone: true,
   imports: [ShareModule],
-  templateUrl: './goods.component.html',
-  styleUrl: './goods.component.scss',
+  templateUrl: './calculate-result-list.component.html',
+  styleUrl: './calculate-result-list.component.scss',
 })
-export class GoodsComponent {
+export class CalculateResultListComponent {
   validateForm: FormGroup = this.fb.group({
-    code: ['', [Validators.required]],
+    code: [''],
     name: ['', [Validators.required]],
-    type: [''],
-    thueBvmt: ['', [Validators.required]],
-    createDate: [new Date(), [Validators.required]],
+    status: [true],
+    fDate: [''],
     isActive: [true, [Validators.required]],
   })
 
   isSubmit: boolean = false
   visible: boolean = false
   edit: boolean = false
-  filter = new GoodsFilter()
+  filter = new CalculateResultListFilter()
   paginationResult = new PaginationResult()
   loading: boolean = false
-  GOODS_RIGHTS = GOODS_RIGHTS
-  lstType: any[] = []
+  lst: any[] = []
+  CALCULATE_RESULT_LIST_RIGHTS = CALCULATE_RESULT_LIST_RIGHTS
 
   constructor(
-    private _service: GoodsService,
+    private _service: CalculateResultListService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService,
@@ -44,7 +43,7 @@ export class GoodsComponent {
     this.globalService.setBreadcrumb([
       {
         name: 'Danh sách loại hàng hoá',
-        path: 'master-data/goods',
+        path: 'master-data/calculate-result-list',
       },
     ])
     this.globalService.getLoading().subscribe((value) => {
@@ -58,10 +57,7 @@ export class GoodsComponent {
 
   ngOnInit(): void {
     this.search()
-    this.lstType = [
-      {code:'X', name: 'Xăng'},
-      {code:'D', name: 'Dầu'}
-    ]
+
   }
 
   onSortChange(name: string, value: any) {
@@ -75,11 +71,9 @@ export class GoodsComponent {
 
   search() {
     this.isSubmit = false
-    this._service.searchGoods(this.filter).subscribe({
+    this._service.getall().subscribe({
       next: (data) => {
-        this.paginationResult = data
-        console.log(this.paginationResult);
-
+        this.lst = data
       },
       error: (response) => {
         console.log(response)
@@ -91,7 +85,7 @@ export class GoodsComponent {
 
   exportExcel() {
     return this._service
-      .exportExcelGoods(this.filter)
+      .exportExcelCalculateResultList(this.filter)
       .subscribe((result: Blob) => {
         const blob = new Blob([result], {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -111,7 +105,7 @@ export class GoodsComponent {
     if (this.validateForm.valid) {
       const formData = this.validateForm.getRawValue()
       if (this.edit) {
-        this._service.updateGoods(formData).subscribe({
+        this._service.updateCalculateResultList(formData).subscribe({
           next: (data) => {
             this.search()
           },
@@ -126,7 +120,7 @@ export class GoodsComponent {
           )
           return
         }
-        this._service.createGoods(formData).subscribe({
+        this._service.createCalculateResultList(formData).subscribe({
           next: (data) => {
             this.search()
           },
@@ -151,7 +145,7 @@ export class GoodsComponent {
   }
 
   reset() {
-    this.filter = new GoodsFilter()
+    this.filter = new CalculateResultListFilter()
     this.search()
   }
 
@@ -166,7 +160,7 @@ export class GoodsComponent {
   }
 
   deleteItem(code: string | number) {
-    this._service.deleteGoods(code).subscribe({
+    this._service.deleteCalculateResultList(code).subscribe({
       next: (data) => {
         this.search()
       },
@@ -180,9 +174,8 @@ export class GoodsComponent {
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
-      type: data.type,
-      thueBvmt: data.thueBvmt,
-      createDate: data.createDate,
+      fDate: data.fDate,
+      status: data.status,
       isActive: data.isActive,
     })
     setTimeout(() => {

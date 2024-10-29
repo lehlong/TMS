@@ -189,6 +189,7 @@ namespace DMS.CORE
         #region Business
         public DbSet<tblBuOpinionList> TblBuOpinionLists { get; set; }
         public DbSet<TblBuListTables> TblBuListTables { get; set; }
+        public DbSet<TblBuCalculateResultList> TblBuCalculateResultList { get; set; }
         public DbSet<tblBuOpinionDetail> tblBuOpinionDetail { get; set; }
         public DbSet<tblBuOpinionDetailHistory> tblBuOpinionDetailHistory { get; set; }
         public DbSet<tblBuPendingOpinionMapping> tblBuPendingOpinionMappings { get; set; }

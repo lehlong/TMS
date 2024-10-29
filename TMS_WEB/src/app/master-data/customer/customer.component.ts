@@ -276,7 +276,6 @@ export class CustomerComponent {
       this.edit = true
       this.visible = true
       this.searchMarket()
-
     }, 200)
   }
 

@@ -23,6 +23,14 @@ export enum GOODS_RIGHTS {
   DELETE = 'R0',
 }
 
+export enum CALCULATE_RESULT_LIST_RIGHTS {
+  LIST = 'R1.1.1',
+  EXCEL = 'R0',
+  ADD = 'R1.1.2',
+  EDIT = 'R1.1.2',
+  DELETE = 'R0',
+}
+
 export enum CUSTOMER_TYPE_RIGHTS {
   LIST = 'R1.1.1',
   EXCEL = 'R0',
