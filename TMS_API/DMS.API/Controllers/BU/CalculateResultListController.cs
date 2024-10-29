@@ -49,16 +49,31 @@ namespace DMS.API.Controllers.BU
             }
             return Ok(transferObject);
         }
-        [HttpPost("Insert")]
-        public async Task<IActionResult> Insert([FromBody] CalculateResultListDto CalculateResultList)
+        [HttpGet("GetObjectCreate")]
+        public async Task<IActionResult> GetObjectCreate()
         {
             var transferObject = new TransferObject();
-            CalculateResultList.Code = new Guid().ToString();
-
-            var result = await _service.Add(CalculateResultList);
+            var result = await _service.GetObjectCreate();
             if (_service.Status)
             {
                 transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+        [HttpPost("Insert")]
+        public async Task<IActionResult> Insert([FromBody] InsertModel model)
+        {
+            var transferObject = new TransferObject();
+
+            //await _service.InsertData(CalculateResultList);
+            if (_service.Status)
+            {
                 transferObject.Status = true;
                 transferObject.MessageObject.MessageType = MessageType.Success;
                 transferObject.GetMessage("0100", _service);

@@ -22,7 +22,7 @@ namespace DMS.BUSINESS.Dtos.BU
         public DateTime FDate { get; set; }
 
         [Description("Status")]
-        public bool? Status { get; set; }
+        public string? Status { get; set; }
 
         [Description("Trạng thái")]
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }

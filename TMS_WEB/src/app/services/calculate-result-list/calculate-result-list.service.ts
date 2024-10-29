@@ -16,7 +16,11 @@ export class CalculateResultListService {
     return this.commonService.get('CalculateResultList/GetAll');
   }
 
-  createCalculateResultList(params: any): Observable<any> {
+  getObjectCreate(): Observable<any> {
+    return this.commonService.get('CalculateResultList/GetObjectCreate');
+  }
+
+  createData(params: any): Observable<any> {
     return this.commonService.post('CalculateResultList/Insert', params);
   }
 

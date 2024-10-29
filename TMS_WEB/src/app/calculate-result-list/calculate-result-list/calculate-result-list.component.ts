@@ -9,6 +9,7 @@ import { CALCULATE_RESULT_LIST_RIGHTS } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { CalculateResultListFilter } from '../../models/calculate-result-list/calculate-result-list.model'
 import { CalculateResultListService } from '../../services/calculate-result-list/calculate-result-list.service'
+import { GoodsService } from '../../services/master-data/goods.service'
 @Component({
   selector: 'app-local',
   standalone: true,
@@ -39,10 +40,11 @@ export class CalculateResultListComponent {
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService,
+    private _goodsService: GoodsService,
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách loại hàng hoá',
+        name: 'Danh sách đợt nhập',
         path: 'master-data/calculate-result-list',
       },
     ])
@@ -50,14 +52,19 @@ export class CalculateResultListComponent {
       this.loading = value
     })
   }
-
+  model : any = {
+    header: {},
+    hS1: [],
+    hS2: [],
+  }
+  goodsResult: any[] = []
   ngOnDestroy() {
     this.globalService.setBreadcrumb([])
   }
 
   ngOnInit(): void {
-    this.search()
-
+    this.search();
+    this.getAllGoods();
   }
 
   onSortChange(name: string, value: any) {
@@ -81,62 +88,19 @@ export class CalculateResultListComponent {
     })
   }
 
-
-
-  exportExcel() {
-    return this._service
-      .exportExcelCalculateResultList(this.filter)
-      .subscribe((result: Blob) => {
-        const blob = new Blob([result], {
-          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        })
-        const url = window.URL.createObjectURL(blob)
-        var anchor = document.createElement('a')
-        anchor.download = 'danh-sach-dia-phuong.xlsx'
-        anchor.href = url
-        anchor.click()
-      })
-  }
   isCodeExist(code: string): boolean {
     return this.paginationResult.data?.some((local: any) => local.code === code)
   }
   submitForm(): void {
-    this.isSubmit = true
-    if (this.validateForm.valid) {
-      const formData = this.validateForm.getRawValue()
-      if (this.edit) {
-        this._service.updateCalculateResultList(formData).subscribe({
-          next: (data) => {
-            this.search()
-          },
-          error: (response) => {
-            console.log(response)
-          },
-        })
-      } else {
-        if (this.isCodeExist(formData.code)) {
-          this.message.error(
-            `Mã khu vục ${formData.code} đã tồn tại, vui lòng nhập lại`,
-          )
-          return
-        }
-        this._service.createCalculateResultList(formData).subscribe({
-          next: (data) => {
-            this.search()
-          },
-          error: (response) => {
-            console.log(response)
-          },
-        })
-      }
-    } else {
-      Object.values(this.validateForm.controls).forEach((control) => {
-        if (control.invalid) {
-          control.markAsDirty()
-          control.updateValueAndValidity({ onlySelf: true })
-        }
-      })
+    console.log(this.model)
+    var m = {
+      model: this.model
     }
+    this._service.createData(this.model).subscribe({
+      next: (data) => {
+        console.log(data)
+      }
+    })
   }
 
   close() {
@@ -152,6 +116,16 @@ export class CalculateResultListComponent {
   openCreate() {
     this.edit = false
     this.visible = true
+    this._service.getObjectCreate().subscribe({
+      next: (data) => {
+        this.model = data
+        console.log(this.model)
+        this.visible = true
+      },
+      error: (err) => {
+        console.log(err)
+      },
+    })
   }
 
   resetForm() {
@@ -193,5 +167,17 @@ export class CalculateResultListComponent {
   pageIndexChange(index: number): void {
     this.filter.currentPage = index
     this.search()
+  }
+
+  getAllGoods() {
+    this.isSubmit = false
+    this._goodsService.getall().subscribe({
+      next: (data) => {
+        this.goodsResult = data
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
   }
 }

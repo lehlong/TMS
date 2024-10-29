@@ -1378,19 +1378,11 @@
 </ng-template>
 
 <!-- Thay đổi trạng thái -->
-<nz-modal
-      [(nzVisible)]="isVisibleStatus"
-      [nzTitle]="statusModel.title"
-      (nzOnCancel)="handleCancel()"
-      (nzOnOk)="handleOk()"
-      nzCancelText="Huỷ"
-    >
-      <p *nzModalContent>{{statusModel.des}}</p>
-      <ng-container *nzModalContent>
-        <textarea
-        nz-input
-        placeholder="Autosize height with minimum and maximum number of lines"
-        [nzAutosize]="{ minRows: 2, maxRows: 6 }"
-      ></textarea>
-      </ng-container>
-    </nz-modal>
+<nz-modal [(nzVisible)]="isVisibleStatus" [nzTitle]="statusModel.title" (nzOnCancel)="handleCancel()"
+    (nzOnOk)="handleOk()" nzCancelText="Huỷ">
+    <ng-container *nzModalContent>
+        <p>{{statusModel.des}}</p>
+        <textarea nz-input placeholder="Nội dung, ý kiến..."
+            [nzAutosize]="{ minRows: 2, maxRows: 6 }" [(ngModel)]="statusModel.value"></textarea>
+    </ng-container>
+</nz-modal>

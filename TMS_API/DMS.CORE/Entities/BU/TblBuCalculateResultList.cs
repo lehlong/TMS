@@ -23,7 +23,7 @@ namespace DMS.CORE.Entities.BU
         [Column("F_DATE", TypeName = "DATETIME")]
         public DateTime FDate { get; set; }
 
-        [Column("STATUS", TypeName = "BIT")]
-        public bool? Status { get; set; }
+        [Column("STATUS", TypeName = "NVARCHAR(50)")]
+        public string? Status { get; set; }
     }   
 }
