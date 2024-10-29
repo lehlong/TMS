@@ -31,6 +31,7 @@ import { MucGiamPhoThongComponent } from './muc-giam-pho-thong/muc-giam-pho-thon
 import { TinhToanDauRaComponent } from './tinh-toan-dau-ra/tinh-toan-dau-ra.component'
 import { CustomerTypeComponent } from './customer-type/customer-type.component'
 import { WarehouseComponent } from './warehouse/warehouse.component'
+import { CompetitorComponent } from './competitor/competitor.component'
 export const masterDataRoutes: Routes = [
   { path: 'currency', component: CurrencyComponent },
   { path: 'unit', component: UnitComponent },
@@ -72,5 +73,6 @@ export const masterDataRoutes: Routes = [
   {path: 'tinh-toan-dau-ra', component: TinhToanDauRaComponent},
   {path: 'customer-type', component: CustomerTypeComponent},
   {path: 'warehouse', component: WarehouseComponent},
+  {path: 'competitor', component: CompetitorComponent},
 
 ]

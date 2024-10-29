@@ -1,6 +1,6 @@
-<div class="container-list" [appPermission]="WAREHOUSE_RIGHTS.LIST">
+<div class="container-list" [appPermission]="COMPETITOR_RIGHTS.LIST">
   <div class="site-page-header-ghost-wrapper">
-    <nz-page-header nzBackIcon nzTitle="Thị trường" nzSubtitle="Danh sách Thị Trường" class="site-page-header">
+    <nz-page-header nzBackIcon nzTitle="Vùng" nzSubtitle="Danh sách vùng" class="site-page-header">
       <nz-page-header-extra>
         <nz-space [nzWrap]="true" class="gap-[5px]">
           <nz-space>
@@ -16,9 +16,19 @@
             </button>
           </nz-space>
           <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
-            [appPermission]="WAREHOUSE_RIGHTS.ADD">
+            [appPermission]="COMPETITOR_RIGHTS.ADD">
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
+          <!-- <button
+            (click)="exportExcel()"
+            class="!flex !items-center"
+            nz-button
+            nzType="primary"
+            [appPermission]="COMPETITOR_RIGHTS.EXCEL"
+            nzDanger
+          >
+            <span nz-icon nzType="file-excel"></span>Tải Excel
+          </button> -->
         </nz-space>
       </nz-page-header-extra>
     </nz-page-header>
@@ -35,28 +45,47 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)">
             Tên
           </th>
-
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('isActive', $event)" nzAlign="center">
             Trạng thái
           </th>
+          <!-- <th
+            nzAlign="center"
+            [appPermission]="COMPETITOR_RIGHTS.DELETE"
+          >
+            Hành động
+          </th> -->
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let data of headerTable.data; let i = index" (dblclick)="openEdit(data)">
           <td>
             {{
-            (paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1
+            (paginationResult.currentPage - 1) * paginationResult.pageSize +
+            i +
+            1
             }}
           </td>
           <td>
             <a (click)="openEdit(data)">{{ data.code }}</a>
           </td>
           <td>{{ data.name }}</td>
-
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
               nzTheme="outline"></span>
           </td>
+          <!-- <td nzAlign="center">
+            <span
+              nz-popconfirm
+              nzPopconfirmTitle="Bạn muốn xoá loại địa phương này ?"
+              nzPopconfirmPlacement="bottom"
+              (nzOnConfirm)="deleteItem(data.code)"
+              class="!text-red-500 cursor-pointer"
+              nz-icon
+              nzType="delete"
+              nzTheme="outline"
+              [appPermission]="COMPETITOR_RIGHTS.DELETE"
+            ></span>
+          </td> -->
         </tr>
       </tbody>
     </nz-table>
@@ -76,9 +105,8 @@
       <app-input-clear placeholder="Nhập mã" [required]="true" label="Mã"
         [control]="$any(validateForm).controls['code']" [required]="true"
         [disabled]="edit ? true : false"></app-input-clear>
-
       <app-input-clear placeholder="Nhập tên" [required]="true" label="Tên"
-      [control]="$any(validateForm).controls['name']"></app-input-clear>
+        [control]="$any(validateForm).controls['name']"></app-input-clear>
 
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>
@@ -95,13 +123,13 @@
 <ng-template #extra>
   <nz-space>
     <ng-container *ngIf="edit">
-      <button [nzLoading]="loading" [appPermission]="WAREHOUSE_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
+      <button [nzLoading]="loading" [appPermission]="COMPETITOR_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>
     <ng-container *ngIf="!edit">
-      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="WAREHOUSE_RIGHTS.ADD" nz-button nzType="primary"
+      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="COMPETITOR_RIGHTS.ADD" nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
