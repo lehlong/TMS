@@ -1,4 +1,21 @@
 // Danh mục
+export enum CALCULATE_RESULT_RIGHT {
+  LIST = 'R01.1',
+  EXCEL = 'R01.07',
+  ADD = 'R01.2',
+  EDIT = 'R01.3',
+  UPDATE = 'R01.4',
+  HISTORY = 'R01.5',
+  TRINH_DUYET = 'R01.6.1', 
+  YEU_CAU_CHINH_SUA = 'R01.6.2',
+  PHE_DUYET = 'R01.6.3',
+  TU_CHOI = 'R01.6.4'
+}
+
+
+
+
+
 export enum UNIT_RIGHTS {
   LIST = 'R1.2.1',
   EXCEL = 'R0',

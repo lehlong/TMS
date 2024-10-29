@@ -4,6 +4,7 @@ import { CalculateResultService } from '../../services/calculate-result/calculat
 import { GlobalService } from '../../services/global.service'
 import { ActivatedRoute } from '@angular/router'
 import { GoodsService } from '../../services/master-data/goods.service'
+import { CALCULATE_RESULT_RIGHT } from '../../shared/constants/access-right.constants'
 
 @Component({
   selector: 'app-calculate-result',
@@ -27,7 +28,7 @@ export class CalculateResultComponent {
     ])
   }
   title: string = 'DỮ LIỆU GỐC'
-
+  CALCULATE_RESULT_RIGHT = CALCULATE_RESULT_RIGHT
   isVisibleHistory: boolean = false
   visibleDrawer: boolean = false
   isVisibleStatus: boolean = false

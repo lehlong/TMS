@@ -16,7 +16,7 @@
             </button>
           </nz-space>
           <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
-            [appPermission]="CALCULATE_RESULT_LIST_RIGHTS.ADD">
+            [appPermission]="CALCULATE_RESULT_RIGHT.ADD">
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
 
@@ -24,7 +24,7 @@
       </nz-page-header-extra>
     </nz-page-header>
   </div>
-  <div class="overflow-auto flex-grow">
+  <div class="overflow-auto flex-grow" [appPermission]="CALCULATE_RESULT_RIGHT.LIST">
     <nz-table [nzScroll]="{ x: 'max-content' }" nzTableLayout="fixed" [nzShowPagination]="false"
       [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data">
       <thead>

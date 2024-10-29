@@ -5,7 +5,7 @@ import { GlobalService } from '../../services/global.service'
 import { LocalService } from '../../services/master-data/local.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { CALCULATE_RESULT_LIST_RIGHTS } from '../../shared/constants'
+import { CALCULATE_RESULT_LIST_RIGHTS, CALCULATE_RESULT_RIGHT } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { CalculateResultListFilter } from '../../models/calculate-result-list/calculate-result-list.model'
 import { CalculateResultListService } from '../../services/calculate-result-list/calculate-result-list.service'
@@ -36,6 +36,7 @@ export class CalculateResultListComponent {
   lst: any[] = []
   CALCULATE_RESULT_LIST_RIGHTS = CALCULATE_RESULT_LIST_RIGHTS
 
+  CALCULATE_RESULT_RIGHT = CALCULATE_RESULT_RIGHT
   constructor(
     private _service: CalculateResultListService,
     private fb: NonNullableFormBuilder,

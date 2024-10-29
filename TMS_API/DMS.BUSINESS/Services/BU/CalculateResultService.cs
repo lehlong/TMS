@@ -761,6 +761,7 @@ namespace DMS.BUSINESS.Services.BU
                 _dbContext.TblInVinhCuaLo.UpdateRange(model.HS2);
                 if(model.Header.Status == model.Status.Code)
                 {
+                    model.Header.Status = "01";
                     _dbContext.TblBuCalculateResultList.Update(model.Header);
                     var h = new TblBuHistoryAction()
                     {
