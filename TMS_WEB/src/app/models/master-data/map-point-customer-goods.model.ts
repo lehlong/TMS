@@ -5,4 +5,6 @@ export class MapPointCustomerGoodsFilter extends BaseFilter {
   isActive?: boolean | string | null
   SortColumn: string = ''
   IsDescending: boolean = true
+  customerCode: string = ''
+  pointCode: string = ''
 }

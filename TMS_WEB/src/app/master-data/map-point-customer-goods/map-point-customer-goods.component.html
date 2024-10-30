@@ -4,6 +4,16 @@
       <nz-page-header-extra>
         <nz-space [nzWrap]="true" class="gap-[5px]">
           <nz-space>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Chọn Khách hàng nhận" style="width: 240px;" [(ngModel)]="filter.customerCode">
+              <nz-option cdkScrollable *ngFor="let item of lstCustomer" [nzLabel]="item.name"
+                [nzValue]="item.code">
+              </nz-option>
+            </nz-select>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Chọn Điểm giao hàng" style="width: 240px;" [(ngModel)]="filter.pointCode">
+              <nz-option cdkScrollable *ngFor="let item of lstDeliveryPoint" [nzLabel]="item.name"
+                [nzValue]="item.code">
+              </nz-option>
+            </nz-select>
             <app-input-clear placeholder="Tìm kiếm" (enterEvent)="search()"
               [(value)]="filter.keyWord"></app-input-clear>
             <button (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button

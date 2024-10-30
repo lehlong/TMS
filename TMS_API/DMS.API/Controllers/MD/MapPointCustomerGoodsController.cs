@@ -2,6 +2,7 @@
 using DMS.API.AppCode.Enum;
 using DMS.API.AppCode.Extensions;
 using DMS.BUSINESS.Dtos.MD;
+using DMS.BUSINESS.Filter.MD;
 using DMS.BUSINESS.Services.MD;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ namespace DMS.API.Controllers.MD
     {
         public readonly IMapPointCustomerGoodsService _service = service;
         [HttpGet("Search")]
-        public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
+        public async Task<IActionResult> Search([FromQuery] MappingCustomerPointFilter filter)
         {
             var transferObject = new TransferObject();
             var result = await _service.Search(filter);

@@ -23,7 +23,9 @@ namespace DMS.BUSINESS.Models
         public List<VK11DB> VK11DB { get; set; } = new List<VK11DB>();
         public List<VK11FOB> VK11FOB { get; set; } = new List<VK11FOB>();
         public List<VK11TNPP> VK11TNPP { get; set; } = new List<VK11TNPP>();
+        public List<VK11BB> VK11BB { get; set; } = new List<VK11BB>();
         public List<BBDO> BBDO { get; set; } = new List<BBDO>();
+        public List<BBFO> BBFO { get; set; } = new List<BBFO>();
     }
     public class DLG
     {
@@ -271,7 +273,21 @@ namespace DMS.BUSINESS.Models
     }
     public class BBFO
     {
-
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public string ColB { get; set; }
+        public string ColC { get; set; }
+        public bool IsBold { get; set; } = false;
+        public decimal? Col1 { get; set; }
+        public decimal? Col2 { get; set; }
+        public decimal? Col3 { get; set; }
+        public decimal? Col4 { get; set; }
+        public decimal? Col5 { get; set; }
+        public decimal? Col6 { get; set; }
+        public decimal? Col7 { get; set; }
+        public decimal? Col8 { get; set; }
+        public decimal? Col9 { get; set; }
+        public decimal? Col10 { get; set; }
     }
     public class PL1
     {
@@ -411,7 +427,29 @@ namespace DMS.BUSINESS.Models
     }
     public class VK11BB
     {
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public string ColB { get; set; }
+        public string ColC { get; set; }
+        public string ColD { get; set; }
+        public List<decimal?> LG { get; set; } = new List<decimal?>();
+        public bool IsBold { get; set; } = false;
+        public string? Col1 { get; set; }
+        public string? Col2 { get; set; }
+        public string? Col3 { get; set; }
+        public string? Col4 { get; set; }
+        public string? Col5 { get; set; }
 
+        public decimal? Col6 { get; set; }
+        public string? Col7 { get; set; }
+        public string? Col8 { get; set; }
+        public string? Col9 { get; set; }
+        public string? Col10 { get; set; }
+        public string? Col11 { get; set; }
+        public string? Col12 { get; set; }
+        public string? Col13 { get; set; }
+        public string? Col14 { get; set; }
+        public string? Col15 { get; set; }
     }
     public class Summary
     {

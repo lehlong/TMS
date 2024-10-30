@@ -2,8 +2,10 @@
 using Common;
 using DMS.BUSINESS.Common;
 using DMS.BUSINESS.Dtos.MD;
+using DMS.BUSINESS.Filter.MD;
 using DMS.CORE;
 using DMS.CORE.Entities.MD;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +17,12 @@ namespace DMS.BUSINESS.Services.MD
     public interface IMapPointCustomerGoodsService : IGenericService<TblMdMapPointCustomerGoods, MapPointCustomerGoodsDto>
     {
         Task<IList<MapPointCustomerGoodsDto>> GetAll(BaseMdFilter filter);
+        Task<PagedResponseDto> Search(MappingCustomerPointFilter filter);
         Task<byte[]> Export(BaseMdFilter filter);
     }
     public class MapPointCustomerGoodsService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdMapPointCustomerGoods, MapPointCustomerGoodsDto>(dbContext, mapper), IMapPointCustomerGoodsService
     {
-        public override async Task<PagedResponseDto> Search(BaseFilter filter)
+        public async Task<PagedResponseDto> Search(MappingCustomerPointFilter filter)
         {
             try
             {
@@ -29,6 +32,16 @@ namespace DMS.BUSINESS.Services.MD
                 {
                     query = query.Where(x =>
                     x.Code.Contains(filter.KeyWord));
+                }
+                if (!string.IsNullOrEmpty(filter.CustomerCode))
+                {
+                    query = query.Where(x =>
+                    x.CustomerCode.Contains(filter.CustomerCode));
+                }
+                if (!string.IsNullOrEmpty(filter.PointCode))
+                {
+                    query = query.Where(x =>
+                    x.DeliveryPointCode.Contains(filter.PointCode));
                 }
                 if (filter.IsActive.HasValue)
                 {

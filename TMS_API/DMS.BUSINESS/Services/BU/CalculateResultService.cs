@@ -742,7 +742,70 @@ namespace DMS.BUSINESS.Services.BU
                 #endregion
 
                 #region DO FO
+                var lstMapDOFO = mappingBBDO.Where(x => x.Type == "BBFO").ToList();
+                var _oDOFO = 1;
+                foreach (var _c in lstMapDOFO.Select(x => x.CustomerCode).ToList().Distinct().ToList())
+                {
+                    var g = lstGoods.FirstOrDefault(x => x.Code == lstMapDOFO.FirstOrDefault().GoodsCode);
+                    var lstPointCode = lstMapDOFO.Where(x => x.CustomerCode == _c).Select(x => x.DeliveryPointCode).ToList();
+                    var lstPoint = dataPoint.Where(x => lstPointCode.Contains(x.Code)).ToList();
 
+                    data.BBFO.Add(new BBFO
+                    {
+                        ColA = _oDOFO.ToString(),
+                        ColB = lstCustomer.FirstOrDefault(x => x.Code == _c)?.Name,
+                        IsBold = true,
+                    });
+                    foreach(var p in lstPoint)
+                    {
+                        var i = new BBFO
+                        {
+                            ColA = "-",
+                            ColB = p.Name,
+                            ColC = g.Name,
+                            Col1 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col8) ?? 0),
+                            Col2 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col9) ?? 0),
+                            Col4 = data.PT.FirstOrDefault(x => x.IsBold == false)?.Col4,
+                            Col5 = p.CuocVcBq,
+                            Col6 = Math.Round(lstCustomer.FirstOrDefault(x => x.Code == _c)?.BankLoanInterest ?? 0),
+                        };
+                        i.Col3 = Math.Round(i.Col4 + i.Col5 + i.Col6 ?? 0);
+                        var _8 = data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col7);
+                        i.Col8 = _8 == 0 ? 0 : Math.Round(_8 / 100 ?? 0);
+                        i.Col7 = Math.Round(i.Col8 + i.Col3 - i.Col2 ?? 0);
+                        i.Col10 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col6) + i.Col7 ?? 0);
+                        i.Col9 = i.Col10 == 0 ? 0 : Math.Round(i.Col10 / 1.1M - data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col2) ?? 0);
+
+
+                        data.BBFO.Add(i);
+                    }
+
+                    _oDOFO++;
+                }
+                #endregion
+
+                #region VK11 BB
+                foreach(var i in data.BBDO)
+                {
+                    data.VK11BB.Add(new VK11BB
+                    {
+                        ColA = i.ColA,
+                        ColB = i.ColB,
+                        ColC = i.ColC,
+                        ColD = i.ColD,
+                        Col1 = i.Col1,
+                        Col2 = i.Col2,
+                        Col3 = i.Col3,
+                        Col4 = i.Col4,
+                        Col5 = i.Col5,
+                        Col6 = i.Col19,
+                        Col7 = "VND",
+                        Col8 = "1",
+                        Col9 = "L",
+                        Col10 = "C",
+                        IsBold = i.IsBold,
+                    });
+                }
                 #endregion
 
                 return await RoundNumberData(data);

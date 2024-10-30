@@ -54,6 +54,7 @@ export class CalculateResultComponent {
     vK11DB: [],
     vK11FOB: [],
     vK11TNPP: [],
+    vK11BB: [],
     bbdo: [],
     bbfo: [],
   }
