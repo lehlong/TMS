@@ -128,7 +128,21 @@
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitFormCustomer()">
+
+        <nz-form-item nz-col nzSpan="11">
+          <nz-form-label>Vùng</nz-form-label>
+          <nz-form-control>
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn Vùng" formControlName="name"
+            (ngModelChange)="openEdit($event)">
+              <nz-option cdkScrollable *ngFor="let item of paginationResult.data" [nzLabel]="item.name"
+                [nzValue]="item" (click)="openEdit(item)">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
       <div nz-row nzJustify="space-evenly">
+
+
         <app-input-clear nzWidth="100%" nz-col nzSpan="13" placeholder="Nhập khách hàng " [required]="true"
           label="Tên khách hàng " [control]="$any(validateForm).controls['name']"></app-input-clear>
 

@@ -254,7 +254,9 @@ export class CustomerComponent {
     })
   }
 
-  openEdit(data: any) {
+  openEdit(data: any): void {
+    console.log(data);
+
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
