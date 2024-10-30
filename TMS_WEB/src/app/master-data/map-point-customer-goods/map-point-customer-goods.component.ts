@@ -10,6 +10,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { DeliveryPointService } from '../../services/master-data/delivery-point.service'
 import { CustomerService } from '../../services/master-data/customer.service'
 import { GoodsService } from '../../services/master-data/goods.service'
+import { CustomerTypeService } from '../../services/master-data/customer-type.service'
 @Component({
   selector: 'app-map-point-customer-goods',
   standalone: true,
@@ -23,6 +24,8 @@ export class MapPointCustomerGoodsComponent {
     deliveryPointCode: ['', [Validators.required]],
     customerCode: ['', [Validators.required]],
     goodsCode: ['', [Validators.required]],
+    cuocVcBq: [''],
+    type: [''],
     isActive: [true, [Validators.required]],
   })
 
@@ -36,11 +39,13 @@ export class MapPointCustomerGoodsComponent {
   lstDeliveryPoint: any[] = []
   lstCustomer: any[] = []
   lstGoods: any[] = []
+  lstCustomerType: any[] = []
 
   constructor(
     private _service: MapPointCustomerGoodsService,
     private _deliveryPointService: DeliveryPointService,
     private _customerService: CustomerService,
+    private _customerTypeService: CustomerTypeService,
     private _goodsService: GoodsService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
@@ -94,6 +99,18 @@ export class MapPointCustomerGoodsComponent {
     this._customerService.getall().subscribe({
       next: (data) => {
         this.lstCustomer = data
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
+  }
+
+  getAllCustomerType() {
+    this.isSubmit = false
+    this._customerTypeService.getall().subscribe({
+      next: (data) => {
+        this.lstCustomerType = data
       },
       error: (response) => {
         console.log(response)
@@ -218,6 +235,8 @@ export class MapPointCustomerGoodsComponent {
       deliveryPointCode: data.deliveryPointCode,
       customerCode: data.customerCode,
       goodsCode: data.goodsCode,
+      cuocVcBq: data.cuocVcBq,
+      type: data.type,
       isActive: data.isActive,
     })
     setTimeout(() => {

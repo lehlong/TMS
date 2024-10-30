@@ -24,6 +24,10 @@ namespace DMS.CORE.Entities.MD
 
         [Column("GOODS_CODE", TypeName = "VARCHAR(50)")]
         public string GoodsCode { get; set; }
+
+        [Column("CUOC_VC_BQ", TypeName = "DECIMAL(18,0)")]
+        public decimal? CuocVcBq { set; get; }
+
         [Column("TYPE", TypeName = "VARCHAR(50)")]
         public string? Type { get; set; }
 

@@ -28,6 +28,12 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Mã Mặt hàng")]
         public string? GoodsCode { get; set; }
 
+        [Description("Cước vận chuyển bình quân")]
+        public decimal? CuocVcBq { get; set; }
+
+        [Description("Kiểu ")]
+        public string? Type { get; set; }
+
         [Description("Trạng thái")]
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
 

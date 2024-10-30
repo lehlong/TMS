@@ -208,6 +208,7 @@ export class CustomerComponent {
       if (this.edit) {
         this._service.updateCustomer(formData).subscribe({
           next: (data) => {
+this.getAllCustomer()
             this.search()
           },
           error: (response) => {

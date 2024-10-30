@@ -48,6 +48,12 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)">
             Mặt hàng
           </th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('cuocVcBq', $event)" nzAlign="center">
+            Cước Vận chuyển bình quân
+          </th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('type', $event)" nzAlign="center">
+            Kiểu
+          </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('isActive', $event)" nzAlign="center">
             Trạng thái
           </th>
@@ -79,6 +85,12 @@
           <td>
             <span *ngFor="let item of lstGoods" >
               <span *ngIf="item.code == data.goodsCode">{{ item.name }}</span>
+            </span>
+          </td>
+          <td class="align-right">{{ data.cuocVcBq | number}}</td>
+          <td>
+            <span *ngFor="let item of lstCustomerType" >
+              <span *ngIf="item.code == data.type">{{ item.name }}</span>
             </span>
           </td>
           <td nzAlign="center">
@@ -146,6 +158,22 @@
           </nz-select>
         </nz-form-control>
       </nz-form-item>
+
+      <app-input-clear placeholder="Nhập cước vận chuyển bình quân" [required]="true" label="Cước vận chuyển bình quân"
+      [control]="$any(validateForm).controls['cuocVcBq']"></app-input-clear>
+
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true">Kiểu</nz-form-label>
+        <nz-form-control nzErrorTip="Không được để trống">
+          <nz-select nzShowSearch nzAllowClear placeholder="Chọn Kiểu" formControlName="type">
+            <nz-option cdkScrollable *ngFor="let item of lstCustomerType" [nzLabel]="item.name"
+              [nzValue]="item.code">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>
         <nz-form-control>
