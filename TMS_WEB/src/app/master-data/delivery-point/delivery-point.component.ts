@@ -19,7 +19,6 @@ export class DeliveryPointComponent {
   validateForm: FormGroup = this.fb.group({
     code: ['', [Validators.required]],
     name: ['', [Validators.required]],
-    customerCode: ['', [Validators.required]],
     isActive: [true, [Validators.required]],
   })
 
@@ -185,7 +184,6 @@ export class DeliveryPointComponent {
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
-      customerCode: data.customerCode,
       isActive: data.isActive,
     })
     setTimeout(() => {

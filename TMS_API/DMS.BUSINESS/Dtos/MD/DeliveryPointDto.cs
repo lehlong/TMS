@@ -23,9 +23,6 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Tên")]
         public string Name { get; set; }
 
-        [Description("Mã khách hàng")]
-        public string CustomerCode { get; set; }
-
         [Description("Ngày tạo")]
         public DateTime? CreateDate { get; set; }
 

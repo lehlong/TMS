@@ -35,12 +35,7 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)" nzAlign="center">
             Điểm giao hàng
           </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('customerCode', $event)" nzAlign="center">
-            Khách hàng
-          </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('createDate', $event)" nzAlign="center">
-            Ngày tạo
-          </th>
+
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('isActive', $event)" nzAlign="center">
             Trạng thái
           </th>
@@ -55,12 +50,7 @@
             <a (click)="openEdit(data)">{{ data.code }}</a>
           </td>
           <td >{{ data.name }}</td>
-          <td >
-            <span *ngFor="let item of customerResult" >
-              <span *ngIf="item.code == data.customerCode">{{ item.name }}</span>
-            </span>
-          </td>
-          <td nzAlign="center">{{ data.createDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
               nzTheme="outline"></span>
@@ -88,18 +78,7 @@
       <app-input-clear placeholder="Nhập điểm giao hàng" [required]="true" label="Điểm giao hàng"
         [control]="$any(validateForm).controls['name']"></app-input-clear>
 
-        <nz-form-item>
-          <nz-form-label [nzRequired]="true">Khách hàng</nz-form-label>
-          <nz-form-control nzErrorTip="Không được để trống">
-            <nz-select nzShowSearch nzAllowClear placeholder="Chọn khách hàng" formControlName="customerCode">
-              <nz-option cdkScrollable *ngFor="let item of customerResult" [nzLabel]="item.name"
-                [nzValue]="item.code">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
       <nz-form-item>
-
         <nz-form-label>Trạng thái</nz-form-label>
         <nz-form-control>
           <nz-radio-group formControlName="isActive">
