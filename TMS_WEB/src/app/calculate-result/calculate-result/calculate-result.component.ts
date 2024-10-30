@@ -55,6 +55,7 @@ export class CalculateResultComponent {
     vK11FOB: [],
     vK11TNPP: [],
     bbdo: [],
+    bbfo: [],
   }
 
   statusModel = {

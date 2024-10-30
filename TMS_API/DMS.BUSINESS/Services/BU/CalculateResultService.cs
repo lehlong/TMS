@@ -685,7 +685,7 @@ namespace DMS.BUSINESS.Services.BU
                 #region BBDO
                 foreach (var g in lstGoods.OrderByDescending(x => x.CreateDate).ToList())
                 {
-                    var c = mappingBBDO.Where(x => x.GoodsCode == g.Code).ToList();
+                    var c = mappingBBDO.Where(x => x.GoodsCode == g.Code && x.Type == "BBDO").ToList();
                     if (c.Count() == 0) continue;
                     data.BBDO.Add(new BBDO
                     {
@@ -705,7 +705,7 @@ namespace DMS.BUSINESS.Services.BU
                     }
                     _m = _m.OrderBy(x => x.CustomerName).ThenBy(x => x.PointName).ToList();
                     var _o = 1;
-                    foreach(var e in _m)
+                    foreach (var e in _m)
                     {
                         var i = new BBDO
                         {
@@ -719,16 +719,30 @@ namespace DMS.BUSINESS.Services.BU
                             Col4 = "L",
                             Col5 = lstCustomer.FirstOrDefault(x => x.Code == e.CustomerCode)?.PaymentTerm,
                             Col6 = Math.Round(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col12) ?? 0),
+                            Col9 = data.PT.FirstOrDefault(x => x.IsBold == false)?.Col4,
+                            Col10 = dataPoint.FirstOrDefault(x => x.Code == e.PointCode)?.CuocVcBq,
+                            Col11 = lstCustomer.FirstOrDefault(x => x.Code == e.CustomerCode)?.BankLoanInterest,
                             Col12 = Math.Round(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col14) ?? 0),
                         };
+                        i.Col8 = Math.Round(i.Col9 + i.Col10 + i.Col11 ?? 0);
                         i.Col7 = i.Col6 == 0 ? 0 : Math.Round(i.Col6 / 1.1M ?? 0);
                         i.Col13 = i.Col12 == 0 ? 0 : Math.Round(i.Col12 / 1.1M ?? 0);
+                        i.Col14 = Math.Round(i.Col12 - i.Col10 * 1.1M ?? 0);
+                        i.Col15 = i.Col14 == 0 ? 0 : Math.Round(i.Col14 / 1.1M ?? 0);
+                        i.Col17 = Math.Round(i.Col7 - i.Col8 - i.Col15 - i.Col11 ?? 0);
+                        i.Col16 = Math.Round(i.Col17 * 1.1M ?? 0);
+                        i.Col19 = Math.Round(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col14 ?? 0);
+                        i.Col18 = i.Col19 == 0 ? 0 : Math.Round(i.Col19 / 1.1M - data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col2) ?? 0);
 
                         data.BBDO.Add(i);
                         _o++;
                     }
 
                 }
+                #endregion
+
+                #region DO FO
+
                 #endregion
 
                 return await RoundNumberData(data);
@@ -809,7 +823,7 @@ namespace DMS.BUSINESS.Services.BU
             {
                 _dbContext.TblInHeSoMatHang.UpdateRange(model.HS1);
                 _dbContext.TblInVinhCuaLo.UpdateRange(model.HS2);
-                if(model.Header.Status == model.Status.Code)
+                if (model.Header.Status == model.Status.Code)
                 {
                     model.Header.Status = "01";
                     _dbContext.TblBuCalculateResultList.Update(model.Header);
@@ -833,7 +847,7 @@ namespace DMS.BUSINESS.Services.BU
                     };
                     _dbContext.TblBuHistoryAction.Add(h);
                 }
-                
+
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -850,7 +864,7 @@ namespace DMS.BUSINESS.Services.BU
                 var data = await _dbContext.TblBuHistoryAction.Where(x => x.HeaderCode == code).OrderByDescending(x => x.CreateDate).ToListAsync();
                 return data;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new List<TblBuHistoryAction>();
             }
