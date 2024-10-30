@@ -245,6 +245,21 @@ namespace DMS.BUSINESS.Models
         public string? Col3 { get; set; }
         public string? Col4 { get; set; }
         public string? Col5 { get; set; }
+
+        public decimal? Col6 { get; set; }
+        public decimal? Col7 { get; set; }
+        public decimal? Col8 { get; set; }
+        public decimal? Col9 { get; set; }
+        public decimal? Col10 { get; set; }
+        public decimal? Col11 { get; set; }
+        public decimal? Col12 { get; set; }
+        public decimal? Col13 { get; set; }
+        public decimal? Col14 { get; set; }
+        public decimal? Col15 { get; set; }
+        public decimal? Col16 { get; set; }
+        public decimal? Col17 { get; set; }
+        public decimal? Col18 { get; set; }
+        public decimal? Col19 { get; set; }
     }
     public class BBDO_MAP
     {

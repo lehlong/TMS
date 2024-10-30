@@ -707,7 +707,7 @@ namespace DMS.BUSINESS.Services.BU
                     var _o = 1;
                     foreach(var e in _m)
                     {
-                        data.BBDO.Add(new BBDO
+                        var i = new BBDO
                         {
                             ColA = _o.ToString(),
                             ColB = e.CustomerName,
@@ -717,7 +717,14 @@ namespace DMS.BUSINESS.Services.BU
                             Col2 = e.CustomerCode,
                             Col3 = g.Code,
                             Col4 = "L",
-                        });
+                            Col5 = lstCustomer.FirstOrDefault(x => x.Code == e.CustomerCode)?.PaymentTerm,
+                            Col6 = Math.Round(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col12) ?? 0),
+                            Col12 = Math.Round(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col14) ?? 0),
+                        };
+                        i.Col7 = i.Col6 == 0 ? 0 : Math.Round(i.Col6 / 1.1M ?? 0);
+                        i.Col13 = i.Col12 == 0 ? 0 : Math.Round(i.Col12 / 1.1M ?? 0);
+
+                        data.BBDO.Add(i);
                         _o++;
                     }
 
