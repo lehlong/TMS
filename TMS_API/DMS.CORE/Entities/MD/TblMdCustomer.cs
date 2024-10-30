@@ -28,6 +28,9 @@ namespace DMS.CORE.Entities.MD
         [Column("ADDRESS", TypeName = "NVARCHAR(255)")]
         public string? Address { set; get; }
 
+        [Column("PAYMENT_TERM", TypeName = "NVARCHAR(255)")]
+        public string? PaymentTerm { set; get; }
+
         [Column("GAP", TypeName = "DECIMAL(18,0)")]
         public decimal? Gap { set; get; }
 
@@ -57,6 +60,7 @@ namespace DMS.CORE.Entities.MD
 
         [Column("MGGLH_XANG", TypeName = "DECIMAL(18,0)")]
         public decimal? MgglhXang { set; get; }
+
         [Column("MGGLH_DAU", TypeName = "DECIMAL(18,0)")]
         public decimal? MgglhDau { set; get; }
 

@@ -27,6 +27,7 @@ export class CustomerComponent {
     phone: [''],
     email: [''],//, Validators.email
     address: [''],
+    paymentTerm: [''],
     gap: [0],
     cuocVcBq: [0],
     mgglhXang: [0],
@@ -260,6 +261,7 @@ export class CustomerComponent {
       phone: data.phone,
       email: data.email,
       address: data.address,
+      paymentTerm: data.paymentTerm,
       gap: data.gap,
       cuocVcBq: data.cuocVcBq,
       mgglhXang: data.mgglhXang,
@@ -273,6 +275,8 @@ export class CustomerComponent {
       isActive: data.isActive,
     })
     setTimeout(() => {
+    console.log(this.validateForm.getRawValue());
+
       this.edit = true
       this.visible = true
       this.searchMarket()

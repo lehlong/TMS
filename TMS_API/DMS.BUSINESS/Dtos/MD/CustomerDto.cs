@@ -32,6 +32,9 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("địa chỉ")]
         public string? Address { get; set; }
 
+        [Description("Hạn thanh toán")]
+        public string? PaymentTerm { get; set; }
+
         [Description("Cự ly BQ")]
         public decimal? Gap { get; set; }
 
