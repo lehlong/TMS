@@ -49,7 +49,6 @@ export class CustomerComponent {
   paginationResult = new PaginationResult()
   localResult: any[] = []
   customerList: any[] = []
-  // customerList = new PaginationResult()
   marketResult: any[] = []
   marketList: any[] = []
   salesMethodResult: any[] = []
@@ -89,7 +88,6 @@ export class CustomerComponent {
     this.search()
     this.getAllMarket()
     this.getAllCustomerType()
-    this.getAllCustomer()
   }
 
   onSortChange(name: string, value: any) {
@@ -114,19 +112,19 @@ export class CustomerComponent {
     })
   }
 
-  getAllCustomer(){
-    this.isSubmit = false
-    this._service.getall().subscribe({
-      next: (data) => {
-        console.log(data);
+  // getAllCustomer(){
+  //   this.isSubmit = false
+  //   this._service.getall().subscribe({
+  //     next: (data) => {
+  //       console.log(data);
 
-        this.customerList = data
-      },
-      error: (response) => {
-        console.log(response)
-      },
-    })
-  }
+  //       this.customerList = data
+  //     },
+  //     error: (response) => {
+  //       console.log(response)
+  //     },
+  //   })
+  // }
 
   getAllLocal(){
     this.isSubmit = false
@@ -208,7 +206,7 @@ export class CustomerComponent {
       if (this.edit) {
         this._service.updateCustomer(formData).subscribe({
           next: (data) => {
-this.getAllCustomer()
+// this.getAllCustomer()
             this.search()
           },
           error: (response) => {
@@ -273,7 +271,6 @@ this.getAllCustomer()
   }
 
   openEdit(data: any): void {
-    // console.log(data);
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
