@@ -23,6 +23,9 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Tên")]
         public string Name { get; set; }
 
+        [Description("Cước vận chuyển bình quân")]
+        public decimal? CuocVcBq { get; set; }
+
         [Description("Ngày tạo")]
         public DateTime? CreateDate { get; set; }
 

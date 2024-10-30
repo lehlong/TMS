@@ -19,6 +19,7 @@ export class DeliveryPointComponent {
   validateForm: FormGroup = this.fb.group({
     code: ['', [Validators.required]],
     name: ['', [Validators.required]],
+    cuocVcBq: [''],
     isActive: [true, [Validators.required]],
   })
 
@@ -180,10 +181,11 @@ export class DeliveryPointComponent {
     })
   }
 
-  openEdit(data: { code: string; name: string; customerCode: string; isActive: boolean}) {
+  openEdit(data: any) {
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
+      cuocVcBq: data.cuocVcBq,
       isActive: data.isActive,
     })
     setTimeout(() => {

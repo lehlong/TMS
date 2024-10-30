@@ -48,7 +48,8 @@ export class CustomerComponent {
   filter = new CustomerFilter()
   paginationResult = new PaginationResult()
   localResult: any[] = []
-  customerList = new PaginationResult()
+  customerList: any[] = []
+  // customerList = new PaginationResult()
   marketResult: any[] = []
   marketList: any[] = []
   salesMethodResult: any[] = []

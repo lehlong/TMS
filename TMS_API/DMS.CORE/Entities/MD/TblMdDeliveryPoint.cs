@@ -19,6 +19,9 @@ namespace DMS.CORE.Entities.MD
         [Column("NAME", TypeName = "NVARCHAR(255)")]
         public string Name { get; set; }
 
+        [Column("CUOC_VC_BQ", TypeName = "DECIMAL(18,0)")]
+        public decimal? CuocVcBq { set; get; }
+
 
     }
 }
