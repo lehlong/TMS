@@ -134,7 +134,7 @@
           <nz-form-control>
             <nz-select nzShowSearch nzAllowClear placeholder="Chọn Vùng" formControlName="name"
             (ngModelChange)="openEdit($event)">
-              <nz-option cdkScrollable *ngFor="let item of paginationResult.data" [nzLabel]="item.name"
+              <nz-option cdkScrollable *ngFor="let item of customerList" [nzLabel]="item.name"
                 [nzValue]="item" (click)="openEdit(item)">
               </nz-option>
             </nz-select>

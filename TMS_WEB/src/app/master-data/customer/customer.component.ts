@@ -48,6 +48,7 @@ export class CustomerComponent {
   filter = new CustomerFilter()
   paginationResult = new PaginationResult()
   localResult: any[] = []
+  customerList = new PaginationResult()
   marketResult: any[] = []
   marketList: any[] = []
   salesMethodResult: any[] = []
@@ -87,6 +88,7 @@ export class CustomerComponent {
     this.search()
     this.getAllMarket()
     this.getAllCustomerType()
+    this.getAllCustomer()
   }
 
   onSortChange(name: string, value: any) {
@@ -104,6 +106,20 @@ export class CustomerComponent {
       next: (data) => {
         // console.log(data);
         this.paginationResult = data
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
+  }
+
+  getAllCustomer(){
+    this.isSubmit = false
+    this._service.getall().subscribe({
+      next: (data) => {
+        console.log(data);
+
+        this.customerList = data
       },
       error: (response) => {
         console.log(response)
@@ -255,8 +271,7 @@ export class CustomerComponent {
   }
 
   openEdit(data: any): void {
-    console.log(data);
-
+    // console.log(data);
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
@@ -277,8 +292,6 @@ export class CustomerComponent {
       isActive: data.isActive,
     })
     setTimeout(() => {
-    console.log(this.validateForm.getRawValue());
-
       this.edit = true
       this.visible = true
       this.searchMarket()
