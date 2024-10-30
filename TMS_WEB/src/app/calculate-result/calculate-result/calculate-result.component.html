@@ -857,23 +857,61 @@
         <nz-tab nzTitle="BB DO" (nzClick)="changeTitle('BB DO')">
 
             <div style="overflow: auto; height: calc(100vh - 210px);">
-                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #fobTable
-                    [nzData]="data.db">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #bbdoTable
+                    [nzData]="data.bbdo">
                     <thead>
                         <tr>
                             <th rowspan="2" class="align-center">STT</th>
                             <th rowspan="2" class="align-center">Tên khách hàng</th>
                             <th rowspan="2" class="align-center">Địa điểm giao hàng</th>
                             <th rowspan="2" class="align-center">Mặt hàng</th>
+                            <th rowspan="2" class="align-center">PT</th>
+                            <th rowspan="2" class="align-center">Mã khách</th>
+                            <th rowspan="2" class="align-center">Mã hàng hóa</th>
+                            <th rowspan="2" class="align-center">ĐVT</th>
+                            <th rowspan="2" class="align-center">Thanh toán</th>
+                            <th colspan="2" class="align-center">Mức lãi gộp TĐ giao (vùng 2)</th>
+                            <th colspan="4" class="align-center">Chi phí tạm tính chưa VAT </th>
+                            <th colspan="2" class="align-center">Đề xuất mức giảm giá tại kho bên bán (FOB)</th>
+                            <th colspan="2" class="align-center">Mức giảm giá tại kho bên mua</th>
+                            <th colspan="2" class="align-center">LỢI NHUẬN (Đ/Ltt)</th>
+
                             <th colspan="2" class="align-center">GIÁ BÁN CHO KHÁCH HÀNG (Đ/L)</th>
                         </tr>
                         <tr>
+                            <th class="align-center">Đã có thuế</th>
+                            <th class="align-center">Chưa thuế</th>
+                            <th class="align-center">Tổng chi phí</th>
+                            <th class="align-center">CP chung chưa cước vc</th>
+                            <th class="align-center">Cước vận chuyển</th>
+                            <th class="align-center">Lãi vay NH, phí bơm rót, ≠</th>
+                            <th class="align-center">Đã có thuế</th>
+                            <th class="align-center">Chưa thuế</th>
+                            <th class="align-center">Đã có thuế</th>
+                            <th class="align-center">Chưa thuế</th>
+                            <th class="align-center">Đã có thuế</th>
+                            <th class="align-center">Chưa thuế</th>
                             <th class="align-center">CHƯA VAT, BVMT</th>
                             <th class="align-center">CÓ VAT, BVMT</th>
                         </tr>
                     </thead>
                     <tbody>
-
+                        @for (t of bbdoTable.data; track t) {
+                            <tr *ngIf="t.isBold" style="font-weight: bold;">
+                                <td></td>
+                                <td colspan="22">{{ t.colB }}</td>
+                            </tr>
+                            <tr *ngIf="!t.isBold">
+                                <td>{{ t.colA }}</td>
+                                <td>{{ t.colB }}</td>
+                                <td>{{ t.colC }}</td>
+                                <td>{{ t.colD }}</td>
+                                <td>{{ t.col1 }}</td>
+                                <td>{{ t.col2 }}</td>
+                                <td>{{ t.col3 }}</td>
+                                <td>{{ t.col4 }}</td>
+                            </tr>
+                            }
                     </tbody>
 
                 </nz-table>

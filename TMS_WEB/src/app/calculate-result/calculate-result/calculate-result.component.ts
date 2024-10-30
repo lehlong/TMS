@@ -54,6 +54,7 @@ export class CalculateResultComponent {
     vK11DB: [],
     vK11FOB: [],
     vK11TNPP: [],
+    bbdo: [],
   }
 
   statusModel = {
@@ -81,7 +82,7 @@ export class CalculateResultComponent {
       next: (params) => {
         const code = params.get('code')
         this.headerId = code
-        this.GetData(code);
+        this.GetData(code)
         this._service.GetDataInput(this.headerId).subscribe({
           next: (data) => {
             this.model = data
@@ -149,8 +150,8 @@ export class CalculateResultComponent {
     this.isVisibleStatus = false
   }
   handleOkStatus(): void {
-    this.model.status.contents = this.statusModel.value;
-    this.updateDataInput();
+    this.model.status.contents = this.statusModel.value
+    this.updateDataInput()
     this.isVisibleStatus = false
   }
 
@@ -191,7 +192,7 @@ export class CalculateResultComponent {
     this._service.UpdateDataInput(this.model).subscribe({
       next: (data) => {
         console.log(data)
-        window.location.reload();
+        window.location.reload()
       },
       error: (err) => {
         console.log(err)

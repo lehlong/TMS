@@ -19,7 +19,7 @@ import { GoodsService } from '../../services/master-data/goods.service'
 })
 export class MapPointCustomerGoodsComponent {
   validateForm: FormGroup = this.fb.group({
-    code: ['', [Validators.required]],
+    code: [''],
     deliveryPointCode: ['', [Validators.required]],
     customerCode: ['', [Validators.required]],
     goodsCode: ['', [Validators.required]],

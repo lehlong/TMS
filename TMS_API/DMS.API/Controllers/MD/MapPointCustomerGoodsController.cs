@@ -51,6 +51,7 @@ namespace DMS.API.Controllers.MD
         public async Task<IActionResult> Insert([FromBody] MapPointCustomerGoodsDto MapPointCustomerGoods)
         {
             var transferObject = new TransferObject();
+            MapPointCustomerGoods.Code = Guid.NewGuid().ToString(); 
             var result = await _service.Add(MapPointCustomerGoods);
             if (_service.Status)
             {

@@ -39,9 +39,6 @@
       <thead>
         <tr>
           <th nzWidth="30px">STT</th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)">
-            Mã
-          </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" nzWidth="150px">
             Điểm giao hàng
           </th>
@@ -63,14 +60,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let data of headerTable.data; let i = index" (dblclick)="openEdit(data)">
+        <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
           <td>
             {{
             (paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1
             }}
-          </td>
-          <td>
-            <a (click)="openEdit(data)">{{ data.code }}</a>
           </td>
           <td>
             <span *ngFor="let item of lstDeliveryPoint" >
@@ -120,10 +114,6 @@
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-      <app-input-clear placeholder="Nhập mã" [required]="true" label="Mã"
-        [control]="$any(validateForm).controls['code']" [required]="true"
-        [disabled]="edit ? true : false"></app-input-clear>
-
         <nz-form-item>
           <nz-form-label [nzRequired]="true">Điểm giao hàng</nz-form-label>
           <nz-form-control nzErrorTip="Không được để trống">

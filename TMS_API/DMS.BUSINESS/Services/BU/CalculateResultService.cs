@@ -42,6 +42,8 @@ namespace DMS.BUSINESS.Services.BU
 
                 var dataVCL = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == code).ToListAsync();
                 var dataHSMH = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == code).ToListAsync();
+                var mappingBBDO = await _dbContext.TblMdMapPointCustomerGoods.ToListAsync();
+                var dataPoint = await _dbContext.TblMdDeliveryPoint.ToListAsync();
                 if (dataVCL.Count() == 0 || dataHSMH.Count() == 0)
                 {
                     return data;
@@ -680,6 +682,47 @@ namespace DMS.BUSINESS.Services.BU
                 }
                 #endregion
 
+                #region BBDO
+                foreach (var g in lstGoods.OrderByDescending(x => x.CreateDate).ToList())
+                {
+                    var c = mappingBBDO.Where(x => x.GoodsCode == g.Code).ToList();
+                    if (c.Count() == 0) continue;
+                    data.BBDO.Add(new BBDO
+                    {
+                        ColB = g.Name,
+                        IsBold = true
+                    });
+                    var _m = new List<BBDO_MAP>();
+                    foreach (var i in c)
+                    {
+                        _m.Add(new BBDO_MAP
+                        {
+                            CustomerCode = i.CustomerCode,
+                            PointCode = i.DeliveryPointCode,
+                            CustomerName = lstCustomer.FirstOrDefault(x => x.Code == i.CustomerCode)?.Name,
+                            PointName = dataPoint.FirstOrDefault(x => x.Code == i.DeliveryPointCode)?.Name,
+                        });
+                    }
+                    _m = _m.OrderBy(x => x.CustomerName).ThenBy(x => x.PointName).ToList();
+                    var _o = 1;
+                    foreach(var e in _m)
+                    {
+                        data.BBDO.Add(new BBDO
+                        {
+                            ColA = _o.ToString(),
+                            ColB = e.CustomerName,
+                            ColC = e.PointName,
+                            ColD = g.Name,
+                            Col1 = "07",
+                            Col2 = e.CustomerCode,
+                            Col3 = g.Code,
+                            Col4 = "L",
+                        });
+                        _o++;
+                    }
+
+                }
+                #endregion
 
                 return await RoundNumberData(data);
             }

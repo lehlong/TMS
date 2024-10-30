@@ -23,6 +23,7 @@ namespace DMS.BUSINESS.Models
         public List<VK11DB> VK11DB { get; set; } = new List<VK11DB>();
         public List<VK11FOB> VK11FOB { get; set; } = new List<VK11FOB>();
         public List<VK11TNPP> VK11TNPP { get; set; } = new List<VK11TNPP>();
+        public List<BBDO> BBDO { get; set; } = new List<BBDO>();
     }
     public class DLG
     {
@@ -232,6 +233,25 @@ namespace DMS.BUSINESS.Models
     }
     public class BBDO
     {
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public string ColB { get; set; }
+        public string ColC { get; set; }
+        public string ColD { get; set; }
+        public List<decimal?> LG { get; set; } = new List<decimal?>();
+        public bool IsBold { get; set; } = false;
+        public string? Col1 { get; set; }
+        public string? Col2 { get; set; }
+        public string? Col3 { get; set; }
+        public string? Col4 { get; set; }
+        public string? Col5 { get; set; }
+    }
+    public class BBDO_MAP
+    {
+        public string CustomerCode { get; set; }
+        public string CustomerName { get; set; }
+        public string PointCode { get; set; }
+        public string PointName { get; set; }
 
     }
     public class BBFO
@@ -386,4 +406,6 @@ namespace DMS.BUSINESS.Models
     {
         public string? FDate { get; set; }
     }
+
+
 }
