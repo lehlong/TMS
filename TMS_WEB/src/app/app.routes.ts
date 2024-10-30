@@ -16,6 +16,7 @@ import {BlankLayoutComponent} from './layouts/blank-layout/blank-layout.componen
 import { calculateResultRoutes } from './calculate-result/calculate-result.route';
 import { inputRoutes } from './input/input.routes';
 import { calculateResultListRoutes } from './calculate-result-list/calculate-result-list.route';
+import { discountInformation } from './discount-information/discount-information.route';
 
 
 export const routes: Routes = [
@@ -31,7 +32,7 @@ export const routes: Routes = [
       {path: 'business', children: businessRoutes, canActivate: [AuthGuard]},
       {path: 'calculate-result', children: calculateResultRoutes, canActivate: [AuthGuard]},
       {path: 'calculate-result-list', children: calculateResultListRoutes, canActivate: [AuthGuard]},
-
+      {path: 'discount-information', children: discountInformation, canActivate: [AuthGuard]},
     ],
   },
   {
