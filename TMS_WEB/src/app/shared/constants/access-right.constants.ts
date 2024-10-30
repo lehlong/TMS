@@ -129,6 +129,13 @@ export enum LOCAL_RIGHTS {
   EDIT = 'R1.4.2',
   DELETE = 'R0',
 }
+export enum MAP_POINT_CUSTOMER_GOODS_RIGHTS {
+  LIST = 'R1.4.1',
+  EXCEL = 'R0',
+  ADD = 'R1.4.2',
+  EDIT = 'R1.4.2',
+  DELETE = 'R0',
+}
 export enum COMPETITOR_RIGHTS {
   LIST = 'R1.4.1',
   EXCEL = 'R0',

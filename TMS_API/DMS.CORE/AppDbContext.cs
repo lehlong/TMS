@@ -132,7 +132,8 @@ namespace DMS.CORE
         public DbSet<TblMdLaiGopDieuTiet> TblMdLaiGopDieuTiet { get; set; }
         public DbSet<TblMdCustomer> TblMdCustomer { get; set; }
         public DbSet<TblMdCompetitor> TblMdCompetitor { get; set; }
-        
+        public DbSet<TblMdMapPointCustomerGoods> TblMdMapPointCustomerGoods { get; set; }
+
         public DbSet<TblMdDeliveryPoint> TblMdDeliveryPoint { get; set; }
         public DbSet<TblMdGiaGiaoTapDoan> TblMdGiaGiaoTapDoan { get; set; }
         public DbSet<TblMdCustomerType> TblMdCustomerType { get; set; }
