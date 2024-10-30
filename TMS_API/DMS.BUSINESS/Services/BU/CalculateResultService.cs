@@ -558,7 +558,7 @@ namespace DMS.BUSINESS.Services.BU
                             ColB = c.Name,
                             Col1 = m?.Name,
                             Col2 = c.Gap,
-                            Col4 = 10,
+                            Col4 = "10",
                             Col5 = c.Code,
                             Col6 = g.Code,
                             Col7 = "L",
@@ -594,7 +594,7 @@ namespace DMS.BUSINESS.Services.BU
                             ColC = c.Name,
                             Col1 = m?.Name,
                             Col2 = c.Gap,
-                            Col4 = 10,
+                            Col4 = "10",
                             Col5 = c.Code,
                             Col6 = g.Code,
                             Col7 = "L",
@@ -756,8 +756,9 @@ namespace DMS.BUSINESS.Services.BU
                         ColB = lstCustomer.FirstOrDefault(x => x.Code == _c)?.Name,
                         IsBold = true,
                     });
-                    foreach(var p in lstPoint)
+                    foreach (var p in lstPoint)
                     {
+                        var _5 = lstMapDOFO.FirstOrDefault(x => x.CustomerCode == _c && x.DeliveryPointCode == p.Code);
                         var i = new BBFO
                         {
                             ColA = "-",
@@ -766,7 +767,7 @@ namespace DMS.BUSINESS.Services.BU
                             Col1 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col8) ?? 0),
                             Col2 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col9) ?? 0),
                             Col4 = data.PT.FirstOrDefault(x => x.IsBold == false)?.Col4,
-                            Col5 = p.CuocVcBq,
+                            Col5 = _5?.CuocVcBq,
                             Col6 = Math.Round(lstCustomer.FirstOrDefault(x => x.Code == _c)?.BankLoanInterest ?? 0),
                         };
                         i.Col3 = Math.Round(i.Col4 + i.Col5 + i.Col6 ?? 0);
@@ -785,7 +786,7 @@ namespace DMS.BUSINESS.Services.BU
                 #endregion
 
                 #region VK11 BB
-                foreach(var i in data.BBDO)
+                foreach (var i in data.BBDO)
                 {
                     data.VK11BB.Add(new VK11BB
                     {
@@ -799,6 +800,150 @@ namespace DMS.BUSINESS.Services.BU
                         Col4 = i.Col4,
                         Col5 = i.Col5,
                         Col6 = i.Col19,
+                        Col7 = "VND",
+                        Col8 = "1",
+                        Col9 = "L",
+                        Col10 = "C",
+                        IsBold = i.IsBold,
+                    });
+                }
+                #endregion
+
+                #region Tổng hợp
+                data.Summary.Add(new Summary
+                {
+                    Code = Guid.NewGuid().ToString(),
+                    ColB = "TNQTM",
+                    IsBold = true,
+                });
+                foreach (var i in data.VK11PT)
+                {
+                    data.Summary.Add(new Summary
+                    {
+                        Code = Guid.NewGuid().ToString(),
+                        ColA = i.ColA,
+                        ColB = i.ColB,
+                        ColC = i.Col1,
+                        Col1 = i.Col4,
+                        Col2 = i.Col5,
+                        Col3 = i.Col6,
+                        Col4 = i.Col7,
+                        Col5 = i.Col8,
+                        Col6 = i.Col9,
+                        Col7 = "VND",
+                        Col8 = "1",
+                        Col9 = "L",
+                        Col10 = "C",
+                        IsBold = i.IsBold,
+                    });
+                }
+
+                data.Summary.Add(new Summary
+                {
+                    Code = Guid.NewGuid().ToString(),
+                    ColB = "KHÁCH ĐẶC BIỆT",
+                    IsBold = true,
+                });
+                foreach (var i in data.VK11DB)
+                {
+                    data.Summary.Add(new Summary
+                    {
+                        Code = Guid.NewGuid().ToString(),
+                        ColA = i.ColA,
+                        ColB = i.ColB,
+                        ColC = i.ColC,
+                        ColD = i.Col1,
+                        Col1 = i.Col4,
+                        Col2 = i.Col5,
+                        Col3 = i.Col6,
+                        Col4 = i.Col7,
+                        Col5 = i.Col8,
+                        Col6 = i.Col9,
+                        Col7 = "VND",
+                        Col8 = "1",
+                        Col9 = "L",
+                        Col10 = "C",
+                        IsBold = i.IsBold,
+                    });
+                }
+
+                data.Summary.Add(new Summary
+                {
+                    Code = Guid.NewGuid().ToString(),
+                    ColB = "BÁN FOB",
+                    IsBold = true,
+                });
+                foreach (var i in data.VK11FOB)
+                {
+                    data.Summary.Add(new Summary
+                    {
+                        Code = Guid.NewGuid().ToString(),
+                        ColA = i.ColA,
+                        ColB = i.IsBold ? i.ColB : i.ColC,
+                        ColC = i.Col1,
+                        Col1 = i.Col4,
+                        Col2 = i.Col5,
+                        Col3 = i.Col6,
+                        Col4 = i.Col7,
+                        Col5 = i.Col8,
+                        Col6 = i.Col9,
+                        Col7 = "VND",
+                        Col8 = "1",
+                        Col9 = "L",
+                        Col10 = "C",
+                        IsBold = i.IsBold,
+                    });
+                }
+
+                data.Summary.Add(new Summary
+                {
+                    Code = Guid.NewGuid().ToString(),
+                    ColB = "TNPP",
+                    IsBold = true,
+                });
+                foreach (var i in data.VK11TNPP)
+                {
+                    data.Summary.Add(new Summary
+                    {
+                        Code = Guid.NewGuid().ToString(),
+                        ColA = i.ColA,
+                        ColB = i.IsBold ? i.ColB : i.ColC,
+                        ColC = i.Col1,
+                        Col1 = i.Col4,
+                        Col2 = i.Col5,
+                        Col3 = i.Col6,
+                        Col4 = i.Col7,
+                        Col5 = i.Col8,
+                        Col6 = i.Col9,
+                        Col7 = "VND",
+                        Col8 = "1",
+                        Col9 = "L",
+                        Col10 = "C",
+                        IsBold = i.IsBold,
+                    });
+                }
+
+                data.Summary.Add(new Summary
+                {
+                    Code = Guid.NewGuid().ToString(),
+                    ColB = "BÁN BUÔN",
+                    IsBold = true,
+                });
+                foreach (var i in data.VK11BB)
+                {
+                    data.Summary.Add(new Summary
+                    {
+                        Code = Guid.NewGuid().ToString(),
+                        ColA = i.ColA,
+                        ColB = i.ColB,
+                        ColC = i.ColC,
+                        ColD = i.ColD,
+                        Col1 = i.Col1,
+                        Col2 = i.Col2,
+                        Col3 = i.Col3,
+                        Col4 = i.Col4,
+                        Col5 = i.Col5,
+                        Col6 = i.Col6,
                         Col7 = "VND",
                         Col8 = "1",
                         Col9 = "L",

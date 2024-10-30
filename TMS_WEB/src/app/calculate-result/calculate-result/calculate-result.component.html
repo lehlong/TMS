@@ -1462,7 +1462,65 @@
 
         </nz-tab>
         <nz-tab nzTitle="Tổng hợp" (nzClick)="changeTitle('TỔNG HỢP')">
+            <div style="overflow: auto; height: calc(100vh - 210px);">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered
+                    #summaryTable [nzData]="data.summary">
+                    <thead>
+                        <tr>
+                            <th class="align-center">STT</th>
+                            <th class="align-center">Tên Khách hàng đại lý</th>
+                            <th class="align-center">Địa điểm giao hàng</th>
+                            <th class="align-center">Mặt hàng</th>
+                            <th class="align-center">Phương thức</th>
+                            <th class="align-center">Mã khách hàng</th>
+                            <th class="align-center">Mã hàng hoá</th>
+                            <th class="align-center">ĐVT</th>
+                            <th class="align-center">Thời hạn TT</th>
+                            <th class="align-center">Giá chưa <br> VAT&BVMT</th>
+                            <th class="align-center">Unit</th>
+                            <th class="align-center">Per</th>
+                            <th class="align-center">ĐVT</th>
+                            <th class="align-center">#</th>
+                            <th class="align-center">Hiệu lực từ</th>
+                            <th class="align-center">Thời gian</th>
+                            <th class="align-center">đến</th>
+                            <th class="align-center">Lower limit</th>
+                            <th class="align-center">Upper limit</th>
+                        </tr>
 
+                    </thead>
+                    <tbody>
+                        @for (t of summaryTable.data; track t) {
+                        <tr *ngIf="t.isBold" style="font-weight: bold;">
+                            <td></td>
+                            <td colspan="18">{{ t.colB }}</td>
+                        </tr>
+                        <tr *ngIf="!t.isBold">
+                            <td>{{ t.colA }}</td>
+                            <td>{{ t.colB }}</td>
+                            <td>{{ t.colC }}</td>
+                            <td>{{ t.colD }}</td>
+                            <td>{{ t.col1 }}</td>
+                            <td>{{ t.col2 }}</td>
+                            <td>{{ t.col3 }}</td>
+                            <td>{{ t.col4 }}</td>
+                            <td>{{ t.col5 }}</td>
+                            <td class="align-right">{{t.col6 | number }}</td>
+                            <td>{{ t.col7 }}</td>
+                            <td>{{ t.col8 }}</td>
+                            <td>{{ t.col9 }}</td>
+                            <td>{{ t.col10 }}</td>
+                            <td>{{ t.col11 }}</td>
+                            <td>{{ t.col12 }}</td>
+                            <td>{{ t.col13 }}</td>
+                            <td>{{ t.col14 }}</td>
+                            <td>{{ t.col15 }}</td>
+                        </tr>
+                        }
+                    </tbody>
+
+                </nz-table>
+            </div>
         </nz-tab>
     </nz-tabset>
 </div>

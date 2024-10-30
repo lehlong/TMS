@@ -57,6 +57,7 @@ export class CalculateResultComponent {
     vK11BB: [],
     bbdo: [],
     bbfo: [],
+    summary: [],
   }
 
   statusModel = {
