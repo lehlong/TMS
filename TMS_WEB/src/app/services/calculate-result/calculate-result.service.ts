@@ -20,4 +20,7 @@ export class CalculateResultService {
   GetHistoryAction(code : any): Observable<any> {
     return this.commonService.get(`CalculateResult/GetHistoryAction?code=${code}`)
   }
+  ExportExcel(headerId: any): Observable<any> {
+    return this.commonService.downloadFile(`CalculateResult/ExportExcel?headerId=${headerId}`)
+  }
 }

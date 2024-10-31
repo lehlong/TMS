@@ -34,7 +34,7 @@ import { DropdownService } from '../../services/dropdown/dropdown.service'
   styleUrls: ['./main-layout.component.scss'],
 })
 export class MainLayoutComponent {
-  isCollapsed = false
+  isCollapsed = true
   userName: string = 'User'
   dataSidebarMenu: any[] = []
   openIndex: number | null = null

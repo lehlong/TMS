@@ -17,6 +17,12 @@ using DocumentFormat.OpenXml.VariantTypes;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Spreadsheet;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using SMO;
+using DocumentFormat.OpenXml.Office2016.Excel;
+using NPOI.SS.Formula.Functions;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -26,6 +32,7 @@ namespace DMS.BUSINESS.Services.BU
         Task<InsertModel> GetDataInput(string code);
         Task<List<TblBuHistoryAction>> GetHistoryAction(string code);
         Task UpdateDataInput(InsertModel model);
+        void ExportExcel(ref MemoryStream outFileStream, string path, string headerId);
     }
     public class CalculateResultService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdGoods, GoodsDto>(dbContext, mapper), ICalculateResultService
     {
@@ -1076,6 +1083,144 @@ namespace DMS.BUSINESS.Services.BU
             {
                 return new List<TblBuHistoryAction>();
             }
+        }
+
+        public void ExportExcel(ref MemoryStream outFileStream, string path, string headerId)
+        {
+            try
+            {
+                FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+                IWorkbook templateWorkbook;
+                templateWorkbook = new XSSFWorkbook(fs);
+                fs.Close();
+
+
+                var startRowPT = 7;
+                ISheet sheetPT = templateWorkbook.GetSheetAt(1);
+
+                //Define Style
+                var styleCellNumber = GetCellStyleNumber(templateWorkbook);
+
+                var font = templateWorkbook.CreateFont();
+                font.FontHeightInPoints = 12;
+                font.FontName = "Times New Roman";
+
+                ICellStyle styleCellBold = templateWorkbook.CreateCellStyle(); // chữ in đậm
+                styleCellBold.CloneStyleFrom(sheetPT.GetRow(1).Cells[0].CellStyle);
+                var fontBold = templateWorkbook.CreateFont();
+                fontBold.Boldweight = (short)FontBoldWeight.Bold;
+                fontBold.FontHeightInPoints = 12;
+                fontBold.FontName = "Times New Roman";
+
+                //Get Data
+                var data = GetResult(headerId);
+                #region Export PT
+                for (var i = 0; i < data.Result.PT.Count(); i++)
+                {
+                    var dataRow = data.Result.PT[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetPT, startRowPT++, 38);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                    rowCur.Cells[2].CellStyle = styleCellNumber;
+                    rowCur.Cells[2].SetCellValue(dataRow.Col1 == 0 ? 0 : Convert.ToDouble(dataRow.Col1));
+
+
+                    var iLG = 0;
+                    for (var lg = iLG; lg < dataRow.LG.Count(); lg++)
+                    {
+                        rowCur.Cells[3 + lg].CellStyle = styleCellNumber;
+                        rowCur.Cells[3 + lg].SetCellValue(dataRow.LG[lg] == 0 ? 0 : Convert.ToDouble(dataRow.LG[lg]));
+                    }
+
+                    rowCur.Cells[8].CellStyle = styleCellNumber;
+                    rowCur.Cells[8].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+                    rowCur.Cells[9].CellStyle = styleCellNumber;
+                    rowCur.Cells[9].SetCellValue(dataRow.Col4 == 0 ? 0 : Convert.ToDouble(dataRow.Col4));
+                    rowCur.Cells[10].CellStyle = styleCellNumber;
+                    rowCur.Cells[10].SetCellValue(dataRow.Col5 == 0 ? 0 : Convert.ToDouble(dataRow.Col5));
+
+                    var iGG = 0;
+                    for (var gg = 0; gg < dataRow.GG.Count(); gg++)
+                    {
+                        rowCur.Cells[13 + iGG].CellStyle = styleCellNumber;
+                        rowCur.Cells[13 + iGG].SetCellValue(dataRow.GG[gg].VAT == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg].VAT));
+                        rowCur.Cells[14 + iGG].CellStyle = styleCellNumber;
+                        rowCur.Cells[14 + iGG].SetCellValue(dataRow.GG[gg].NonVAT == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg].NonVAT));
+                        iGG += 2;
+                    }
+
+                    var iLN = 0;
+                    for (var ln = iLN; ln < dataRow.LG.Count(); ln++)
+                    {
+                        rowCur.Cells[23 + ln].CellStyle = styleCellNumber;
+                        rowCur.Cells[23 + ln].SetCellValue(dataRow.LN[ln] == 0 ? 0 : Convert.ToDouble(dataRow.LN[ln]));
+                    }
+
+                    var iBV = 0;
+                    for (var gg = 0; gg < dataRow.BVMT.Count(); gg++)
+                    {
+                        rowCur.Cells[28 + iBV].CellStyle = styleCellNumber;
+                        rowCur.Cells[28 + iBV].SetCellValue(dataRow.BVMT[gg].NonVAT == 0 ? 0 : Convert.ToDouble(dataRow.BVMT[gg].NonVAT));
+                        rowCur.Cells[29 + iBV].CellStyle = styleCellNumber;
+                        rowCur.Cells[29 + iBV].SetCellValue(dataRow.BVMT[gg].VAT == 0 ? 0 : Convert.ToDouble(dataRow.BVMT[gg].VAT));
+                        iBV += 2;
+                    }
+
+                    for (var j = 0; j < 38; j++)
+                    {
+                        if (dataRow.IsBold)
+                        {
+                            rowCur.Cells[j].CellStyle = styleCellBold;
+                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                        }
+                        else
+                        {
+                            rowCur.Cells[j].CellStyle.SetFont(font);
+                        }
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+
+                #endregion
+
+                #region Export ĐB
+                #endregion
+
+                templateWorkbook.Write(outFileStream);
+            }
+            catch (Exception ex)
+            {
+                this.Status = false;
+                this.Exception = ex;
+            }
+        }
+        public ICellStyle GetCellStyleNumber(IWorkbook templateWorkbook)
+        {
+            ICellStyle styleCellNumber = templateWorkbook.CreateCellStyle();
+            styleCellNumber.DataFormat = templateWorkbook.CreateDataFormat().GetFormat("#,##0");
+            return styleCellNumber;
+        }
+        public ICellStyle GetCellStyleNumberDecimal(IWorkbook templateWorkbook)
+        {
+            ICellStyle styleCellNumber = templateWorkbook.CreateCellStyle();
+            styleCellNumber.DataFormat = templateWorkbook.CreateDataFormat().GetFormat("#,##0.000");
+            return styleCellNumber;
+        }
+        public ICellStyle GetCellStyleNumberDecimal2(IWorkbook templateWorkbook)
+        {
+            ICellStyle styleCellNumber = templateWorkbook.CreateCellStyle();
+            styleCellNumber.DataFormat = templateWorkbook.CreateDataFormat().GetFormat("#,###.#0");
+            return styleCellNumber;
+        }
+        public ICellStyle GetCellStylePercentage(IWorkbook templateWorkbook)
+        {
+            ICellStyle styleCellPercentage = templateWorkbook.CreateCellStyle();
+            styleCellPercentage.DataFormat = templateWorkbook.CreateDataFormat().GetFormat("0.000%");
+            return styleCellPercentage;
         }
 
     }

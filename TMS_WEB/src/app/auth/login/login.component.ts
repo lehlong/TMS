@@ -48,6 +48,7 @@ export class LoginComponent {
             localStorage.setItem('token', response.accessToken)
             localStorage.setItem('refreshToken', response.refreshToken)
             this.globalService.setUserInfo(response.accountInfo)
+            localStorage.setItem('openSidebar', 'true')
             const userName = response?.accountInfo?.userName;
             if (userName) {
               this.globalService.setUserName(userName); // Lưu userName

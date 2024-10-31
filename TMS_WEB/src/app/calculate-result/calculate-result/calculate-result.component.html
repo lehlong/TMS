@@ -31,9 +31,13 @@
                         [appPermission]="CALCULATE_RESULT_RIGHT.HISTORY">
                         <span nz-icon nzType="history"></span> Lịch sử thực hiện
                     </button>
-                    <button class="!flex !items-center" nzType="primary" nz-button
+                    <button class="!flex !items-center btn-excel" nzType="primary" nz-button (click)="exportExcel()"
                         [appPermission]="CALCULATE_RESULT_RIGHT.EXCEL">
                         <span nz-icon nzType="file-excel"></span> Xuất Excel
+                    </button>
+                    <button class="!flex !items-center" nzType="primary" nz-button (click)="exportWord()"
+                        [appPermission]="CALCULATE_RESULT_RIGHT.EXCEL">
+                        <span nz-icon nzType="file-word"></span> Xuất Word
                     </button>
 
                 </nz-space>

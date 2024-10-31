@@ -202,4 +202,22 @@ export class CalculateResultComponent {
       },
     })
   }
+  
+  exportExcel(){
+    return this._service
+      .ExportExcel(this.headerId)
+      .subscribe((result: Blob) => {
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        const url = window.URL.createObjectURL(blob)
+        var anchor = document.createElement('a')
+        anchor.download = 'CoSoTinhMucGiamGia.xlsx'
+        anchor.href = url
+        anchor.click()
+      })
+  }
+  exportWord(){
+    console.log('Word')
+  }
 }
