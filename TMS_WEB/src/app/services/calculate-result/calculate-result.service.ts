@@ -23,4 +23,7 @@ export class CalculateResultService {
   ExportExcel(headerId: any): Observable<any> {
     return this.commonService.downloadFile(`CalculateResult/ExportExcel?headerId=${headerId}`)
   }
+  ExportWord(headerId: any): Observable<any> {
+    return this.commonService.downloadFile(`CalculateResult/ExportWord?headerId=${headerId}`)
+  }
 }

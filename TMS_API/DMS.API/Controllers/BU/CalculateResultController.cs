@@ -112,5 +112,26 @@ namespace DMS.API.Controllers.BU
                 return Ok(transferObject);
             }
         }
+
+        [HttpGet("ExportWord")]
+        public async Task<IActionResult> ExportWord([FromQuery] string headerId)
+        {
+            var transferObject = new TransferObject();
+            MemoryStream outFileStream = new MemoryStream();
+            var path = Path.GetFullPath("~/Template/CoSoTinhMucGiamGia.xlsx").Replace("~\\", "");
+            _service.ExportExcel(ref outFileStream, path, headerId);
+            if (_service.Status)
+            {
+                return File(outFileStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", DateTime.Now.ToString() + "_CoSoTinhMucGiamGia" + ".xlsx");
+                // return Ok(transferObject);
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("2000", _service);
+                return Ok(transferObject);
+            }
+        }
     }
 }

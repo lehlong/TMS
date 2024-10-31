@@ -218,6 +218,17 @@ export class CalculateResultComponent {
       })
   }
   exportWord(){
-    console.log('Word')
+    return this._service
+      .ExportWord(this.headerId)
+      .subscribe((result: Blob) => {
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        const url = window.URL.createObjectURL(blob)
+        var anchor = document.createElement('a')
+        anchor.download = 'CoSoTinhMucGiamGia.xlsx'
+        anchor.href = url
+        anchor.click()
+      })
   }
 }
