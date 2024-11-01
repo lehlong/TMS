@@ -1550,7 +1550,7 @@
 <nz-modal [(nzVisible)]="isVisibleCustomer" nzTitle="CHỌN KHÁCH HÀNG" (nzOnCancel)="handleCancel()" (nzOnOk)="confirmExportWord()"
     nzCancelText="Đóng">
     <ng-container *nzModalContent>
-        <nz-table #customerTable [nzData]="lstCustomer">
+        <nz-table #customerTable [nzData]="lstCustomer" nzSize="small">
             <thead>
                 <tr>
                     <th [(nzChecked)]="checked" (nzCheckedChange)="onAllChecked($event)"></th>
@@ -1573,7 +1573,7 @@
 <nz-modal [(nzVisible)]="isVisibleCustomerPDF" nzTitle="CHỌN KHÁCH HÀNG" (nzOnCancel)="handleCancel()" (nzOnOk)="confirmExportPDF()"
     nzCancelText="Đóng">
     <ng-container *nzModalContent>
-        <nz-table #customerTable [nzData]="lstCustomer">
+        <nz-table #customerTable [nzData]="lstCustomer" nzSize="small">
             <thead>
                 <tr>
                     <th [(nzChecked)]="checked" (nzCheckedChange)="onAllChecked($event)"></th>
@@ -1596,7 +1596,7 @@
 <nz-modal nzWidth="60%" [(nzVisible)]="isVisibleHistory" nzTitle="LỊCH SỬ THỰC HIỆN" (nzOnCancel)="handleCancel()"
     nzCancelText="Đóng">
     <ng-container *nzModalContent>
-        <nz-table #historyTable [nzData]="lstHistory">
+        <nz-table #historyTable [nzData]="lstHistory" nzSize="small">
             <thead>
                 <tr>
                     <th>STT</th>
@@ -1623,7 +1623,7 @@
 <nz-modal nzWidth="60%" [(nzVisible)]="isVisibleExport" nzTitle="LỊCH SỬ XUẤT FILE" (nzOnCancel)="handleCancel()"
     nzCancelText="Đóng">
     <ng-container *nzModalContent>
-        <nz-table #historyTable [nzData]="lstHistoryFile">
+        <nz-table #historyTable [nzData]="lstHistoryFile" nzSize="small">
             <thead>
                 <tr>
                     <th>STT</th>
@@ -1639,6 +1639,12 @@
                     <td>{{i+1}}</td>
                     <td *ngIf="data.type == 'xlsx'">
                         <img src="/assets/img/excel.png" style="width: 24px;">
+                    </td>
+                    <td *ngIf="data.type == 'docx'">
+                        <img src="/assets/img/word.png" style="width: 24px;">
+                    </td>
+                    <td *ngIf="data.type == 'pdf'">
+                        <img src="/assets/img/pdf.png" style="width: 24px;">
                     </td>
                     <td>{{data.name}}</td>
                     <td>{{data.createBy}}</td>

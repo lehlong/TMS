@@ -22,6 +22,7 @@ using DocumentFormat.OpenXml;
 using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
 using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
 using System.Linq;
+using NPOI.HPSF;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -2380,7 +2381,17 @@ namespace DMS.BUSINESS.Services.BU
 
             if (type == "WORD")
             {
-                return await GenarateWord(lstCustomerChecked, headerId);
+                var path = await GenarateWord(lstCustomerChecked, headerId);
+                _dbContext.TblBuHistoryDownload.Add(new TblBuHistoryDownload
+                {
+                    Code = Guid.NewGuid().ToString(),
+                    HeaderCode = headerId,
+                    Name = path.Replace($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}/", ""),
+                    Type = "docx",
+                    Path = path
+                });
+                await _dbContext.SaveChangesAsync();
+                return path;
             }
             else
             {
@@ -2396,6 +2407,16 @@ namespace DMS.BUSINESS.Services.BU
                 var fileName = $"{DateTime.Now.Day}{DateTime.Now.Month}{DateTime.Now.Year}_{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}_ThongBaoGia.pdf";
                 var fullPath = Path.Combine(pathToSave, fileName);
                 doc.Save(fullPath, SaveFormat.Pdf);
+
+                _dbContext.TblBuHistoryDownload.Add(new TblBuHistoryDownload
+                {
+                    Code = Guid.NewGuid().ToString(),
+                    HeaderCode = headerId,
+                    Name = fileName,
+                    Type = "pdf",
+                    Path = $"{folderName}/{fileName}",
+                });
+                await _dbContext.SaveChangesAsync();
                 return $"{folderName}/{fileName}";
             }
         }
