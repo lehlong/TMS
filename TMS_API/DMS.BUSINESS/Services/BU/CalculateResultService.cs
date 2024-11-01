@@ -1213,7 +1213,6 @@ namespace DMS.BUSINESS.Services.BU
                 #endregion
 
                 #region Export ĐB
-
                 var startRowDB = 7;
                 ISheet sheetDB = templateWorkbook.GetSheetAt(2);
                 styleCellBold.CloneStyleFrom(sheetDB.GetRow(1).Cells[0].CellStyle);
@@ -1222,7 +1221,7 @@ namespace DMS.BUSINESS.Services.BU
                 for (var i = 0; i < data.Result.DB.Count(); i++)
                 {
                     var dataRow = data.Result.DB[i];
-                    IRow rowCur = ReportUtilities.CreateRow(ref sheetDB, startRowDB++, 48);
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetDB, startRowDB++, 43);
                     rowCur.Cells[0].SetCellValue(dataRow.ColA);
                     rowCur.Cells[1].SetCellValue(dataRow.ColB);
                     rowCur.Cells[2].SetCellValue(dataRow.Col1);
@@ -1289,7 +1288,7 @@ namespace DMS.BUSINESS.Services.BU
                         iBV += 2;
                     }
 
-                    for (var j = 0; j < 48; j++)
+                    for (var j = 0; j < 43; j++)
                     {
                         if (dataRow.IsBold)
                         {
@@ -1903,7 +1902,6 @@ namespace DMS.BUSINESS.Services.BU
 
                 var startRowVK11FOB = 3;
                 ISheet sheetVK11FOB = templateWorkbook.GetSheetAt(13);
-                styleCellBold.CloneStyleFrom(sheetVK11FOB.GetRow(1).Cells[0].CellStyle);
 
                 for (var i = 0; i < data.Result.VK11FOB.Count(); i++)
                 {
@@ -1968,7 +1966,6 @@ namespace DMS.BUSINESS.Services.BU
 
                 var startRowVK11TNPP = 3;
                 ISheet sheetVK11TNPP = templateWorkbook.GetSheetAt(14);
-                styleCellBold.CloneStyleFrom(sheetVK11TNPP.GetRow(1).Cells[0].CellStyle);
 
                 for (var i = 0; i < data.Result.VK11TNPP.Count(); i++)
                 {
@@ -2033,7 +2030,6 @@ namespace DMS.BUSINESS.Services.BU
 
                 var startRowVK11BB = 3;
                 ISheet sheetVK11BB = templateWorkbook.GetSheetAt(15);
-                styleCellBold.CloneStyleFrom(sheetVK11BB.GetRow(1).Cells[0].CellStyle);
 
                 for (var i = 0; i < data.Result.VK11BB.Count(); i++)
                 {
@@ -2092,7 +2088,6 @@ namespace DMS.BUSINESS.Services.BU
 
                 var startRowTH = 3;
                 ISheet sheetTH = templateWorkbook.GetSheetAt(17);
-                styleCellBold.CloneStyleFrom(sheetTH.GetRow(1).Cells[0].CellStyle);
 
                 for (var i = 0; i < data.Result.Summary.Count(); i++)
                 {

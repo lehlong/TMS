@@ -60,18 +60,17 @@
             nzPopconfirmPlacement="bottom" nz-button>
             <span nz-icon nzType="mail"></span> Gửi Email
           </button>
-          <button class="!flex !items-center"  nz-button (click)="fullScreen()">
-            <span style="margin: 0 auto" nz-icon nzType="arrows-alt" nzTheme="outline"></span>
-          </button>
+          <button nz-button nzType="default" (click)="fullScreen()"><span nz-icon nzType="fullscreen"></span></button>
         </nz-space>
       </nz-page-header-extra>
     </nz-page-header>
   </div>
 
 <div [ngClass]="isZoom ? 'zoom' : ''">
-  <button [ngClass]="isZoom ? 'd-block close' : 'd-none'" nz-button (click)="closeFullScreen()">
+  <!-- <button [ngClass]="isZoom ? 'd-block close' : 'd-none'" nz-button (click)="closeFullScreen()">
     <span style="font-size: 24px" nz-icon nzType="close" nzTheme="outline"></span>
-  </button>
+  </button> -->
+  <button nz-button [ngClass]="isZoom ? 'd-block close' : 'd-none'" nzType="default" (click)="closeFullScreen()"><span nz-icon nzType="fullscreen-exit"></span></button>
   <nz-tabset>
     <nz-tab nzTitle="Dữ liệu gốc" (nzClick)="changeTitle('DỮ LIỆU GỐC')">
       <div
@@ -1677,7 +1676,6 @@
     <nz-table #historyTable [nzData]="lstHistory" nzSize="small">
       <thead>
         <tr>
-          <th>STT</th>
           <th>Hành động</th>
           <th>Người cập nhật</th>
           <th>Thời gian cập nhật</th>
@@ -1685,13 +1683,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let data of lstHistory; let i = index">
-          <td>{{i+1}}</td>
-          <td>{{data.action}}</td>
-          <td>{{data.createBy}}</td>
-          <td>{{data.createDate | date:'dd/MM/yyyy hh:mm:ss'}}</td>
-          <td>{{data.contents}}</td>
-        </tr>
+        @for (data of historyTable.data; track data) {
+          <tr>
+            <td>{{data.action}}</td>
+            <td class="align-center">{{data.createBy}}</td>
+            <td class="align-center">{{data.createDate | date:'dd/MM/yyyy hh:mm:ss'}}</td>
+            <td>{{data.contents}}</td>
+          </tr>
+          }
       </tbody>
     </nz-table>
   </ng-container>
@@ -1701,37 +1700,37 @@
 <nz-modal nzWidth="60%" [(nzVisible)]="isVisibleExport" nzTitle="LỊCH SỬ XUẤT FILE" (nzOnCancel)="handleCancel()"
   nzCancelText="Đóng">
   <ng-container *nzModalContent>
-    <nz-table #historyTable [nzData]="lstHistoryFile" nzSize="small">
+    <nz-table #historyTableFile [nzData]="lstHistoryFile" nzSize="small">
       <thead>
         <tr>
-          <th>STT</th>
           <th></th>
-          <th>Tên file</th>
-          <th>Người xuất</th>
-          <th>Thời gian</th>
-          <th>Hành động</th>
+          <th class="align-center">Tên file</th>
+          <th class="align-center">Người xuất</th>
+          <th class="align-center">Thời gian</th>
+          <th class="align-center">Hành động</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let data of lstHistoryFile; let i = index">
-          <td>{{i+1}}</td>
-          <td *ngIf="data.type == 'xlsx'">
-            <img src="/assets/img/excel.png" style="width: 24px;">
-          </td>
-          <td *ngIf="data.type == 'docx'">
-            <img src="/assets/img/word.png" style="width: 24px;">
-          </td>
-          <td *ngIf="data.type == 'pdf'">
-            <img src="/assets/img/pdf.png" style="width: 24px;">
-          </td>
-          <td>{{data.name}}</td>
-          <td>{{data.createBy}}</td>
-          <td>{{data.createDate | date:'dd/MM/yyyy hh:mm:ss'}}</td>
-          <td>
-            <a [href]="data.pathView" target="_blank"><span nz-icon nzType="eye"></span></a>
-            <a [href]="data.pathDownload" style="margin-left: 12px;"><span nz-icon nzType="download"></span></a>
-          </td>
-        </tr>
+        @for (data of historyTableFile.data; track data) {
+          <tr>
+            <td *ngIf="data.type == 'xlsx'">
+              <img src="/assets/img/excel.png" style="width: 24px;">
+            </td>
+            <td *ngIf="data.type == 'docx'">
+              <img src="/assets/img/word.png" style="width: 24px;">
+            </td>
+            <td *ngIf="data.type == 'pdf'">
+              <img src="/assets/img/pdf.png" style="width: 24px;">
+            </td>
+            <td>{{data.name}}</td>
+            <td class="align-center">{{data.createBy}}</td>
+            <td class="align-center">{{data.createDate | date:'dd/MM/yyyy hh:mm:ss'}}</td>
+            <td class="align-center">
+              <button nz-button nzType="default" (click)="openNewTab(data.pathView)"><span nz-icon nzType="eye"></span>Xem trực tiếp</button>
+              <button nz-button nzType="default" (click)="openNewTab(data.pathDownload)" style="margin-left: 12px;"><span nz-icon nzType="download"></span>Tải xuống</button>
+            </td>
+          </tr>
+          }
       </tbody>
     </nz-table>
   </ng-container>

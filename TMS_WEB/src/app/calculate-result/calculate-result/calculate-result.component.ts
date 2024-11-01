@@ -348,4 +348,7 @@ export class CalculateResultComponent {
   }
   cancelSendSMS() {}
   confirmSendSMS() {}
+  openNewTab(url : string){
+    window.open(url, '_blank')
+  }
 }
