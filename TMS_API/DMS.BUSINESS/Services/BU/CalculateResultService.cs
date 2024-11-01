@@ -1308,7 +1308,6 @@ namespace DMS.BUSINESS.Services.BU
 
                 #endregion
 
-
                 #region Export FOB
 
                 var startRowFOB = 7;
@@ -1402,7 +1401,6 @@ namespace DMS.BUSINESS.Services.BU
 
                 #endregion
 
-
                 #region Export PT09
 
                 var startRowPT09 = 7;
@@ -1484,7 +1482,6 @@ namespace DMS.BUSINESS.Services.BU
                 }
 
                 #endregion
-
 
                 #region Export BB ĐO
 
@@ -1570,7 +1567,6 @@ namespace DMS.BUSINESS.Services.BU
                 }
 
                 #endregion
-
 
                 #region Export BB FO
 
@@ -2080,10 +2076,6 @@ namespace DMS.BUSINESS.Services.BU
 
                 #endregion
 
-
-
-
-
                 #region Export TongHop
 
                 var startRowTH = 3;
@@ -2370,7 +2362,6 @@ namespace DMS.BUSINESS.Services.BU
 
             return $"{folderName}/{fileName}";
         }
-
         public async Task<string> GenarateFile(List<string> lstCustomerChecked, string type, string headerId)
         {
 
@@ -2415,7 +2406,6 @@ namespace DMS.BUSINESS.Services.BU
                 return $"{folderName}/{fileName}";
             }
         }
-
         static void AppendWordFilesToNewDocument(string directoryPath, string newWordFilePath)
         {
             using (WordprocessingDocument sourceDocument = WordprocessingDocument.Open(directoryPath, false))
@@ -2434,7 +2424,6 @@ namespace DMS.BUSINESS.Services.BU
             }
 
         }
-
         static Table CreateSampleTable()
         {
             Table table = new Table();
