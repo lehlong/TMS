@@ -17,6 +17,11 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
 using PROJECT.Service.Extention;
 using Aspose.Words;
+using Table = DocumentFormat.OpenXml.Wordprocessing.Table;
+using DocumentFormat.OpenXml;
+using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
+using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
+using System.Linq;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -30,7 +35,7 @@ namespace DMS.BUSINESS.Services.BU
         Task UpdateDataInput(InsertModel model);
         void ExportExcel(ref MemoryStream outFileStream, string path, string headerId);
         Task<string> SaveFileHistory(MemoryStream outFileStream, string headerId);
-        Task<string> GenarateWord(List<string> lstCustomerChecked);
+        Task<string> GenarateWord(List<string> lstCustomerChecked, string headerId);
         Task<string> GenarateFile(List<string> lstCustomerChecked, string type,string headerId);
     }
     public class CalculateResultService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdGoods, GoodsDto>(dbContext, mapper), ICalculateResultService
@@ -1286,7 +1291,7 @@ namespace DMS.BUSINESS.Services.BU
             return formFile;
 
         }
-        public async Task<string> GenarateWord(List<string> lstCustomerChecked)
+        public async Task<string> GenarateWord(List<string> lstCustomerChecked, string headerId)
         {
             #region Tạo 1 file word mới từ file template
             var filePathTemplate = Directory.GetCurrentDirectory() + "/Template/ThongBaoGia.docx";
@@ -1296,7 +1301,7 @@ namespace DMS.BUSINESS.Services.BU
                 Directory.CreateDirectory(folderName);
             }
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-            var fileName = $"{DateTime.Now.Day}{DateTime.Now.Month}{DateTime.Now.Year}_{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}_Test.docx";
+            var fileName = $"{DateTime.Now.Day}{DateTime.Now.Month}{DateTime.Now.Year}_{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}_ThongBaoGia.docx";
             var fullPath = Path.Combine(pathToSave, fileName);
             File.Copy(filePathTemplate, fullPath, true);
             #endregion
@@ -1312,8 +1317,11 @@ namespace DMS.BUSINESS.Services.BU
             #endregion
 
             #region Fill dữ liệu
+            var data = await GetResult(headerId);
+            var header = await _dbContext.TblBuCalculateResultList.FindAsync(headerId);
             foreach (var code in lstCustomerChecked)
             {
+                var d = data.VK11BB.Where(x => x.Col2 == code).ToList();
                 var c = await _dbContext.TblMdCustomer.FindAsync(code);
                 using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
                 {
@@ -1324,6 +1332,10 @@ namespace DMS.BUSINESS.Services.BU
                     {
                         switch (t)
                         {
+                            case "##DATE@@":
+                                var text = $"{header.FDate.Hour}h{header.FDate.Minute} ngày {header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, text);
+                                break;
                             case "##COMPANY@@":
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, c.Name);
                                 break;
@@ -1331,7 +1343,93 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, c.Address);
                                 break;
                             case "##TABLE@@":
-                                //Huynh code vào đây
+                                Paragraph paragraph = body.Descendants<Paragraph>()
+                                           .FirstOrDefault(p => p.InnerText.Contains("##TABLE@@"));
+                                if (paragraph != null)
+                                {
+                                    Table table = new Table();
+                                    TableProperties tblProperties = new TableProperties(
+                                        new TableBorders(
+                                            new TopBorder { Val = BorderValues.Single, Size = 4 },
+                                            new BottomBorder { Val = BorderValues.Single, Size = 4 },
+                                            new LeftBorder { Val = BorderValues.Single, Size = 4 },
+                                            new RightBorder { Val = BorderValues.Single, Size = 4 },
+                                            new InsideHorizontalBorder { Val = BorderValues.Single, Size = 4 },
+                                            new InsideVerticalBorder { Val = BorderValues.Single, Size = 4 }
+                                        )
+                                    );
+                                    table.AppendChild(tblProperties);
+                                    #region Header table
+                                    TableRow rowHeader = new TableRow();
+
+
+                                    TableCell CreateHeaderCell(string text, int gridSpan, int fontSize = 16)
+                                    {
+                                        TableCell cell = new TableCell();
+                                        Paragraph paragraph = new Paragraph(new Run(new Text(text)));
+                                        paragraph.ParagraphProperties = new ParagraphProperties(new Justification() { Val = JustificationValues.Center });
+                                        Run run = paragraph.Elements<Run>().First();
+                                        run.RunProperties = new RunProperties(
+                                           new Bold(),
+                                           new FontSize() { Val = new StringValue(fontSize.ToString()) }
+                                       );
+
+                                        cell.Append(paragraph);
+                                        TableCellProperties cellProperties = new TableCellProperties(
+                                            new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center }
+                                        );
+                                        if (gridSpan > 1)
+                                        {
+                                            cellProperties.Append(new GridSpan() { Val = gridSpan });
+                                        }
+                                        cell.Append(cellProperties);
+                                        return cell;
+                                    }
+
+
+                                    TableCell CreateCell(string text, bool isBold, int fontSize = 26)
+                                    {
+                                        Run run = new Run(new Text(text));
+                                        RunProperties runProperties = new RunProperties(
+                                            new FontSize() { Val = new StringValue(fontSize.ToString()) }
+                                        );
+                                        if (isBold)
+                                        {
+                                            runProperties.AppendChild(new Bold());
+                                        }
+                                        run.RunProperties = runProperties;
+                                        Paragraph paragraph = new Paragraph(run);
+                                        return new TableCell(paragraph);
+                                    }
+                                    TableCell cell1 = CreateHeaderCell("STT", 1, 26);
+                                    TableCell cell2 = CreateHeaderCell("Mặt hàng", 1, 26);
+                                    TableCell cell3 = CreateHeaderCell("Điểm giao hàng", 1, 26);
+                                    TableCell cell4 = CreateHeaderCell("Đơn giá", 2, 26);
+                                    rowHeader.Append(cell1);
+                                    rowHeader.Append(cell2);
+                                    rowHeader.Append(cell3);
+                                    rowHeader.Append(cell4);
+                                    table.Append(rowHeader);
+                                    #endregion
+
+                                    #region Gendata table
+                                    var o = 1;
+                                    foreach (var i in d)
+                                    {
+                                        TableRow row = new TableRow();
+                                        row.Append(CreateCell(o.ToString(),false, 26));
+                                        row.Append(CreateCell(i.ColD, false, 26));
+                                        row.Append(CreateCell(i.ColC, false, 26));
+                                        row.Append(CreateCell(i.Col6.HasValue ? i.Col6.Value.ToString("N0") : "0", false, 26));
+                                        row.Append(CreateCell("Đ/lít tt", false, 26));
+                                        table.Append(row);
+                                        o++;
+                                    }
+                                    #endregion
+
+                                    paragraph.Parent.InsertAfter(table, paragraph);
+                                    paragraph.Remove();
+                                }
                                 break;
                         }
                     }
@@ -1352,11 +1450,11 @@ namespace DMS.BUSINESS.Services.BU
 
             if (type == "WORD")
             {
-                return await GenarateWord(lstCustomerChecked);
+                return await GenarateWord(lstCustomerChecked, headerId);
             }
             else
             {
-                var w = await GenarateWord(lstCustomerChecked);
+                var w = await GenarateWord(lstCustomerChecked, headerId);
                 var pathWord = Directory.GetCurrentDirectory() + "/" + w;
                 Aspose.Words.Document doc = new Aspose.Words.Document(pathWord);
                 var folderName = Path.Combine($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}");
@@ -1365,7 +1463,7 @@ namespace DMS.BUSINESS.Services.BU
                     Directory.CreateDirectory(folderName);
                 }
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-                var fileName = $"{DateTime.Now.Day}{DateTime.Now.Month}{DateTime.Now.Year}_{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}_Test.pdf";
+                var fileName = $"{DateTime.Now.Day}{DateTime.Now.Month}{DateTime.Now.Year}_{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}_ThongBaoGia.pdf";
                 var fullPath = Path.Combine(pathToSave, fileName);
                 doc.Save(fullPath, SaveFormat.Pdf);
                 return $"{folderName}/{fileName}";
@@ -1389,6 +1487,24 @@ namespace DMS.BUSINESS.Services.BU
                 }
             }
 
+        }
+
+        static Table CreateSampleTable()
+        {
+            Table table = new Table();
+            TableProperties tblProp = new TableProperties(
+                new TableBorders(
+                    new TopBorder { Val = new EnumValue<BorderValues>(BorderValues.Thick), Size = 8 },
+                    new BottomBorder { Val = new EnumValue<BorderValues>(BorderValues.Thick), Size = 8 },
+                    new LeftBorder { Val = new EnumValue<BorderValues>(BorderValues.Thick), Size = 8 },
+                    new RightBorder { Val = new EnumValue<BorderValues>(BorderValues.Thick), Size = 8 },
+                    new InsideHorizontalBorder { Val = new EnumValue<BorderValues>(BorderValues.Thick), Size = 8 },
+                    new InsideVerticalBorder { Val = new EnumValue<BorderValues>(BorderValues.Thick), Size = 8 }));
+            table.AppendChild(tblProp); TableRow tr = new TableRow();
+            TableCell tc1 = new TableCell(new Paragraph(new Run(new Text("Cell 1"))));
+            TableCell tc2 = new TableCell(new Paragraph(new Run(new Text("Cell 2"))));
+            tr.Append(tc1); tr.Append(tc2);
+            table.Append(tr); return table;
         }
 
     }
