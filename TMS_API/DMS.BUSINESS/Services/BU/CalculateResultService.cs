@@ -1124,7 +1124,7 @@ namespace DMS.BUSINESS.Services.BU
                 //Define Style
                 var styleCellNumber = GetCellStyleNumber(templateWorkbook);
 
-                var font = templateWorkbook.CreateFont();
+                var font = templateWorkbook.CreateFont();   
                 font.FontHeightInPoints = 12;
                 font.FontName = "Times New Roman";
 
@@ -1137,6 +1137,7 @@ namespace DMS.BUSINESS.Services.BU
 
                 //Get Data
                 var data = GetResult(headerId);
+
                 #region Export PT
                 for (var i = 0; i < data.Result.PT.Count(); i++)
                 {
@@ -1211,6 +1212,935 @@ namespace DMS.BUSINESS.Services.BU
                 #endregion
 
                 #region Export ĐB
+
+                var startRowDB = 7;
+                ISheet sheetDB = templateWorkbook.GetSheetAt(2);
+                styleCellBold.CloneStyleFrom(sheetDB.GetRow(1).Cells[0].CellStyle);
+
+
+                for (var i = 0; i < data.Result.DB.Count(); i++)
+                {
+                    var dataRow = data.Result.DB[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetDB, startRowDB++, 48);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                    rowCur.Cells[2].SetCellValue(dataRow.Col1);
+                    rowCur.Cells[3].CellStyle = styleCellNumber;
+                    rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
+
+                    var iLG = 0;
+                    for (var lg = iLG; lg < dataRow.LG.Count(); lg++)
+                    {
+                        rowCur.Cells[4 + lg].CellStyle = styleCellNumber;
+                        rowCur.Cells[4 + lg].SetCellValue(dataRow.LG[lg] == 0 ? 0 : Convert.ToDouble(dataRow.LG[lg]));
+                    }
+
+                    rowCur.Cells[9].CellStyle = styleCellNumber;
+                    rowCur.Cells[9].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+
+                    rowCur.Cells[10].CellStyle = styleCellNumber;
+                    rowCur.Cells[10].SetCellValue(dataRow.Col4 == 0 ? 0 : Convert.ToDouble(dataRow.Col4));
+
+                    rowCur.Cells[11].CellStyle = styleCellNumber;
+                    rowCur.Cells[11].SetCellValue(dataRow.Col5 == 0 ? 0 : Convert.ToDouble(dataRow.Col5));
+
+                    rowCur.Cells[12].CellStyle = styleCellNumber;
+                    rowCur.Cells[12].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+
+                    rowCur.Cells[13].CellStyle = styleCellNumber;
+                    rowCur.Cells[13].SetCellValue(dataRow.Col7 == 0 ? 0 : Convert.ToDouble(dataRow.Col7));
+
+                    rowCur.Cells[14].CellStyle = styleCellNumber;
+                    rowCur.Cells[14].SetCellValue(dataRow.Col8 == 0 ? 0 : Convert.ToDouble(dataRow.Col8));
+
+                    rowCur.Cells[15].CellStyle = styleCellNumber;
+                    rowCur.Cells[15].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+
+                    rowCur.Cells[16].CellStyle = styleCellNumber;
+                    rowCur.Cells[16].SetCellValue(dataRow.Col10 == 0 ? 0 : Convert.ToDouble(dataRow.Col10));
+
+                    var iGG = 0;
+                    for (var gg = 0; gg < dataRow.GG.Count(); gg++)
+                    {
+                        rowCur.Cells[17 + iGG].CellStyle = styleCellNumber;
+                        rowCur.Cells[17 + iGG].SetCellValue(dataRow.GG[gg].VAT == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg].VAT));
+                        rowCur.Cells[18 + iGG].CellStyle = styleCellNumber;
+                        rowCur.Cells[18 + iGG].SetCellValue(dataRow.GG[gg].NonVAT == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg].NonVAT));
+                        iGG += 2;
+                    }
+
+                    //rowCur.Cells[27].CellStyle = 0;
+
+                    var iLN = 0;
+                    for (var ln = iLN; ln < dataRow.LG.Count(); ln++)
+                    {
+                        rowCur.Cells[28 + ln].CellStyle = styleCellNumber;
+                        rowCur.Cells[28 + ln].SetCellValue(dataRow.LN[ln] == 0 ? 0 : Convert.ToDouble(dataRow.LN[ln]));
+                    }
+
+                    var iBV = 0;
+                    for (var gg = 0; gg < dataRow.BVMT.Count(); gg++)
+                    {
+                        rowCur.Cells[33 + iBV].CellStyle = styleCellNumber;
+                        rowCur.Cells[33 + iBV].SetCellValue(dataRow.BVMT[gg].NonVAT == 0 ? 0 : Convert.ToDouble(dataRow.BVMT[gg].NonVAT));
+                        rowCur.Cells[34 + iBV].CellStyle = styleCellNumber;
+                        rowCur.Cells[34 + iBV].SetCellValue(dataRow.BVMT[gg].VAT == 0 ? 0 : Convert.ToDouble(dataRow.BVMT[gg].VAT));
+                        iBV += 2;
+                    }
+
+                    for (var j = 0; j < 48; j++)
+                    {
+                        if (dataRow.IsBold)
+                        {
+                            rowCur.Cells[j].CellStyle = styleCellBold;
+                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                        }
+                        else
+                        {
+                            rowCur.Cells[j].CellStyle.SetFont(font);
+                        }
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+                #endregion
+
+
+                #region Export FOB
+
+                var startRowFOB = 7;
+                ISheet sheetFOB = templateWorkbook.GetSheetAt(3);
+                styleCellBold.CloneStyleFrom(sheetFOB.GetRow(1).Cells[0].CellStyle);
+
+
+                for (var i = 0; i < data.Result.FOB.Count(); i++)
+                {
+                    var dataRow = data.Result.FOB[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetFOB, startRowFOB++, 40);
+
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+
+                    var iLG = 0;
+                    for (var lg = iLG; lg < dataRow.LG.Count(); lg++)
+                    {
+                        rowCur.Cells[2 + lg].CellStyle = styleCellNumber;
+                        rowCur.Cells[2 + lg].SetCellValue(dataRow.LG[lg] == 0 ? 0 : Convert.ToDouble(dataRow.LG[lg]));
+                    }
+
+                    rowCur.Cells[7].CellStyle = styleCellNumber;
+                    rowCur.Cells[7].SetCellValue(dataRow.Col1 == 0 ? 0 : Convert.ToDouble(dataRow.Col1));
+
+                    rowCur.Cells[8].CellStyle = styleCellNumber;
+                    rowCur.Cells[8].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
+
+                    rowCur.Cells[9].CellStyle = styleCellNumber;
+                    rowCur.Cells[9].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+
+                    rowCur.Cells[10].CellStyle = styleCellNumber;
+                    rowCur.Cells[10].SetCellValue(dataRow.Col4 == 0 ? 0 : Convert.ToDouble(dataRow.Col4));
+
+                    rowCur.Cells[11].CellStyle = styleCellNumber;
+                    rowCur.Cells[11].SetCellValue(dataRow.Col5 == 0 ? 0 : Convert.ToDouble(dataRow.Col5));
+
+                    rowCur.Cells[12].CellStyle = styleCellNumber;
+                    rowCur.Cells[12].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+
+                    rowCur.Cells[13].CellStyle = styleCellNumber;
+                    rowCur.Cells[13].SetCellValue(dataRow.Col7 == 0 ? 0 : Convert.ToDouble(dataRow.Col7));
+
+                    var iGG = 0;
+                    for (var gg = 0; gg < dataRow.GG.Count(); gg++)
+                    {
+                        rowCur.Cells[13 + iGG].CellStyle = styleCellNumber;
+                        rowCur.Cells[13 + iGG].SetCellValue(dataRow.GG[gg].VAT == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg].VAT));
+                        rowCur.Cells[14 + iGG].CellStyle = styleCellNumber;
+                        rowCur.Cells[14 + iGG].SetCellValue(dataRow.GG[gg].NonVAT == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg].NonVAT));
+                        iGG += 2;
+                    }
+
+                    rowCur.Cells[23].CellStyle = styleCellNumber;
+                    rowCur.Cells[23].SetCellValue(dataRow.Col8 == 0 ? 0 : Convert.ToDouble(dataRow.Col8));
+
+                    var iLN = 0;
+                    for (var ln = iLN; ln < dataRow.LG.Count(); ln++)
+                    {
+                        rowCur.Cells[24 + ln].CellStyle = styleCellNumber;
+                        rowCur.Cells[24 + ln].SetCellValue(dataRow.LN[ln] == 0 ? 0 : Convert.ToDouble(dataRow.LN[ln]));
+                    }
+
+                    var iBV = 0;
+                    for (var gg = 0; gg < dataRow.BVMT.Count(); gg++)
+                    {
+                        rowCur.Cells[29 + iBV].CellStyle = styleCellNumber;
+                        rowCur.Cells[29 + iBV].SetCellValue(dataRow.BVMT[gg].NonVAT == 0 ? 0 : Convert.ToDouble(dataRow.BVMT[gg].NonVAT));
+                        rowCur.Cells[30 + iBV].CellStyle = styleCellNumber;
+                        rowCur.Cells[30 + iBV].SetCellValue(dataRow.BVMT[gg].VAT == 0 ? 0 : Convert.ToDouble(dataRow.BVMT[gg].VAT));
+                        iBV += 2;
+                    }
+
+                    for (var j = 0; j < 40; j++)
+                    {
+                        if (dataRow.IsBold)
+                        {
+                            rowCur.Cells[j].CellStyle = styleCellBold;
+                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                        }
+                        else
+                        {
+                            rowCur.Cells[j].CellStyle.SetFont(font);
+                        }
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+                #endregion
+
+
+                #region Export PT09
+
+                var startRowPT09 = 7;
+                ISheet sheetPT09 = templateWorkbook.GetSheetAt(4);
+                styleCellBold.CloneStyleFrom(sheetPT09.GetRow(1).Cells[0].CellStyle);
+
+
+                for (var i = 0; i < data.Result.PT09.Count(); i++)
+                {
+                    var dataRow = data.Result.PT09[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetPT09, startRowPT09++, 39);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+
+                    var iLG = 0;
+                    for (var lg = iLG; lg < dataRow.LG.Count(); lg++)
+                    {
+                        rowCur.Cells[2 + lg].CellStyle = styleCellNumber;
+                        rowCur.Cells[2 + lg].SetCellValue(dataRow.LG[lg] == 0 ? 0 : Convert.ToDouble(dataRow.LG[lg]));
+                    }
+
+                    rowCur.Cells[7].CellStyle = styleCellNumber;
+                    rowCur.Cells[7].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+
+                    rowCur.Cells[8].CellStyle = styleCellNumber;
+                    rowCur.Cells[8].SetCellValue(dataRow.Col4 == 0 ? 0 : Convert.ToDouble(dataRow.Col4));
+
+                    rowCur.Cells[9].CellStyle = styleCellNumber;
+                    rowCur.Cells[9].SetCellValue(dataRow.Col5 == 0 ? 0 : Convert.ToDouble(dataRow.Col5));
+
+                    rowCur.Cells[10].CellStyle = styleCellNumber;
+                    rowCur.Cells[10].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+
+                    rowCur.Cells[11].CellStyle = styleCellNumber;
+                    rowCur.Cells[11].SetCellValue(dataRow.Col7 == 0 ? 0 : Convert.ToDouble(dataRow.Col7));
+
+                    rowCur.Cells[12].CellStyle = styleCellNumber;
+                    rowCur.Cells[12].SetCellValue(dataRow.Col8 == 0 ? 0 : Convert.ToDouble(dataRow.Col8));
+
+
+                    var iGG = 0;
+                    for (var gg = 0; gg < dataRow.GG.Count(); gg++)
+                    {
+                        rowCur.Cells[13 + iGG].CellStyle = styleCellNumber;
+                        rowCur.Cells[13 + iGG].SetCellValue(dataRow.GG[gg].VAT == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg].VAT));
+                        rowCur.Cells[14 + iGG].CellStyle = styleCellNumber;
+                        rowCur.Cells[14 + iGG].SetCellValue(dataRow.GG[gg].NonVAT == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg].NonVAT));
+                        iGG += 2;
+                    }
+
+                    rowCur.Cells[23].CellStyle = styleCellNumber;
+                    rowCur.Cells[23].SetCellValue(dataRow.Col18 == 0 ? 0 : Convert.ToDouble(dataRow.Col18));
+
+                    var iLN = 0;
+                    for (var ln = iLN; ln < dataRow.LG.Count(); ln++)
+                    {
+                        rowCur.Cells[24 + ln].CellStyle = styleCellNumber;
+                        rowCur.Cells[24 + ln].SetCellValue(dataRow.LN[ln] == 0 ? 0 : Convert.ToDouble(dataRow.LN[ln]));
+                    }
+
+                    var iBV = 0;
+                    for (var gg = 0; gg < dataRow.BVMT.Count(); gg++)
+                    {
+                        rowCur.Cells[29 + iBV].CellStyle = styleCellNumber;
+                        rowCur.Cells[29 + iBV].SetCellValue(dataRow.BVMT[gg].NonVAT == 0 ? 0 : Convert.ToDouble(dataRow.BVMT[gg].NonVAT));
+                        rowCur.Cells[30 + iBV].CellStyle = styleCellNumber;
+                        rowCur.Cells[30 + iBV].SetCellValue(dataRow.BVMT[gg].VAT == 0 ? 0 : Convert.ToDouble(dataRow.BVMT[gg].VAT));
+                        iBV += 2;
+                    }   
+
+                    for (var j = 0; j < 38; j++)
+                    {
+                        rowCur.Cells[j].CellStyle.SetFont(font);
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+                #endregion
+
+
+                #region Export BB ĐO
+
+                var startRowBBDO = 9;
+                ISheet sheetBBDO = templateWorkbook.GetSheetAt(5);
+                styleCellBold.CloneStyleFrom(sheetBBDO.GetRow(1).Cells[0].CellStyle);
+
+
+                for (var i = 0; i < data.Result.BBDO.Count(); i++)
+                {
+                    var dataRow = data.Result.BBDO[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetBBDO, startRowBBDO++, 23);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                    rowCur.Cells[2].SetCellValue(dataRow.ColC);
+                    rowCur.Cells[3].SetCellValue(dataRow.ColD);
+
+                    rowCur.Cells[4].SetCellValue(dataRow.Col1);
+                    rowCur.Cells[5].SetCellValue(dataRow.Col2);
+                    rowCur.Cells[6].SetCellValue(dataRow.Col3);
+                    rowCur.Cells[7].SetCellValue(dataRow.Col4);
+                    rowCur.Cells[8].SetCellValue(dataRow.Col5);
+
+
+                    rowCur.Cells[9].CellStyle = styleCellNumber;
+                    rowCur.Cells[9].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+
+                    rowCur.Cells[10].CellStyle = styleCellNumber;
+                    rowCur.Cells[10].SetCellValue(dataRow.Col7 == 0 ? 0 : Convert.ToDouble(dataRow.Col7));
+
+                    rowCur.Cells[11].CellStyle = styleCellNumber;
+                    rowCur.Cells[11].SetCellValue(dataRow.Col8 == 0 ? 0 : Convert.ToDouble(dataRow.Col8));
+
+                    rowCur.Cells[12].CellStyle = styleCellNumber;
+                    rowCur.Cells[12].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+
+                    rowCur.Cells[13].CellStyle = styleCellNumber;
+                    rowCur.Cells[13].SetCellValue(dataRow.Col10 == 0 ? 0 : Convert.ToDouble(dataRow.Col10));
+
+                    rowCur.Cells[14].CellStyle = styleCellNumber;
+                    rowCur.Cells[14].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
+
+                    rowCur.Cells[15].CellStyle = styleCellNumber;
+                    rowCur.Cells[15].SetCellValue(dataRow.Col12 == 0 ? 0 : Convert.ToDouble(dataRow.Col12));
+
+                    rowCur.Cells[16].CellStyle = styleCellNumber;
+                    rowCur.Cells[16].SetCellValue(dataRow.Col13 == 0 ? 0 : Convert.ToDouble(dataRow.Col13));
+
+                    rowCur.Cells[17].CellStyle = styleCellNumber;
+                    rowCur.Cells[17].SetCellValue(dataRow.Col14 == 0 ? 0 : Convert.ToDouble(dataRow.Col14));
+
+                    rowCur.Cells[18].CellStyle = styleCellNumber;
+                    rowCur.Cells[18].SetCellValue(dataRow.Col15 == 0 ? 0 : Convert.ToDouble(dataRow.Col15));
+
+                    rowCur.Cells[19].CellStyle = styleCellNumber;
+                    rowCur.Cells[19].SetCellValue(dataRow.Col16 == 0 ? 0 : Convert.ToDouble(dataRow.Col16));
+
+                    rowCur.Cells[20].CellStyle = styleCellNumber;
+                    rowCur.Cells[20].SetCellValue(dataRow.Col17 == 0 ? 0 : Convert.ToDouble(dataRow.Col17));
+
+                    rowCur.Cells[21].CellStyle = styleCellNumber;
+                    rowCur.Cells[21].SetCellValue(dataRow.Col18 == 0 ? 0 : Convert.ToDouble(dataRow.Col18));
+
+                    rowCur.Cells[22].CellStyle = styleCellNumber;
+                    rowCur.Cells[22].SetCellValue(dataRow.Col19 == 0 ? 0 : Convert.ToDouble(dataRow.Col19));
+
+                    for (var j = 0; j < 23; j++)
+                    {
+                        if (dataRow.IsBold)
+                        {
+                            rowCur.Cells[j].CellStyle = styleCellBold;
+                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                        }
+                        else
+                        {
+                            rowCur.Cells[j].CellStyle.SetFont(font);
+                        }
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+                #endregion
+
+
+                #region Export BB FO
+
+                var startRowBBFO = 11;
+                ISheet sheetBBFO = templateWorkbook.GetSheetAt(6);
+                styleCellBold.CloneStyleFrom(sheetBBFO.GetRow(1).Cells[0].CellStyle);
+
+
+                for (var i = 0; i < data.Result.BBFO.Count(); i++)
+                {
+                    var dataRow = data.Result.BBFO[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetBBFO, startRowBBFO++, 14);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                    rowCur.Cells[2].SetCellValue(dataRow.ColC);
+
+
+                    rowCur.Cells[4].CellStyle = styleCellNumber;
+                    rowCur.Cells[4].SetCellValue(dataRow.Col1 == 0 ? 0 : Convert.ToDouble(dataRow.Col1));
+
+                    rowCur.Cells[5].CellStyle = styleCellNumber;
+                    rowCur.Cells[5].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
+
+                    rowCur.Cells[6].CellStyle = styleCellNumber;
+                    rowCur.Cells[6].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+
+                    rowCur.Cells[7].CellStyle = styleCellNumber;
+                    rowCur.Cells[7].SetCellValue(dataRow.Col4 == 0 ? 0 : Convert.ToDouble(dataRow.Col4));
+
+                    rowCur.Cells[8].CellStyle = styleCellNumber;
+                    rowCur.Cells[8].SetCellValue(dataRow.Col5 == 0 ? 0 : Convert.ToDouble(dataRow.Col5));
+
+                    rowCur.Cells[9].CellStyle = styleCellNumber;
+                    rowCur.Cells[9].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+
+                    rowCur.Cells[10].CellStyle = styleCellNumber;
+                    rowCur.Cells[10].SetCellValue(dataRow.Col7 == 0 ? 0 : Convert.ToDouble(dataRow.Col7));
+
+                    rowCur.Cells[11].CellStyle = styleCellNumber;
+                    rowCur.Cells[11].SetCellValue(dataRow.Col8 == 0 ? 0 : Convert.ToDouble(dataRow.Col8));
+
+                    rowCur.Cells[12].CellStyle = styleCellNumber;
+                    rowCur.Cells[12].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+
+                    rowCur.Cells[13].CellStyle = styleCellNumber;
+                    rowCur.Cells[13].SetCellValue(dataRow.Col10 == 0 ? 0 : Convert.ToDouble(dataRow.Col10));
+                    for (var j = 0; j < 14; j++)    
+                    {
+                        if (dataRow.IsBold)
+                        {
+                            rowCur.Cells[j].CellStyle = styleCellBold;
+                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                        }
+                        else
+                        {
+                            rowCur.Cells[j].CellStyle.SetFont(font);
+                        }
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+                #endregion
+
+                #region Export PL1
+
+                var startRowPL1 = 8;
+                ISheet sheetPL1 = templateWorkbook.GetSheetAt(7);
+                styleCellBold.CloneStyleFrom(sheetPL1.GetRow(1).Cells[0].CellStyle);
+
+
+                for (var i = 0; i < data.Result.PL1.Count(); i++)
+                {
+                    var dataRow = data.Result.PL1[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetPL1, startRowPL1++, 7);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+
+                    var iGG = 0;
+                    for (var gg = 0; gg < dataRow.GG.Count(); gg++)
+                    {
+                        rowCur.Cells[2 + iGG].CellStyle = styleCellNumber;
+                        rowCur.Cells[2 + iGG].SetCellValue(dataRow.GG[gg] == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg]));
+                        iGG += 1;
+                    }
+                    for (var j = 0; j < 7; j++)
+                    {
+                        rowCur.Cells[j].CellStyle.SetFont(font);
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+                #endregion
+
+                #region Export PL2
+
+                var startRowPL2 = 7;
+                ISheet sheetPL2 = templateWorkbook.GetSheetAt(8);
+                styleCellBold.CloneStyleFrom(sheetPL2.GetRow(1).Cells[0].CellStyle);
+
+
+                for (var i = 0; i < data.Result.PL2.Count(); i++)
+                {
+                    var dataRow = data.Result.PL2[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetPL2, startRowPL2++, 7);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+
+                    var iGG = 0;
+                    for (var gg = 0; gg < dataRow.GG.Count(); gg++)
+                    {
+                        rowCur.Cells[2 + iGG].CellStyle = styleCellNumber;
+                        rowCur.Cells[2 + iGG].SetCellValue(dataRow.GG[gg] == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg]));
+                        iGG += 1;
+                    }
+                    for (var j = 0; j < 7; j++)
+                    {
+                        rowCur.Cells[j].CellStyle.SetFont(font);
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+                #endregion
+
+                #region Export PL3
+
+                var startRowPL3 = 7;
+                ISheet sheetPL3 = templateWorkbook.GetSheetAt(9);
+                styleCellBold.CloneStyleFrom(sheetPL3.GetRow(1).Cells[0].CellStyle);
+
+
+                for (var i = 0; i < data.Result.PL3.Count(); i++)
+                {
+                    var dataRow = data.Result.PL3[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetPL3, startRowPL3++, 7);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+
+                    var iGG = 0;
+                    for (var gg = 0; gg < dataRow.GG.Count(); gg++)
+                    {
+                        rowCur.Cells[2 + iGG].CellStyle = styleCellNumber;
+                        rowCur.Cells[2 + iGG].SetCellValue(dataRow.GG[gg] == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg]));
+                        iGG += 1;
+                    }
+                    for (var j = 0; j < 7; j++)
+                    {
+                        rowCur.Cells[j].CellStyle.SetFont(font);
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+
+                }
+
+                #endregion
+
+                #region Export PL4
+
+                var startRowPL4 = 8;
+                ISheet sheetPL4 = templateWorkbook.GetSheetAt(10);
+                styleCellBold.CloneStyleFrom(sheetPL4.GetRow(1).Cells[0].CellStyle);
+
+
+                for (var i = 0; i < data.Result.PL4.Count(); i++)
+                {
+                    var dataRow = data.Result.PL4[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetPL4, startRowPL4++, 7);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+
+                    var iGG = 0;
+                    for (var gg = 0; gg < dataRow.GG.Count(); gg++)
+                    {
+                        rowCur.Cells[2 + iGG].CellStyle = styleCellNumber;
+                        rowCur.Cells[2 + iGG].SetCellValue(dataRow.GG[gg] == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg]));
+                        iGG += 1;
+                    }
+                    for (var j = 0; j < 7; j++)
+                    {
+                        rowCur.Cells[j].CellStyle.SetFont(font);
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+                #endregion
+
+                #region Export VK11-PT
+
+                var startRowVK11PT = 2;
+                ISheet sheetVK11PT = templateWorkbook.GetSheetAt(11);
+                styleCellBold.CloneStyleFrom(sheetVK11PT.GetRow(1).Cells[0].CellStyle);
+
+
+                for (var i = 0; i < data.Result.VK11PT.Count(); i++)
+                {
+                    var dataRow = data.Result.VK11PT[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11PT, startRowVK11PT++, 20);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                    rowCur.Cells[2].SetCellValue(dataRow.Col1);
+
+                    rowCur.Cells[3].CellStyle = styleCellNumber;
+                    rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
+
+                    rowCur.Cells[4].CellStyle = styleCellNumber;
+                    rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+
+                    rowCur.Cells[5].SetCellValue(dataRow.Col4);
+                    rowCur.Cells[6].SetCellValue(dataRow.Col5);
+                    rowCur.Cells[7].SetCellValue(dataRow.Col6);
+                    rowCur.Cells[8].SetCellValue(dataRow.Col7);
+                    rowCur.Cells[9].SetCellValue(dataRow.Col8);
+
+                    rowCur.Cells[10].CellStyle = styleCellNumber;
+                    rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+                    
+                    rowCur.Cells[11].SetCellValue(dataRow.Col10);
+
+                    rowCur.Cells[12].CellStyle = styleCellNumber;
+                    rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
+                    
+
+                    rowCur.Cells[13].SetCellValue(dataRow.Col12);
+                    rowCur.Cells[14].SetCellValue(dataRow.Col13);
+                    rowCur.Cells[15].SetCellValue(dataRow.Col14);
+                    rowCur.Cells[16].SetCellValue(dataRow.Col15);
+                    rowCur.Cells[17].SetCellValue(dataRow.Col16);
+                    rowCur.Cells[18].SetCellValue(dataRow.Col17);
+                    rowCur.Cells[19].SetCellValue(dataRow.Col18);
+
+
+                    for (var j = 0; j < 20; j++)
+                    {
+                        if (dataRow.IsBold)
+                        {
+                            rowCur.Cells[j].CellStyle = styleCellBold;
+                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                        }
+                        else
+                        {
+                            rowCur.Cells[j].CellStyle.SetFont(font);
+                        }
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+                #endregion
+
+                #region Export VK11-DB
+
+                var startRowVK11DB = 2;
+                ISheet sheetVK11DB = templateWorkbook.GetSheetAt(12);
+                styleCellBold.CloneStyleFrom(sheetVK11DB.GetRow(1).Cells[0].CellStyle);
+
+                for (var i = 0; i < data.Result.VK11DB.Count(); i++)
+                {
+                    var dataRow = data.Result.VK11DB[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11DB, startRowVK11DB++, 21);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                    rowCur.Cells[2].SetCellValue(dataRow.ColC);
+                    rowCur.Cells[3].SetCellValue(dataRow.Col1);
+
+                    rowCur.Cells[4].CellStyle = styleCellNumber;
+                    rowCur.Cells[4].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
+
+                    rowCur.Cells[5].CellStyle = styleCellNumber;
+                    rowCur.Cells[5].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+
+                    rowCur.Cells[6].SetCellValue(dataRow.Col4);
+                    rowCur.Cells[7].SetCellValue(dataRow.Col5);
+                    rowCur.Cells[8].SetCellValue(dataRow.Col6);
+                    rowCur.Cells[9].SetCellValue(dataRow.Col7);
+                    rowCur.Cells[10].SetCellValue(dataRow.Col8);
+
+                    rowCur.Cells[11].CellStyle = styleCellNumber;
+                    rowCur.Cells[11].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+
+                    rowCur.Cells[12].SetCellValue(dataRow.Col10);
+
+                    rowCur.Cells[13].CellStyle = styleCellNumber;
+                    rowCur.Cells[13].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
+
+                    rowCur.Cells[14].SetCellValue(dataRow.Col12);
+                    rowCur.Cells[15].SetCellValue(dataRow.Col13);
+                    rowCur.Cells[16].SetCellValue(dataRow.Col14);
+                    rowCur.Cells[17].SetCellValue(dataRow.Col15);
+                    rowCur.Cells[18].SetCellValue(dataRow.Col16);
+                    rowCur.Cells[19].SetCellValue(dataRow.Col17);
+                    rowCur.Cells[20].SetCellValue(dataRow.Col18);
+
+                    for (var j = 0; j < 21; j++)
+                    {
+                        if (dataRow.IsBold)
+                        {
+                            rowCur.Cells[j].CellStyle = styleCellBold;
+                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                        }
+                        else
+                        {
+                            rowCur.Cells[j].CellStyle.SetFont(font);
+                        }
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+                #endregion
+
+                #region Export VK11-FOB
+
+                var startRowVK11FOB = 3;
+                ISheet sheetVK11FOB = templateWorkbook.GetSheetAt(13);
+                styleCellBold.CloneStyleFrom(sheetVK11FOB.GetRow(1).Cells[0].CellStyle);
+
+                for (var i = 0; i < data.Result.VK11FOB.Count(); i++)
+                {
+                    var dataRow = data.Result.VK11FOB[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11FOB, startRowVK11FOB++, 21);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    //rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColC == null ? dataRow.ColB : dataRow.ColC);
+                    //rowCur.Cells[1].SetCellValue(dataRow.ColC);
+
+                    rowCur.Cells[2].SetCellValue(dataRow.Col1);
+
+                    rowCur.Cells[3].CellStyle = styleCellNumber;
+                    rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
+
+                    rowCur.Cells[4].CellStyle = styleCellNumber;
+                    rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+
+                    rowCur.Cells[5].SetCellValue(dataRow.Col4);
+                    rowCur.Cells[6].SetCellValue(dataRow.Col5);
+                    rowCur.Cells[7].SetCellValue(dataRow.Col6);
+                    rowCur.Cells[8].SetCellValue(dataRow.Col7);
+                    rowCur.Cells[9].SetCellValue(dataRow.Col8);
+
+                    rowCur.Cells[10].CellStyle = styleCellNumber;
+                    rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+
+                    rowCur.Cells[11].SetCellValue(dataRow.Col10);
+
+                    rowCur.Cells[12].CellStyle = styleCellNumber;
+                    rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
+
+                    rowCur.Cells[13].SetCellValue(dataRow.Col12);
+                    rowCur.Cells[14].SetCellValue(dataRow.Col13);
+                    rowCur.Cells[15].SetCellValue(dataRow.Col14);
+                    rowCur.Cells[16].SetCellValue(dataRow.Col15);
+                    rowCur.Cells[17].SetCellValue(dataRow.Col16);
+                    rowCur.Cells[18].SetCellValue(dataRow.Col17);
+                    rowCur.Cells[19].SetCellValue(dataRow.Col18);
+
+                    for (var j = 0; j < 20; j++)
+                    {
+                        if (dataRow.IsBold)
+                        {
+                            rowCur.Cells[j].CellStyle = styleCellBold;
+                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                        }
+                        else
+                        {
+                            rowCur.Cells[j].CellStyle.SetFont(font);
+                        }
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+                #endregion
+
+                #region Export VK11-TNPP
+
+                var startRowVK11TNPP = 3;
+                ISheet sheetVK11TNPP = templateWorkbook.GetSheetAt(14);
+                styleCellBold.CloneStyleFrom(sheetVK11TNPP.GetRow(1).Cells[0].CellStyle);
+
+                for (var i = 0; i < data.Result.VK11TNPP.Count(); i++)
+                {
+                    var dataRow = data.Result.VK11TNPP[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11TNPP, startRowVK11TNPP++, 20);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+
+                    //rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColC == null ? dataRow.ColB : dataRow.ColC);
+
+                    rowCur.Cells[2].SetCellValue(dataRow.Col1);
+
+                    rowCur.Cells[3].CellStyle = styleCellNumber;
+                    rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
+
+                    rowCur.Cells[4].CellStyle = styleCellNumber;
+                    rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+
+                    rowCur.Cells[5].SetCellValue(dataRow.Col4);
+                    rowCur.Cells[6].SetCellValue(dataRow.Col5);
+                    rowCur.Cells[7].SetCellValue(dataRow.Col6);
+                    rowCur.Cells[8].SetCellValue(dataRow.Col7);
+                    rowCur.Cells[9].SetCellValue(dataRow.Col8);
+
+                    rowCur.Cells[10].CellStyle = styleCellNumber;
+                    rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+
+                    rowCur.Cells[11].SetCellValue(dataRow.Col10);
+
+                    rowCur.Cells[12].CellStyle = styleCellNumber;
+                    rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
+
+                    rowCur.Cells[13].SetCellValue(dataRow.Col12);
+                    rowCur.Cells[14].SetCellValue(dataRow.Col13);
+                    rowCur.Cells[15].SetCellValue(dataRow.Col14);
+                    rowCur.Cells[16].SetCellValue(dataRow.Col15);
+                    rowCur.Cells[17].SetCellValue(dataRow.Col16);
+                    rowCur.Cells[18].SetCellValue(dataRow.Col17);
+                    rowCur.Cells[19].SetCellValue(dataRow.Col18);
+
+                    for (var j = 0; j < 20; j++)
+                    {
+                        if (dataRow.IsBold)
+                        {
+                            rowCur.Cells[j].CellStyle = styleCellBold;
+                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                        }
+                        else
+                        {
+                            rowCur.Cells[j].CellStyle.SetFont(font);
+                        }
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+                #endregion
+
+                #region Export VK11-BB
+
+                var startRowVK11BB = 3;
+                ISheet sheetVK11BB = templateWorkbook.GetSheetAt(15);
+                styleCellBold.CloneStyleFrom(sheetVK11BB.GetRow(1).Cells[0].CellStyle);
+
+                for (var i = 0; i < data.Result.VK11BB.Count(); i++)
+                {
+                    var dataRow = data.Result.VK11BB[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11BB, startRowVK11BB++, 18);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                    rowCur.Cells[2].SetCellValue(dataRow.ColC);
+
+                    rowCur.Cells[3].SetCellValue(dataRow.Col1);
+                    rowCur.Cells[4].SetCellValue(dataRow.Col2);
+                    rowCur.Cells[5].SetCellValue(dataRow.Col3);
+                    rowCur.Cells[6].SetCellValue(dataRow.Col4);
+                    rowCur.Cells[7].SetCellValue(dataRow.Col5);
+
+                    rowCur.Cells[8].CellStyle = styleCellNumber;
+                    rowCur.Cells[8].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+
+                    rowCur.Cells[9].SetCellValue(dataRow.Col7);
+                    rowCur.Cells[10].SetCellValue(dataRow.Col8);
+                    rowCur.Cells[11].SetCellValue(dataRow.Col9);
+                    rowCur.Cells[12].SetCellValue(dataRow.Col10);
+                    rowCur.Cells[13].SetCellValue(dataRow.Col11);
+
+                    rowCur.Cells[14].SetCellValue(dataRow.Col12);
+                    rowCur.Cells[15].SetCellValue(dataRow.Col13);
+                    rowCur.Cells[16].SetCellValue(dataRow.Col14);
+                    rowCur.Cells[17].SetCellValue(dataRow.Col15);
+
+                    for (var j = 0; j < 18; j++)
+                    {
+                        if (dataRow.IsBold)
+                        {
+                            rowCur.Cells[j].CellStyle = styleCellBold;
+                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                        }
+                        else
+                        {
+                            rowCur.Cells[j].CellStyle.SetFont(font);
+                        }
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
+                #endregion
+
+
+
+
+
+                #region Export TongHop
+
+                var startRowTH = 3;
+                ISheet sheetTH = templateWorkbook.GetSheetAt(17);
+                styleCellBold.CloneStyleFrom(sheetTH.GetRow(1).Cells[0].CellStyle);
+
+                for (var i = 0; i < data.Result.Summary.Count(); i++)
+                {
+                    var dataRow = data.Result.Summary[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetTH, startRowTH++, 21);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                    rowCur.Cells[2].SetCellValue(dataRow.ColC);
+                    rowCur.Cells[3].SetCellValue(dataRow.ColD);
+
+                    rowCur.Cells[6].SetCellValue(dataRow.Col1);
+                    rowCur.Cells[7].SetCellValue(dataRow.Col2);
+                    rowCur.Cells[8].SetCellValue(dataRow.Col3);
+                    rowCur.Cells[9].SetCellValue(dataRow.Col4);
+                    rowCur.Cells[10].SetCellValue(dataRow.Col5);
+
+                    rowCur.Cells[11].CellStyle = styleCellNumber;
+                    rowCur.Cells[11].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+
+                    rowCur.Cells[12].SetCellValue(dataRow.Col7);
+                    rowCur.Cells[13].SetCellValue(dataRow.Col8);
+                    rowCur.Cells[14].SetCellValue(dataRow.Col9);
+                    rowCur.Cells[15].SetCellValue(dataRow.Col10);
+                    rowCur.Cells[16].SetCellValue(dataRow.Col11);
+
+                    rowCur.Cells[17].SetCellValue(dataRow.Col12);
+                    rowCur.Cells[18].SetCellValue(dataRow.Col13);
+                    rowCur.Cells[19].SetCellValue(dataRow.Col14);
+                    rowCur.Cells[20].SetCellValue(dataRow.Col15);
+
+                    for (var j = 0; j < 21; j++)
+                    {
+                        if (dataRow.IsBold)
+                        {
+                            rowCur.Cells[j].CellStyle = styleCellBold;
+                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                        }
+                        else
+                        {
+                            rowCur.Cells[j].CellStyle.SetFont(font);
+                        }
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
+
                 #endregion
 
                 templateWorkbook.Write(outFileStream);
