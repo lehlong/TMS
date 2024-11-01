@@ -20,10 +20,19 @@ export class CalculateResultService {
   GetHistoryAction(code : any): Observable<any> {
     return this.commonService.get(`CalculateResult/GetHistoryAction?code=${code}`)
   }
-  ExportExcel(headerId: any): Observable<any> {
-    return this.commonService.downloadFile(`CalculateResult/ExportExcel?headerId=${headerId}`)
+  GetHistoryFile(code : any): Observable<any> {
+    return this.commonService.get(`CalculateResult/GetHistoryFile?code=${code}`)
   }
-  ExportWord(headerId: any): Observable<any> {
-    return this.commonService.downloadFile(`CalculateResult/ExportWord?headerId=${headerId}`)
+  ExportExcel(headerId: any): Observable<any> {
+    return this.commonService.get(`CalculateResult/ExportExcel?headerId=${headerId}`)
+  }
+  ExportWord(lstCustomerChecked: any, headerId : any): Observable<any> {
+    return this.commonService.post(`CalculateResult/ExportWord?headerId=${headerId}`, lstCustomerChecked)
+  }
+  ExportPDF(lstCustomerChecked: any, headerId: any): Observable<any> {
+    return this.commonService.post(`CalculateResult/ExportPDF?headerId=${headerId}`, lstCustomerChecked)
+  }
+  GetCustomer(): Observable<any> {
+    return this.commonService.get(`CalculateResult/GetCustomer`)
   }
 }

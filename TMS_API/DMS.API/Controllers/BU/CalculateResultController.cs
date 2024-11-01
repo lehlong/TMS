@@ -6,6 +6,7 @@ using DMS.BUSINESS.Models;
 using DMS.BUSINESS.Services.BU;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NPOI.HSSF.Record.Chart;
 
 namespace DMS.API.Controllers.BU
 {
@@ -70,6 +71,40 @@ namespace DMS.API.Controllers.BU
             }
             return Ok(transferObject);
         }
+        [HttpGet("GetHistoryFile")]
+        public async Task<IActionResult> GetHistoryFile([FromQuery] string code)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.GetHistoryFile(code);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                //transferObject.GetMessage("2000", _service);
+            }
+            return Ok(transferObject);
+        }
+        [HttpGet("GetCustomer")]
+        public async Task<IActionResult> GetCustomer()
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.GetCustomer();
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                //transferObject.GetMessage("2000", _service);
+            }
+            return Ok(transferObject);
+        }
 
         [HttpPost("UpdateDataInput")]
         public async Task<IActionResult> UpdateDataInput([FromBody] InsertModel model)
@@ -97,12 +132,14 @@ namespace DMS.API.Controllers.BU
         {
             var transferObject = new TransferObject();
             MemoryStream outFileStream = new MemoryStream();
-            var path = Path.GetFullPath("~/Template/CoSoTinhMucGiamGia.xlsx").Replace("~\\", "");
+            var path = Directory.GetCurrentDirectory() + "/Template/CoSoTinhMucGiamGia.xlsx";
             _service.ExportExcel(ref outFileStream, path, headerId);
             if (_service.Status)
             {
-                return File(outFileStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", DateTime.Now.ToString() + "_CoSoTinhMucGiamGia" + ".xlsx");
-               // return Ok(transferObject);
+                var result = await _service.SaveFileHistory(outFileStream, headerId);
+                //return File(outFileStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", DateTime.Now.ToString() + "_CoSoTinhMucGiamGia" + ".xlsx");
+                transferObject.Data = result;
+                return Ok(transferObject);
             }
             else
             {
@@ -113,17 +150,36 @@ namespace DMS.API.Controllers.BU
             }
         }
 
-        [HttpGet("ExportWord")]
-        public async Task<IActionResult> ExportWord([FromQuery] string headerId)
+        [HttpPost("ExportWord")]
+        public async Task<IActionResult> ExportWord([FromBody] List<string> lstCustomerChecked, [FromQuery] string headerId)
         {
             var transferObject = new TransferObject();
-            MemoryStream outFileStream = new MemoryStream();
-            var path = Path.GetFullPath("~/Template/CoSoTinhMucGiamGia.xlsx").Replace("~\\", "");
-            _service.ExportExcel(ref outFileStream, path, headerId);
+            var result = await _service.GenarateFile(lstCustomerChecked, "WORD", headerId);
             if (_service.Status)
             {
-                return File(outFileStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", DateTime.Now.ToString() + "_CoSoTinhMucGiamGia" + ".xlsx");
-                // return Ok(transferObject);
+                transferObject.Data = result;
+                return Ok(transferObject);
+
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("2000", _service);
+                return Ok(transferObject);
+            }
+        }
+
+        [HttpPost("ExportPDF")]
+        public async Task<IActionResult> ExportPDF([FromBody] List<string> lstCustomerChecked, [FromQuery] string headerId)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.GenarateFile(lstCustomerChecked, "PDF", headerId);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+                return Ok(transferObject);
+
             }
             else
             {

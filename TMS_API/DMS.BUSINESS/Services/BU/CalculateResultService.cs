@@ -3,26 +3,20 @@ using DMS.BUSINESS.Common;
 using DMS.BUSINESS.Dtos.BU;
 using DMS.CORE.Entities.BU;
 using DMS.CORE;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using DMS.CORE.Entities.MD;
 using DMS.BUSINESS.Dtos.MD;
-using Common;
 using Microsoft.AspNetCore.Http;
 using DMS.BUSINESS.Models;
-using DocumentFormat.OpenXml.VariantTypes;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
-using DocumentFormat.OpenXml.EMMA;
-using DocumentFormat.OpenXml.Spreadsheet;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using SMO;
-using DocumentFormat.OpenXml.Office2016.Excel;
-using NPOI.SS.Formula.Functions;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
+using PROJECT.Service.Extention;
+using Aspose.Words;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -31,8 +25,13 @@ namespace DMS.BUSINESS.Services.BU
         Task<CalculateResultModel> GetResult(string code);
         Task<InsertModel> GetDataInput(string code);
         Task<List<TblBuHistoryAction>> GetHistoryAction(string code);
+        Task<List<TblBuHistoryDownload>> GetHistoryFile(string code);
+        Task<List<TblMdCustomer>> GetCustomer();
         Task UpdateDataInput(InsertModel model);
         void ExportExcel(ref MemoryStream outFileStream, string path, string headerId);
+        Task<string> SaveFileHistory(MemoryStream outFileStream, string headerId);
+        Task<string> GenarateWord(List<string> lstCustomerChecked);
+        Task<string> GenarateFile(List<string> lstCustomerChecked, string type,string headerId);
     }
     public class CalculateResultService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdGoods, GoodsDto>(dbContext, mapper), ICalculateResultService
     {
@@ -969,7 +968,6 @@ namespace DMS.BUSINESS.Services.BU
                 return new CalculateResultModel();
             }
         }
-
         public async Task<CalculateResultModel> RoundNumberData(CalculateResultModel data)
         {
             try
@@ -1015,7 +1013,6 @@ namespace DMS.BUSINESS.Services.BU
                 return new CalculateResultModel();
             }
         }
-
         public async Task<InsertModel> GetDataInput(string code)
         {
             try
@@ -1031,7 +1028,6 @@ namespace DMS.BUSINESS.Services.BU
                 return new InsertModel();
             }
         }
-
         public async Task UpdateDataInput(InsertModel model)
         {
             try
@@ -1071,7 +1067,6 @@ namespace DMS.BUSINESS.Services.BU
                 this.Exception = ex;
             }
         }
-
         public async Task<List<TblBuHistoryAction>> GetHistoryAction(string code)
         {
             try
@@ -1084,12 +1079,35 @@ namespace DMS.BUSINESS.Services.BU
                 return new List<TblBuHistoryAction>();
             }
         }
-
+        public async Task<List<TblBuHistoryDownload>> GetHistoryFile(string code)
+        {
+            try
+            {
+                var data = await _dbContext.TblBuHistoryDownload.Where(x => x.HeaderCode == code).OrderByDescending(x => x.CreateDate).ToListAsync();
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return new List<TblBuHistoryDownload>();
+            }
+        }
+        public async Task<List<TblMdCustomer>> GetCustomer()
+        {
+            try
+            {
+                var data = await _dbContext.TblMdCustomer.Where(x => x.CustomerTypeCode == "BBDO").OrderBy(x => x.Name).ToListAsync();
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return new List<TblMdCustomer>();
+            }
+        }
         public void ExportExcel(ref MemoryStream outFileStream, string path, string headerId)
         {
             try
             {
-                FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+                FileStream fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite);
                 IWorkbook templateWorkbook;
                 templateWorkbook = new XSSFWorkbook(fs);
                 fs.Close();
@@ -1221,6 +1239,156 @@ namespace DMS.BUSINESS.Services.BU
             ICellStyle styleCellPercentage = templateWorkbook.CreateCellStyle();
             styleCellPercentage.DataFormat = templateWorkbook.CreateDataFormat().GetFormat("0.000%");
             return styleCellPercentage;
+        }
+        public async Task<string> SaveFileHistory(MemoryStream outFileStream, string headerId)
+        {
+            byte[] data = outFileStream.ToArray();
+            var path = "";
+            using (MemoryStream memoryStream = new MemoryStream(data))
+            {
+                IFormFile file = ConvertMemoryStreamToIFormFile(memoryStream, "example.txt");
+                var folderName = Path.Combine($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}");
+                if (!Directory.Exists(folderName))
+                {
+                    Directory.CreateDirectory(folderName);
+                }
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                if (file.Length > 0)
+                {
+                    var fileName = $"{DateTime.Now.Day}{DateTime.Now.Month}{DateTime.Now.Year}_{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}_CoSoTinhMucGiamGia.xlsx";
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    path = $"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}/{fileName}";
+                    _dbContext.TblBuHistoryDownload.Add(new TblBuHistoryDownload
+                    {
+                        Code = Guid.NewGuid().ToString(),
+                        HeaderCode = headerId,
+                        Name = fileName,
+                        Type = "xlsx",
+                        Path = path
+                    });
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+            return path;
+        }
+        public static IFormFile ConvertMemoryStreamToIFormFile(MemoryStream memoryStream, string fileName)
+        {
+            memoryStream.Position = 0; // Reset the stream position to the beginning
+            IFormFile formFile = new FormFile(memoryStream, 0, memoryStream.Length, "file", fileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "application/octet-stream"
+            };
+            return formFile;
+
+        }
+        public async Task<string> GenarateWord(List<string> lstCustomerChecked)
+        {
+            #region Tạo 1 file word mới từ file template
+            var filePathTemplate = Directory.GetCurrentDirectory() + "/Template/ThongBaoGia.docx";
+            var folderName = Path.Combine($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}");
+            if (!Directory.Exists(folderName))
+            {
+                Directory.CreateDirectory(folderName);
+            }
+            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            var fileName = $"{DateTime.Now.Day}{DateTime.Now.Month}{DateTime.Now.Year}_{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}_Test.docx";
+            var fullPath = Path.Combine(pathToSave, fileName);
+            File.Copy(filePathTemplate, fullPath, true);
+            #endregion
+
+            #region Lấy các text element
+            List<string> lstTextElement = new List<string>();
+            WordDocumentService wordDocumentService = new WordDocumentService();
+            using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
+            {
+                lstTextElement = wordDocumentService.FindTextElement(doc);
+                lstTextElement = lstTextElement.Distinct().ToList();
+            }
+            #endregion
+
+            #region Fill dữ liệu
+            foreach (var code in lstCustomerChecked)
+            {
+                var c = await _dbContext.TblMdCustomer.FindAsync(code);
+                using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
+                {
+                    MainDocumentPart mainPart = doc.MainDocumentPart;
+                    DocumentFormat.OpenXml.Wordprocessing.Body body = mainPart.Document.Body;
+
+                    foreach(var t in lstTextElement)
+                    {
+                        switch (t)
+                        {
+                            case "##COMPANY@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, c.Name);
+                                break;
+                            case "##ADDRESS@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, c.Address);
+                                break;
+                            case "##TABLE@@":
+                                //Huynh code vào đây
+                                break;
+                        }
+                    }
+                }
+
+                if (code != lstCustomerChecked.LastOrDefault())
+                {
+                    AppendWordFilesToNewDocument(filePathTemplate, fullPath);
+                }
+            }
+            #endregion
+
+            return $"{folderName}/{fileName}";
+        }
+
+        public async Task<string> GenarateFile(List<string> lstCustomerChecked, string type, string headerId)
+        {
+
+            if (type == "WORD")
+            {
+                return await GenarateWord(lstCustomerChecked);
+            }
+            else
+            {
+                var w = await GenarateWord(lstCustomerChecked);
+                var pathWord = Directory.GetCurrentDirectory() + "/" + w;
+                Aspose.Words.Document doc = new Aspose.Words.Document(pathWord);
+                var folderName = Path.Combine($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}");
+                if (!Directory.Exists(folderName))
+                {
+                    Directory.CreateDirectory(folderName);
+                }
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                var fileName = $"{DateTime.Now.Day}{DateTime.Now.Month}{DateTime.Now.Year}_{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}_Test.pdf";
+                var fullPath = Path.Combine(pathToSave, fileName);
+                doc.Save(fullPath, SaveFormat.Pdf);
+                return $"{folderName}/{fileName}";
+            }
+        }
+
+        static void AppendWordFilesToNewDocument(string directoryPath, string newWordFilePath)
+        {
+            using (WordprocessingDocument sourceDocument = WordprocessingDocument.Open(directoryPath, false))
+            {
+                DocumentFormat.OpenXml.Wordprocessing.Body sourceBody = sourceDocument.MainDocumentPart.Document.Body;
+
+                using (WordprocessingDocument destinationDocument = WordprocessingDocument.Open(newWordFilePath, true))
+                {
+                    DocumentFormat.OpenXml.Wordprocessing.Body destinationBody = destinationDocument.MainDocumentPart.Document.Body;
+                    foreach (var element in sourceBody.Elements())
+                    {
+                        destinationBody.Append(element.CloneNode(true));
+                    }
+                    destinationDocument.MainDocumentPart.Document.Save();
+                }
+            }
+
         }
 
     }

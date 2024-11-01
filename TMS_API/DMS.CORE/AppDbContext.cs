@@ -182,7 +182,6 @@ namespace DMS.CORE
 
         #endregion
 
-
         #region Common
         public DbSet<TblCmAttachment> TblBuAttachment { get; set; }
         public DbSet<TblCmModuleAttachment> TblBuModuleAttachment { get; set; }
@@ -190,8 +189,10 @@ namespace DMS.CORE
         public DbSet<TblCmModuleComment> TblCmModuleComment { get; set; }
 
         #endregion
+
         #region Business
         public DbSet<tblBuOpinionList> TblBuOpinionLists { get; set; }
+        public DbSet<TblBuHistoryDownload> TblBuHistoryDownload { get; set; }
         public DbSet<TblBuHistoryAction> TblBuHistoryAction { get; set; }
         public DbSet<TblBuListTables> TblBuListTables { get; set; }
         public DbSet<TblBuCalculateResultList> TblBuCalculateResultList { get; set; }

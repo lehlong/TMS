@@ -12,7 +12,8 @@
                         <span nz-icon nzType="calculator"></span> Tính toán lại
                     </button>
                     <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('01', '02')"
-                        [appPermission]="CALCULATE_RESULT_RIGHT.TRINH_DUYET" *ngIf="model.header.status == '01' || model.header.status == '03'">
+                        [appPermission]="CALCULATE_RESULT_RIGHT.TRINH_DUYET"
+                        *ngIf="model.header.status == '01' || model.header.status == '03'">
                         <span nz-icon nzType="send"></span> Trình duyệt
                     </button>
                     <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('02', '03')"
@@ -31,6 +32,10 @@
                         [appPermission]="CALCULATE_RESULT_RIGHT.HISTORY">
                         <span nz-icon nzType="history"></span> Lịch sử thực hiện
                     </button>
+                    <button class="!flex !items-center" nzType="default" nz-button (click)="showHistoryExport()"
+                        [appPermission]="CALCULATE_RESULT_RIGHT.HISTORY">
+                        <span nz-icon nzType="history"></span> Lịch sử xuất file
+                    </button>
                     <button class="!flex !items-center btn-excel" nzType="primary" nz-button (click)="exportExcel()"
                         [appPermission]="CALCULATE_RESULT_RIGHT.EXCEL">
                         <span nz-icon nzType="file-excel"></span> Xuất Excel
@@ -38,6 +43,18 @@
                     <button class="!flex !items-center" nzType="primary" nz-button (click)="exportWord()"
                         [appPermission]="CALCULATE_RESULT_RIGHT.EXCEL">
                         <span nz-icon nzType="file-word"></span> Xuất Word
+                    </button>
+                    <button class="!flex !items-center btn-pdf" nzType="primary" nz-button (click)="exportPDF()"
+                        [appPermission]="CALCULATE_RESULT_RIGHT.EXCEL">
+                        <span nz-icon nzType="file-pdf"></span> Xuất PDF
+                    </button>
+                    <button nz-popconfirm  class="!flex !items-center btn-sms" nzType="primary" nzPopconfirmTitle="Bạn có chắc chắn gửi SMS thông báo cho các khách hàng?" (nzOnConfirm)="confirmSendSMS()" [nzCancelText]="'Huỷ'" [nzOkText]="'Gửi'"
+                        (nzOnCancel)="cancelSendSMS()" nzPopconfirmPlacement="bottom" nz-button>
+                        <span nz-icon nzType="message"></span> Gửi SMS
+                    </button>
+                    <button nz-popconfirm  class="!flex !items-center btn-email" nzType="primary" nzPopconfirmTitle="Bạn có chắc chắn gửi Email thông báo cho các khách hàng?" (nzOnConfirm)="confirmSendSMS()" [nzCancelText]="'Huỷ'" [nzOkText]="'Gửi'"
+                        (nzOnCancel)="cancelSendSMS()" nzPopconfirmPlacement="bottom" nz-button>
+                        <span nz-icon nzType="mail"></span> Gửi Email
                     </button>
 
                 </nz-space>
@@ -901,36 +918,36 @@
                     </thead>
                     <tbody>
                         @for (t of bbdoTable.data; track t) {
-                            <tr *ngIf="t.isBold" style="font-weight: bold;">
-                                <td></td>
-                                <td colspan="22">{{ t.colB }}</td>
-                            </tr>
-                            <tr *ngIf="!t.isBold">
-                                <td>{{ t.colA }}</td>
-                                <td>{{ t.colB }}</td>
-                                <td>{{ t.colC }}</td>
-                                <td>{{ t.colD }}</td>
-                                <td>{{ t.col1 }}</td>
-                                <td>{{ t.col2 }}</td>
-                                <td>{{ t.col3 }}</td>
-                                <td>{{ t.col4 }}</td>
-                                <td>{{ t.col5 }}</td>
-                                <td class="align-right">{{ t.col6 | number }}</td>
-                                <td class="align-right">{{ t.col7 | number}}</td>
-                                <td class="align-right">{{ t.col8 | number}}</td>
-                                <td class="align-right">{{ t.col9 | number}}</td>
-                                <td class="align-right">{{ t.col10 | number}}</td>
-                                <td class="align-right">{{ t.col11 | number}}</td>
-                                <td class="align-right">{{ t.col12 | number}}</td>
-                                <td class="align-right">{{ t.col13 | number}}</td>
-                                <td class="align-right">{{ t.col14 | number}}</td>
-                                <td class="align-right">{{ t.col15 | number}}</td>
-                                <td class="align-right">{{ t.col16 | number}}</td>
-                                <td class="align-right">{{ t.col17 | number}}</td>
-                                <td class="align-right">{{ t.col18 | number}}</td>
-                                <td class="align-right">{{ t.col19 | number}}</td>
-                            </tr>
-                            }
+                        <tr *ngIf="t.isBold" style="font-weight: bold;">
+                            <td></td>
+                            <td colspan="22">{{ t.colB }}</td>
+                        </tr>
+                        <tr *ngIf="!t.isBold">
+                            <td>{{ t.colA }}</td>
+                            <td>{{ t.colB }}</td>
+                            <td>{{ t.colC }}</td>
+                            <td>{{ t.colD }}</td>
+                            <td>{{ t.col1 }}</td>
+                            <td>{{ t.col2 }}</td>
+                            <td>{{ t.col3 }}</td>
+                            <td>{{ t.col4 }}</td>
+                            <td>{{ t.col5 }}</td>
+                            <td class="align-right">{{ t.col6 | number }}</td>
+                            <td class="align-right">{{ t.col7 | number}}</td>
+                            <td class="align-right">{{ t.col8 | number}}</td>
+                            <td class="align-right">{{ t.col9 | number}}</td>
+                            <td class="align-right">{{ t.col10 | number}}</td>
+                            <td class="align-right">{{ t.col11 | number}}</td>
+                            <td class="align-right">{{ t.col12 | number}}</td>
+                            <td class="align-right">{{ t.col13 | number}}</td>
+                            <td class="align-right">{{ t.col14 | number}}</td>
+                            <td class="align-right">{{ t.col15 | number}}</td>
+                            <td class="align-right">{{ t.col16 | number}}</td>
+                            <td class="align-right">{{ t.col17 | number}}</td>
+                            <td class="align-right">{{ t.col18 | number}}</td>
+                            <td class="align-right">{{ t.col19 | number}}</td>
+                        </tr>
+                        }
                     </tbody>
 
                 </nz-table>
@@ -968,26 +985,26 @@
                     </thead>
                     <tbody>
                         @for (t of bbfoTable.data; track t) {
-                            <tr *ngIf="t.isBold" style="font-weight: bold;">
-                                <td></td>
-                                <td colspan="12">{{ t.colB }}</td>
-                            </tr>
-                            <tr *ngIf="!t.isBold">
-                                <td>{{ t.colA }}</td>
-                                <td>{{ t.colB }}</td>
-                                <td>{{ t.colC }}</td>
-                                <td class="align-right">{{ t.col1 | number}}</td>
-                                <td class="align-right">{{ t.col2 | number}}</td>
-                                <td class="align-right">{{ t.col3 | number}}</td>
-                                <td class="align-right">{{ t.col4 | number}}</td>
-                                <td class="align-right">{{ t.col5 | number}}</td>
-                                <td class="align-right">{{ t.col6 | number}}</td>
-                                <td class="align-right">{{ t.col7 | number}}</td>
-                                <td class="align-right">{{ t.col8 | number}}</td>
-                                <td class="align-right">{{ t.col9 | number}}</td>
-                                <td class="align-right">{{ t.col10 | number}}</td>
-                            </tr>
-                            }
+                        <tr *ngIf="t.isBold" style="font-weight: bold;">
+                            <td></td>
+                            <td colspan="12">{{ t.colB }}</td>
+                        </tr>
+                        <tr *ngIf="!t.isBold">
+                            <td>{{ t.colA }}</td>
+                            <td>{{ t.colB }}</td>
+                            <td>{{ t.colC }}</td>
+                            <td class="align-right">{{ t.col1 | number}}</td>
+                            <td class="align-right">{{ t.col2 | number}}</td>
+                            <td class="align-right">{{ t.col3 | number}}</td>
+                            <td class="align-right">{{ t.col4 | number}}</td>
+                            <td class="align-right">{{ t.col5 | number}}</td>
+                            <td class="align-right">{{ t.col6 | number}}</td>
+                            <td class="align-right">{{ t.col7 | number}}</td>
+                            <td class="align-right">{{ t.col8 | number}}</td>
+                            <td class="align-right">{{ t.col9 | number}}</td>
+                            <td class="align-right">{{ t.col10 | number}}</td>
+                        </tr>
+                        }
                     </tbody>
 
                 </nz-table>
@@ -1405,8 +1422,8 @@
         </nz-tab>
         <nz-tab nzTitle="VK11 BB" (nzClick)="changeTitle('VK11 BB')">
             <div style="overflow: auto; height: calc(100vh - 210px);">
-                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered
-                    #vk11bbTable [nzData]="data.vK11BB">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #vk11bbTable
+                    [nzData]="data.vK11BB">
                     <thead>
                         <tr>
                             <th class="align-center">STT</th>
@@ -1467,8 +1484,8 @@
         </nz-tab>
         <nz-tab nzTitle="Tổng hợp" (nzClick)="changeTitle('TỔNG HỢP')">
             <div style="overflow: auto; height: calc(100vh - 210px);">
-                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered
-                    #summaryTable [nzData]="data.summary">
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #summaryTable
+                    [nzData]="data.summary">
                     <thead>
                         <tr>
                             <th class="align-center">STT</th>
@@ -1529,6 +1546,52 @@
     </nz-tabset>
 </div>
 
+<!-- Customer -->
+<nz-modal [(nzVisible)]="isVisibleCustomer" nzTitle="CHỌN KHÁCH HÀNG" (nzOnCancel)="handleCancel()" (nzOnOk)="confirmExportWord()"
+    nzCancelText="Đóng">
+    <ng-container *nzModalContent>
+        <nz-table #customerTable [nzData]="lstCustomer">
+            <thead>
+                <tr>
+                    <th [(nzChecked)]="checked" (nzCheckedChange)="onAllChecked($event)"></th>
+                    <th>Tên khách hàng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (data of customerTable.data; track data) {
+                    <tr>
+                      <td [nzChecked]="lstCustomerChecked.includes(data.code)" (nzCheckedChange)="onItemChecked(data.code, $event)"></td>
+                      <td>{{ data.name }}</td>
+                    </tr>
+                  }
+            </tbody>
+        </nz-table>
+    </ng-container>
+</nz-modal>
+
+<!-- Customer PDF -->
+<nz-modal [(nzVisible)]="isVisibleCustomerPDF" nzTitle="CHỌN KHÁCH HÀNG" (nzOnCancel)="handleCancel()" (nzOnOk)="confirmExportPDF()"
+    nzCancelText="Đóng">
+    <ng-container *nzModalContent>
+        <nz-table #customerTable [nzData]="lstCustomer">
+            <thead>
+                <tr>
+                    <th [(nzChecked)]="checked" (nzCheckedChange)="onAllChecked($event)"></th>
+                    <th>Tên khách hàng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (data of customerTable.data; track data) {
+                    <tr>
+                      <td [nzChecked]="lstCustomerChecked.includes(data.code)" (nzCheckedChange)="onItemChecked(data.code, $event)"></td>
+                      <td>{{ data.name }}</td>
+                    </tr>
+                  }
+            </tbody>
+        </nz-table>
+    </ng-container>
+</nz-modal>
+
 <!-- History -->
 <nz-modal nzWidth="60%" [(nzVisible)]="isVisibleHistory" nzTitle="LỊCH SỬ THỰC HIỆN" (nzOnCancel)="handleCancel()"
     nzCancelText="Đóng">
@@ -1550,6 +1613,40 @@
                     <td>{{data.createBy}}</td>
                     <td>{{data.createDate | date:'dd/MM/yyyy hh:mm:ss'}}</td>
                     <td>{{data.contents}}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </ng-container>
+</nz-modal>
+
+<!-- History Export File-->
+<nz-modal nzWidth="60%" [(nzVisible)]="isVisibleExport" nzTitle="LỊCH SỬ XUẤT FILE" (nzOnCancel)="handleCancel()"
+    nzCancelText="Đóng">
+    <ng-container *nzModalContent>
+        <nz-table #historyTable [nzData]="lstHistoryFile">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th></th>
+                    <th>Tên file</th>
+                    <th>Người xuất</th>
+                    <th>Thời gian</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of lstHistoryFile; let i = index">
+                    <td>{{i+1}}</td>
+                    <td *ngIf="data.type == 'xlsx'">
+                        <img src="/assets/img/excel.png" style="width: 24px;">
+                    </td>
+                    <td>{{data.name}}</td>
+                    <td>{{data.createBy}}</td>
+                    <td>{{data.createDate | date:'dd/MM/yyyy hh:mm:ss'}}</td>
+                    <td>
+                        <a [href]="data.pathView" target="_blank"><span nz-icon nzType="eye"></span></a>
+                        <a [href]="data.pathDownload" style="margin-left: 12px;"><span nz-icon nzType="download"></span></a>
+                    </td>
                 </tr>
             </tbody>
         </nz-table>

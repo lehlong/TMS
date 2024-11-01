@@ -12,9 +12,13 @@
 
   <ItemGroup>
     <Compile Remove="Uploads\**" />
+    <Compile Remove="wwwroot\**" />
     <Content Remove="Uploads\**" />
+    <Content Remove="wwwroot\**" />
     <EmbeddedResource Remove="Uploads\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
     <None Remove="Uploads\**" />
+    <None Remove="wwwroot\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +42,6 @@
 
   <ItemGroup>
     <Folder Include="Template\" />
-    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

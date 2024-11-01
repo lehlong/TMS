@@ -5,6 +5,8 @@ import { GlobalService } from '../../services/global.service'
 import { ActivatedRoute } from '@angular/router'
 import { GoodsService } from '../../services/master-data/goods.service'
 import { CALCULATE_RESULT_RIGHT } from '../../shared/constants/access-right.constants'
+import { environment } from '../../../environments/environment.prod'
+import { NzMessageService } from 'ng-zorro-antd/message'
 
 @Component({
   selector: 'app-calculate-result',
@@ -19,6 +21,7 @@ export class CalculateResultComponent {
     private globalService: GlobalService,
     private route: ActivatedRoute,
     private _goodsService: GoodsService,
+    private message: NzMessageService,
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -32,6 +35,9 @@ export class CalculateResultComponent {
   isVisibleHistory: boolean = false
   visibleDrawer: boolean = false
   isVisibleStatus: boolean = false
+  isVisibleExport: boolean = false
+  isVisibleCustomer: boolean = false
+  isVisibleCustomerPDF: boolean = false
   data: any = {
     lstGoods: [],
     dlg: {
@@ -77,9 +83,11 @@ export class CalculateResultComponent {
       contents: '',
     },
   }
-  lstHistory: any[] = []
-  goodsResult: any[] = []
 
+  lstHistory: any[] = []
+  lstHistoryFile: any[] = []
+  goodsResult: any[] = []
+  lstCustomer: any[] = []
   ngOnInit() {
     this.route.paramMap.subscribe({
       next: (params) => {
@@ -94,6 +102,80 @@ export class CalculateResultComponent {
       },
     })
     this.getAllGoods()
+  }
+
+  checked = false
+  lstCustomerChecked: any[] = []
+
+  updateCheckedSet(code: any, checked: boolean): void {
+    if (checked) {
+      this.lstCustomerChecked.push(code)
+    } else {
+      this.lstCustomerChecked = this.lstCustomerChecked.filter((x) => x != code)
+    }
+  }
+  onItemChecked(code: number, checked: boolean): void {
+    this.updateCheckedSet(code, checked)
+  }
+  onAllChecked(value: boolean): void {
+    this.lstCustomerChecked = []
+    if (value) {
+      this.lstCustomer.forEach((i) => {
+        this.lstCustomerChecked.push(i.code)
+      })
+    } else {
+      this.lstCustomerChecked = []
+    }
+  }
+
+  confirmExportWord() {
+    if (this.lstCustomerChecked.length == 0) {
+      this.message.create(
+        'warning',
+        'Vui lòng chọn khách hàng cần xuất ra file',
+      )
+      return
+    } else {
+      this._service.ExportWord(this.lstCustomerChecked, this.headerId).subscribe({
+        next: (data) => {
+          this.isVisibleCustomer = false
+          this.lstCustomerChecked = []
+          var a = document.createElement('a')
+          a.href = environment.apiUrl + data
+          a.target = '_blank'
+          a.click()
+          a.remove()
+        },
+        error: (err) => {
+          console.log(err)
+        },
+      })
+    }
+  }
+
+  confirmExportPDF() {
+    if (this.lstCustomerChecked.length == 0) {
+      this.message.create(
+        'warning',
+        'Vui lòng chọn khách hàng cần xuất ra file',
+      )
+      return
+    } else {
+      this._service.ExportPDF(this.lstCustomerChecked, this.headerId).subscribe({
+        next: (data) => {
+          this.isVisibleCustomer = false
+          this.lstCustomerChecked = []
+          var a = document.createElement('a')
+          a.href = environment.apiUrl + data
+          a.target = '_blank'
+          a.click()
+          a.remove()
+        },
+        error: (err) => {
+          console.log(err)
+        },
+      })
+    }
   }
 
   ngOnDestroy() {
@@ -148,6 +230,21 @@ export class CalculateResultComponent {
       },
     })
   }
+  showHistoryExport() {
+    this._service.GetHistoryFile(this.headerId).subscribe({
+      next: (data) => {
+        this.lstHistoryFile = data
+        this.isVisibleExport = true
+        this.lstHistoryFile.forEach((item) => {
+          item.pathDownload = environment.apiUrl + item.path
+          item.pathView = `https://view.officeapps.live.com/op/embed.aspx?src=${environment.apiUrl}${item.path}`
+        })
+      },
+      error: (err) => {
+        console.log(err)
+      },
+    })
+  }
   handleOk(): void {
     this.isVisibleHistory = false
     this.isVisibleStatus = false
@@ -161,6 +258,10 @@ export class CalculateResultComponent {
   handleCancel(): void {
     this.isVisibleHistory = false
     this.isVisibleStatus = false
+    this.isVisibleExport = false
+    this.isVisibleCustomer = false
+    this.isVisibleCustomerPDF = false
+    this.lstCustomerChecked = [];
   }
   reCalculate() {
     this.GetData(this.headerId)
@@ -202,33 +303,36 @@ export class CalculateResultComponent {
       },
     })
   }
-  
-  exportExcel(){
-    return this._service
-      .ExportExcel(this.headerId)
-      .subscribe((result: Blob) => {
-        const blob = new Blob([result], {
-          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        })
-        const url = window.URL.createObjectURL(blob)
-        var anchor = document.createElement('a')
-        anchor.download = 'CoSoTinhMucGiamGia.xlsx'
-        anchor.href = url
-        anchor.click()
-      })
+
+  exportExcel() {
+    this._service.ExportExcel(this.headerId).subscribe({
+      next: (data) => {
+        var a = document.createElement('a')
+        a.href = environment.apiUrl + data
+        a.target = '_blank'
+        a.click()
+        a.remove()
+      },
+    })
   }
-  exportWord(){
-    return this._service
-      .ExportWord(this.headerId)
-      .subscribe((result: Blob) => {
-        const blob = new Blob([result], {
-          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        })
-        const url = window.URL.createObjectURL(blob)
-        var anchor = document.createElement('a')
-        anchor.download = 'CoSoTinhMucGiamGia.xlsx'
-        anchor.href = url
-        anchor.click()
-      })
+  exportWord() {
+    this._service.GetCustomer().subscribe({
+      next: (data) => {
+        this.lstCustomer = data
+        this.isVisibleCustomer = true
+      },
+    })
   }
+  exportPDF() {
+    this._service.GetCustomer().subscribe({
+      next: (data) => {
+        this.lstCustomer = data
+        this.isVisibleCustomerPDF = true
+      },
+    })
+  }
+  onCurrentPageDataChange($event: any): void {}
+
+  cancelSendSMS() {}
+  confirmSendSMS() {}
 }
