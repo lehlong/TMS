@@ -73,6 +73,7 @@ export class CalculateResultComponent {
   }
 
   headerId: any = ''
+  isZoom = false
 
   model: any = {
     header: {},
@@ -333,6 +334,18 @@ export class CalculateResultComponent {
   }
   onCurrentPageDataChange($event: any): void {}
 
+  fullScreen(){
+    this.isZoom = true
+    document.documentElement.requestFullscreen()
+  }
+  closeFullScreen(){
+    this.isZoom = false
+    document.exitFullscreen()
+      .then(() => {
+    })
+      .catch(() => {
+    })
+  }
   cancelSendSMS() {}
   confirmSendSMS() {}
 }

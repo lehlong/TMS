@@ -16,6 +16,10 @@
     background: none;
     text-align: right;
 }
+._ngcontent-ng-c3840563359{
+  overflow-y: auto !important;
+    height: calc(100vh - 206px) !important;
+}
 
 .btn-excel{
     background-color: #008B45;
@@ -32,4 +36,28 @@
 .btn-email{
     background-color: #696969;
     border-color: #696969;
+}
+
+.zoom{
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 10;
+  padding: 5px 20px;
+}
+.close{
+  position: absolute;
+  right: 35px;
+  border: none;
+  font-size: 33px;
+  z-index: 11;
+}
+.d-none{
+  display: none;
+}
+.d-block{
+  display: block;
 }
