@@ -67,9 +67,6 @@
   </div>
 
 <div [ngClass]="isZoom ? 'zoom' : ''">
-  <!-- <button [ngClass]="isZoom ? 'd-block close' : 'd-none'" nz-button (click)="closeFullScreen()">
-    <span style="font-size: 24px" nz-icon nzType="close" nzTheme="outline"></span>
-  </button> -->
   <button nz-button [ngClass]="isZoom ? 'd-block close' : 'd-none'" nzType="default" (click)="closeFullScreen()"><span nz-icon nzType="fullscreen-exit"></span></button>
   <nz-tabset>
     <nz-tab nzTitle="Dữ liệu gốc" (nzClick)="changeTitle('DỮ LIỆU GỐC')">
@@ -1850,6 +1847,7 @@
     </nz-table>
   </ng-container>
 </nz-drawer>
+
 <ng-template #extra>
   <button nz-button nzType="primary" (click)="updateDataInput()">Cập nhật</button>
 </ng-template>

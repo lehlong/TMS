@@ -1,1 +1,64 @@
-<p>discount-information works!</p>
+<nz-table class="ant-table-content" [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #Table
+  [nzData]="data.discount">
+  <thead>
+    <tr>
+      <th rowspan="4">STT</th>
+      <th rowspan="4">Điểm giao hàng</th>
+      <th colspan="3" rowspan="2" class="align-center">Cự ly vận chuyển từ kho trung tâm (Km)</th>
+      <th colspan="3" rowspan="2" class="align-center">Đơn giá cước vận chuyển</th>
+      <th colspan="{{ data.lstGoods.length * 5 }}" rowspan="1">Chiết khấu cùng điểm giao</th>
+    </tr>
+    <tr>
+      @for (i of data.lstGoods; track i){
+      <th colspan="5">{{ i.name }}</th>
+      }
+    </tr>
+    <tr>
+      <th rowspan="4">PLXNA</th>
+      <th rowspan="2" class="align-center"> ANH PHÁT <br> PETRO (APP) </th>
+      <th rowspan="2" class="align-center"> PVOIL <br> VŨNG ÁNG </th>
+
+      <th rowspan="2">PLXNA</th>
+      <th rowspan="2" class="align-center"> ANH PHÁT <br> PETRO (APP) </th>
+      <th rowspan="2" class="align-center"> PVOIL <br> VŨNG ÁNG </th>
+
+      @for (i of data.lstGoods; track i){
+      <th rowspan="2">PLXNA</th>
+      <th colspan="2" rowspan="1" class="align-center"> ANH PHÁT PETRO (APP) </th>
+      <th colspan="2" rowspan="1" class="align-center"> PVOIL VŨNG ÁNG </th>
+      }
+
+    </tr>
+    <tr>
+      @for (i of data.lstGoods ; track i){
+      <th rowspan="2" class="align-center"> CK </th>
+      <th rowspan="2" class="align-center"> CHÊNH LỆCH <br> SO PLX (+/-)</th>
+
+      <th rowspan="1" class="align-center"> CK </th>
+      <th rowspan="1" class="align-center"> CHÊNH LỆCH SO <br> PLX (+/-)</th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for (d of Table.data; track d) {
+    <tr>
+      <td>{{ d.colA }}</td>
+      <td>{{ d.colB }}</td>
+      <td class="align-right">{{ d.col1}}</td>
+      <td class="align-right"></td>
+      <td class="align-right">{{ d.col3}}</td>
+      <td class="align-right">{{ d.col4}}</td>
+      <td class="align-right"></td>
+      <td class="align-right">{{ d.col6}}</td>
+       @for (g of d.ck; track g) {
+        <td>{{ g.plxna }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        }
+    </tr>
+    }
+  </tbody>
+
+</nz-table>

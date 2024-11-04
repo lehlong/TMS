@@ -194,9 +194,11 @@ export class CalculateResultComponent {
       },
     })
   }
+
   changeTitle(value: string) {
     this.title = value
   }
+
   changeStatus(value: string, status: string) {
     switch (value) {
       case '01':
