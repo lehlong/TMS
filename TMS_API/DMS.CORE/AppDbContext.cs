@@ -133,6 +133,7 @@ namespace DMS.CORE
         public DbSet<TblMdCustomer> TblMdCustomer { get; set; }
         public DbSet<TblMdCompetitor> TblMdCompetitor { get; set; }
         public DbSet<TblMdMapPointCustomerGoods> TblMdMapPointCustomerGoods { get; set; }
+        public DbSet<TblMdMarketCompetitor> TblMdMarketCompetitor { get; set; }
 
         public DbSet<TblMdDeliveryPoint> TblMdDeliveryPoint { get; set; }
         public DbSet<TblMdGiaGiaoTapDoan> TblMdGiaGiaoTapDoan { get; set; }
@@ -179,7 +180,8 @@ namespace DMS.CORE
         #region Input
         public DbSet<TblInVinhCuaLo> TblInVinhCuaLo { get; set; }
         public DbSet<TblInHeSoMatHang> TblInHeSoMatHang { get; set; }
-
+        public DbSet<TblInDiscountCompetitor> TblInDiscountCompetitor { get; set; }
+        
         #endregion
 
         #region Common

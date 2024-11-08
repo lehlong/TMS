@@ -71,7 +71,7 @@
           </td>
           <td>
             <span *ngFor="let item of marketResult" >
-              <span *ngIf="item.code == data.marketCode">{{ item.code + ' - ' + item.name }}</span>
+              <span *ngIf="item.code == data.marketCode">{{ item.name }}</span>
             </span>
           </td>
           <td>
@@ -80,7 +80,7 @@
             </span>
           </td>
 
-          <td nzAlign="center">{{ data.price }}</td>
+          <td nzAlign="right">{{ data.price }}</td>
 
           <td nzAlign="center">{{ data.fromDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">{{ data.toDate | date: 'dd/MM/yyyy HH:mm'}}</td>

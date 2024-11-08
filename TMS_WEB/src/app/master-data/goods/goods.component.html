@@ -39,7 +39,7 @@
       <thead>
         <tr>
           <th nzWidth="30px">STT</th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" nzWidth="150px">
+          <th [nzSortFn]="true"  nzAlign="center" (nzSortOrderChange)="onSortChange('code', $event)" nzWidth="150px">
             Mã
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)" >
@@ -67,22 +67,20 @@
       </thead>
       <tbody>
         <tr *ngFor="let data of headerTable.data; let i = index" (dblclick)="openEdit(data)">
-          <td>
-            {{
-            (paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1
-            }}
+          <td nzAlign="center">
+            {{(paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1}}
           </td>
-          <td>
+          <td nzAlign="right">
             <a (click)="openEdit(data)">{{ data.code }}</a>
           </td>
           <td >{{ data.name }}</td>
 
-          <td nzAlign="right">
+          <td nzAlign="left">
             <span *ngFor="let item of lstType" >
               <span *ngIf="item.code == data.type">{{ item.name }}</span>
             </span>
           </td>
-          <td nzAlign="center">{{ data.thueBvmt }}</td>
+          <td nzAlign="right">{{ data.thueBvmt }}</td>
           <td nzAlign="center">{{ data.createDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"

@@ -10,6 +10,7 @@ namespace DMS.BUSINESS.Models
     public class DiscountInformationModel
     {
         public List<TblMdGoods> lstGoods { get; set; }
+        public List<TblMdCompetitor> lstCompetitor { get; set; }
         public List<discout> discount { get; set; } = new List<discout>();
     }
 
@@ -18,24 +19,27 @@ namespace DMS.BUSINESS.Models
         public string colA { get; set; }
         public string colB { get; set; }
         public decimal? col1 { get; set; }
-        public decimal? col2 { get; set; }
-        public decimal? col3 { get; set; }
+        public List<decimal?> gaps { get; set; } = new List<decimal?>();
         public decimal? col4 { get; set; }
-        public decimal? col5 { get; set; }
-        public decimal? col6 { get; set; }
+        public List<decimal?> cuocVCs { get; set; } = new List<decimal?>();
+
         public List<CK> CK { get; set; } = new List<CK>();
 
     }
     public class CK
     {
         public decimal? plxna { get; set; }
-        public List<CkCl> AP { get; set; } = new List<CkCl>();
-        public List<CkCl> VA { get; set; } = new List<CkCl>();
+        public List<DT> DT { get; set; } = new List<DT>();
     }
 
-    public class CkCl
+    public class DT
     {
-        public decimal? ck { get; set; }
-        public decimal? cl { get; set; }
+        public List<decimal?> ckCl { get; set; } = new List<decimal?>();
     }
+
+    //public class CkCl
+    //{
+    //    public decimal? ck { get; set; }
+    //    public decimal? cl { get; set; }
+    //}
 }

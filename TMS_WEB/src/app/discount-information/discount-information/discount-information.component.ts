@@ -29,6 +29,7 @@ export class DiscountInformationComponent {
 //  lstGoods: any[] = []
   data: any = {
     lstGoods : [],
+    lstCompetitor : [],
     discount: []
   }
 

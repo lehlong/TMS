@@ -68,21 +68,21 @@
           <td>
             <a (click)="openEdit(data)">{{ data.code }}</a>
           </td>
-          <td>{{ data.name }}</td>
-          <td>{{ data.gap }}</td>
-          <td>
+          <td >{{ data.name }}</td>
+          <td class="align-right">{{ data.gap }}</td>
+          <td class="align-right">
             <span *ngFor="let item of localResult" >
               <span *ngIf="item.code == data.localCode">{{ item.name }}</span>
             </span>
           </td>
-          <td>
+          <td class="align-right">
             <span *ngFor="let item of warehouseResult" >
               <span *ngIf="item.code == data.warehouseCode">{{ item.name }}</span>
             </span>
           </td>
-          <td>{{ data.cpChungChuaCuocVC }}</td>
-          <td>{{ data.cuocVCBQ }}</td>
-          <td>{{ data.createDate | date: 'dd/MM/yyyy HH:mm' }}</td>
+          <td class="align-right">{{ data.cpChungChuaCuocVC }}</td>
+          <td class="align-right">{{ data.cuocVCBQ }}</td>
+          <td class="align-right">{{ data.createDate | date: 'dd/MM/yyyy HH:mm' }}</td>
 
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"

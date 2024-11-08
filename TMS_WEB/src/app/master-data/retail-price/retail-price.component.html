@@ -83,8 +83,8 @@
               <span *ngIf="item.code == data.localCode">{{ item.name }}</span>
             </span>
           </td>
-          <td>{{ data.oldPrice }}</td>
-          <td>{{ data.newPrice }}</td>
+          <td class="align-right">{{ data.oldPrice }}</td>
+          <td class="align-right">{{ data.newPrice }}</td>
           <td>{{ data.fromDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td>{{ data.toDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">

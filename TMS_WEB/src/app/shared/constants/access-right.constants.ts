@@ -115,6 +115,14 @@ export enum MARKET_RIGHTS {
   DELETE = 'R0',
 }
 
+export enum MARKET_COMPETITOR_RIGHTS {
+  LIST = 'R1.1.1',
+  EXCEL = 'R0',
+  ADD = 'R1.1.2',
+  EDIT = 'R1.1.2',
+  DELETE = 'R0',
+}
+
 export enum RETAIL_PRICE_RIGHTS {
   LIST = 'R1.1.1',
   EXCEL = 'R0',

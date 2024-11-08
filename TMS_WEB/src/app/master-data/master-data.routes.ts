@@ -33,6 +33,7 @@ import { CustomerTypeComponent } from './customer-type/customer-type.component'
 import { WarehouseComponent } from './warehouse/warehouse.component'
 import { CompetitorComponent } from './competitor/competitor.component'
 import { MapPointCustomerGoodsComponent } from './map-point-customer-goods/map-point-customer-goods.component'
+import { MarketCompetitorComponent } from './market-competitor/market-competitor.component'
 export const masterDataRoutes: Routes = [
   { path: 'currency', component: CurrencyComponent },
   { path: 'unit', component: UnitComponent },
@@ -76,5 +77,6 @@ export const masterDataRoutes: Routes = [
   {path: 'warehouse', component: WarehouseComponent},
   {path: 'competitor', component: CompetitorComponent},
   {path: 'map-point-customer-goods', component: MapPointCustomerGoodsComponent},
+  {path: 'market-competitor', component: MarketCompetitorComponent},
 
 ]
