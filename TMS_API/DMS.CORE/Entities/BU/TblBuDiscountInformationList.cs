@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace DMS.CORE.Entities.BU
 {
-    [Table("T_BU_DISCOINT_INFORMATION")]
-    public class TblBuDiscountInformation : SoftDeleteEntity
+    [Table("T_BU_DISCOUNT_INFORMATION_LIST")]
+    public class TblBuDiscountInformationList : SoftDeleteEntity
     {
         [Key]
         [Column("CODE", TypeName = "VARCHAR(50)")]
@@ -23,7 +23,5 @@ namespace DMS.CORE.Entities.BU
         [Column("F_DATE", TypeName = "DATETIME")]
         public DateTime FDate { get; set; }
 
-        [Column("STATUS", TypeName = "NVARCHAR(50)")]
-        public string? Status { get; set; }
     }
 }

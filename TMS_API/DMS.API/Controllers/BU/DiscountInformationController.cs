@@ -17,10 +17,10 @@ namespace DMS.API.Controllers.BU
         }   
 
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string Code)
         {
             var transferObject = new TransferObject();
-            var result = await _service.getAll();
+            var result = await _service.getAll(Code);
             if (_service.Status)
             {
                 transferObject.Data = result;

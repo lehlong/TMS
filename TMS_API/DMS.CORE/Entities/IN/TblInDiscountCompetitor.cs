@@ -12,6 +12,9 @@ namespace DMS.CORE.Entities.IN
         [Column("CODE", TypeName = "VARCHAR(50)")]
         public string? Code { get; set; }
 
+        [Column("HEADER_CODE", TypeName = "VARCHAR(50)")]
+        public string? HeaderCode { get; set; }
+
         [Column("COMPETITOR_CODE", TypeName = "NVARCHAR(255)")]
         public string CompetitorCode { get; set; }
 
@@ -21,10 +24,5 @@ namespace DMS.CORE.Entities.IN
         [Column("DISCOUNT", TypeName = "DECIMAL(18,0)")]
         public decimal? Discount { get; set; }
 
-        [Column("FROM_DATE", TypeName = "DATETIME")]
-        public DateTime? FromDate { get; set; }
-
-        [Column("TO_DATE", TypeName = "DATETIME")]
-        public DateTime? ToDate { get; set; }
     }
 }

@@ -201,7 +201,7 @@ namespace DMS.CORE
         public DbSet<tblBuOpinionDetail> tblBuOpinionDetail { get; set; }
         public DbSet<tblBuOpinionDetailHistory> tblBuOpinionDetailHistory { get; set; }
         public DbSet<tblBuPendingOpinionMapping> tblBuPendingOpinionMappings { get; set; }
-        public DbSet<TblBuDiscountInformation> TblBuDiscountInformation { get; set; }
+        public DbSet<TblBuDiscountInformationList> TblBuDiscountInformationList { get; set; }
         
 
         #endregion

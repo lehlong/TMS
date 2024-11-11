@@ -1,4 +1,5 @@
-﻿using DMS.CORE.Entities.MD;
+﻿using DMS.CORE.Entities.BU;
+using DMS.CORE.Entities.MD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace DMS.BUSINESS.Models
         public List<TblMdGoods> lstGoods { get; set; }
         public List<TblMdCompetitor> lstCompetitor { get; set; }
         public List<discout> discount { get; set; } = new List<discout>();
+        public List<TblBuDiscountInformationList> lstDIL { get; set; } = new List<TblBuDiscountInformationList>();
     }
 
     public class discout
@@ -22,7 +24,7 @@ namespace DMS.BUSINESS.Models
         public List<decimal?> gaps { get; set; } = new List<decimal?>();
         public decimal? col4 { get; set; }
         public List<decimal?> cuocVCs { get; set; } = new List<decimal?>();
-
+        public bool IsBold { get; set; } = false;
         public List<CK> CK { get; set; } = new List<CK>();
 
     }

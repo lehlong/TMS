@@ -12,8 +12,8 @@ export class DiscountInformationService {
     return this.commonService.get('DiscountInformation/Search', params);
   }
 
-  getAll(): Observable<any> {
-    return this.commonService.get('DiscountInformation/GetAll');
+  getAll(code : any): Observable<any> {
+    return this.commonService.get(`DiscountInformation/GetAll?code=${code}`);
   }
 
   createDiscountInformation(params: any): Observable<any> {

@@ -13,12 +13,19 @@
 .p-m{
   margin-top: 12px;
 }
-.input-v{
-  border: none;
-  background: none;
-  text-align: right;
+
+.btn-excel{
+  background-color: #008B45;
+  border-color: #008B45;
 }
 ._ngcontent-ng-c3840563359{
 overflow-y: auto !important;
   height: calc(100vh - 206px) !important;
+}
+.input-v{
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  background: none;
+  text-align: right;
 }
