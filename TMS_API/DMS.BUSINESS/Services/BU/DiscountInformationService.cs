@@ -3,18 +3,35 @@ using DMS.BUSINESS.Common;
 using DMS.BUSINESS.Dtos.MD;
 using DMS.BUSINESS.Models;
 using DMS.CORE;
+using DMS.CORE.Entities.BU;
 using DMS.CORE.Entities.MD;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
+using PROJECT.Service.Extention;
+using Aspose.Words;
+using Table = DocumentFormat.OpenXml.Wordprocessing.Table;
+using DocumentFormat.OpenXml;
+using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
+using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NPOI.SS.Formula.Functions;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace DMS.BUSINESS.Services.BU
 {
     public interface IDiscountInformationService : IGenericService<TblMdGoods, GoodsDto>
     {
+        Task<string> SaveFileHistory(MemoryStream outFileStream, string headerId);
+        void ExportExcel(ref MemoryStream outFileStream, string path, string headerId);
         Task<DiscountInformationModel> getAll(string Code);
     }
     public class DiscountInformationService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdGoods, GoodsDto> (dbContext, mapper), IDiscountInformationService
@@ -129,8 +146,103 @@ namespace DMS.BUSINESS.Services.BU
                 this.Exception = ex;
                 return new DiscountInformationModel();
             }
+        }   
+
+        public void ExportExcel(ref MemoryStream outFileStream, string path, string headerId)
+        {
+            try
+            {
+                FileStream fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite);
+                IWorkbook templateWorkbook;
+                templateWorkbook = new XSSFWorkbook(fs);
+                fs.Close();
+
+                //Define Style
+                var styleCellNumber = GetCellStyleNumber(templateWorkbook);
+
+                var font = templateWorkbook.CreateFont();
+                font.FontHeightInPoints = 12;
+                font.FontName = "Times New Roman";
+
+                ICellStyle styleCellBold = templateWorkbook.CreateCellStyle(); // chữ in đậm
+                var fontBold = templateWorkbook.CreateFont();
+                fontBold.Boldweight = (short)FontBoldWeight.Bold;
+                fontBold.FontHeightInPoints = 12;
+                fontBold.FontName = "Times New Roman";
+
+                //Get Data
+                var data = getAll(headerId);
+
+                var startRowPTCK = 0;
+                ISheet sheetPTCK = templateWorkbook.GetSheetAt(1);
+                styleCellBold.CloneStyleFrom(sheetPTCK.GetRow(1).Cells[0].CellStyle);
+
+                for(var i = 0; i < data.Result.discount.Count(); i++)
+                {
+                    //var data
+                }
+
+                    templateWorkbook.Write(outFileStream);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        public ICellStyle GetCellStyleNumber(IWorkbook templateWorkbook)
+        {
+            ICellStyle styleCellNumber = templateWorkbook.CreateCellStyle();
+            styleCellNumber.DataFormat = templateWorkbook.CreateDataFormat().GetFormat("#,##0");
+            return styleCellNumber;
         }
 
+        public async Task<string> SaveFileHistory(MemoryStream outFileStream, string headerId)
+        {
+            byte[] data = outFileStream.ToArray();
+            var path = "";
+            using (MemoryStream memoryStream = new MemoryStream(data))
+            {
+                IFormFile file = ConvertMemoryStreamToIFormFile(memoryStream, "example.txt");
+                var folderName = Path.Combine($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}");
+                if (!Directory.Exists(folderName))
+                {
+                    Directory.CreateDirectory(folderName);
+                }
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                if (file.Length > 0)
+                {
+                    var fileName = $"{DateTime.Now.Day}{DateTime.Now.Month}{DateTime.Now.Year}_{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}PhanTichChietKhau.xlsx";
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    path = $"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}/{fileName}";
+                    _dbContext.TblBuHistoryDownload.Add(new TblBuHistoryDownload
+                    {
+                        Code = Guid.NewGuid().ToString(),
+                        HeaderCode = headerId,
+                        Name = fileName,
+                        Type = "xlsx",
+                        Path = path
+                    });
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+            return path;
+        }
+        public static IFormFile ConvertMemoryStreamToIFormFile(MemoryStream memoryStream, string fileName)
+        {
+            memoryStream.Position = 0; // Reset the stream position to the beginning
+            IFormFile formFile = new FormFile(memoryStream, 0, memoryStream.Length, "file", fileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "application/octet-stream"
+            };
+            return formFile;
 
+        }
     }
+
+    
 }
