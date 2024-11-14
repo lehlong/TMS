@@ -1,0 +1,62 @@
+@media print {
+  body {
+    margin: 0 !important;
+  }
+}
+
+nz-input-group {
+  margin-bottom: 12px;
+}
+
+.btn_success {
+  background-color: #28a745;
+  border: 1px solid #28a745;
+  color: #ffffff;
+  margin-top: 50px;
+  width: 150px;
+}
+.btn_warning {
+  background-color: #28a745;
+  border: 1px solid #28a745;
+  color: #ffffff;
+}
+
+.node_icon {
+  color: #ff4d4f;
+  z-index: 10;
+}
+.icon-tree {
+  font-size: 10px;
+}
+.btn_warning {
+  background-color: #28a745;
+  border: 1px solid #28a745;
+  color: #ffffff;
+}
+.badge-blue {
+  border-radius: 10px;
+  background-color: #2196f3;
+  color: #ffffff;
+}
+.main-container {
+  font-family: 'Lato';
+  width: fit-content;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.ck-content {
+  font-family: 'Lato';
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.editor-container_classic-editor .editor-container__editor {
+  min-width: 795px;
+  max-width: 795px;
+}
+// @media print {
+//   body {
+//     margin: 0 !important;
+//   }
+// }

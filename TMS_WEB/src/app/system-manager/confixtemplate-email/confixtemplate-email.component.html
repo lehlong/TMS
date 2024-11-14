@@ -1,0 +1,106 @@
+<div>
+  <button nzType="primary" class="btn_success">
+    <span nz-icon nzType="check" nzTheme="outline"></span>Cập nhật thông tin
+  </button>
+  <nz-tabset>
+    <nz-tab [nzTitle]="'Email1'">
+      <strong style="margin-top: 10px">
+        Các tham số được sử dụng trong nội dung email bao gồm :
+      </strong>
+      <div nz-row>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM1]</span>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM2]</span>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM3]</span>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM4]</span>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM5]</span>
+      </div>
+      <strong style="margin-top: 10px"> Tiêu đề email </strong>
+      <input type="text" nz-input [ngModel]="'[PARAM1]-[PARAM2]'" />
+      <strong> Nội dung email </strong>
+      <div>
+        <div class="main-container">
+          <div
+            class="editor-container editor-container_classic-editor"
+            #editorContainerElement
+          >
+            <div class="editor-container__editor">
+              <div #editorElement>
+                <ckeditor
+                  [editor]="Editor"
+                  [config]="config"
+                  *ngIf="isLayoutReady"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-tab>
+    <nz-tab [nzTitle]="'Email2'">
+      <strong style="margin-top: 10px">
+        Các tham số được sử dụng trong nội dung email bao gồm :
+      </strong>
+      <div nz-row>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM1]</span>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM2]</span>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM3]</span>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM4]</span>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM5]</span>
+      </div>
+      <strong style="margin-top: 10px"> Tiêu đề email </strong>
+      <input type="text" nz-input [ngModel]="'[PARAM1]-[PARAM2]'" />
+      <strong> Nội dung email </strong>
+      <div>
+        <div class="main-container">
+          <div
+            class="editor-container editor-container_classic-editor"
+            #editorContainerElement
+          >
+            <div class="editor-container__editor">
+              <div #editorElement>
+                <ckeditor
+                  [editor]="Editor"
+                  [config]="config"
+                  *ngIf="isLayoutReady"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-tab>
+    <nz-tab [nzTitle]="'Email3'">
+      <strong style="margin-top: 10px">
+        Các tham số được sử dụng trong nội dung email bao gồm :
+      </strong>
+      <div nz-row>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM1]</span>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM2]</span>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM3]</span>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM4]</span>
+        <span class="badge-blue align-center" nz-col nzSpan="2">[PARAM5]</span>
+      </div>
+      <strong style="margin-top: 10px"> Tiêu đề email </strong>
+      <input type="text" nz-input [ngModel]="'[PARAM1]-[PARAM2]'" />
+      <strong> Nội dung email </strong>
+      <div>
+        <div class="main-container">
+          <div
+            class="editor-container editor-container_classic-editor"
+            #editorContainerElement
+          >
+            <div class="editor-container__editor">
+              <div #editorElement>
+                <ckeditor
+                  [editor]="Editor"
+                  [config]="config"
+                  *ngIf="isLayoutReady"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</div>

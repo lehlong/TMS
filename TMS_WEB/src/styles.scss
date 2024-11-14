@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import 'ckeditor5/ckeditor5.css';
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 .swal2-title {
   font-size: 22px;
 }
@@ -185,19 +187,19 @@
 }
 
 // stc
-.align-right{
+.align-right {
   text-align: right;
 }
-.align-center{
+.align-center {
   text-align: center;
 }
-.align-left{
+.align-left {
   text-align: left !important;
 }
-.d-block{
+.d-block {
   display: block;
 }
-.d-none{
+.d-none {
   display: none;
 }
 
@@ -207,29 +209,23 @@
     overflow: auto;
     &::-webkit-scrollbar {
       width: 5px !important;
-      background: #207CE5
- !important;
+      background: #207ce5 !important;
     }
     &::-webkit-scrollbar-track {
-      background: #207CE5
- !important;
+      background: #207ce5 !important;
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: #207CE5
- !important;
+      background-color: #207ce5 !important;
       border-radius: 5px;
       cursor: pointer;
       &:hover {
-        background-color: #207CE5
- !important;
+        background-color: #207ce5 !important;
       }
     }
     & {
       scrollbar-width: none;
-      scrollbar-color: #424242
- #424242
-;
+      scrollbar-color: #424242 #424242;
       scrollbar-width: 2px;
     }
   }
