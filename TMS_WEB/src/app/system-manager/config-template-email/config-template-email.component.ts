@@ -37,29 +37,160 @@ import {
   Undo,
   EditorConfig,
 } from 'ckeditor5'
+import { ConfigTemplateService } from '../../services/system-manager/config-template.service'
+import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
 
 @Component({
-  selector: 'confixtemplate-email',
+  selector: 'config-template-email',
   standalone: true,
   imports: [ShareModule, CKEditorModule],
-  templateUrl: './confixtemplate-email.component.html',
-  styleUrls: ['./confixtemplate-email.component.scss'], // Đã đổi thành 'styleUrls'
+  templateUrl: './config-template-email.component.html',
+  styleUrls: ['./config-template-email.component.scss'],
 })
 export class ConfixTemplateEmailComponent implements AfterViewInit, OnInit {
+  validateForm: FormGroup = this.fb.group({
+    code: [''],
+    name: ['', [Validators.required]],
+    htmlSource: [''],
+    type: ['EMAIL'],
+    title: [''],
+    isActive: [true, [Validators.required]],
+  })
+
   public Editor = ClassicEditor
   public isLayoutReady = false
   public config: EditorConfig = {}
 
   constructor(
+    private fb: NonNullableFormBuilder,
+    private _service : ConfigTemplateService,
     private globalService: GlobalService,
     private changeDetector: ChangeDetectorRef,
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Cấu hình Template Email',
-        path: 'system-manager/confixtemplate-email',
+        name: 'Cấu hình Template SMS',
+        path: 'system-manager/confixtemplate-sms',
       },
     ])
+  }
+
+  title: any = 'Cấu hình template SMS'
+  edit: boolean = false
+  isSubmit: boolean = false
+  tabs: any = []
+  isCancelModalVisible: boolean = false
+  name: any = 'new'
+  indexTab: any = 0
+  data: any = {
+    htmlSource : ''
+  }
+
+  ngOnInit(): void {
+    this.getAll()
+    this.ngAfterViewInit()
+    console.log(this.config.initialData);
+  }
+
+  newTab(): void {
+    this.isCancelModalVisible = true
+    this.edit = false
+  }
+
+  closeTab({ index }: { index: number }): void  {
+    this.tabs.splice(index, 1);
+  }
+
+  handleCancelOk(){
+    this.tabs.push(this.name);
+    console.log(this.tabs);
+    this.isCancelModalVisible = false
+    this.edit = false
+  }
+  handleCancelModal(){
+    this.isCancelModalVisible = false
+    this.name = ''
+    this.edit = true
+  }
+  save(){
+    console.log(this.indexTab);
+  }
+
+  trackByItemId(index: number, item: any){
+    console.log(item.code);
+  }
+
+  submitForm(): void {
+    this.isSubmit = true
+    this.isCancelModalVisible = false
+    this.name = ''
+
+    if (this.validateForm.valid) {
+      const formData = this.validateForm.getRawValue()
+      console.log(formData);
+
+      if (this.edit) {
+        this._service.updateConfigTemplate(formData).subscribe({
+          next: (data) => {
+            this.getAll()
+          },
+          error: (response) => {
+            console.log(response)
+          },
+        })
+      } else {
+        this._service.createConfigTemplate(formData).subscribe({
+          next: (data) => {
+            this.getAll()
+          },
+          error: (response) => {
+            console.log(response)
+          },
+        })
+      }
+    } else {
+      Object.values(this.validateForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty()
+          control.updateValueAndValidity({ onlySelf: true })
+        }
+      })
+    }
+  }
+
+  getAll() {
+    this.isSubmit = false
+    this._service.getall().subscribe({
+    next: (data) => {
+        this.data = data.filter((item: any) => item.type === "EMAIL")
+        console.log(this.data);
+
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
+  }
+
+  openEdit(data: any): void {
+    this.validateForm.setValue({
+      code: data.code,
+      name: data.name,
+      htmlSource: data.htmlSource,
+      title: data.title,
+      type:  data.type,
+      isActive: data.isActive,
+    })
+    setTimeout(() => {
+      this.edit = true
+    }, 2000)
+  }
+
+  addPram(event: Event, pram: string){
+    event.preventDefault();
+    var html = this.validateForm.get('htmlSource')?.value
+    var htmlSource = html + ' ' + pram
+    this.validateForm.get('htmlSource')?.setValue(htmlSource);
   }
 
   public ngAfterViewInit(): void {
@@ -220,5 +351,10 @@ export class ConfixTemplateEmailComponent implements AfterViewInit, OnInit {
     this.changeDetector.detectChanges()
   }
 
-  ngOnInit(): void {}
+
+
+
 }
+
+
+

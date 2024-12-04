@@ -202,7 +202,9 @@
 .d-none {
   display: none;
 }
-
+.d-flex {
+  display: flex;
+}
 .menu-sidebar {
   .ant-menu-root {
     height: calc(100vh - 56px);

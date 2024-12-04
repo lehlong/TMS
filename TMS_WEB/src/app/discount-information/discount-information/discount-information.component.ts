@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { GoodsService } from '../../services/master-data/goods.service';
 import { DiscountInformationService } from '../../services/discount-information/discount-information.service';
 import { DiscountInformationListService } from '../../services/discount-information/discount-information-list.service';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-discount-information',
@@ -38,6 +39,7 @@ export class DiscountInformationComponent {
   code: any = ''
   title: any = 'Phân tích chiết khấu'
   name: any = ''
+  headerId: any = ''
   fDate: any = ''
   data: any = {
     lstDIL: [{}],
@@ -50,7 +52,10 @@ export class DiscountInformationComponent {
       code: '',
       hs: []
     }],
-    headers: []
+    header: {
+      name: '',
+      fData: ''
+    }
   }
 
   ngOnInit() {
@@ -114,7 +119,17 @@ export class DiscountInformationComponent {
   showHistoryExport(){
 
   }
-  exportExcel(){}
+  exportExcel(){
+    this._service.ExportExcel(this.code).subscribe({
+      next: (data) => {
+        var a = document.createElement('a')
+        a.href = environment.apiUrl + data
+        a.target = '_blank'
+        a.click()
+        a.remove()
+      },
+    })
+  }
 
 
   close() {

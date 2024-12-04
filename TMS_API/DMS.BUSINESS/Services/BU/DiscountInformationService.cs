@@ -8,23 +8,20 @@ using DMS.CORE.Entities.MD;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
-using PROJECT.Service.Extention;
-using Aspose.Words;
-using Table = DocumentFormat.OpenXml.Wordprocessing.Table;
-using DocumentFormat.OpenXml;
-using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
-using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.ComponentModel;
+using System.Drawing;
+using System.Reflection;
+
+using SMO;
+using OfficeOpenXml.Style;
+using System.IO.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using NPOI.SS.Util;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -90,12 +87,20 @@ namespace DMS.BUSINESS.Services.BU
                 
                 data.discount.Add(row1);
 
-                data.discount.Add(new discout
+
+                var row2 = new discout
                 {
                     colA = "II",
                     colB = "KHO KHÁCH HÀNG (CIF)",
                     IsBold = true
-                });
+                };
+                foreach (var c in lstCompetitor)
+                {
+                    row2.gaps.Add(null);
+                    row2.cuocVCs.Add(null);
+                }
+                data.discount.Add(row2);
+
 
                 foreach (var m in lstMarket)
                 {
@@ -173,20 +178,134 @@ namespace DMS.BUSINESS.Services.BU
                 //Get Data
                 var data = getAll(headerId);
 
-                var startRowPTCK = 0;
-                ISheet sheetPTCK = templateWorkbook.GetSheetAt(1);
-                styleCellBold.CloneStyleFrom(sheetPTCK.GetRow(1).Cells[0].CellStyle);
+                //var startRowPTCK = 0;
+                var numbCompetitor = data.Result.lstCompetitor.Count();
+                var numbGoods = data.Result.lstGoods.Count();
 
-                for(var i = 0; i < data.Result.discount.Count(); i++)
+                var numbCell = (numbCompetitor + 1) * 2 + numbGoods * (numbCompetitor * 2 + 1) + 3;
+                //styleCellBold.CloneStyleFrom(sheetPTCK.GetRow(1).Cells[0].CellStyle);
+                var cellH = 1;
+                ISheet sheetPTCK = templateWorkbook.GetSheetAt(0);
+
+                // row 1
+                #region exp header
+                IRow rowCur = ReportUtilities.CreateRow(ref sheetPTCK, 2, numbCell);
+
+                rowCur.Cells[cellH++].SetCellValue("STT");
+                rowCur.Cells[cellH++].SetCellValue("Điểm giao hàng");
+                rowCur.Cells[cellH].SetCellValue("Cự ly chuyển từ kho trung tâm (Km)");
+                sheetPTCK.AddMergedRegion(new CellRangeAddress(2, 3, cellH, cellH+=numbCompetitor));
+                cellH++;
+
+                rowCur.Cells[cellH].SetCellValue("Đơn giá cước vận chuyển");
+                sheetPTCK.AddMergedRegion(new CellRangeAddress(2, 3, cellH, cellH+=numbCompetitor ));
+                cellH++;
+                var startR2 = cellH;
+
+                rowCur.Cells[cellH].SetCellValue("CHIẾT KHẤU CÙNG ĐIỂM GIAO");
+                sheetPTCK.AddMergedRegion(new CellRangeAddress(2, 2, cellH, cellH+=(numbCompetitor*numbGoods*2 +numbGoods -1)  ));
+                cellH++;
+
+                 //row 2
+                IRow rowCur2 = ReportUtilities.CreateRow(ref sheetPTCK, 3, numbCell);
+                for (var i = 0; i < numbGoods; i++)
                 {
-                    //var data
+                    var lstGoods = data.Result.lstGoods[i];
+                    rowCur2.Cells[startR2].SetCellValue(lstGoods.Name);
+                    sheetPTCK.AddMergedRegion(new CellRangeAddress(3, 3, startR2, startR2 += (numbCompetitor * 2 )));
+                    startR2++;
                 }
 
-                    templateWorkbook.Write(outFileStream);
+                //Row 3
+                var startR3 = 3;
+                IRow rowCur3 = ReportUtilities.CreateRow(ref sheetPTCK, 4, numbCell);
+                IRow rowCur4 = ReportUtilities.CreateRow(ref sheetPTCK, 5, numbCell);
+                for (var i = 0; i < 2; i++)
+                {
+                    rowCur3.Cells[startR3].SetCellValue("PLXNA");
+                    sheetPTCK.AddMergedRegion(new CellRangeAddress(4, 5, startR3, startR3++));
+                    for (var j = 0; j < numbCompetitor; j++)
+                    {
+                        var lstCompetitor = data.Result.lstCompetitor[j];
+                        rowCur3.Cells[startR3].SetCellValue(lstCompetitor.Name);
+                        sheetPTCK.AddMergedRegion(new CellRangeAddress(4, 5, startR3, startR3++));
+                    }
+                }
+                var startR4 = 0;
+                for (var i = 0; i < numbGoods; i++)
+                {
+                    rowCur3.Cells[startR3].SetCellValue("PLXNA");
+                    sheetPTCK.AddMergedRegion(new CellRangeAddress(4, 5, startR3, startR3++));
+                    startR4 = startR3;
+                    for (var j = 0; j < numbCompetitor; j++)
+                    {
+                        var lstCompetitor = data.Result.lstCompetitor[j];
+                        rowCur3.Cells[startR3].SetCellValue(lstCompetitor.Name);
+                        sheetPTCK.AddMergedRegion(new CellRangeAddress(4, 4, startR3, startR3 += 1));
+                        startR3++;
+
+                        rowCur4.Cells[startR4++].SetCellValue("CK");
+                        rowCur4.Cells[startR4++].SetCellValue("Chênh lệch so \n với PLX(+/-)");
+                    }
+                }
+                #endregion
+
+                #region exp body
+                var startRow = 6;
+                var startCell = 1;
+
+                for (var i = 0; i < data.Result.discount.Count(); i++)
+                {
+                    var dataD = data.Result.discount[i];
+                    IRow rowBody = ReportUtilities.CreateRow(ref sheetPTCK, startRow++, numbCell);
+
+                    rowBody.Cells[startCell++].SetCellValue(dataD.colA);
+                    rowBody.Cells[startCell++].SetCellValue(dataD.colB);
+                    if (i != 1)
+                    {
+                        rowBody.Cells[startCell].CellStyle = styleCellNumber;
+                            rowBody.Cells[startCell++].SetCellValue(Convert.ToDouble(dataD.col1));
+
+                        for (var j = 0; j < dataD.gaps.Count(); j++)
+                        {
+                            rowBody.Cells[startCell].CellStyle = styleCellNumber;
+                            rowBody.Cells[startCell++].SetCellValue((dataD.gaps[j] == 0 || dataD.gaps[j] == null) ? 0 : Convert.ToDouble(dataD.gaps[j]));
+                        }
+                        rowBody.Cells[startCell].CellStyle = styleCellNumber;
+                        rowBody.Cells[startCell++].SetCellValue(dataD.col1 == 0 ? 0 : Convert.ToDouble(dataD.col4));
+                        for (var j = 0; j < dataD.cuocVCs.Count(); j++)
+                        {
+                            rowBody.Cells[startCell].CellStyle = styleCellNumber;
+                            rowBody.Cells[startCell++].SetCellValue((dataD.cuocVCs[j] == 0 || dataD.cuocVCs[j] == null) ? 0 : Convert.ToDouble(dataD.cuocVCs[j]));
+                        }
+                    
+                        for (var j = 0; j < data.Result.lstGoods.Count(); j++)
+                        {
+                            var dataCk = dataD.CK[j];
+                            rowBody.Cells[startCell].CellStyle = styleCellNumber;
+                            rowBody.Cells[startCell++].SetCellValue((dataD.CK[j].plxna == null || dataD.CK[j].plxna == 0) ? 0 : Convert.ToDouble(dataD.CK[j].plxna));
+
+                            for (var k = 0; k < dataCk.DT.Count(); k++)
+                            {
+                                for (var z = 0; z < dataCk.DT[k].ckCl.Count(); z++)
+                                {
+                                    rowBody.Cells[startCell].CellStyle = styleCellNumber;
+                                    rowBody.Cells[startCell++].SetCellValue(dataCk.DT[k].ckCl[z] == 0 ? 0 : Convert.ToDouble(dataCk.DT[k].ckCl[z]));
+                                }
+                            }
+                        }
+                    }
+
+                    startCell = 1;
+                }
+
+                #endregion
+                templateWorkbook.Write(outFileStream);
             }
             catch (Exception ex)
             {
-
+                this.Status = false;
+                this.Exception = ex;
             }
         }
         public ICellStyle GetCellStyleNumber(IWorkbook templateWorkbook)
@@ -204,6 +323,7 @@ namespace DMS.BUSINESS.Services.BU
             {
                 IFormFile file = ConvertMemoryStreamToIFormFile(memoryStream, "example.txt");
                 var folderName = Path.Combine($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}");
+                //var folderName = Path.Combine("D:\\dowloads\\xuatexcel");
                 if (!Directory.Exists(folderName))
                 {
                     Directory.CreateDirectory(folderName);
@@ -211,7 +331,7 @@ namespace DMS.BUSINESS.Services.BU
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 if (file.Length > 0)
                 {
-                    var fileName = $"{DateTime.Now.Day}{DateTime.Now.Month}{DateTime.Now.Year}_{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}PhanTichChietKhau.xlsx";
+                    var fileName = $"{DateTime.Now.Day}{DateTime.Now.Month}{DateTime.Now.Year}_{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}_PhanTichChietKhau.xlsx";
                     var fullPath = Path.Combine(pathToSave, fileName);
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {

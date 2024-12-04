@@ -110,6 +110,8 @@ namespace DMS.CORE
         }
 
         #region System Manage
+        public DbSet<TblAdConfigTemplate> TblAdConfigTemplate { get; set; }
+
         public DbSet<TblAdAccount> TblAdAccount { get; set; }
         public DbSet<TblAdAccountGroup> TblAdAccountGroup { get; set; }
         public DbSet<TblAdMenu> TblAdMenu { get; set; }

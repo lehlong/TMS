@@ -8,8 +8,8 @@ import { ActionLogComponent } from './action-log/action-log.component'
 import { DeviceConnectionListComponent } from './device-connection-list/device-connection-list.component'
 import { SystemParameterComponent } from './system-parameter/system-parameter.component'
 import { OrganizeComponent } from './organize/organize.component'
-import { ConfixTemplateEmailComponent } from './confixtemplate-email/confixtemplate-email.component'
-import { ConfixTemplateSmsComponent } from './confixtemplate-sms/confixtemplate-sms.component'
+import { ConfixTemplateEmailComponent } from './config-template-email/config-template-email.component'
+import { ConfixTemplateSmsComponent } from './config-template-sms/config-template-sms.component'
 export const systemManagerRoutes: Routes = [
   { path: 'account', component: AccountIndexComponent },
   { path: 'account-group', component: AccountGroupIndexComponent },
@@ -20,6 +20,6 @@ export const systemManagerRoutes: Routes = [
   { path: 'device-connection', component: DeviceConnectionListComponent },
   { path: 'system-parameter', component: SystemParameterComponent },
   { path: 'organization', component: OrganizeComponent },
-  { path: 'confixtemplate-email', component: ConfixTemplateEmailComponent },
-  { path: 'confixtemplate-sms', component: ConfixTemplateSmsComponent },
+  { path: 'config-template-email', component: ConfixTemplateEmailComponent },
+  { path: 'config-template-sms', component: ConfixTemplateSmsComponent },
 ]

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { ConfixTemplateEmailComponent } from './confixtemplate-email.component'
+import { ConfixTemplateEmailComponent } from './config-template-email.component'
 
 describe('ConfixTemplateEmailComponent', () => {
   let component: ConfixTemplateEmailComponent

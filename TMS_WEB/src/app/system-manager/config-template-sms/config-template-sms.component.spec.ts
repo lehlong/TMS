@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { ConfixTemplateSmsComponent } from './confixtemplate-sms.component'
+import { ConfixTemplateSmsComponent } from './config-template-sms.component'
 
 describe('ConfixTemplateSmsComponent', () => {
   let component: ConfixTemplateSmsComponent

@@ -15,6 +15,7 @@ namespace DMS.CORE.Entities.MD
         [Key]
         [Column("CODE", TypeName = "VARCHAR(50)")]
         public string Code { get; set; }
+
         [Column("NAME", TypeName = "NVARCHAR(255)")]
         public string Name { get; set; }
 

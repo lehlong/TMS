@@ -38,7 +38,10 @@ export class DiscountInformationListComponent{
       code: '',
       hs: []
     }],
-    headers: []
+    header: {
+      name: '',
+      fDate: ''
+    }
   }
   list: any[] = []
   loading: boolean = false
@@ -70,7 +73,6 @@ export class DiscountInformationListComponent{
   }
 
   getAll(){
-    this.isSubmit = false
     this._service.getAll().subscribe({
       next: (data) => {
         this.list = data
@@ -83,11 +85,11 @@ export class DiscountInformationListComponent{
   }
 
   submitForm(): void {
-    // this._service.createData(this.model).subscribe({
-    //   next: (data) => {
-    //     console.log(data)
-    //   }
-    // })
+    this._service.createData(this.model).subscribe({
+      next: (data) => {
+        console.log(data)
+      }
+    })
   }
   openCreate() {
     this.edit = false

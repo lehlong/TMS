@@ -28,13 +28,13 @@
       <tr>
         <th rowspan="4">STT</th>
         <th rowspan="4">Điểm giao hàng</th>
-        <th colspan="3" rowspan="2" class="align-center">Cự ly vận chuyển từ kho trung tâm (Km)</th>
-        <th colspan="3" rowspan="2" class="align-center">Đơn giá cước vận chuyển</th>
-        <th colspan="{{ data.lstGoods.length * 5 }}" rowspan="1">Chiết khấu cùng điểm giao</th>
+        <th colspan="{{ data.lstCompetitor.length + 1 }}" rowspan="2" class="align-center">Cự ly vận chuyển từ kho trung tâm (Km)</th>
+        <th colspan="{{ data.lstCompetitor.length + 1 }}" rowspan="2" class="align-center">Đơn giá cước vận chuyển</th>
+        <th colspan="{{ data.lstGoods.length * (data.lstCompetitor.length * 2 + 1) }}" rowspan="1">Chiết khấu cùng điểm giao</th>
       </tr>
       <tr>
         @for (i of data.lstGoods; track i){
-          <th colspan="5">{{ i.name }}</th>
+          <th colspan="{{ data.lstCompetitor.length * 2 + 1 }}">{{ i.name }}</th>
         }
       </tr>
       <tr>
