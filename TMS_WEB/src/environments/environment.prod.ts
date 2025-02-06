@@ -4,7 +4,7 @@ export const environment = {
   //baseApiUrl: 'https://localhost:4008/api',
   // apiUrl: 'http://sso.d2s.com.vn:4443/',
 
-  baseApiUrl: 'http://localhost:5203/api',
-  apiUrl: 'http://sso.d2s.com.vn:5203/',
+  baseApiUrl: 'http://sso.d2s.com.vn:1002/api',
+  apiUrl: 'http://sso.d2s.com.vn:1002/',
 
 };

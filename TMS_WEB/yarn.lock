@@ -1295,12 +1295,12 @@
     "@ckeditor/ckeditor5-utils" "43.3.1"
     ckeditor5 "43.3.1"
 
-"@ckeditor/ckeditor5-angular@^9.0.0":
-  version "9.0.0"
-  resolved "https://registry.npmjs.org/@ckeditor/ckeditor5-angular/-/ckeditor5-angular-9.0.0.tgz"
-  integrity sha512-/zV/N4sequ8D46/c5TYtenXu6yYg/5rolOUbCk0dVGMOizG3MwVSAFenYk+y/0y3+b03AE2nGZ0wIU4WRxtBAw==
+"@ckeditor/ckeditor5-angular@^9.1.0":
+  version "9.1.0"
+  resolved "https://registry.npmjs.org/@ckeditor/ckeditor5-angular/-/ckeditor5-angular-9.1.0.tgz"
+  integrity sha512-KJYdlH62CLd6EyaeMbFOfc4hsD+uRy9vsBAEEVY4jyTROROmODje4ZnfBtkz4KthuOVaDd+2ykwDQgAQ3gBIYA==
   dependencies:
-    "@ckeditor/ckeditor5-integrations-common" "^2.0.0"
+    "@ckeditor/ckeditor5-integrations-common" "^2.2.2"
     tslib "^2.3.0"
 
 "@ckeditor/ckeditor5-autoformat@43.3.1":
@@ -1620,10 +1620,10 @@
     "@ckeditor/ckeditor5-utils" "43.3.1"
     ckeditor5 "43.3.1"
 
-"@ckeditor/ckeditor5-integrations-common@^2.0.0":
-  version "2.2.0"
-  resolved "https://registry.npmjs.org/@ckeditor/ckeditor5-integrations-common/-/ckeditor5-integrations-common-2.2.0.tgz"
-  integrity sha512-qH68tqgyMibuejo+VAJ+iSH3ZmZweqBEzaawv9hZb4zzSMkBityWBjSc2hKXMtmJgCNsbSK84cyHpa5J/MNyLg==
+"@ckeditor/ckeditor5-integrations-common@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.npmjs.org/@ckeditor/ckeditor5-integrations-common/-/ckeditor5-integrations-common-2.2.2.tgz"
+  integrity sha512-SKGBBrwFFmSEZawR8P9tHGRq/l2OoqoJxy9f7j0HbDGEwIpSOsCSgH0xudD6lcEbWG4QWrCS28p5n8lgPA5elQ==
 
 "@ckeditor/ckeditor5-language@43.3.1":
   version "43.3.1"

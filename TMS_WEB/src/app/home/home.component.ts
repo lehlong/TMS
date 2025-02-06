@@ -10,8 +10,8 @@ declare var google: any
 })
 export class HomeComponent implements OnInit {
   ngOnInit(): void {
-    this.dashBoard1();
-    this.dashBoard2();
+    //this.dashBoard1();
+    //this.dashBoard2();
   }
 
   dashBoard1(){
