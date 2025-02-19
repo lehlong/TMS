@@ -3,17 +3,36 @@
     <nz-page-header nzBackIcon [nzTitle]="title" class="site-page-header">
       <nz-page-header-extra>
         <nz-space [nzWrap]="true" class="gap-[5px]">
-
-          <button class="!flex !items-center" nzType="default" nz-button (click)="getDataHeader()">
+          <button
+            class="!flex !items-center"
+            nzType="default"
+            nz-button
+            (click)="getDataHeader()"
+          >
             <span nz-icon nzType="right-square"></span> Dữ liệu đầu vào
           </button>
-          <button class="!flex !items-center" nzType="default" nz-button (click)="reCalculate()">
+          <button
+            class="!flex !items-center"
+            nzType="default"
+            nz-button
+            (click)="reCalculate()"
+          >
             <span nz-icon nzType="calculator"></span> Tính toán lại
           </button>
-          <button class="!flex !items-center" nzType="default" nz-button (click)="showHistoryExport()">
+          <button
+            class="!flex !items-center"
+            nzType="default"
+            nz-button
+            (click)="showHistoryExport()"
+          >
             <span nz-icon nzType="history"></span> Lịch sử xuất file
           </button>
-          <button class="!flex !items-center btn-excel" nzType="primary" nz-button (click)="exportExcel()">
+          <button
+            class="!flex !items-center btn-excel"
+            nzType="primary"
+            nz-button
+            (click)="exportExcel()"
+          >
             <span nz-icon nzType="file-excel"></span> Xuất Excel
           </button>
           <!-- <button nz-button nzType="default" (click)="fullScreen()"><span nz-icon nzType="fullscreen"></span></button> -->
@@ -22,92 +41,144 @@
     </nz-page-header>
   </div>
 
-  <nz-table class="ant-table-content" [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered
-    #Table [nzData]="data.discount">
+  <nz-table
+    class="ant-table-content"
+    [nzShowPagination]="false"
+    nzSize="small"
+    [nzFrontPagination]="false"
+    nzBordered
+    #Table
+    [nzData]="data.discount"
+  >
     <thead>
       <tr>
         <th rowspan="4">STT</th>
         <th rowspan="4">Điểm giao hàng</th>
-        <th colspan="{{ data.lstCompetitor.length + 1 }}" rowspan="2" class="align-center">Cự ly vận chuyển từ kho trung tâm (Km)</th>
-        <th colspan="{{ data.lstCompetitor.length + 1 }}" rowspan="2" class="align-center">Đơn giá cước vận chuyển</th>
-        <th colspan="{{ data.lstGoods.length * (data.lstCompetitor.length * 2 + 1) }}" rowspan="1">Chiết khấu cùng điểm giao</th>
+        <!-- <th
+          colspan="{{ data.lstCompetitor.length + 1 }}"
+          rowspan="2"
+          class="align-center"
+        >
+          Cự ly vận chuyển từ kho trung tâm (Km)
+        </th> -->
+        <!-- <th
+          colspan="{{ data.lstCompetitor.length + 1 }}"
+          rowspan="2"
+          class="align-center"
+        >
+          Đơn giá cước vận chuyển
+        </th> -->
+        <th
+          colspan="{{
+            data.lstGoods.length * (data.lstCompetitor.length * 2 + 1)
+          }}"
+          rowspan="1"
+        >
+          Chiết khấu cùng điểm giao
+        </th>
       </tr>
       <tr>
-        @for (i of data.lstGoods; track i){
-          <th colspan="{{ data.lstCompetitor.length * 2 + 1 }}">{{ i.name }}</th>
+        @for (i of data.lstGoods; track i) {
+          <th colspan="{{ data.lstCompetitor.length * 2 + 1 }}">
+            {{ i.name }}
+          </th>
         }
       </tr>
       <tr>
-        <th rowspan="4">PLXNA</th>
-        @for (i of data.lstCompetitor; track i){
-          <th rowspan="2" class="align-center"> {{ i.name }}</th>
-        }
+        <!-- <th rowspan="4">PLXNA</th>
+        @for (i of data.lstCompetitor; track i) {
+          <th rowspan="2" class="align-center">{{ i.name }}</th>
+        } -->
 
-        <th rowspan="2">PLXNA</th>
-        @for (i of data.lstCompetitor; track i){
-          <th rowspan="2" class="align-center"> {{ i.name }}</th>
-        }
-        @for (i of data.lstGoods; track i){
+        <!-- <th rowspan="2">PLXNA</th>
+        @for (i of data.lstCompetitor; track i) {
+          <th rowspan="2" class="align-center">{{ i.name }}</th>
+        } -->
+        @for (i of data.lstGoods; track i) {
           <th rowspan="2">PLXNA</th>
-          @for (c of data.lstCompetitor; track c){
-            <th colspan="2" rowspan="1" class="align-center">{{c.name}}</th>
+          @for (c of data.lstCompetitor; track c) {
+            <th colspan="2" rowspan="1" class="align-center">{{ c.name }}</th>
           }
         }
-
       </tr>
       <tr>
-        @for (i of data.lstGoods ; track i){
-          @for (c of data.lstCompetitor; track c){
-            <th rowspan="2" class="align-center"> CK </th>
-            <th rowspan="2" class="align-center"> CHÊNH LỆCH <br> SO PLX (+/-)</th>
+        @for (i of data.lstGoods; track i) {
+          @for (c of data.lstCompetitor; track c) {
+            <th rowspan="2" class="align-center">CK</th>
+            <th rowspan="2" class="align-center">
+              CHÊNH LỆCH <br />
+              SO PLX (+/-)
+            </th>
           }
         }
       </tr>
     </thead>
     <tbody>
       @for (d of Table.data; track d) {
-      <tr>
-        <td [ngStyle]="{'font-weight' : d.isBold ? '600' : ''}">{{ d.colA }}</td>
-        <td [ngStyle]="{'font-weight' : d.isBold ? '600' : ''}">{{ d.colB }}</td>
-        <td class="align-right">{{ d.col1}}</td>
-        @for(gap of d.gaps; track gap){
-          <td class="align-right">{{ gap }}</td>
-        }
-          <td class="align-right">{{ d.col4}}</td>
-        @for(cuoc of d.cuocVCs; track cuoc){
-          <td class="align-right">{{ cuoc }}</td>
-        }
-        @for (cK of d.ck; track cK) {
-          <td class="align-right">{{ cK.plxna }}</td>
-          @for ( dT of cK.dt; track dT){
-            @for (ckCL of dT.ckCl; track ckCL){
-              <td [ngStyle]="{'color' : ckCL < 0 ? 'red' : ''}" class="align-right">{{ ckCL }}</td>
+        <tr>
+          <td [ngStyle]="{ 'font-weight': d.isBold ? '600' : '' }">
+            {{ d.colA }}
+          </td>
+          <td [ngStyle]="{ 'font-weight': d.isBold ? '600' : '' }">
+            {{ d.colB }}
+          </td>
+          <!-- <td class="align-right">{{ d.col1 }}</td>
+          @for (gap of d.gaps; track gap) {
+            <td class="align-right">{{ gap }}</td>
+          }
+          <td class="align-right">{{ d.col4 }}</td>
+          @for (cuoc of d.cuocVCs; track cuoc) {
+            <td class="align-right">{{ cuoc }}</td>
+          } -->
+          @for (cK of d.ck; track cK) {
+            <td class="align-right">{{ cK.plxna }}</td>
+            @for (dT of cK.dt; track dT) {
+              @for (ckCL of dT.ckCl; track ckCL) {
+                <td
+                  [ngStyle]="{ color: ckCL < 0 ? 'red' : '' }"
+                  class="align-right"
+                >
+                  {{ ckCL }}
+                </td>
+              }
             }
           }
-        }
-      </tr>
+        </tr>
       }
     </tbody>
   </nz-table>
 
-
   <!--Create Update-->
-  <nz-drawer [nzMask]="!edit" [nzWidth]="'60%'" [nzVisible]="visible" nzPlacement="right"
-    [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
+  <nz-drawer
+    [nzMask]="!edit"
+    [nzWidth]="'60%'"
+    [nzVisible]="visible"
+    nzPlacement="right"
+    [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '"
+    [nzExtra]="extra"
+    (nzOnClose)="close()"
+  >
     <ng-container *nzDrawerContent>
-
       <nz-divider nzText="THÔNG TIN" nzOrientation="left"></nz-divider>
       <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
         <div nz-col class="gutter-row" [nzSpan]="18">
           <div class="inner-box">
             <label>Tên đợt nhập</label>
-            <input nz-input class="input-v align-left" [(ngModel)]="model.header.name" />
+            <input
+              nz-input
+              class="input-v align-left"
+              [(ngModel)]="model.header.name"
+            />
           </div>
         </div>
         <div nz-col class="gutter-row" [nzSpan]="6">
           <div class="inner-box">
             <label>Ngày hiệu lực</label>
-            <nz-date-picker nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss" [(ngModel)]="model.header.fDate"></nz-date-picker>
+            <nz-date-picker
+              nzShowTime
+              nzFormat="dd-MM-yyyy HH:mm:ss"
+              [(ngModel)]="model.header.fDate"
+            ></nz-date-picker>
           </div>
         </div>
       </div>
@@ -117,27 +188,44 @@
         <thead>
           <tr>
             <th rowspan="2" [nzAlign]="'center'"></th>
-            @for(c of data.lstCompetitor; track c){
+            @for (c of data.lstCompetitor; track c) {
               <th rowspan="2" [nzAlign]="'center'">{{ c.name }}</th>
             }
           </tr>
         </thead>
         <tbody>
           @for (d of hsTable.data; track data) {
-          <tr>
-            <td style="width: 20%;">
-              <nz-select nzShowSearch nzAllowClear placeholder="Chọn mặt hàng" [(ngModel)]="d.code"
-                [nzDisabled]="true" style="width: 100%;">
-                <nz-option cdkScrollable *ngFor="let item of data.lstGoods" [nzLabel]="item.name" [nzValue]="item.code">
-                </nz-option>
-              </nz-select>
-            </td>
-            @for(hs of d.hs; track hs){
-            <td>
-              <input class="input-v" nz-input [(ngModel)]="hs.discount" placeholder="0" type="number" />
-            </td>
-            }
-          </tr>
+            <tr>
+              <td style="width: 20%">
+                <nz-select
+                  nzShowSearch
+                  nzAllowClear
+                  placeholder="Chọn mặt hàng"
+                  [(ngModel)]="d.code"
+                  [nzDisabled]="true"
+                  style="width: 100%"
+                >
+                  <nz-option
+                    cdkScrollable
+                    *ngFor="let item of data.lstGoods"
+                    [nzLabel]="item.name"
+                    [nzValue]="item.code"
+                  >
+                  </nz-option>
+                </nz-select>
+              </td>
+              @for (hs of d.hs; track hs) {
+                <td>
+                  <input
+                    class="input-v"
+                    nz-input
+                    [(ngModel)]="hs.discount"
+                    placeholder="0"
+                    type="number"
+                  />
+                </td>
+              }
+            </tr>
           }
         </tbody>
       </nz-table>
@@ -146,16 +234,28 @@
   <ng-template #extra>
     <nz-space>
       <ng-container>
-        <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
-          (click)="submitForm()">
+        <button
+          [nzLoading]="loading"
+          *nzSpaceItem
+          nz-button
+          nzType="primary"
+          class="!flex !items-center"
+          (click)="submitForm()"
+        >
           <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
         </button>
       </ng-container>
-      <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger
-        (click)="close()">
+      <button
+        *nzSpaceItem
+        nz-button
+        nzType="default"
+        nzType="primary"
+        class="!flex !items-center"
+        nzDanger
+        (click)="close()"
+      >
         <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
       </button>
     </nz-space>
-
-
-
+  </ng-template>
+</div>
