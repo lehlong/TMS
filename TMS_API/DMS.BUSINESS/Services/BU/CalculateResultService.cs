@@ -758,47 +758,47 @@ namespace DMS.BUSINESS.Services.BU
                 #endregion
 
                 #region DO FO
-                //var lstMapDOFO = mappingBBDO.Where(x => x.Type == "BBFO").ToList();
-                //var _oDOFO = 1;
-                //foreach (var _c in lstMapDOFO.Select(x => x.CustomerCode).ToList().Distinct().ToList())
-                //{
-                //    var g = lstGoods.FirstOrDefault(x => x.Code == lstMapDOFO.FirstOrDefault().GoodsCode);
-                //    var lstPointCode = lstMapDOFO.Where(x => x.CustomerCode == _c).Select(x => x.DeliveryPointCode).ToList();
-                //    var lstPoint = dataPoint.Where(x => lstPointCode.Contains(x.Code)).ToList();
+                var lstMapDOFO = mappingBBDO.Where(x => x.Type == "BBFO").ToList();
+                var _oDOFO = 1;
+                foreach (var _c in lstMapDOFO.Select(x => x.CustomerCode).ToList().Distinct().ToList())
+                {
+                    var g = lstGoods.FirstOrDefault(x => x.Code == lstMapDOFO.FirstOrDefault().GoodsCode);
+                    var lstPointCode = lstMapDOFO.Where(x => x.CustomerCode == _c).Select(x => x.DeliveryPointCode).ToList();
+                    var lstPoint = dataPoint.Where(x => lstPointCode.Contains(x.Code)).ToList();
 
-                //    data.BBFO.Add(new BBFO
-                //    {
-                //        ColA = _oDOFO.ToString(),
-                //        ColB = lstCustomer.FirstOrDefault(x => x.Code == _c)?.Name,
-                //        IsBold = true,
-                //    });
-                //    foreach (var p in lstPoint)
-                //    {
-                //        var _5 = lstMapDOFO.FirstOrDefault(x => x.CustomerCode == _c && x.DeliveryPointCode == p.Code);
-                //        var i = new BBFO
-                //        {
-                //            ColA = "-",
-                //            ColB = p.Name,
-                //            ColC = g.Name,
-                //            Col1 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col8) ?? 0),
-                //            Col2 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col9) ?? 0),
-                //            Col4 = data.PT.FirstOrDefault(x => x.IsBold == false)?.Col4,
-                //            Col5 = _5?.CuocVcBq,
-                //            Col6 = Math.Round(lstCustomer.FirstOrDefault(x => x.Code == _c)?.BankLoanInterest ?? 0),
-                //        };
-                //        i.Col3 = Math.Round(i.Col4 + i.Col5 + i.Col6 ?? 0);
-                //        var _8 = data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col7);
-                //        i.Col8 = _8 == 0 ? 0 : Math.Round(_8 / 100 ?? 0);
-                //        i.Col7 = Math.Round(i.Col8 + i.Col3 - i.Col2 ?? 0);
-                //        i.Col10 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col6) + i.Col7 ?? 0);
-                //        i.Col9 = i.Col10 == 0 ? 0 : Math.Round(i.Col10 / 1.1M - data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col2) ?? 0);
+                    data.BBFO.Add(new BBFO
+                    {
+                        ColA = _oDOFO.ToString(),
+                        ColB = lstCustomer.FirstOrDefault(x => x.Code == _c)?.Name,
+                        IsBold = true,
+                    });
+                    foreach (var p in lstPoint)
+                    {
+                        var _5 = lstMapDOFO.FirstOrDefault(x => x.CustomerCode == _c && x.DeliveryPointCode == p.Code);
+                        var i = new BBFO
+                        {
+                            ColA = "-",
+                            ColB = p.Name,
+                            ColC = g.Name,
+                            Col1 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col8) ?? 0),
+                            Col2 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col9) ?? 0),
+                            Col4 = data.PT.FirstOrDefault(x => x.IsBold == false)?.Col4,
+                            Col5 = _5?.CuocVcBq,
+                            Col6 = Math.Round(lstCustomer.FirstOrDefault(x => x.Code == _c)?.BankLoanInterest ?? 0),
+                        };
+                        i.Col3 = Math.Round(i.Col4 + i.Col5 + i.Col6 ?? 0);
+                        var _8 = data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col7);
+                        i.Col8 = _8 == 0 ? 0 : Math.Round(_8 / 100 ?? 0);
+                        i.Col7 = Math.Round(i.Col8 + i.Col3 - i.Col2 ?? 0);
+                        i.Col10 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col6) + i.Col7 ?? 0);
+                        i.Col9 = i.Col10 == 0 ? 0 : Math.Round(i.Col10 / 1.1M - data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col2) ?? 0);
 
 
-                //        data.BBFO.Add(i);
-                //    }
+                        data.BBFO.Add(i);
+                    }
 
-                //    _oDOFO++;
-                //}
+                    _oDOFO++;
+                }
                 #endregion
 
                 #region VK11 BB
@@ -1574,66 +1574,66 @@ namespace DMS.BUSINESS.Services.BU
 
                 #region Export BB FO
 
-                //var startRowBBFO = 11;
-                //ISheet sheetBBFO = templateWorkbook.GetSheetAt(6);
-                //styleCellBold.CloneStyleFrom(sheetBBFO.GetRow(1).Cells[0].CellStyle);
+                var startRowBBFO = 11;
+                ISheet sheetBBFO = templateWorkbook.GetSheetAt(6);
+                styleCellBold.CloneStyleFrom(sheetBBFO.GetRow(1).Cells[0].CellStyle);
 
 
-                //for (var i = 0; i < data.Result.BBFO.Count(); i++)
-                //{
-                //    var dataRow = data.Result.BBFO[i];
-                //    IRow rowCur = ReportUtilities.CreateRow(ref sheetBBFO, startRowBBFO++, 14);
-                //    rowCur.Cells[0].SetCellValue(dataRow.ColA);
-                //    rowCur.Cells[1].SetCellValue(dataRow.ColB);
-                //    rowCur.Cells[2].SetCellValue(dataRow.ColC);
+                for (var i = 0; i < data.Result.BBFO.Count(); i++)
+                {
+                    var dataRow = data.Result.BBFO[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetBBFO, startRowBBFO++, 14);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                    rowCur.Cells[2].SetCellValue(dataRow.ColC);
 
 
-                //    rowCur.Cells[4].CellStyle = styleCellNumber;
-                //    rowCur.Cells[4].SetCellValue(dataRow.Col1 == 0 ? 0 : Convert.ToDouble(dataRow.Col1));
+                    rowCur.Cells[4].CellStyle = styleCellNumber;
+                    rowCur.Cells[4].SetCellValue(dataRow.Col1 == 0 ? 0 : Convert.ToDouble(dataRow.Col1));
 
-                //    rowCur.Cells[5].CellStyle = styleCellNumber;
-                //    rowCur.Cells[5].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
+                    rowCur.Cells[5].CellStyle = styleCellNumber;
+                    rowCur.Cells[5].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
 
-                //    rowCur.Cells[6].CellStyle = styleCellNumber;
-                //    rowCur.Cells[6].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+                    rowCur.Cells[6].CellStyle = styleCellNumber;
+                    rowCur.Cells[6].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
 
-                //    rowCur.Cells[7].CellStyle = styleCellNumber;
-                //    rowCur.Cells[7].SetCellValue(dataRow.Col4 == 0 ? 0 : Convert.ToDouble(dataRow.Col4));
+                    rowCur.Cells[7].CellStyle = styleCellNumber;
+                    rowCur.Cells[7].SetCellValue(dataRow.Col4 == 0 ? 0 : Convert.ToDouble(dataRow.Col4));
 
-                //    rowCur.Cells[8].CellStyle = styleCellNumber;
-                //    rowCur.Cells[8].SetCellValue(dataRow.Col5 == 0 ? 0 : Convert.ToDouble(dataRow.Col5));
+                    rowCur.Cells[8].CellStyle = styleCellNumber;
+                    rowCur.Cells[8].SetCellValue(dataRow.Col5 == 0 ? 0 : Convert.ToDouble(dataRow.Col5));
 
-                //    rowCur.Cells[9].CellStyle = styleCellNumber;
-                //    rowCur.Cells[9].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+                    rowCur.Cells[9].CellStyle = styleCellNumber;
+                    rowCur.Cells[9].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
 
-                //    rowCur.Cells[10].CellStyle = styleCellNumber;
-                //    rowCur.Cells[10].SetCellValue(dataRow.Col7 == 0 ? 0 : Convert.ToDouble(dataRow.Col7));
+                    rowCur.Cells[10].CellStyle = styleCellNumber;
+                    rowCur.Cells[10].SetCellValue(dataRow.Col7 == 0 ? 0 : Convert.ToDouble(dataRow.Col7));
 
-                //    rowCur.Cells[11].CellStyle = styleCellNumber;
-                //    rowCur.Cells[11].SetCellValue(dataRow.Col8 == 0 ? 0 : Convert.ToDouble(dataRow.Col8));
+                    rowCur.Cells[11].CellStyle = styleCellNumber;
+                    rowCur.Cells[11].SetCellValue(dataRow.Col8 == 0 ? 0 : Convert.ToDouble(dataRow.Col8));
 
-                //    rowCur.Cells[12].CellStyle = styleCellNumber;
-                //    rowCur.Cells[12].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+                    rowCur.Cells[12].CellStyle = styleCellNumber;
+                    rowCur.Cells[12].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
 
-                //    rowCur.Cells[13].CellStyle = styleCellNumber;
-                //    rowCur.Cells[13].SetCellValue(dataRow.Col10 == 0 ? 0 : Convert.ToDouble(dataRow.Col10));
-                //    for (var j = 0; j < 14; j++)    
-                //    {
-                //        if (dataRow.IsBold)
-                //        {
-                //            rowCur.Cells[j].CellStyle = styleCellBold;
-                //            rowCur.Cells[j].CellStyle.SetFont(fontBold);
-                //        }
-                //        else
-                //        {
-                //            rowCur.Cells[j].CellStyle.SetFont(font);
-                //        }
-                //        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
-                //        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
-                //        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
-                //        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
-                //    }
-                //}
+                    rowCur.Cells[13].CellStyle = styleCellNumber;
+                    rowCur.Cells[13].SetCellValue(dataRow.Col10 == 0 ? 0 : Convert.ToDouble(dataRow.Col10));
+                    for (var j = 0; j < 14; j++)
+                    {
+                        if (dataRow.IsBold)
+                        {
+                            rowCur.Cells[j].CellStyle = styleCellBold;
+                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                        }
+                        else
+                        {
+                            rowCur.Cells[j].CellStyle.SetFont(font);
+                        }
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
 
                 #endregion
 

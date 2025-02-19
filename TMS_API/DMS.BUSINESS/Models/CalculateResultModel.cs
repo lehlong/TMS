@@ -25,7 +25,7 @@ namespace DMS.BUSINESS.Models
         public List<VK11TNPP> VK11TNPP { get; set; } = new List<VK11TNPP>();
         public List<VK11BB> VK11BB { get; set; } = new List<VK11BB>();
         public List<BBDO> BBDO { get; set; } = new List<BBDO>();
-        //public List<BBFO> BBFO { get; set; } = new List<BBFO>();
+        public List<BBFO> BBFO { get; set; } = new List<BBFO>();
         public List<Summary> Summary { get; set; } = new List<Summary>();
     }
     public class DLG
