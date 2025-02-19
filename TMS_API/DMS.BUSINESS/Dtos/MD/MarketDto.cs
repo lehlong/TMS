@@ -26,6 +26,9 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Khoảng cách")]
         public decimal? Gap { get; set; }
 
+        [Description("hệ số")]
+        public decimal? Coefficient { get; set; }
+        
         [Description("Cước VC bình quân")]
         public decimal? CuocVCBQ { get; set; }
 

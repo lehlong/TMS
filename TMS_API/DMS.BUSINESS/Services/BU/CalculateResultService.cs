@@ -273,7 +273,7 @@ namespace DMS.BUSINESS.Services.BU
                             var d = new PT_GG
                             {
                                 Code = _l.Code,
-                                VAT = p - i.Col5 * 1.1M + i.Col6
+                                VAT = p - i.Col5 * m.Coefficient + i.Col6
                             };
                             d.VAT = Math.Round(d.VAT == null ? 0M : d.VAT / 10 ?? 0) * 10;
                             d.NonVAT = d.VAT == 0 ? 0 : d.VAT / 1.1M;

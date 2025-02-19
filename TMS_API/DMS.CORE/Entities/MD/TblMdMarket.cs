@@ -22,6 +22,9 @@ namespace DMS.CORE.Entities.MD
         [Column("GAP", TypeName = "DECIMAL(18,0)")]
         public decimal? Gap { get; set; }
 
+        [Column("COEFFICIENT", TypeName = "DECIMAL(18,1)")]
+        public decimal? Coefficient { get; set; }
+
         [Column("LOCAL_CODE", TypeName = "VARCHAR(50)")]
         public string LocalCode { get; set; }
 

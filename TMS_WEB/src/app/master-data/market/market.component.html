@@ -38,6 +38,9 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('gap', $event)">
             Cự ly BQ (Km)
           </th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('coefficient', $event)">
+            Hệ số
+          </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('localCode', $event)">
             Vùng
           </th>
@@ -70,6 +73,7 @@
           </td>
           <td >{{ data.name }}</td>
           <td class="align-right">{{ data.gap }}</td>
+          <td class="align-right">{{ data.coefficient }}</td>
           <td class="align-right">
             <span *ngFor="let item of localResult" >
               <span *ngIf="item.code == data.localCode">{{ item.name }}</span>
@@ -113,6 +117,9 @@
 
       <app-input-clear placeholder="Nhập cự ly BQ" [required]="true" label="Cự ly BQ (Km)"
       [control]="$any(validateForm).controls['gap']"></app-input-clear>
+
+      <app-input-clear placeholder="Hệ số" [required]="true" label="Cự ly BQ (Km)"
+      [control]="$any(validateForm).controls['coefficient']"></app-input-clear>
 
       <nz-form-item>
         <nz-form-label [nzRequired]="true">Kho</nz-form-label>
