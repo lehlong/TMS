@@ -33,6 +33,7 @@ export class CalculateResultListComponent {
   filter = new CalculateResultListFilter()
   paginationResult = new PaginationResult()
   loading: boolean = false
+  isName : boolean = false
   lst: any[] = []
   CALCULATE_RESULT_LIST_RIGHTS = CALCULATE_RESULT_LIST_RIGHTS
 
@@ -138,7 +139,7 @@ export class CalculateResultListComponent {
 
   deleteItem(code: string | number) {
     this._service.deleteCalculateResultList(code).subscribe({
-      next: (data) => {
+      next: (_data) => {
         this.search()
       },
       error: (response) => {
@@ -178,5 +179,9 @@ export class CalculateResultListComponent {
     row.v2_V1 = row.gblV2 - row.gblcsV1
     row.gny = row.gblcsV1 + row.mtsV1
     row.clgblv = row.gblV2 - row.gny
+  }
+
+  checkName(_name: string){
+    _name == '' ? this.isName = true : this.isName = false
   }
 }

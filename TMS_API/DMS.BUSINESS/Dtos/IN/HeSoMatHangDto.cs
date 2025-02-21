@@ -5,6 +5,7 @@ using System.ComponentModel;
 
 using Common;
 using DMS.CORE.Entities.IN;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DMS.BUSINESS.Dtos.IN
 {
@@ -38,6 +39,9 @@ namespace DMS.BUSINESS.Dtos.IN
 
         [Description("Giảm giá FOB có VAT & BVMT")]
         public decimal GiamGiaFob { get; set; }
+
+        [Description("Lãi Gộp điều tiết")]
+        public decimal? LaiGopDieuTiet { get; set; }
 
         [Description("Từ ngày")]
         public DateTime? FromDate { get; set; }

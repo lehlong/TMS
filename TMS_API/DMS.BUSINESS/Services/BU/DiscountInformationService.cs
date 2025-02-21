@@ -22,6 +22,7 @@ using OfficeOpenXml.Style;
 using System.IO.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using NPOI.SS.Util;
+using DMS.CORE.Entities.IN;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -30,6 +31,9 @@ namespace DMS.BUSINESS.Services.BU
         Task<string> SaveFileHistory(MemoryStream outFileStream, string headerId);
         void ExportExcel(ref MemoryStream outFileStream, string path, string headerId);
         Task<DiscountInformationModel> getAll(string Code);
+        //Task<CompetitorModel> GetDataInput(string code);
+        Task UpdateDataInput(CompetitorModel model);
+
     }
     public class DiscountInformationService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdGoods, GoodsDto> (dbContext, mapper), IDiscountInformationService
     {
@@ -151,8 +155,30 @@ namespace DMS.BUSINESS.Services.BU
                 this.Exception = ex;
                 return new DiscountInformationModel();
             }
-        }   
+        }
 
+
+        public async Task UpdateDataInput(CompetitorModel model)
+        {
+            try
+            {
+                
+                _dbContext.TblBuDiscountInformationList.Update(model.Header);
+
+                foreach (var g in model.goodss)
+                {
+                    _dbContext.TblInDiscountCompetitor.UpdateRange(g.HS);
+                   
+                }
+
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                Status = false;
+                Exception = ex;
+            }
+        }
         public void ExportExcel(ref MemoryStream outFileStream, string path, string headerId)
         {
             try

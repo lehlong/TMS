@@ -56,7 +56,11 @@
       <div nz-col class="gutter-row" [nzSpan]="18">
         <div class="inner-box">
           <label>Tên đợt nhập</label>
-          <input nz-input  class="input-v align-left" [(ngModel)]="model.header.name" />
+          <input nz-input  class="input-v align-left" [(ngModel)]="model.header.name"  (keyup)="checkName(model.header.name)"/>
+
+          <div *ngIf="isName" style="color: red">
+            Tên đợt nhập là bắt buộc!
+          </div>
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="6">

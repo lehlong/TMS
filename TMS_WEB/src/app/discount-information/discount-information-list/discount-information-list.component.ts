@@ -29,6 +29,7 @@ export class DiscountInformationListComponent{
   paginationResult = new PaginationResult()
   filter = new DiscountInformationListFilter()
   visible: boolean = false
+  isName: boolean = false
   goodsResult: any[] = []
   competitorResult: any[] = []
   code: any = null
@@ -173,4 +174,7 @@ export class DiscountInformationListComponent{
     })
   }
 
+  checkName(_name: string){
+    _name == '' ? this.isName = true : this.isName = false
+  }
 }

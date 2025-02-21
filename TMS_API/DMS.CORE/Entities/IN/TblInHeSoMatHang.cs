@@ -33,6 +33,9 @@ namespace DMS.CORE.Entities.IN
         [Column("GIAM_GIA_FOB", TypeName = "DECIMAL(18,0)")]
         public decimal GiamGiaFob { get; set; }
 
+        [Column("LAI_GOP_DIEU_TIET", TypeName = "DECIMAL(18,0)")]
+        public decimal? LaiGopDieuTiet { get; set; }
+
         [Column("FROM_DATE", TypeName = "DATETIME")]
         public DateTime? FromDate { get; set; }
 

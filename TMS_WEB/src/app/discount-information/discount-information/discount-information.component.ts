@@ -34,7 +34,7 @@ export class DiscountInformationComponent {
 
 
   loading: boolean = false
-  edit: boolean = false
+  edit: boolean = true
   visible: boolean = false
   code: any = ''
   title: any = 'Phân tích chiết khấu'
@@ -99,6 +99,19 @@ export class DiscountInformationComponent {
       }
     })
   }
+
+  updateDataInput() {
+    this._service.UpdateDataInput(this.model).subscribe({
+      next: (data) => {
+        console.log(data)
+        window.location.reload()
+      },
+      error: (err) => {
+        console.log(err)
+      },
+    })
+  }
+
   changeTitle(name: string, fDate: string){
     this.title = 'Phân tích chiết khấu ngày ' + fDate
     console.log(name + fDate);
@@ -109,7 +122,10 @@ export class DiscountInformationComponent {
     this._discountInformationList.getObjectCreate(this.code).subscribe({
       next: (data) => {
         this.visible = true
+
         this.model = data
+        console.log(this.model);
+
       },
     })
   }

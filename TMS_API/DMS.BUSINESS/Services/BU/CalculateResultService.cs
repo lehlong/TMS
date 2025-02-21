@@ -139,6 +139,9 @@ namespace DMS.BUSINESS.Services.BU
                     _oDlg++;
                 }
 
+
+
+
                 data.DLG.Dlg_4.Add(new DLG_4
                 {
                     ColA = "I",
@@ -163,7 +166,7 @@ namespace DMS.BUSINESS.Services.BU
                         Col5 = (hsmh.Sum(x => x.ThueBvmt) + hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
                         Col6 = dlg1.Sum(x => x.Col6),
                         Col14 = hsmh.Sum(x => x.GiamGiaFob),
-                        Col10 = 0
+                        Col10 = hsmh.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmh.Sum(x => x.LaiGopDieuTiet),
                     };
                     if (i.Col6 != 0)
                     {
@@ -208,7 +211,7 @@ namespace DMS.BUSINESS.Services.BU
                         Col5 = (hsmh.Sum(x => x.ThueBvmt) + hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
                         Col6 = dlg1.Sum(x => x.Col7),
                         Col14 = hsmh.Sum(x => x.GiamGiaFob),
-                        Col10 = 0
+                        Col10 = hsmh.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmh.Sum(x => x.LaiGopDieuTiet),
                     };
                     if (i.Col6 != 0)
                     {
@@ -273,7 +276,8 @@ namespace DMS.BUSINESS.Services.BU
                             var d = new PT_GG
                             {
                                 Code = _l.Code,
-                                VAT = p - i.Col5 * m.Coefficient + i.Col6
+                                //VAT = p - i.Col5 * m.Coefficient + i.Col6
+                                VAT = p - i.Col5 * 1.1M + i.Col6
                             };
                             d.VAT = Math.Round(d.VAT == null ? 0M : d.VAT / 10 ?? 0) * 10;
                             d.NonVAT = d.VAT == 0 ? 0 : d.VAT / 1.1M;

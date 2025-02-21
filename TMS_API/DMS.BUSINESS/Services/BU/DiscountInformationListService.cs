@@ -67,7 +67,7 @@ namespace DMS.BUSINESS.Services.BU
             try
             {
                 var obj = new CompetitorModel();
-                obj.Header.Code = Guid.NewGuid().ToString();
+                obj.Header.Code = code != null ? code : Guid.NewGuid().ToString();
                 obj.Header.Name = await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.Name).FirstOrDefaultAsync() ?? "";
                 obj.Header.FDate = code != null ? await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.FDate).FirstOrDefaultAsync() : DateTime.Now;
                 obj.Header.IsActive = true;
@@ -84,7 +84,7 @@ namespace DMS.BUSINESS.Services.BU
                     {
                         goods.HS.Add(new TblInDiscountCompetitor
                         {
-                            Code = Guid.NewGuid().ToString(),
+                            Code = code != null ? lstDiscountInformation.Where(x => x.GoodsCode == g.Code && x.CompetitorCode == c.Code).Select(x => x.Code).FirstOrDefault() : Guid.NewGuid().ToString(),
                             HeaderCode = obj.Header.Code,
                             GoodsCode = g.Code,
                             Discount = code != null ? lstDiscountInformation.Where(x => x.GoodsCode == g.Code && x.CompetitorCode == c.Code).Sum(x => x.Discount ?? 0) : 0,
