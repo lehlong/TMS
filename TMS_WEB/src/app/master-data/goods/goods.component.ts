@@ -43,7 +43,7 @@ export class GoodsComponent {
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách loại hàng hoá',
+        name: 'Danh sách Mặt hàng',
         path: 'master-data/goods',
       },
     ])

@@ -1,6 +1,6 @@
 <div class="container-list" [appPermission]="GOODS_RIGHTS.LIST">
   <div class="site-page-header-ghost-wrapper">
-    <nz-page-header nzBackIcon nzTitle="Loại hàng hoá" nzSubtitle="Danh sách loại hàng hoá" class="site-page-header">
+    <nz-page-header nzBackIcon nzTitle="Mặt hàng" nzSubtitle="Danh sách mặt hàng" class="site-page-header">
       <nz-page-header-extra>
         <nz-space [nzWrap]="true" class="gap-[5px]">
           <nz-space>
@@ -49,7 +49,7 @@
             Loại mặt hàng
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('thueBvmt', $event)" nzAlign="center">
-            Mã số thuế
+            Thuế BVMT
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('createDate', $event)" nzAlign="center">
             Ngày tạo
