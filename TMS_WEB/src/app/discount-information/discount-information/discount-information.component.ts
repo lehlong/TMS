@@ -36,6 +36,8 @@ export class DiscountInformationComponent {
   loading: boolean = false
   edit: boolean = true
   visible: boolean = false
+  isName: boolean = false
+
   code: any = ''
   title: any = 'Phân tích chiết khấu'
   name: any = ''
@@ -101,15 +103,18 @@ export class DiscountInformationComponent {
   }
 
   updateDataInput() {
-    this._service.UpdateDataInput(this.model).subscribe({
-      next: (data) => {
-        console.log(data)
-        window.location.reload()
-      },
-      error: (err) => {
-        console.log(err)
-      },
-    })
+    if (this.model.header.name != ''){
+
+      this._service.UpdateDataInput(this.model).subscribe({
+        next: (data) => {
+          console.log(data)
+          window.location.reload()
+        },
+        error: (err) => {
+          console.log(err)
+        },
+      })
+    }
   }
 
   changeTitle(name: string, fDate: string){
@@ -148,7 +153,15 @@ export class DiscountInformationComponent {
   }
 
 
+  checkName(_name: string){
+    _name == '' ? this.isName = true : this.isName = false
+  }
+
   close() {
     this.visible = false
   }
+
+
+
+
 }

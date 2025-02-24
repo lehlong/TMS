@@ -86,11 +86,14 @@ export class DiscountInformationListComponent{
   }
 
   submitForm(): void {
-    this._service.createData(this.model).subscribe({
-      next: (data) => {
-        console.log(data)
-      }
-    })
+    if (this.model.header.name != ''){
+
+      this._service.createData(this.model).subscribe({
+        next: (data) => {
+          console.log(data)
+        }
+      })
+    }
   }
   openCreate() {
     this.edit = false
@@ -177,4 +180,6 @@ export class DiscountInformationListComponent{
   checkName(_name: string){
     _name == '' ? this.isName = true : this.isName = false
   }
+
+
 }

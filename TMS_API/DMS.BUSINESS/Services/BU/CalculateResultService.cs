@@ -49,11 +49,23 @@ namespace DMS.BUSINESS.Services.BU
                 var lstGoods = await _dbContext.TblMdGoods.OrderBy(x => x.CreateDate).ToListAsync();
                 data.lstGoods = lstGoods;
                 var lstMarket = await _dbContext.TblMdMarket.OrderBy(x => x.Code).ToListAsync();
-                var lstLGDT = await _dbContext.TblMdLaiGopDieuTiet.ToListAsync();
+                //var lstLGDT = await _dbContext.TblMdLaiGopDieuTiet.ToListAsync();
                 var lstCustomer = await _dbContext.TblMdCustomer.ToListAsync();
+                var lstCR = await _dbContext.TblBuCalculateResultList.OrderBy(x => x.FDate).ToListAsync();
+                
+                DateTime fDate = lstCR.FirstOrDefault(x => x.Code == code).FDate;
+
+                //var CodeOldCalculate = await _dbContext.TblBuCalculateResultList.Where();
+                var CodeOldCalculate = await _dbContext.TblBuCalculateResultList
+                                            .Where(x => x.FDate < fDate) // Lọc các trường có FDate nhỏ hơn ngày hiện tại
+                                            //.Where(x => x.Status == 04) //lấy trường đã đươc phê duyệt
+                                            .Select(x => x.Code) // Chọn trường Code
+                                            .FirstOrDefaultAsync();
 
                 var dataVCL = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == code).ToListAsync();
+                var dataVCLOld = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == CodeOldCalculate).ToListAsync();
                 var dataHSMH = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == code).ToListAsync();
+                var dataHSMHOld = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == CodeOldCalculate).ToListAsync();
                 var mappingBBDO = await _dbContext.TblMdMapPointCustomerGoods.ToListAsync();
                 var dataPoint = await _dbContext.TblMdDeliveryPoint.ToListAsync();
                 if (dataVCL.Count() == 0 || dataHSMH.Count() == 0)
@@ -230,6 +242,62 @@ namespace DMS.BUSINESS.Services.BU
                     data.DLG.Dlg_4.Add(i);
                     _oII++;
                 }
+
+
+                // thay dổi giá bán lẻ 
+                foreach (var g in lstGoods)
+                {
+                    var vcl = dataVCLOld.Where(x => x.GoodsCode == g.Code).ToList();
+                    //var hsmh = dataHSMH.Where(x => x.GoodsCode == g.Code).ToList();
+                    var dlg_1 = data.DLG.Dlg_1;
+                    foreach (var n in dlg_1)
+                    {
+                        if (g.Code == n.Code)
+                        {
+                            var i = new Dlg_TDGBL
+                            {
+                                Code = g.Code,
+                                ColA = g.Name,
+                                Col1 = vcl.Sum(x => x.Gny), // lấy giá niêm yết ở kì trước
+                                Col2 = n.Col6,
+                                TangGiam1_2 = n.Col6 - vcl.Sum(x => x.Gny),
+                                Col3 = vcl.Sum(x => x.GblV2), // lấy giá niêm yết ở kì trước
+                                Col4 = n.Col3,
+                                TangGiam3_4 = n.Col3 - vcl.Sum(x => x.GblV2),
+                            };
+
+                            data.DLG.Dlg_TDGBL.Add(i);
+                        }
+
+                    }
+                }
+
+                // thay đổi giá giao phương thức bán lẻ
+                foreach (var g in lstGoods)
+                {
+                    var hsmh = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
+                    //var hsmh = dataHSMH.Where(x => x.GoodsCode == g.Code).ToList();
+                    var dlg_3 = data.DLG.Dlg_3;
+                    foreach (var n in dlg_3)
+                    {
+                        if (g.Code == n.Code)
+                        {
+                            var i = new Dlg_TdGgptbl
+                            {
+                                Code = g.Code,
+                                ColA = g.Name,
+                                Col1 = hsmh.Sum(x => x.L15ChuaVatBvmt), // lấy giá niêm yết ở kì trước
+                                Col2 = n.Col3,
+                                TangGiam1_2 = n.Col3 - hsmh.Sum(x => x.L15ChuaVatBvmt),
+                            };
+
+                            data.DLG.Dlg_TdGgptbl.Add(i);
+                        }
+
+                    }
+                }
+
+
 
                 #endregion
 

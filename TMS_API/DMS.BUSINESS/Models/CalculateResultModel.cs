@@ -36,6 +36,8 @@ namespace DMS.BUSINESS.Models
         public List<DLG_4> Dlg_4 { get; set; } = new List<DLG_4>();
         public List<DLG_5> Dlg_5 { get; set; } = new List<DLG_5>();
         public List<DLG_6> Dlg_6 { get; set; } = new List<DLG_6>();
+        public List<Dlg_TDGBL> Dlg_TDGBL { get; set; } = new List<Dlg_TDGBL>();
+        public List<Dlg_TdGgptbl> Dlg_TdGgptbl { get; set; } = new List<Dlg_TdGgptbl>();
 
     }
     public class DLG_1
@@ -121,6 +123,28 @@ namespace DMS.BUSINESS.Models
         public string Col8 { get; set; }
 
     }
+
+    public class Dlg_TDGBL
+    {
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public decimal? Col1 { get; set; }
+        public decimal? Col2 { get; set; }
+        public decimal? TangGiam1_2 { get; set; }
+        public decimal? Col3 { get; set; }
+        public decimal? Col4 { get; set; }
+        public decimal? TangGiam3_4 { get; set; }
+    }
+
+    public class Dlg_TdGgptbl
+    {
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public decimal? Col1 { get; set; }
+        public decimal? Col2 { get; set; }
+        public decimal? TangGiam1_2 { get; set; }
+    }
+
     public class PT
     {
         public string Code { get; set; }

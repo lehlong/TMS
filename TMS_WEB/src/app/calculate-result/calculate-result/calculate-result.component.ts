@@ -38,6 +38,8 @@ export class CalculateResultComponent {
   isVisibleExport: boolean = false
   isVisibleCustomer: boolean = false
   isVisibleCustomerPDF: boolean = false
+  isName: boolean = false
+
   data: any = {
     lstGoods: [],
     dlg: {
@@ -296,15 +298,18 @@ export class CalculateResultComponent {
     row.clgblv = row.gblV2 - row.gny
   }
   updateDataInput() {
-    this._service.UpdateDataInput(this.model).subscribe({
-      next: (data) => {
-        console.log(data)
-        window.location.reload()
-      },
-      error: (err) => {
-        console.log(err)
-      },
-    })
+    if (this.model.header.name != ''){
+
+      this._service.UpdateDataInput(this.model).subscribe({
+        next: (data) => {
+          console.log(data)
+          window.location.reload()
+        },
+        error: (err) => {
+          console.log(err)
+        },
+      })
+    }
   }
 
   exportExcel() {
@@ -355,5 +360,10 @@ export class CalculateResultComponent {
 
   openNewTab(url : string){
     window.open(url, '_blank')
+  }
+
+
+  checkName(_name: string){
+    _name == '' ? this.isName = true : this.isName = false
   }
 }

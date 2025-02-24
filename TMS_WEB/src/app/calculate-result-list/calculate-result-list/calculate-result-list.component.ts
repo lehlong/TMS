@@ -96,15 +96,18 @@ export class CalculateResultListComponent {
     return this.paginationResult.data?.some((local: any) => local.code === code)
   }
   submitForm(): void {
-    console.log(this.model)
-    var m = {
-      model: this.model
-    }
-    this._service.createData(this.model).subscribe({
-      next: (data) => {
-        console.log(data)
+    if (this.model.header.name != ''){
+      console.log(this.model)
+
+      var m = {
+        model: this.model
       }
-    })
+      this._service.createData(this.model).subscribe({
+        next: (data) => {
+          console.log(data)
+        }
+      })
+    }
   }
 
   close() {
