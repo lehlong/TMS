@@ -37,9 +37,9 @@ namespace DMS.BUSINESS.Services.BU
         Task UpdateDataInput(InsertModel model);
         void ExportExcel(ref MemoryStream outFileStream, string path, string headerId);
         Task<string> SaveFileHistory(MemoryStream outFileStream, string headerId);
-        Task<string> GenarateWordTrinhKy(string headerId, string nameTeam, string quyetDinhSo);
+        Task<string> GenarateWordTrinhKy(string headerId, string nameTeam);
         Task<string> GenarateWord(List<string> lstCustomerChecked, string headerId);
-        Task<string> GenarateFile(List<string> lstCustomerChecked, string type,string headerId, string nameTemp = "", string quyetDinhSo = "");
+        Task<string> GenarateFile(List<string> lstCustomerChecked, string type, string headerId);
     }
     public class CalculateResultService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdGoods, GoodsDto>(dbContext, mapper), ICalculateResultService
     {
@@ -2289,7 +2289,7 @@ namespace DMS.BUSINESS.Services.BU
 
         }
 
-        public async Task<string> GenarateWordTrinhKy(string headerId, string nameTemp, string quyetDinhSo)
+        public async Task<string> GenarateWordTrinhKy(string headerId, string nameTemp)
         {
             #region Tạo 1 file word mới từ file template
             var filePathTemplate = Directory.GetCurrentDirectory() + $"/Template/TempTrinhKy/{nameTemp}.docx";
@@ -2336,9 +2336,9 @@ namespace DMS.BUSINESS.Services.BU
                                 var text = $"ngày {header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, text);
                                 break;
-                            case "##QUYET_DINH_SO@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, quyetDinhSo);
-                                break;
+                            //case "##QUYET_DINH_SO@@":
+                            //    wordDocumentService.ReplaceStringInWordDocumennt(doc, t, quyetDinhSo);
+                            //    break;
                         //case "##ADDRESS@@":
                         //    wordDocumentService.ReplaceStringInWordDocumennt(doc, t, c.Address);
                         //    break;
@@ -2610,7 +2610,7 @@ namespace DMS.BUSINESS.Services.BU
             return $"{folderName}/{fileName}";
         }
 
-        public async Task<string> GenarateFile(List<string> lstCustomerChecked, string type, string headerId, string nameTemp = "", string quyetDinhSo = "")
+        public async Task<string> GenarateFile(List<string> lstCustomerChecked, string type, string headerId)
         {
 
             if (type == "WORD")
@@ -2629,17 +2629,20 @@ namespace DMS.BUSINESS.Services.BU
             }
             if (type == "WORDTRINHKY")
             {
-                var path = await GenarateWordTrinhKy(headerId, nameTemp, quyetDinhSo);
-                _dbContext.TblBuHistoryDownload.Add(new TblBuHistoryDownload
+                foreach (var n in lstCustomerChecked)
                 {
-                    Code = Guid.NewGuid().ToString(),
-                    HeaderCode = headerId,
-                    Name = path.Replace($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}/", ""),
-                    Type = "docx",
-                    Path = path
-                });
-                await _dbContext.SaveChangesAsync();
-                return path;
+                    var path = await GenarateWordTrinhKy(headerId, n);
+                    _dbContext.TblBuHistoryDownload.Add(new TblBuHistoryDownload
+                    {
+                        Code = Guid.NewGuid().ToString(),
+                        HeaderCode = headerId,
+                        Name = path.Replace($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}/", ""),
+                        Type = "docx",
+                        Path = path
+                    });
+                    await _dbContext.SaveChangesAsync();
+                }
+                return null;
             }
             else
             {

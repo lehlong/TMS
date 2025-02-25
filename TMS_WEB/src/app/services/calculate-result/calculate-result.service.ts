@@ -29,6 +29,9 @@ export class CalculateResultService {
   ExportWord(lstCustomerChecked: any, headerId : any): Observable<any> {
     return this.commonService.post(`CalculateResult/ExportWord?headerId=${headerId}`, lstCustomerChecked)
   }
+  ExportWordTrinhKy(lstTrinhKyChecked: any, headerId : any): Observable<any> {
+    return this.commonService.post(`CalculateResult/ExportWordTrinhKy?headerId=${headerId}`, lstTrinhKyChecked)
+  }
   ExportPDF(lstCustomerChecked: any, headerId: any): Observable<any> {
     return this.commonService.post(`CalculateResult/ExportPDF?headerId=${headerId}`, lstCustomerChecked)
   }

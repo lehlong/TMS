@@ -171,10 +171,10 @@ namespace DMS.API.Controllers.BU
         }
 
         [HttpPost("ExportWordTrinhKy")]
-        public async Task<IActionResult> ExportWordTrinhky([FromBody] List<string> lstCustomerChecked, [FromQuery] string headerId, string nameTemp, string quyetDinhSo)
+        public async Task<IActionResult> ExportWordTrinhky([FromBody] List<string> lstTrinhKyChecked, [FromQuery] string headerId)
         {
             var transferObject = new TransferObject();
-            var result = await _service.GenarateFile(lstCustomerChecked, "WORDTRINHKY", headerId, nameTemp, quyetDinhSo);
+            var result = await _service.GenarateFile(lstTrinhKyChecked, "WORDTRINHKY", headerId);
             if (_service.Status)
             {
                 transferObject.Data = result;

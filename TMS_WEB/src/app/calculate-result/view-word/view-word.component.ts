@@ -15,7 +15,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 export class ViewWordComponent {
 
   urlSafe: any;
-  reportUrl: string = `https://docs.google.com/gview?url=https://docs.google.com/document/d/1hsfxVG47SUBR5GPXYUh1B3Jcbo8_C4mbbmJHmv9mUPk/edit?tab=t.0&embedded=true`
+  reportUrl: string = `https://docs.google.com/gview?url=http://sso.d2s.com.vn/Upload/0bd0716e-76b2-4b97-bf13-8d6222bd5b48.docx&embedded=true`
 
   constructor(
     public sanitizer: DomSanitizer,

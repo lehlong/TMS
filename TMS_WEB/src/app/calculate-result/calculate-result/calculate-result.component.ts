@@ -37,6 +37,7 @@ export class CalculateResultComponent {
   isVisibleStatus: boolean = false
   isVisibleExport: boolean = false
   isVisibleCustomer: boolean = false
+  isVisibleLstTrinhKy: boolean = false
   isVisibleCustomerPDF: boolean = false
   isName: boolean = false
 
@@ -109,6 +110,21 @@ export class CalculateResultComponent {
 
   checked = false
   lstCustomerChecked: any[] = []
+  lstTrinhKyChecked: any[] = []
+
+  updateTrinhKyCheckedSet(code: any, checked: boolean): void {
+    if (checked) {
+      this.lstTrinhKyChecked.push(code)
+    } else {
+      this.lstTrinhKyChecked = this.lstTrinhKyChecked.filter((x) => x != code)
+    }
+  }
+
+  onItemTrinhKyChecked(code: String, checked: boolean): void {
+    this.updateTrinhKyCheckedSet(code, checked)
+    console.log(this.lstTrinhKyChecked);
+
+  }
 
   updateCheckedSet(code: any, checked: boolean): void {
     if (checked) {
@@ -117,9 +133,11 @@ export class CalculateResultComponent {
       this.lstCustomerChecked = this.lstCustomerChecked.filter((x) => x != code)
     }
   }
-  onItemChecked(code: number, checked: boolean): void {
+
+  onItemChecked(code: String, checked: boolean): void {
     this.updateCheckedSet(code, checked)
   }
+
   onAllChecked(value: boolean): void {
     this.lstCustomerChecked = []
     if (value) {
@@ -155,6 +173,32 @@ export class CalculateResultComponent {
       })
     }
   }
+
+  confirmExportWordTrinhKy() {
+    if (this.lstTrinhKyChecked.length == 0) {
+      this.message.create(
+        'warning',
+        'Vui lòng chọn trình ky xuất ra file',
+      )
+      return
+    } else {
+      this._service.ExportWordTrinhKy(this.lstTrinhKyChecked, this.headerId).subscribe({
+        next: (data) => {
+          this.isVisibleCustomer = false
+          this.lstTrinhKyChecked = []
+          var a = document.createElement('a')
+          a.href = environment.apiUrl + data
+          a.target = '_blank'
+          a.click()
+          a.remove()
+        },
+        error: (err) => {
+          console.log(err)
+        },
+      })
+    }
+  }
+
 
   confirmExportPDF() {
     if (this.lstCustomerChecked.length == 0) {
@@ -331,6 +375,11 @@ export class CalculateResultComponent {
       },
     })
   }
+
+  exportWordTrinhKy() {
+        this.isVisibleLstTrinhKy = !this.isVisibleLstTrinhKy
+  }
+
   exportPDF() {
     this._service.GetCustomer().subscribe({
       next: (data) => {

@@ -44,9 +44,9 @@
             <span nz-icon nzType="file-word"></span> Xuất Word
           </button>
 
-          <button class="!flex !items-center" nzType="primary" nz-button (click)="exportWord()"
+          <button class="!flex !items-center" nzType="primary" nz-button (click)="exportWordTrinhKy()"
             [appPermission]="CALCULATE_RESULT_RIGHT.EXCEL">
-            <span nz-icon nzType="file-word"></span> Xuất Word
+            <span nz-icon nzType="file-word"></span> Xuất Trình Ký
           </button>
 
           <button class="!flex !items-center btn-pdf" nzType="primary" nz-button (click)="exportPDF()"
@@ -1897,6 +1897,52 @@
           <td>{{ data.name }}</td>
         </tr>
         }
+      </tbody>
+    </nz-table>
+  </ng-container>
+</nz-modal>
+
+ <!-- danh sach trình ký -->
+<nz-modal [(nzVisible)]="isVisibleLstTrinhKy" nzTitle="CHỌN TRÌNH KÝ" (nzOnCancel)="exportWordTrinhKy()"
+  (nzOnOk)="confirmExportWordTrinhKy()" nzCancelText="Đóng">
+  <ng-container *nzModalContent>
+    <nz-table #customerTable [nzData]="lstCustomer" nzSize="small">
+      <thead>
+        <tr>
+          <th [(nzChecked)]="checked" (nzCheckedChange)="onAllChecked($event)"></th>
+          <th>Báo cáo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td [nzChecked]="lstTrinhKyChecked.includes('CongDienKKGiaBanLe')" (nzCheckedChange)="onItemTrinhKyChecked('CongDienKKGiaBanLe', $event)"></td>
+          <td>Công Điện Kiểm Kê Giá Bán Lẻ</td>
+        </tr>
+
+        <tr>
+          <td [nzChecked]="lstTrinhKyChecked.includes('MucGiamGiaNQTM')" (nzCheckedChange)="onItemTrinhKyChecked('MucGiamGiaNQTM', $event)"></td>
+          <td>Mức Giảm Giá NQTM</td>
+        </tr>
+        <tr>
+          <td [nzChecked]="lstTrinhKyChecked.includes('QDGBanBuon')" (nzCheckedChange)="onItemTrinhKyChecked('QDGBanBuon', $event)"></td>
+          <td>Quyết Định Giá bán Buôn</td>
+        </tr>
+        <tr>
+          <td [nzChecked]="lstTrinhKyChecked.includes('QDGBanLe')" (nzCheckedChange)="onItemTrinhKyChecked('QDGBanLe', $event)"></td>
+          <td>Quyết Định Giá Bán lẻ</td>
+        </tr>
+        <tr>
+          <td [nzChecked]="lstTrinhKyChecked.includes('QDGCtyPTS')" (nzCheckedChange)="onItemTrinhKyChecked('QDGCtyPTS', $event)"></td>
+          <td>Quyết Định Công Ty PTS</td>
+        </tr>
+        <tr>
+          <td [nzChecked]="lstTrinhKyChecked.includes('QDGNoiDung')" (nzCheckedChange)="onItemTrinhKyChecked('QDGNoiDung', $event)"></td>
+          <td>Quyết Giá Nội Dung</td>
+        </tr>
+        <tr>
+          <td [nzChecked]="lstTrinhKyChecked.includes('ToTrinh')" (nzCheckedChange)="onItemTrinhKyChecked('ToTrinh', $event)"></td>
+          <td>Tờ Trình</td>
+        </tr>
       </tbody>
     </nz-table>
   </ng-container>
