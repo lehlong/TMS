@@ -23,6 +23,7 @@ using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
 using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
 using System.Linq;
 using NPOI.HPSF;
+using NPOI.SS.Formula.Functions;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -36,8 +37,9 @@ namespace DMS.BUSINESS.Services.BU
         Task UpdateDataInput(InsertModel model);
         void ExportExcel(ref MemoryStream outFileStream, string path, string headerId);
         Task<string> SaveFileHistory(MemoryStream outFileStream, string headerId);
+        Task<string> GenarateWordTrinhKy(string headerId, string nameTeam, string quyetDinhSo);
         Task<string> GenarateWord(List<string> lstCustomerChecked, string headerId);
-        Task<string> GenarateFile(List<string> lstCustomerChecked, string type,string headerId);
+        Task<string> GenarateFile(List<string> lstCustomerChecked, string type,string headerId, string nameTemp = "", string quyetDinhSo = "");
     }
     public class CalculateResultService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdGoods, GoodsDto>(dbContext, mapper), ICalculateResultService
     {
@@ -2286,6 +2288,176 @@ namespace DMS.BUSINESS.Services.BU
             return formFile;
 
         }
+
+        public async Task<string> GenarateWordTrinhKy(string headerId, string nameTemp, string quyetDinhSo)
+        {
+            #region Tạo 1 file word mới từ file template
+            var filePathTemplate = Directory.GetCurrentDirectory() + $"/Template/TempTrinhKy/{nameTemp}.docx";
+            var folderName = Path.Combine($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}");
+            if (!Directory.Exists(folderName))
+            {
+                Directory.CreateDirectory(folderName);
+            }
+            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            var fileName = $"{DateTime.Now.Day}{DateTime.Now.Month}{DateTime.Now.Year}_{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}_{nameTemp}.docx";
+            var fullPath = Path.Combine(pathToSave, fileName);
+            File.Copy(filePathTemplate, fullPath, true);
+            #endregion
+
+            #region Lấy các text element
+            List<string> lstTextElement = new List<string>();
+            WordDocumentService wordDocumentService = new WordDocumentService();
+            using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
+            {
+                lstTextElement = wordDocumentService.FindTextElement(doc);
+                lstTextElement = lstTextElement.Distinct().ToList();
+            }
+            #endregion
+
+            #region Fill dữ liệu
+            var data = await GetResult(headerId);
+            var header = await _dbContext.TblBuCalculateResultList.FindAsync(headerId);
+
+            //var dataVCL = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == headerId).ToListAsync();
+            //var dataHSMH = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == headerId).ToListAsync();
+
+            //foreach (var code in lstCustomerChecked)
+            //{
+            //var d = data.VK11BB.Where(x => x.Col2 == code).ToList();
+            //var c = await _dbContext.TblMdCustomer.FindAsync(code);
+
+            #region fill dữ liệu file công điện kiểm kê giá bán lẻ
+            if (nameTemp == "CongDienKKGiaBanLe")
+            {
+                var dlg1 = data.DLG.Dlg_1;
+                using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
+                {
+                    MainDocumentPart mainPart = doc.MainDocumentPart;
+                    DocumentFormat.OpenXml.Wordprocessing.Body body = mainPart.Document.Body;
+
+                    foreach (var t in lstTextElement)
+                    {
+                        switch (t)
+                        {
+                            case "##F_DATE@@":
+                                var text = $"ngày {header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, text);
+                                break;
+                            case "##QUYET_DINH_SO@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, quyetDinhSo);
+                                break;
+                        //case "##ADDRESS@@":
+                        //    wordDocumentService.ReplaceStringInWordDocumennt(doc, t, c.Address);
+                        //    break;
+                        case "##TABLE_TT@@":
+                            Paragraph paragraph = body.Descendants<Paragraph>()
+                                       .FirstOrDefault(p => p.InnerText.Contains("##TABLE_TT@@"));
+                            if (paragraph != null)
+                            {
+                                Table table = new Table();
+                                TableProperties tblProperties = new TableProperties(
+                                    new TableBorders(
+                                        new TopBorder { Val = BorderValues.Single, Size = 4 },
+                                        new BottomBorder { Val = BorderValues.Single, Size = 4 },
+                                        new LeftBorder { Val = BorderValues.Single, Size = 4 },
+                                        new RightBorder { Val = BorderValues.Single, Size = 4 },
+                                        new InsideHorizontalBorder { Val = BorderValues.Single, Size = 4 },
+                                        new InsideVerticalBorder { Val = BorderValues.Single, Size = 4 }
+                                    )
+                                );
+                                table.AppendChild(tblProperties);
+                                #region Header table
+                                TableRow rowHeader = new TableRow();
+
+
+                                TableCell CreateHeaderCell(string text, int gridSpan, int fontSize = 16)
+                                {
+                                    TableCell cell = new TableCell();
+                                    Paragraph paragraph = new Paragraph(new Run(new Text(text)));
+                                    paragraph.ParagraphProperties = new ParagraphProperties(new Justification() { Val = JustificationValues.Center });
+                                    Run run = paragraph.Elements<Run>().First();
+                                    run.RunProperties = new RunProperties(
+                                       new Bold(),
+                                       new FontSize() { Val = new StringValue(fontSize.ToString()) }
+                                   );
+
+                                    cell.Append(paragraph);
+                                    TableCellProperties cellProperties = new TableCellProperties(
+                                        new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center }
+                                    );
+                                    if (gridSpan > 1)
+                                    {
+                                        cellProperties.Append(new GridSpan() { Val = gridSpan });
+                                    }
+                                    cell.Append(cellProperties);
+                                    return cell;
+                                }
+
+
+                                TableCell CreateCell(string text, bool isBold, int fontSize = 26)
+                                {
+                                    Run run = new Run(new Text(text));
+                                    RunProperties runProperties = new RunProperties(
+                                        new FontSize() { Val = new StringValue(fontSize.ToString()) }
+                                    );
+                                    if (isBold)
+                                    {
+                                        runProperties.AppendChild(new Bold());
+                                    }
+                                    run.RunProperties = runProperties;
+                                    Paragraph paragraph = new Paragraph(run);
+                                    return new TableCell(paragraph);
+                                }
+                                //TableCell cell1 = CreateHeaderCell("STT", 1, 26);
+                                //TableCell cell1 = CreateHeaderCell("Mặt hàng", 1, 26);
+                                //TableCell cell2 = CreateHeaderCell("Điểm giao hàng", 1, 26);
+                                //TableCell cell3 = CreateHeaderCell("Đơn giá", 2, 26);
+                                //rowHeader.Append(cell1);
+                                //rowHeader.Append(cell2);
+                                //rowHeader.Append(cell3);
+                                ////rowHeader.Append(cell4);
+                                //table.Append(rowHeader);
+                                #endregion
+
+                                #region Gendata table
+                                var o = 1;
+                                foreach (var i in dlg1)
+                                {
+                                    TableRow row = new TableRow();
+                                    //row.Append(CreateCell(o.ToString(), false, 26));
+                                    row.Append(CreateCell(i.Col1, false, 26));
+                                    row.Append(CreateCell(i.Col6.Value.ToString("N0"), false, 26));
+                                    row.Append(CreateCell("Đ/lít thực tế", false, 26));
+                                    //row.Append(CreateCell("", false, 26));
+                                    table.Append(row);
+                                    o++;
+                                }
+                                #endregion
+
+                                paragraph.Parent.InsertAfter(table, paragraph);
+                                paragraph.Remove();
+                            }
+                            break;
+                        }
+                    }
+                //}
+
+                //if (code != lstCustomerChecked.LastOrDefault())
+                //{
+                //    AppendWordFilesToNewDocument(filePathTemplate, fullPath);
+                //}
+                }
+            
+            }
+            
+            
+            #endregion
+
+            #endregion
+
+            return $"{folderName}/{fileName}";
+        }
+
         public async Task<string> GenarateWord(List<string> lstCustomerChecked, string headerId)
         {
             #region Tạo 1 file word mới từ file template
@@ -2439,12 +2611,27 @@ namespace DMS.BUSINESS.Services.BU
 
             return $"{folderName}/{fileName}";
         }
-        public async Task<string> GenarateFile(List<string> lstCustomerChecked, string type, string headerId)
+
+        public async Task<string> GenarateFile(List<string> lstCustomerChecked, string type, string headerId, string nameTemp = "", string quyetDinhSo = "")
         {
 
             if (type == "WORD")
             {
                 var path = await GenarateWord(lstCustomerChecked, headerId);
+                _dbContext.TblBuHistoryDownload.Add(new TblBuHistoryDownload
+                {
+                    Code = Guid.NewGuid().ToString(),
+                    HeaderCode = headerId,
+                    Name = path.Replace($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}/", ""),
+                    Type = "docx",
+                    Path = path
+                });
+                await _dbContext.SaveChangesAsync();
+                return path;
+            }
+            if (type == "WORDTRINHKY")
+            {
+                var path = await GenarateWordTrinhKy(headerId, nameTemp, quyetDinhSo);
                 _dbContext.TblBuHistoryDownload.Add(new TblBuHistoryDownload
                 {
                     Code = Guid.NewGuid().ToString(),

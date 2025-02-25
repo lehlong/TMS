@@ -1,0 +1,41 @@
+<div class="container-list" >
+  <div class="site-page-header-ghost-wrapper">
+    <nz-page-header nzBackIcon nzTitle="Khách hàng" nzSubtitle="Danh sách khách hàng" class="site-page-header">
+      <nz-page-header-extra>
+        <nz-space [nzWrap]="true" class="gap-[5px]">
+          <!-- <nz-space> -->
+            <!-- <app-input-clear placeholder="Tìm kiếm" (enterEvent)="search()"
+              [(value)]="filter.keyWord"></app-input-clear>
+            <button (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+              nzType="default">
+              <span nz-icon nzType="search"></span>
+            </button>
+            <button (click)="reset()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+              nzType="default">
+              <span nz-icon nzType="redo"></span>
+            </button>
+          </nz-space>
+          <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
+            [appPermission]="CUSTOMER_RIGHTS.ADD">
+            <span nz-icon nzType="plus-circle"></span> Thêm mới
+          </button> -->
+          <!-- <button
+            (click)="exportExcel()"
+            class="!flex !items-center"
+            nz-button
+            nzType="primary"
+            [appPermission]="LOCAL_RIGHTS.EXCEL"
+            nzDanger
+          >
+            <span nz-icon nzType="file-excel"></span>Tải Excel
+          </button> -->
+        </nz-space>
+      </nz-page-header-extra>
+    </nz-page-header>
+  </div>
+  <div class="overflow-auto flex-grow">
+    <div class="office-viewer">
+      <iframe [src]='urlSafe' width='100%' height='1000%' frameborder='0'></iframe>
+    </div>
+  </div>
+</div>

@@ -170,6 +170,26 @@ namespace DMS.API.Controllers.BU
             }
         }
 
+        [HttpPost("ExportWordTrinhKy")]
+        public async Task<IActionResult> ExportWordTrinhky([FromBody] List<string> lstCustomerChecked, [FromQuery] string headerId, string nameTemp, string quyetDinhSo)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.GenarateFile(lstCustomerChecked, "WORDTRINHKY", headerId, nameTemp, quyetDinhSo);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+                return Ok(transferObject);
+
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("2000", _service);
+                return Ok(transferObject);
+            }
+        }
+
         [HttpPost("ExportPDF")]
         public async Task<IActionResult> ExportPDF([FromBody] List<string> lstCustomerChecked, [FromQuery] string headerId)
         {

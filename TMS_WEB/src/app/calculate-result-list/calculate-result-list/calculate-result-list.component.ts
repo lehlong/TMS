@@ -69,6 +69,7 @@ export class CalculateResultListComponent {
   ngOnInit(): void {
     this.search();
     this.getAllGoods();
+    console.log('calculate')
   }
 
   onSortChange(name: string, value: any) {
@@ -85,6 +86,8 @@ export class CalculateResultListComponent {
     this._service.getall().subscribe({
       next: (data) => {
         this.lst = data
+        console.log(this.lst);
+
       },
       error: (response) => {
         console.log(response)
@@ -95,6 +98,7 @@ export class CalculateResultListComponent {
   isCodeExist(code: string): boolean {
     return this.paginationResult.data?.some((local: any) => local.code === code)
   }
+
   submitForm(): void {
     if (this.model.header.name != ''){
       console.log(this.model)
@@ -142,7 +146,7 @@ export class CalculateResultListComponent {
 
   deleteItem(code: string | number) {
     this._service.deleteCalculateResultList(code).subscribe({
-      next: (_data) => {
+      next: (data) => {
         this.search()
       },
       error: (response) => {

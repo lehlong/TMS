@@ -23,7 +23,7 @@
       </nz-page-header-extra>
     </nz-page-header>
   </div>
-  <div class="overflow-auto flex-grow" [appPermission]="CALCULATE_RESULT_RIGHT.LIST">
+  <div class="overflow-auto flex-grow" [appPermission]="CALCULATE_RESULT_RIGHT.LIST"> -->
     <nz-table [nzScroll]="{ x: 'max-content' }" nzTableLayout="fixed" [nzShowPagination]="false"
       [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data">
       <thead>
@@ -76,6 +76,8 @@
   </div>
 </div>
 
+
+
 <!--Create Update-->
 <nz-drawer [nzMask]="!edit" [nzWidth]="'60%'" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
@@ -85,8 +87,8 @@
       <div nz-col class="gutter-row" [nzSpan]="18">
         <div class="inner-box">
           <label>Tên đợt nhập *</label>
-          <input nz-input [(ngModel)]="model.header.name" #nameInput="ngModel" required (keyup)="checkName(model.header.name)"/>
-
+          <input nz-input [(ngModel)]="model.header.name" #nameInput="ngModel" required
+          (keyup)="checkName(model.header.name)" />
           <div *ngIf="isName" style="color: red">
             Tên đợt nhập là bắt buộc!
           </div>
