@@ -2318,13 +2318,6 @@ namespace DMS.BUSINESS.Services.BU
             var data = await GetResult(headerId);
             var header = await _dbContext.TblBuCalculateResultList.FindAsync(headerId);
 
-            //var dataVCL = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == headerId).ToListAsync();
-            //var dataHSMH = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == headerId).ToListAsync();
-
-            //foreach (var code in lstCustomerChecked)
-            //{
-            //var d = data.VK11BB.Where(x => x.Col2 == code).ToList();
-            //var c = await _dbContext.TblMdCustomer.FindAsync(code);
 
             #region fill dữ liệu file công điện kiểm kê giá bán lẻ
             if (nameTemp == "CongDienKKGiaBanLe")
@@ -2452,6 +2445,11 @@ namespace DMS.BUSINESS.Services.BU
             
             
             #endregion
+
+
+
+
+
 
             #endregion
 
