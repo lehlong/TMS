@@ -61,7 +61,8 @@ namespace DMS.BUSINESS.Services.BU
                 //var CodeOldCalculate = await _dbContext.TblBuCalculateResultList.Where();
                 var CodeOldCalculate = await _dbContext.TblBuCalculateResultList
                                             .Where(x => x.FDate < fDate) // Lọc các trường có FDate nhỏ hơn ngày hiện tại
-                                            //.Where(x => x.Status == 04) //lấy trường đã đươc phê duyệt
+                                            .Where(x => x.Status == "04") //lấy trường đã đươc phê duyệt
+                                            .OrderByDescending(x => x.FDate)
                                             .Select(x => x.Code) // Chọn trường Code
                                             .FirstOrDefaultAsync();
 

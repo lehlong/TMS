@@ -23,7 +23,7 @@
       </nz-page-header-extra>
     </nz-page-header>
   </div>
-  <div class="overflow-auto flex-grow" [appPermission]="CALCULATE_RESULT_RIGHT.LIST"> -->
+  <div class="overflow-auto flex-grow" [appPermission]="CALCULATE_RESULT_RIGHT.LIST">
     <nz-table [nzScroll]="{ x: 'max-content' }" nzTableLayout="fixed" [nzShowPagination]="false"
       [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data">
       <thead>
@@ -103,7 +103,7 @@
       <div nz-col class="gutter-row" [nzSpan]="7">
         <div class="inner-box">
           <label>Quyết định số</label>
-          <input nz-input [(ngModel)]="model.nguoiKyTen.daiDien" #nameInput="ngModel" required/>
+          <input nz-input [(ngModel)]="model.nguoiKyTen.quyetDinhSo" #nameInput="ngModel" required/>
 
         </div>
       </div>
