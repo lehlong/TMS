@@ -24,6 +24,7 @@ using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
 using System.Linq;
 using NPOI.HPSF;
 using NPOI.SS.Formula.Functions;
+using DMS.CORE.Entities.IN;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -1099,9 +1100,29 @@ namespace DMS.BUSINESS.Services.BU
         }
         public async Task<InsertModel> GetDataInput(string code)
         {
+            
             try
             {
+                var nguoiKyTen = new TblInNguoiKyTen();
+                nguoiKyTen.Code = Guid.NewGuid().ToString();
+                nguoiKyTen.HeaderCode = code;
+                nguoiKyTen.NguoiDaiDien = "";
+                nguoiKyTen.DaiDien = "";
+                nguoiKyTen.QuyetDinhSo = "";
+
                 var data = new InsertModel();
+                //data.NguoiKyTen = await _dbContext.TblInNguoiKyTen.FindAsync(code) == null ? nguoiKyTen : await _dbContext.TblInNguoiKyTen.FindAsync(code);
+                var checkNull = await _dbContext.TblInNguoiKyTen.FirstOrDefaultAsync(x => x.HeaderCode == code);
+
+                if (checkNull == null)
+                {
+                    data.NguoiKyTen = nguoiKyTen;
+                }
+                else
+                {
+                    data.NguoiKyTen = await _dbContext.TblInNguoiKyTen.FirstOrDefaultAsync(x => x.HeaderCode == code);
+                }
+
                 data.Header = await _dbContext.TblBuCalculateResultList.FindAsync(code);
                 data.HS1 = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == code).ToListAsync();
                 data.HS2 = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == code).ToListAsync();
@@ -1116,8 +1137,25 @@ namespace DMS.BUSINESS.Services.BU
         {
             try
             {
+                var checkNull = await _dbContext.TblInNguoiKyTen.FirstOrDefaultAsync(x => x.Code == model.NguoiKyTen.Code);
+                //var checkNull = await _dbContext.TblInNguoiKyTen.FindAsync(model.NguoiKyTen.Code);
+                if (checkNull == null)
+                {
+                    _dbContext.TblInNguoiKyTen.Add(model.NguoiKyTen);
+                }
+                else
+                {
+                    //checkNull = null;
+                    checkNull.NguoiDaiDien = model.NguoiKyTen.NguoiDaiDien;
+                    checkNull.DaiDien = model.NguoiKyTen.DaiDien;
+                    checkNull.QuyetDinhSo = model.NguoiKyTen.QuyetDinhSo;
+
+                    //_dbContext.TblInNguoiKyTen.UpdateRange(model.NguoiKyTen);
+                }
+
                 _dbContext.TblInHeSoMatHang.UpdateRange(model.HS1);
                 _dbContext.TblInVinhCuaLo.UpdateRange(model.HS2);
+                
                 if (model.Header.Status == model.Status.Code)
                 {
                     model.Header.Status = "01";

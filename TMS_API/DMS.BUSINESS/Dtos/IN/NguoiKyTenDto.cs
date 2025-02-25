@@ -16,19 +16,19 @@ namespace DMS.BUSINESS.Dtos.IN
 
         [Key]
         [Description("Mã")]
-        public string Code { get; set; }
+        public string? Code { get; set; }
 
         [Description("Mã Header")]
-        public string HeaderCode { get; set; }
+        public string? HeaderCode { get; set; }
 
-        [Description("Phòng ban")]
-        public string Department { get; set; }
+        [Description("Đại diện")]
+        public string? DaiDien { get; set; }
 
-        [Description("Chức vụ")]
-        public string Position { get; set; }
+        [Description("Người đại diện")]
+        public string? NguoiDaiDien { get; set; }
 
-        [Description("Người ký tên")]
-        public string Signatory { get; set; }
+        [Description("Quyết định số")]
+        public string? QuyetDinhSo { get; set; }
 
         public void Mapping(Profile profile)
         {

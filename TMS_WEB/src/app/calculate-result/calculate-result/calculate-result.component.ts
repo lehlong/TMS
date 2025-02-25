@@ -80,6 +80,7 @@ export class CalculateResultComponent {
 
   model: any = {
     header: {},
+    nguoiKyTen: {},
     hS1: [],
     hS2: [],
     status: {
@@ -322,6 +323,8 @@ export class CalculateResultComponent {
     this._service.GetDataInput(this.headerId).subscribe({
       next: (data) => {
         this.model = data
+        console.log(this.model);
+
         this.visibleDrawer = true
       },
     })

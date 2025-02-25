@@ -10,18 +10,18 @@ namespace DMS.CORE.Entities.IN
     {
         [Key]
         [Column("CODE", TypeName = "VARCHAR(50)")]
-        public string Code { get; set; }
+        public string? Code { get; set; }
 
         [Column("HEADER_CODE", TypeName = "VARCHAR(50)")]
-        public string HeaderCode { set; get; }
+        public string? HeaderCode { set; get; }
 
-        [Column("DEPARTMENT", TypeName = "VARCHAR(250)")]
-        public string Department { get; set; }
+        [Column("DAI_DIEN", TypeName = "VARCHAR(250)")]
+        public string? DaiDien { get; set; }
 
-        [Column("POSITION", TypeName = "VARCHAR(250)")]
-        public string Position { get; set; }
+        [Column("NGUOI_DAI_DIEN", TypeName = "VARCHAR(250)")]
+        public string? NguoiDaiDien { get; set; }
 
-        [Column("SIGNATORY", TypeName = "VARCHAR(250)")]
-        public string Signatory { get; set; }
+        [Column("QUYET_DINH_SO", TypeName = "VARCHAR(250)")]
+        public string? QuyetDinhSo { get; set; }
     }
 }

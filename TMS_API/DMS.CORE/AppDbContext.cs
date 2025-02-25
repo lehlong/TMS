@@ -180,6 +180,7 @@ namespace DMS.CORE
         #endregion
 
         #region Input
+        public DbSet<TblInNguoiKyTen> TblInNguoiKyTen { get; set; }
         public DbSet<TblInVinhCuaLo> TblInVinhCuaLo { get; set; }
         public DbSet<TblInHeSoMatHang> TblInHeSoMatHang { get; set; }
         public DbSet<TblInDiscountCompetitor> TblInDiscountCompetitor { get; set; }

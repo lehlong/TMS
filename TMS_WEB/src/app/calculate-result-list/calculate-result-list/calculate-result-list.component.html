@@ -84,7 +84,7 @@
   <ng-container *nzDrawerContent>
     <nz-divider nzText="THÔNG TIN" nzOrientation="left"></nz-divider>
     <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-      <div nz-col class="gutter-row" [nzSpan]="18">
+      <div nz-col class="gutter-row" [nzSpan]="11">
         <div class="inner-box">
           <label>Tên đợt nhập *</label>
           <input nz-input [(ngModel)]="model.header.name" #nameInput="ngModel" required
@@ -100,7 +100,33 @@
           <nz-date-picker nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss" [(ngModel)]="model.header.fDate"></nz-date-picker>
         </div>
       </div>
+      <div nz-col class="gutter-row" [nzSpan]="7">
+        <div class="inner-box">
+          <label>Quyết định số</label>
+          <input nz-input [(ngModel)]="model.nguoiKyTen.daiDien" #nameInput="ngModel" required/>
+
+        </div>
+      </div>
     </div>
+
+    <nz-divider nzText="Người ký " nzOrientation="left"></nz-divider>
+    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Ký thay</label>
+          <input nz-input [(ngModel)]="model.nguoiKyTen.daiDien" #nameInput="ngModel" required/>
+
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="inner-box">
+          <label>Người Ký Thay</label>
+          <input nz-input [(ngModel)]="model.nguoiKyTen.nguoiDaiDien" #nameInput="ngModel" required/>
+        </div>
+      </div>
+
+    </div>
+
     <nz-divider nzText="HỆ SỐ MẶT HÀNG" nzOrientation="left"></nz-divider>
 
     <nz-table #hs2Table [nzData]="model.hS2" nzSize="small">
