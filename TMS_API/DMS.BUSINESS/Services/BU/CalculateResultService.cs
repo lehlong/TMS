@@ -2356,7 +2356,63 @@ namespace DMS.BUSINESS.Services.BU
             #region Fill dữ liệu
             var data = await GetResult(headerId);
             var header = await _dbContext.TblBuCalculateResultList.FindAsync(headerId);
+            var model = await GetDataInput(headerId);
+            var goods = await _dbContext.TblMdGoods.ToListAsync();
+            var NguoiKyTen = await _dbContext.TblInNguoiKyTen.FirstOrDefaultAsync(x => x.HeaderCode == headerId);
+            var f_date = $"{header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
+            var date = $"{header.FDate.Day}/{header.FDate.Month}/{header.FDate.Year}";
+            var f_date_hour = $"kể từ {header.FDate.Hour} giờ {header.FDate.Minute} ngày {header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
+            TableCell CreateCell(string text, bool isBold = true, int fontSize = 26, bool isCenter = true, string width = "2400", int? gridSpan = null)
+            {
+                Run run = new Run(new Text(text));
 
+                RunProperties runProperties = new RunProperties(
+                    new RunFonts()
+                    {
+                        Ascii = "Times New Roman",
+                        HighAnsi = "Times New Roman",
+                        ComplexScript = "Times New Roman"
+                    },
+                    new FontSize() { Val = new StringValue(fontSize.ToString()) }
+                );
+
+                if (isBold)
+                {
+                    runProperties.Append(new Bold());
+                }
+
+                run.RunProperties = runProperties;
+
+                Paragraph paragraph = new Paragraph(run);
+
+                if (isCenter)
+                {
+                    paragraph.ParagraphProperties = new ParagraphProperties(
+                        new Justification() { Val = JustificationValues.Center }
+                    );
+                }
+
+                TableCellProperties cellProperties = new TableCellProperties(
+                    new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center }
+                );
+
+                if (!string.IsNullOrEmpty(width))
+                {
+                    cellProperties.Append(new TableCellWidth() { Width = width, Type = TableWidthUnitValues.Dxa });
+                }
+
+                // Nếu có gridSpan, áp dụng thuộc tính gộp ô
+                if (gridSpan.HasValue && gridSpan > 1)
+                {
+                    cellProperties.Append(new GridSpan() { Val = gridSpan });
+                }
+
+                TableCell cell = new TableCell();
+                cell.Append(cellProperties);
+                cell.Append(paragraph);
+
+                return cell;
+            }
 
             #region fill dữ liệu file công điện kiểm kê giá bán lẻ
             if (nameTemp == "CongDienKKGiaBanLe")
@@ -2400,46 +2456,6 @@ namespace DMS.BUSINESS.Services.BU
                                 table.AppendChild(tblProperties);
                                 #region Header table
                                 TableRow rowHeader = new TableRow();
-
-
-                                TableCell CreateHeaderCell(string text, int gridSpan, int fontSize = 16)
-                                {
-                                    TableCell cell = new TableCell();
-                                    Paragraph paragraph = new Paragraph(new Run(new Text(text)));
-                                    paragraph.ParagraphProperties = new ParagraphProperties(new Justification() { Val = JustificationValues.Center });
-                                    Run run = paragraph.Elements<Run>().First();
-                                    run.RunProperties = new RunProperties(
-                                       new Bold(),
-                                       new FontSize() { Val = new StringValue(fontSize.ToString()) }
-                                   );
-
-                                    cell.Append(paragraph);
-                                    TableCellProperties cellProperties = new TableCellProperties(
-                                        new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center }
-                                    );
-                                    if (gridSpan > 1)
-                                    {
-                                        cellProperties.Append(new GridSpan() { Val = gridSpan });
-                                    }
-                                    cell.Append(cellProperties);
-                                    return cell;
-                                }
-
-
-                                TableCell CreateCell(string text, bool isBold, int fontSize = 26)
-                                {
-                                    Run run = new Run(new Text(text));
-                                    RunProperties runProperties = new RunProperties(
-                                        new FontSize() { Val = new StringValue(fontSize.ToString()) }
-                                    );
-                                    if (isBold)
-                                    {
-                                        runProperties.AppendChild(new Bold());
-                                    }
-                                    run.RunProperties = runProperties;
-                                    Paragraph paragraph = new Paragraph(run);
-                                    return new TableCell(paragraph);
-                                }
                                 //TableCell cell1 = CreateHeaderCell("STT", 1, 26);
                                 //TableCell cell1 = CreateHeaderCell("Mặt hàng", 1, 26);
                                 //TableCell cell2 = CreateHeaderCell("Điểm giao hàng", 1, 26);
@@ -2472,17 +2488,388 @@ namespace DMS.BUSINESS.Services.BU
                             break;
                         }
                     }
+                }
                 //}
 
                 //if (code != lstCustomerChecked.LastOrDefault())
                 //{
                 //    AppendWordFilesToNewDocument(filePathTemplate, fullPath);
                 //}
-                }
-            
             }
-            
-            
+            else if (nameTemp == "QDGNoiDung")
+            {
+                var dlg5 = data.DLG.Dlg_5;
+                using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
+                {
+                    MainDocumentPart mainPart = doc.MainDocumentPart;
+                    DocumentFormat.OpenXml.Wordprocessing.Body body = mainPart.Document.Body;
+
+                    foreach (var t in lstTextElement)
+                    {
+                        switch (t)
+                        {
+                            case "##F_DATE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date);
+                                break;
+                            case "##DATE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, date);
+                                break;
+                            case "##QUYET_DINH_SO@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.QuyetDinhSo);
+                                break;
+                            case "##DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                break;
+                            case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                break;
+                            case "##TABLE_ND@@":
+                                Paragraph paragraph = body.Descendants<Paragraph>()
+                                           .FirstOrDefault(p => p.InnerText.Contains("##TABLE_ND@@"));
+                                if (paragraph != null)
+                                {
+                                    Table table = new Table();
+                                    TableProperties tblProperties = new TableProperties(
+                                        new TableBorders(
+                                            new TopBorder { Val = BorderValues.Single, Size = 4 },
+                                            new BottomBorder { Val = BorderValues.Single, Size = 4 },
+                                            new LeftBorder { Val = BorderValues.Single, Size = 4 },
+                                            new RightBorder { Val = BorderValues.Single, Size = 4 },
+                                            new InsideHorizontalBorder { Val = BorderValues.Single, Size = 4 },
+                                            new InsideVerticalBorder { Val = BorderValues.Single, Size = 4 }
+                                        ),
+                                        new TableCellMarginDefault(
+                                            new LeftMargin() { Width = "115" },
+                                            new RightMargin() { Width = "115" },
+                                            new TopMargin() { Width = "50" },
+                                            new BottomMargin() { Width = "50" }
+                                        )
+                                    );
+                                    table.AppendChild(tblProperties);
+
+                                    #region Header table
+                                    TableRow rowHeader = new TableRow();
+
+                                    TableCell cell1 = CreateCell("TT",true, 26,true,"1");
+                                    TableCell cell2 = CreateCell("MẶT HÀNG",true, 26,true, "2082");
+                                    TableCell cell3 = CreateCell("ĐƠN GIÁ", true, 26, true, "2082");
+                                    TableCell cell4 = CreateCell("ĐƠN VỊ TÍNH", true, 26, true, "2082");
+                                    TableCell cell5 = CreateCell("GHI CHÚ", true, 26, true, "2082");
+
+                                    rowHeader.Append(cell1);
+                                    rowHeader.Append(cell2);
+                                    rowHeader.Append(cell3);
+                                    rowHeader.Append(cell4);
+                                    rowHeader.Append(cell5);
+
+                                    table.Append(rowHeader);
+                                    #endregion
+
+                                    #region Gendata table
+                                    var o = 1;
+                                    foreach (var i in dlg5)
+                                    {
+                                        if (i.Code != "701001")
+                                        {
+                                            TableRow row = new TableRow();
+                                            row.Append(CreateCell(i.ColA, true, 26, true, "1"));
+                                            row.Append(CreateCell(i.ColB, true, 26, true));
+                                            row.Append(CreateCell(i.Col5.Value.ToString("N0"), true, 26));
+                                            row.Append(CreateCell("đ/ lít thực tế", true, 26));
+                                            row.Append(CreateCell("Thay đổi", true, 26));
+                                            table.Append(row);
+                                            o++;
+                                        }
+                                    }
+                                    #endregion
+
+                                    paragraph.Parent.InsertAfter(table, paragraph);
+                                    paragraph.Remove();
+                                }
+                                break;
+                        }
+
+                    }
+                }
+            }
+            else if (nameTemp == "QDGCtyPTS")
+            {
+                var dlg6 = data.DLG.Dlg_6;
+                using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
+                {
+                    MainDocumentPart mainPart = doc.MainDocumentPart;
+                    DocumentFormat.OpenXml.Wordprocessing.Body body = mainPart.Document.Body;
+
+                    foreach (var t in lstTextElement)
+                    {
+                        switch (t)
+                        {
+                            case "##F_DATE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date);
+                                break;
+                            case "##DATE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, date);
+                                break;
+                            case "##QUYET_DINH_SO@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.QuyetDinhSo);
+                                break;
+                            case "##DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                break;
+                            case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                break;
+                            case "##TABLE_PTS@@":
+                                Paragraph paragraph = body.Descendants<Paragraph>()
+                                           .FirstOrDefault(p => p.InnerText.Contains("##TABLE_PTS@@"));
+                                if (paragraph != null)
+                                {
+                                    Table table = new Table();
+                                    TableProperties tblProperties = new TableProperties(
+                                        new TableBorders(
+                                            new TopBorder { Val = BorderValues.Single, Size = 4 },
+                                            new BottomBorder { Val = BorderValues.Single, Size = 4 },
+                                            new LeftBorder { Val = BorderValues.Single, Size = 4 },
+                                            new RightBorder { Val = BorderValues.Single, Size = 4 },
+                                            new InsideHorizontalBorder { Val = BorderValues.Single, Size = 4 },
+                                            new InsideVerticalBorder { Val = BorderValues.Single, Size = 4 }
+                                        ),
+                                        new TableCellMarginDefault(
+                                            new LeftMargin() { Width = "115" },
+                                            new RightMargin() { Width = "115" },
+                                            new TopMargin() { Width = "50" },
+                                            new BottomMargin() { Width = "50" }
+                                        )
+                                    );
+                                    table.AppendChild(tblProperties);
+
+                                    #region Header table
+                                    TableRow rowHeader = new TableRow();
+
+                                    TableCell cell1 = CreateCell("TT", true, 26, true,"1");
+                                    TableCell cell2 = CreateCell("MẶT HÀNG", true, 26, true, "2082");
+                                    TableCell cell3 = CreateCell("GIÁ BÁN", true, 26, true, "2082");
+                                    TableCell cell4 = CreateCell("ĐƠN VỊ TÍNH", true, 26, true, "2082");
+                                    TableCell cell5 = CreateCell("GHI CHÚ", true, 26, true, "2082");
+
+                                    rowHeader.Append(cell1);
+                                    rowHeader.Append(cell2);
+                                    rowHeader.Append(cell3);
+                                    rowHeader.Append(cell4);
+                                    rowHeader.Append(cell5);
+
+                                    table.Append(rowHeader);
+                                    #endregion
+
+                                    #region Gendata table
+                                    var o = 1;
+                                    foreach (var i in dlg6)
+                                    {
+                                        if (i.Code != "701001")
+                                        {
+                                            TableRow row = new TableRow();
+                                            row.Append(CreateCell(i.ColA, true, 26, true, "1"));
+                                            row.Append(CreateCell(i.ColB, true, 26, true, "2082"));
+                                            row.Append(CreateCell(i.Col6.Value.ToString("N0"), true, 26, true, "2082"));
+                                            row.Append(CreateCell("đ/ lít thực tế", true, 26, true, "2082"));
+                                            row.Append(CreateCell("Thay đổi", true, 26, true, "2082"));
+                                            table.Append(row);
+                                            o++;
+                                        }
+                                    }
+                                    #endregion
+
+                                    paragraph.Parent.InsertAfter(table, paragraph);
+                                    paragraph.Remove();
+                                }
+                                break;
+                        }
+
+                    }
+                }
+            }
+            else if (nameTemp == "QDGBanBuon")
+            {
+                using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
+                {
+                    MainDocumentPart mainPart = doc.MainDocumentPart;
+                    DocumentFormat.OpenXml.Wordprocessing.Body body = mainPart.Document.Body;
+
+                    foreach (var t in lstTextElement)
+                    {
+                        switch (t)
+                        {
+                            case "##F_DATE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date);
+                                break;
+                            case "##DATE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, date);
+                                break;
+                            case "##F_DATE_HOUR@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date_hour);
+                                break;
+                            case "##QUYET_DINH_SO@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.QuyetDinhSo);
+                                break;
+                            case "##DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                break;
+                            case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                break;
+                        }
+
+                    }
+                }
+            }
+            else if(nameTemp == "MucGiamGiaNQTM")
+            {
+                using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
+                {
+                    MainDocumentPart mainPart = doc.MainDocumentPart;
+                    DocumentFormat.OpenXml.Wordprocessing.Body body = mainPart.Document.Body;
+
+                    foreach (var t in lstTextElement)
+                    {
+                        switch (t)
+                        {
+                            case "##F_DATE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date);
+                                break;
+                            case "##DATE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, date);
+                                break;
+                            case "##F_DATE_HOUR@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date_hour);
+                                break;
+                            case "##QUYET_DINH_SO@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.QuyetDinhSo);
+                                break;
+                            case "##DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                break;
+                            case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                break;
+                        }
+
+                    }
+                } 
+            }
+            else if (nameTemp == "QDGBanLe")
+            {
+                var sortedHS2 = model.HS2.OrderBy(x => int.Parse(x.GoodsCode)).ToList();
+                using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
+                {
+                    MainDocumentPart mainPart = doc.MainDocumentPart;
+                    DocumentFormat.OpenXml.Wordprocessing.Body body = mainPart.Document.Body;
+
+                    foreach (var t in lstTextElement)
+                    {
+                        switch (t)
+                        {
+                            case "##F_DATE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date);
+                                break;
+                            case "##DATE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, date);
+                                break;
+                            case "##QUYET_DINH_SO@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.QuyetDinhSo);
+                                break;
+                            case "##DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                break;
+                            case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                break;
+                            case "##TABLE_TT@@":
+                                Paragraph paragraph = body.Descendants<Paragraph>()
+                                           .FirstOrDefault(p => p.InnerText.Contains("##TABLE_TT@@"));
+                                if (paragraph != null)
+                                {
+                                    Table table = new Table();
+                                    DocumentFormat.OpenXml.Wordprocessing.TableProperties tblProperties = new DocumentFormat.OpenXml.Wordprocessing.TableProperties(
+                                       new TableCellMarginDefault(
+                                           new LeftMargin() { Width = "115" },
+                                           new RightMargin() { Width = "115" },
+                                           new TopMargin() { Width = "50" },
+                                           new BottomMargin() { Width = "50" },
+                                           new TableIndentation() { Width = 600, Type = TableWidthUnitValues.Dxa }
+                                       )
+                                   );
+                                    table.AppendChild(tblProperties);
+
+                                    #region Gendata table
+                                    var o = 1;
+                                    var goodsList = goods.Where(x => x.IsActive == true)
+                                                         .OrderByDescending(x => x.ThueBvmt)
+                                                         .ToList();
+                                    foreach (var i in goodsList)
+                                    {
+                                        var HS2Item = model.HS2.FirstOrDefault(x => x.GoodsCode == i.Code);
+                                        if (HS2Item != null)
+                                        {
+                                            TableRow row = new TableRow();
+                                            row.Append(CreateCell("+ " + i.Name, true, 26, false, "2500"));
+                                            row.Append(CreateCell(":", false, 26, true, "1"));
+                                            row.Append(CreateCell(HS2Item.Gny.ToString("N0"), true, 26, false, "1200"));
+                                            row.Append(CreateCell("đ/lít thực tế", false, 26, false, "1700"));
+                                            row.Append(CreateCell("(Thay đổi);", false, 26, false, "3300"));
+                                            table.Append(row);
+                                            o++;
+                                        }
+                                    }
+                                    #endregion
+                                    paragraph.Parent.InsertAfter(table, paragraph);
+                                    paragraph.Remove();
+                                }
+                                break;
+                            case "##TABLE_CL@@":
+                                Paragraph paragraph2 = body.Descendants<Paragraph>()
+                                           .FirstOrDefault(p => p.InnerText.Contains("##TABLE_CL@@"));
+                                if (paragraph2 != null)
+                                {
+                                    Table table = new Table();
+                                    DocumentFormat.OpenXml.Wordprocessing.TableProperties tblProperties = new DocumentFormat.OpenXml.Wordprocessing.TableProperties(
+                                       new TableCellMarginDefault(
+                                           new LeftMargin() { Width = "115" },
+                                           new RightMargin() { Width = "115" },
+                                           new TopMargin() { Width = "50" },
+                                           new BottomMargin() { Width = "50" },
+                                           new TableIndentation() { Width = 600, Type = TableWidthUnitValues.Dxa }
+                                       )
+                                   );
+                                    table.AppendChild(tblProperties);
+
+                                    #region Gendata table
+                                    var o = 1;
+                                    foreach (var i in data.DLG.Dlg_2)
+                                    {
+                                        if(i.Code != "701001")
+                                        {
+                                            TableRow row = new TableRow();
+                                            row.Append(CreateCell("+ " + i.Col1, true, 26, false, "2500"));
+                                            row.Append(CreateCell(":", false, 26, true, "1"));
+                                            row.Append(CreateCell(i.Col2.Value.ToString("N0"), true, 26, false, "1200"));
+                                            row.Append(CreateCell("đ/lít thực tế", false, 26, false, "1700"));
+                                            row.Append(CreateCell("(Thay đổi);", false, 26, false, "3300"));
+                                            table.Append(row);
+                                            o++;
+                                        }
+                                    }
+
+                                    #endregion
+
+                                    paragraph2.Parent.InsertAfter(table, paragraph2);
+                                    paragraph2.Remove();
+                                }
+                                break;
+                        }
+
+                    }
+                }
+            }
             #endregion
 
 
