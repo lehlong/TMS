@@ -50,6 +50,8 @@ export class CalculateResultComponent {
       dlg_4: [],
       dlg_5: [],
       dlg_6: [],
+      dlg_7: [],
+      dlg_8: []
     },
     pt: [],
     db: [],

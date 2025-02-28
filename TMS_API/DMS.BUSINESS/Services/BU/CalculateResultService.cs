@@ -25,6 +25,7 @@ using System.Linq;
 using NPOI.HPSF;
 using NPOI.SS.Formula.Functions;
 using DMS.CORE.Entities.IN;
+using Aspose.Words.Tables;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -247,6 +248,82 @@ namespace DMS.BUSINESS.Services.BU
                     _oII++;
                 }
 
+                #region
+
+                
+                foreach (var g in lstGoods)
+                {
+                    var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
+                    var dlg1 = data.DLG.Dlg_1.Where(x => x.Code == g.Code).ToList();
+                    var k = new DLG_4_Old
+                    {
+                        Code = g.Code,
+                        Type = "TT",
+                        ColB = g.Name,
+                        Col1 = hsmho.Sum(x => x.HeSoVcf),
+                        Col2 = hsmho.Sum(x => x.ThueBvmt),
+                        Col3 = hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
+                        Col4 = hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
+                        Col5 = (hsmho.Sum(x => x.ThueBvmt) + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
+                        Col6 = dlg1.Sum(x => x.Col6),
+                        Col14 = hsmho.Sum(x => x.GiamGiaFob),
+                        Col10 = hsmho.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmho.Sum(x => x.LaiGopDieuTiet),
+                    };
+                    if (k.Col6 != 0)
+                    {
+                       k.Col7 = k.Col6 / 1.1M - k.Col2;
+                    }
+                    k.Col8 = k.Col6 - k.Col5;
+                    if (k.Col8 != 0)
+                    {
+                        k.Col9 = k.Col8 / 1.1M;
+                    }
+                    k.Col11 = k.Col1 * k.Col10 * 1.1M;
+                    k.Col13 = k.Col11 + k.Col9;
+                    k.Col12 = k.Col13 * 1.1M;
+                    k.Col15 = (k.Col12 - k.Col14) * k.Col1;
+                    k.Col16 = k.Col12 - k.Col14;
+                    data.DLG.Dlg_4_Old.Add(k);
+                }
+
+                foreach (var g in lstGoods)
+                {
+                    var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
+                    var dlg1 = data.DLG.Dlg_3.Where(x => x.Code == g.Code).ToList();
+                    var k = new DLG_4_Old
+                    {
+                        Code = g.Code,
+                        Type = "OTHER",
+                        ColA = _oII.ToString(),
+                        ColB = g.Name,
+                        Col1 = hsmho.Sum(x => x.HeSoVcf),
+                        Col2 = hsmho.Sum(x => x.ThueBvmt),
+                        Col3 = hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
+                        Col4 = hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
+                        Col5 = (hsmho.Sum(x => x.ThueBvmt) + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
+                        Col6 = dlg1.Sum(x => x.Col7),
+                        Col14 = hsmho.Sum(x => x.GiamGiaFob),
+                        Col10 = hsmho.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmho.Sum(x => x.LaiGopDieuTiet),
+                    };
+                    if (k.Col6 != 0)
+                    {
+                        k.Col7 = k.Col6 / 1.1M - k.Col2;
+                    }
+                    k.Col8 = k.Col6 - k.Col5;
+                    if (k.Col8 != 0)
+                    {
+                        k.Col9 = k.Col8 / 1.1M;
+                    }
+                    k.Col11 = k.Col1 * k.Col10 * 1.1M;
+                    k.Col13 = k.Col11 + k.Col9;
+                    k.Col12 = k.Col13 * 1.1M;
+                    k.Col15 = (k.Col12 -k.Col14) * k.Col1;
+                    k.Col16 = k.Col12 - k.Col14;
+                    data.DLG.Dlg_4_Old.Add(k);
+
+                }
+                #endregion
+
 
                 // thay dổi giá bán lẻ 
                 foreach (var g in lstGoods)
@@ -271,6 +348,60 @@ namespace DMS.BUSINESS.Services.BU
                             };
 
                             data.DLG.Dlg_TDGBL.Add(i);
+                        }
+
+                    }
+                }
+                // Lãi gộp
+                foreach (var g in lstGoods)
+                {
+                    var hsmh = dataHSMH.Where(x => x.GoodsCode == g.Code).ToList();
+                    var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
+                    var dlg_4 = data.DLG.Dlg_4;
+                    var dlg_4_Old = data.DLG.Dlg_4_Old;
+                    var k = dlg_4_Old.FirstOrDefault();
+                    foreach (var n in dlg_4)
+                        {
+                            if (g.Code == n.Code)
+                            {
+                                var i = new DLG_7
+                                {
+                                    Code = g.Code,
+                                    ColA = g.Name,
+                                    Type = n.Type,
+                                    Col1 = k.Col12, // lấy giá niêm yết ở kì trước
+                                    Col2 = n.Col12,
+                                    TangGiam1_2 = n.Col12 - k.Col12,
+                                };
+
+                                data.DLG.Dlg_7.Add(i);
+                            }
+                        }
+                }
+
+
+                // Đề xuất mức giảm giá
+                foreach (var g in lstGoods)
+                {
+                    var hsmh = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
+                    var dlg_4 = data.DLG.Dlg_4;
+                    var dlg_4_Old = data.DLG.Dlg_4_Old;
+                    var k = dlg_4_Old.FirstOrDefault();
+                    foreach (var n in dlg_4)
+                    {
+                        if (g.Code == n.Code)
+                        {
+                            var i = new DLG_8
+                            {
+                                Code = g.Code,
+                                ColA = g.Name,
+                                Type = n.Type,
+                                Col1 = k.Col14, // lấy giá niêm yết ở kì trước
+                                Col2 = n.Col14,
+                                TangGiam1_2 = n.Col14 - k.Col14,
+                            };
+
+                            data.DLG.Dlg_8.Add(i);
                         }
 
                     }
@@ -2358,11 +2489,11 @@ namespace DMS.BUSINESS.Services.BU
             var header = await _dbContext.TblBuCalculateResultList.FindAsync(headerId);
             var model = await GetDataInput(headerId);
             var goods = await _dbContext.TblMdGoods.ToListAsync();
-            var NguoiKyTen = await _dbContext.TblInNguoiKyTen.FirstOrDefaultAsync(x => x.HeaderCode == headerId);
+            var NguoiKyTen = await _dbContext.TblInNguoiKyTen.FirstOrDefaultAsync(x => x.HeaderCode == headerId);  //
             var f_date = $"{header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
             var date = $"{header.FDate.Day}/{header.FDate.Month}/{header.FDate.Year}";
             var f_date_hour = $"kể từ {header.FDate.Hour} giờ {header.FDate.Minute} ngày {header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
-            TableCell CreateCell(string text, bool isBold = true, int fontSize = 26, bool isCenter = true, string width = "2400", int? gridSpan = null)
+            TableCell CreateCell(string text, bool isBold = true, int fontSize = 26, bool isCenter = true, string width = "2400", int? gridSpan = null, int v = 0)
             {
                 Run run = new Run(new Text(text));
 
@@ -2417,6 +2548,7 @@ namespace DMS.BUSINESS.Services.BU
             #region fill dữ liệu file công điện kiểm kê giá bán lẻ
             if (nameTemp == "CongDienKKGiaBanLe")
             {
+                var sortedHS2 = model.HS2.OrderBy(x => int.Parse(x.GoodsCode)).ToList();
                 var dlg1 = data.DLG.Dlg_1;
                 using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
                 {
@@ -2431,61 +2563,95 @@ namespace DMS.BUSINESS.Services.BU
                                 var text = $"ngày {header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, text);
                                 break;
-                            //case "##QUYET_DINH_SO@@":
-                            //    wordDocumentService.ReplaceStringInWordDocumennt(doc, t, quyetDinhSo);
-                            //    break;
-                        //case "##ADDRESS@@":
-                        //    wordDocumentService.ReplaceStringInWordDocumennt(doc, t, c.Address);
-                        //    break;
-                        case "##TABLE_TT@@":
-                            Paragraph paragraph = body.Descendants<Paragraph>()
-                                       .FirstOrDefault(p => p.InnerText.Contains("##TABLE_TT@@"));
-                            if (paragraph != null)
-                            {
-                                Table table = new Table();
-                                TableProperties tblProperties = new TableProperties(
-                                    new TableBorders(
-                                        new TopBorder { Val = BorderValues.Single, Size = 4 },
-                                        new BottomBorder { Val = BorderValues.Single, Size = 4 },
-                                        new LeftBorder { Val = BorderValues.Single, Size = 4 },
-                                        new RightBorder { Val = BorderValues.Single, Size = 4 },
-                                        new InsideHorizontalBorder { Val = BorderValues.Single, Size = 4 },
-                                        new InsideVerticalBorder { Val = BorderValues.Single, Size = 4 }
-                                    )
-                                );
-                                table.AppendChild(tblProperties);
-                                #region Header table
-                                TableRow rowHeader = new TableRow();
-                                //TableCell cell1 = CreateHeaderCell("STT", 1, 26);
-                                //TableCell cell1 = CreateHeaderCell("Mặt hàng", 1, 26);
-                                //TableCell cell2 = CreateHeaderCell("Điểm giao hàng", 1, 26);
-                                //TableCell cell3 = CreateHeaderCell("Đơn giá", 2, 26);
-                                //rowHeader.Append(cell1);
-                                //rowHeader.Append(cell2);
-                                //rowHeader.Append(cell3);
-                                ////rowHeader.Append(cell4);
-                                //table.Append(rowHeader);
-                                #endregion
-
-                                #region Gendata table
-                                var o = 1;
-                                foreach (var i in dlg1)
+                            case "##QUYET_DINH_SO@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.QuyetDinhSo);
+                                break;
+                            case "##DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                break;
+                            case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                break;
+                            case "##TABLE_TT@@":
+                                Paragraph paragraph = body.Descendants<Paragraph>()
+                                               .FirstOrDefault(p => p.InnerText.Contains("##TABLE_TT@@"));
+                                if (paragraph != null)
                                 {
-                                    TableRow row = new TableRow();
-                                    //row.Append(CreateCell(o.ToString(), false, 26));
-                                    row.Append(CreateCell(i.Col1, false, 26));
-                                    row.Append(CreateCell(i.Col6.Value.ToString("N0"), false, 26));
-                                    row.Append(CreateCell("Đ/lít thực tế", false, 26));
-                                    //row.Append(CreateCell("", false, 26));
-                                    table.Append(row);
-                                    o++;
-                                }
-                                #endregion
+                                    Table table = new Table();
+                                    DocumentFormat.OpenXml.Wordprocessing.TableProperties tblProperties = new DocumentFormat.OpenXml.Wordprocessing.TableProperties(
+                                       new TableCellMarginDefault(
+                                           new LeftMargin() { Width = "115" },
+                                           new RightMargin() { Width = "115" },
+                                           new TopMargin() { Width = "50" },
+                                           new BottomMargin() { Width = "50" }
+                                           
+                                       )
+                                   );
+                                    table.AppendChild(tblProperties);
 
-                                paragraph.Parent.InsertAfter(table, paragraph);
-                                paragraph.Remove();
-                            }
-                            break;
+                                    #region Gendata table
+                                    var o = 1;
+                                    var goodsList = goods.Where(x => x.IsActive == true)
+                                                         .OrderByDescending(x => x.ThueBvmt)
+                                                         .ToList();
+                                    foreach (var i in goodsList)
+                                    {
+                                        var HS2Item = model.HS2.FirstOrDefault(x => x.GoodsCode == i.Code);
+                                        if (HS2Item != null)
+                                        {
+                                            TableRow row = new TableRow();
+                                            row.Append(CreateCell("+ " + i.Name, true, 26, false, "3500"));
+                                            row.Append(CreateCell(":", false, 26, true, "1"));
+                                            row.Append(CreateCell(HS2Item.Gny.ToString("N0"), true, 26, false, "2400"));
+                                            row.Append(CreateCell("đ/lít thực tế", false, 26, false, "2400"));                                           
+                                            table.Append(row);
+                                            o++;
+                                        }
+                                    }
+                                    #endregion
+                                    paragraph.Parent.InsertAfter(table, paragraph);
+                                    paragraph.Remove();
+                                }
+                                break;
+                            case "##TABLE_VCL@@":
+                                Paragraph paragraph2 = body.Descendants<Paragraph>()
+                                           .FirstOrDefault(p => p.InnerText.Contains("##TABLE_VCL@@"));
+                                if (paragraph2 != null)
+                                {
+                                    Table table = new Table();
+                                    DocumentFormat.OpenXml.Wordprocessing.TableProperties tblProperties = new DocumentFormat.OpenXml.Wordprocessing.TableProperties(
+                                       new TableCellMarginDefault(
+                                           new LeftMargin() { Width = "115" },
+                                           new RightMargin() { Width = "115" },
+                                           new TopMargin() { Width = "50" },
+                                           new BottomMargin() { Width = "50" }
+                                           
+                                       )
+                                   );
+                                    table.AppendChild(tblProperties);
+
+                                    #region Gendata table
+                                    var o = 1;
+                                    foreach (var i in data.DLG.Dlg_2)
+                                    {
+                                        if (i.Code != "701001")
+                                        {
+                                            TableRow row = new TableRow();
+                                            row.Append(CreateCell("+ " + i.Col1, true, 26, false, "3500"));
+                                            row.Append(CreateCell(":", false, 26, true, "1"));
+                                            row.Append(CreateCell(i.Col2.Value.ToString("N0"), true, 26, false, "2400"));
+                                            row.Append(CreateCell("đ/lít thực tế", false, 26, false, "2400"));
+                                            table.Append(row);
+                                            o++;
+                                        }
+                                    }
+
+                                    #endregion
+
+                                    paragraph2.Parent.InsertAfter(table, paragraph2);
+                                    paragraph2.Remove();
+                                }
+                                break;
                         }
                     }
                 }
@@ -2551,16 +2717,14 @@ namespace DMS.BUSINESS.Services.BU
                                     TableRow rowHeader = new TableRow();
 
                                     TableCell cell1 = CreateCell("TT",true, 26,true,"1");
-                                    TableCell cell2 = CreateCell("MẶT HÀNG",true, 26,true, "2082");
-                                    TableCell cell3 = CreateCell("ĐƠN GIÁ", true, 26, true, "2082");
-                                    TableCell cell4 = CreateCell("ĐƠN VỊ TÍNH", true, 26, true, "2082");
-                                    TableCell cell5 = CreateCell("GHI CHÚ", true, 26, true, "2082");
+                                    TableCell cell2 = CreateCell("MẶT HÀNG",true, 26,true, "3000");
+                                    TableCell cell3 = CreateCell("ĐƠN GIÁ", true, 26, true, "3000");
+                                    TableCell cell4 = CreateCell("ĐƠN VỊ TÍNH", true, 26, true, "3000");
 
                                     rowHeader.Append(cell1);
                                     rowHeader.Append(cell2);
                                     rowHeader.Append(cell3);
                                     rowHeader.Append(cell4);
-                                    rowHeader.Append(cell5);
 
                                     table.Append(rowHeader);
                                     #endregion
@@ -2576,7 +2740,6 @@ namespace DMS.BUSINESS.Services.BU
                                             row.Append(CreateCell(i.ColB, true, 26, true));
                                             row.Append(CreateCell(i.Col5.Value.ToString("N0"), true, 26));
                                             row.Append(CreateCell("đ/ lít thực tế", true, 26));
-                                            row.Append(CreateCell("Thay đổi", true, 26));
                                             table.Append(row);
                                             o++;
                                         }
@@ -2587,6 +2750,7 @@ namespace DMS.BUSINESS.Services.BU
                                     paragraph.Remove();
                                 }
                                 break;
+                             
                         }
 
                     }
@@ -2647,16 +2811,14 @@ namespace DMS.BUSINESS.Services.BU
                                     TableRow rowHeader = new TableRow();
 
                                     TableCell cell1 = CreateCell("TT", true, 26, true,"1");
-                                    TableCell cell2 = CreateCell("MẶT HÀNG", true, 26, true, "2082");
-                                    TableCell cell3 = CreateCell("GIÁ BÁN", true, 26, true, "2082");
-                                    TableCell cell4 = CreateCell("ĐƠN VỊ TÍNH", true, 26, true, "2082");
-                                    TableCell cell5 = CreateCell("GHI CHÚ", true, 26, true, "2082");
+                                    TableCell cell2 = CreateCell("MẶT HÀNG", true, 26, true, "3000");
+                                    TableCell cell3 = CreateCell("GIÁ BÁN", true, 26, true, "3000");
+                                    TableCell cell4 = CreateCell("ĐƠN VỊ TÍNH", true, 26, true, "3000");
 
                                     rowHeader.Append(cell1);
                                     rowHeader.Append(cell2);
                                     rowHeader.Append(cell3);
                                     rowHeader.Append(cell4);
-                                    rowHeader.Append(cell5);
 
                                     table.Append(rowHeader);
                                     #endregion
@@ -2669,10 +2831,9 @@ namespace DMS.BUSINESS.Services.BU
                                         {
                                             TableRow row = new TableRow();
                                             row.Append(CreateCell(i.ColA, true, 26, true, "1"));
-                                            row.Append(CreateCell(i.ColB, true, 26, true, "2082"));
-                                            row.Append(CreateCell(i.Col6.Value.ToString("N0"), true, 26, true, "2082"));
-                                            row.Append(CreateCell("đ/ lít thực tế", true, 26, true, "2082"));
-                                            row.Append(CreateCell("Thay đổi", true, 26, true, "2082"));
+                                            row.Append(CreateCell(i.ColB, true, 26, true, "3000"));
+                                            row.Append(CreateCell(i.Col6.Value.ToString("N0"), true, 26, true, "3000"));
+                                            row.Append(CreateCell("đ/ lít thực tế", true, 26, true, "3000"));
                                             table.Append(row);
                                             o++;
                                         }
@@ -2756,6 +2917,195 @@ namespace DMS.BUSINESS.Services.BU
                     }
                 } 
             }
+            else if (nameTemp == "KeKhaiGia")
+            {
+                using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
+                {
+                    MainDocumentPart mainPart = doc.MainDocumentPart;
+                    DocumentFormat.OpenXml.Wordprocessing.Body body = mainPart.Document.Body;
+
+                    foreach (var t in lstTextElement)
+                    {
+                        switch (t)
+                        {
+                            case "##F_DATE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date);
+                                break;                          
+                            case "##DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                break;
+                            case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                break;
+                        }
+
+                    }
+                }
+            }
+            else if (nameTemp == "ToTrinh")
+            {
+                var dlg7 = data.DLG.Dlg_7;
+                var dlg8 = data.DLG.Dlg_8;
+                using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
+                {
+                    MainDocumentPart mainPart = doc.MainDocumentPart;
+                    DocumentFormat.OpenXml.Wordprocessing.Body body = mainPart.Document.Body;
+
+                    foreach (var t in lstTextElement)
+                    {
+                        switch (t)
+                        {
+                         
+                            case "##DATE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, date);
+                                break;
+                            case "##F_DATE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date);
+                                break;
+                            case "##F_DATE_HOURE@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date_hour);
+                                break;
+                            case "##TABLE_LAI_GOP@@":
+                                Paragraph paragraph = body.Descendants<Paragraph>()
+                                       .FirstOrDefault(p => p.InnerText.Contains("##TABLE_LAI_GOP@@"));
+                                if (paragraph != null)
+                                {
+                                    Table table = new Table();
+                                    TableProperties tblProperties = new TableProperties(
+                                        new TableBorders(
+                                            new TopBorder { Val = BorderValues.Single, Size = 4 },
+                                            new BottomBorder { Val = BorderValues.Single, Size = 4 },
+                                            new LeftBorder { Val = BorderValues.Single, Size = 4 },
+                                            new RightBorder { Val = BorderValues.Single, Size = 4 },
+                                            new InsideHorizontalBorder { Val = BorderValues.Single, Size = 4 },
+                                            new InsideVerticalBorder { Val = BorderValues.Single, Size = 4 }
+                                        )
+                                    );
+                                    table.AppendChild(tblProperties);
+
+                                    #region Header table
+
+
+                                    TableRow headerRow1 = new TableRow();
+                                    headerRow1.Append(CreateCell("So sánh lãi gộp giữa hai kỳ", true, 26, true, "2082", 4, 1)); 
+
+                                    TableRow headerRow2 = new TableRow();
+                                    headerRow2.Append(CreateCell("Mặt hàng", true, 26, true, "2082"));
+                                    headerRow2.Append(CreateCell("LG Cũ", true, 26, true, "2082"));
+                                    headerRow2.Append(CreateCell("LG Mới", true, 26, true, "2082"));
+                                    headerRow2.Append(CreateCell("Tăng/Giảm", true, 26, true, "2082"));
+
+                                    table.Append(headerRow1);
+                                    table.Append(headerRow2);
+
+                                    // Thêm dòng tiêu đề "Vùng thị trường trung tâm"
+                                    TableRow regionRow1 = new TableRow();
+                                    regionRow1.Append(CreateCell("Vùng thị trường trung tâm", true, 26, true, "2082", 4, 1)); 
+                                    table.Append(regionRow1);
+                                    #endregion
+
+                                    #region Gendata table                                   
+                                    foreach (var i in dlg7.Where(x => x.Type == "TT"))
+                                    {
+                                        if(i.Code != "701001")
+                                        {
+                                        TableRow row = new TableRow();
+                                        row.Append(CreateCell(i.ColA, false, 26, false, "3000")); // Tên mặt hàng
+                                        row.Append(CreateCell(i.Col1?.ToString("N0"), false, 26, false, "2082")); // LG cũ
+                                        row.Append(CreateCell(i.Col2?.ToString("N0"), false, 26, false, "2082")); // LG mới
+                                        row.Append(CreateCell(i.TangGiam1_2?.ToString("N0"), false, 26, false, "2082")); 
+                                        table.Append(row);
+                                        }    
+                                       
+                                    }
+
+                                    // Thêm dòng tiêu đề "Các vùng thị trường còn lại"
+                                    TableRow regionRow2 = new TableRow();
+                                    regionRow2.Append(CreateCell("Các vùng thị trường còn lại", true, 26, true, "2082", 4, 1)); // Gộp 4 cột
+                                    table.Append(regionRow2);
+
+                                    // Duyệt danh sách dlg7, in từng mặt hàng thuộc vùng còn lại
+                                    foreach (var i in dlg7.Where(x => x.Type == "OTHER"))
+                                    {
+                                        if (i.Code != "701001")
+                                        {
+                                            TableRow row = new TableRow();
+                                            row.Append(CreateCell(i.ColA, false, 26, false, "3000")); // Tên mặt hàng
+                                            row.Append(CreateCell(i.Col1?.ToString("N0"), false, 26, false, "2082")); // LG cũ
+                                            row.Append(CreateCell(i.Col2?.ToString("N0"), false, 26, false, "2082")); // LG mới
+                                            row.Append(CreateCell(i.TangGiam1_2?.ToString("N0"), false, 26, false, "2082")); 
+                                            table.Append(row);
+                                        }
+                                       
+                                    }
+                                        #endregion
+
+                                    paragraph.Parent.InsertAfter(table, paragraph);
+                                    paragraph.Remove();
+                                }
+                                break;
+                            case "##TABLE_GIAM_GIA@@":
+                                Paragraph paragraph1 = body.Descendants<Paragraph>()
+                                        .FirstOrDefault(p => p.InnerText.Contains("##TABLE_GIAM_GIA@@"));
+                                if (paragraph1 != null)
+                                {
+                                    Table table = new Table();
+                                    TableProperties tblProperties = new TableProperties(
+                                        new TableBorders(
+                                            new TopBorder { Val = BorderValues.Single, Size = 4 },
+                                            new BottomBorder { Val = BorderValues.Single, Size = 4 },
+                                            new LeftBorder { Val = BorderValues.Single, Size = 4 },
+                                            new RightBorder { Val = BorderValues.Single, Size = 4 },
+                                            new InsideHorizontalBorder { Val = BorderValues.Single, Size = 4 },
+                                            new InsideVerticalBorder { Val = BorderValues.Single, Size = 4 }
+                                        )
+                                    );
+                                    table.AppendChild(tblProperties);
+
+                                    #region Header table
+                                    TableRow headerRow1 = new TableRow();
+                                    
+                                    headerRow1.Append(CreateCell("So sánh lãi gộp giữa hai kỳ", true, 26, true, "2082", 4, 1));
+
+                                    TableRow headerRow2 = new TableRow();
+                                    headerRow2.Append(CreateCell("Mặt hàng", true, 26, true, "2082"));
+                                    headerRow2.Append(CreateCell("CK Cũ", true, 26, true, "2082"));
+                                    headerRow2.Append(CreateCell("CK Mới", true, 26, true, "2082"));
+                                    headerRow2.Append(CreateCell("Tăng/Giảm", true, 26, true, "2082"));
+
+                                    table.Append(headerRow1);
+                                    table.Append(headerRow2);
+
+                                    #endregion
+
+                                    #region Gendata table
+                                    var o = 1;
+                                    foreach (var i in dlg8.Where(x => x.Type == "TT"))
+                                    {
+                                        if (i.Code != "701001")
+                                        {
+                                            TableRow row = new TableRow();
+
+                                            row.Append(CreateCell(i.ColA, false, 26, false, "3000")); // Tên mặt hàng
+                                            row.Append(CreateCell(i.Col1?.ToString("N0"), false, 26, false, "2082")); // LG cũ
+                                            row.Append(CreateCell(i.Col2?.ToString("N0"), false, 26, false, "2082")); // LG mới
+                                            row.Append(CreateCell(i.TangGiam1_2?.ToString("N0"), false, 26, false, "2082")); 
+                                            table.Append(row);
+                                        }
+
+                                    }
+                                    #endregion
+
+                                    paragraph1.Parent.InsertAfter(table, paragraph1);
+                                    paragraph1.Remove();
+                                }
+                                break;
+                        }
+
+                    }
+                }
+            }
+            
             else if (nameTemp == "QDGBanLe")
             {
                 var sortedHS2 = model.HS2.OrderBy(x => int.Parse(x.GoodsCode)).ToList();
@@ -2794,8 +3144,8 @@ namespace DMS.BUSINESS.Services.BU
                                            new LeftMargin() { Width = "115" },
                                            new RightMargin() { Width = "115" },
                                            new TopMargin() { Width = "50" },
-                                           new BottomMargin() { Width = "50" },
-                                           new TableIndentation() { Width = 600, Type = TableWidthUnitValues.Dxa }
+                                           new BottomMargin() { Width = "50" }
+                                           
                                        )
                                    );
                                     table.AppendChild(tblProperties);
@@ -2811,11 +3161,10 @@ namespace DMS.BUSINESS.Services.BU
                                         if (HS2Item != null)
                                         {
                                             TableRow row = new TableRow();
-                                            row.Append(CreateCell("+ " + i.Name, true, 26, false, "2500"));
+                                            row.Append(CreateCell("+ " + i.Name, true, 26, false, "3500"));
                                             row.Append(CreateCell(":", false, 26, true, "1"));
-                                            row.Append(CreateCell(HS2Item.Gny.ToString("N0"), true, 26, false, "1200"));
-                                            row.Append(CreateCell("đ/lít thực tế", false, 26, false, "1700"));
-                                            row.Append(CreateCell("(Thay đổi);", false, 26, false, "3300"));
+                                            row.Append(CreateCell(HS2Item.Gny.ToString("N0"), true, 26, false, "2400"));
+                                            row.Append(CreateCell("đ/lít thực tế", false, 26, false, "2400"));
                                             table.Append(row);
                                             o++;
                                         }
@@ -2836,8 +3185,8 @@ namespace DMS.BUSINESS.Services.BU
                                            new LeftMargin() { Width = "115" },
                                            new RightMargin() { Width = "115" },
                                            new TopMargin() { Width = "50" },
-                                           new BottomMargin() { Width = "50" },
-                                           new TableIndentation() { Width = 600, Type = TableWidthUnitValues.Dxa }
+                                           new BottomMargin() { Width = "50" }
+                                           
                                        )
                                    );
                                     table.AppendChild(tblProperties);
@@ -2849,11 +3198,10 @@ namespace DMS.BUSINESS.Services.BU
                                         if(i.Code != "701001")
                                         {
                                             TableRow row = new TableRow();
-                                            row.Append(CreateCell("+ " + i.Col1, true, 26, false, "2500"));
+                                            row.Append(CreateCell("+ " + i.Col1, true, 26, false, "3500"));
                                             row.Append(CreateCell(":", false, 26, true, "1"));
-                                            row.Append(CreateCell(i.Col2.Value.ToString("N0"), true, 26, false, "1200"));
-                                            row.Append(CreateCell("đ/lít thực tế", false, 26, false, "1700"));
-                                            row.Append(CreateCell("(Thay đổi);", false, 26, false, "3300"));
+                                            row.Append(CreateCell(i.Col2.Value.ToString("N0"), true, 26, false, "2400"));
+                                            row.Append(CreateCell("đ/lít thực tế", false, 26, false, "2400"));
                                             table.Append(row);
                                             o++;
                                         }

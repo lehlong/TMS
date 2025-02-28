@@ -34,8 +34,11 @@ namespace DMS.BUSINESS.Models
         public List<DLG_2> Dlg_2 { get; set; } = new List<DLG_2>();
         public List<DLG_3> Dlg_3 { get; set; } = new List<DLG_3>();
         public List<DLG_4> Dlg_4 { get; set; } = new List<DLG_4>();
+        public List<DLG_4_Old> Dlg_4_Old { get; set; } = new List<DLG_4_Old>();
         public List<DLG_5> Dlg_5 { get; set; } = new List<DLG_5>();
         public List<DLG_6> Dlg_6 { get; set; } = new List<DLG_6>();
+        public List<DLG_7> Dlg_7 { get; set; } = new List<DLG_7>();
+        public List<DLG_8> Dlg_8 { get; set; } = new List<DLG_8>();
         public List<Dlg_TDGBL> Dlg_TDGBL { get; set; } = new List<Dlg_TDGBL>();
         public List<Dlg_TdGgptbl> Dlg_TdGgptbl { get; set; } = new List<Dlg_TdGgptbl>();
 
@@ -97,6 +100,30 @@ namespace DMS.BUSINESS.Models
         public decimal? Col16 { get; set; }
         public bool IsBold { get; set; } = false;
     }
+    public class DLG_4_Old
+    {
+        public string Code { get; set; }
+        public string Type { get; set; }
+        public string ColA { get; set; }
+        public string ColB { get; set; }
+        public decimal? Col1 { get; set; }
+        public decimal? Col2 { get; set; }
+        public decimal? Col3 { get; set; }
+        public decimal? Col4 { get; set; }
+        public decimal? Col5 { get; set; }
+        public decimal? Col6 { get; set; }
+        public decimal? Col7 { get; set; }
+        public decimal? Col8 { get; set; }
+        public decimal? Col9 { get; set; }
+        public decimal? Col10 { get; set; }
+        public decimal? Col11 { get; set; }
+        public decimal? Col12 { get; set; }
+        public decimal? Col13 { get; set; }
+        public decimal? Col14 { get; set; }
+        public decimal? Col15 { get; set; }
+        public decimal? Col16 { get; set; }
+        public bool IsBold { get; set; } = false;
+    }
     public class DLG_5
     {
         public string Code { get; set; }
@@ -123,7 +150,24 @@ namespace DMS.BUSINESS.Models
         public string Col8 { get; set; }
 
     }
-
+    public class DLG_7
+    {
+        public string Code { get; set; }
+        public string Type { get; set; }
+        public string ColA { get; set; }
+        public decimal? Col1 { get; set; }
+        public decimal? Col2 { get; set; }
+        public decimal? TangGiam1_2 { get; set; }
+    }
+    public class DLG_8
+    {
+        public string Code { get; set; }
+        public string ColA { get; set; }
+        public string Type { get; set; }
+        public decimal? Col1 { get; set; }
+        public decimal? Col2 { get; set; }
+        public decimal? TangGiam1_2 { get; set; }
+    }
     public class Dlg_TDGBL
     {
         public string Code { get; set; }
