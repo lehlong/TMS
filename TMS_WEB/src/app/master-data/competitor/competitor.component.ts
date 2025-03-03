@@ -5,7 +5,7 @@ import { GlobalService } from '../../services/global.service'
 import { CompetitorService } from '../../services/master-data/competitor.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { COMPETITOR_RIGHTS } from '../../shared/constants'
+import { COMPETITOR_RIGHTS, MASTER_DATA_MANAGEMENT } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 @Component({
   selector: 'app-Competitor',
@@ -27,7 +27,7 @@ export class CompetitorComponent {
   filter = new CompetitorFilter()
   paginationResult = new PaginationResult()
   loading: boolean = false
-  COMPETITOR_RIGHTS = COMPETITOR_RIGHTS
+  MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
   constructor(
     private _service: CompetitorService,
     private fb: NonNullableFormBuilder,

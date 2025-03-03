@@ -6,6 +6,7 @@ import { GoodsService } from '../../services/master-data/goods.service';
 import { DiscountInformationService } from '../../services/discount-information/discount-information.service';
 import { DiscountInformationListService } from '../../services/discount-information/discount-information-list.service';
 import { environment } from '../../../environments/environment.prod';
+import { COMPETITOR_ANALYSIS } from '../../shared/constants';
 
 @Component({
   selector: 'app-discount-information',
@@ -15,6 +16,7 @@ import { environment } from '../../../environments/environment.prod';
   styleUrl: './discount-information.component.scss'
 })
 export class DiscountInformationComponent {
+  COMPETITOR_ANALYSIS = COMPETITOR_ANALYSIS
   constructor(
     private _service: DiscountInformationService,
     private _discountInformationList: DiscountInformationListService,

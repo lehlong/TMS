@@ -10,6 +10,7 @@ import { AccountFilter } from '../../../models/system-manager/account.model'
 import { AccountEditComponent } from '../account-edit/account-edit.component'
 import { AccountGroupEditComponent } from '../../account-group/account-group-edit/account-group-edit.component'
 import { ActivatedRoute, Router } from '@angular/router'
+import { ADMIN_RIGHTS } from '../../../shared/constants'
 
 @Component({
   selector: 'app-account-index',
@@ -45,7 +46,7 @@ export class AccountIndexComponent {
   @ViewChild(AccountEditComponent) accountEditComponent!: AccountEditComponent
   @ViewChild(AccountGroupEditComponent)
   accountGroupEditComponent!: AccountGroupEditComponent
-
+  ADMIN_RIGHTS = ADMIN_RIGHTS
   constructor(
     private dropdownService: DropdownService,
     // private _service: PartnerManagementService,

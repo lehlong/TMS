@@ -3,7 +3,7 @@ import { ShareModule } from '../../shared/share-module'
 import { GlobalService } from '../../services/global.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { MARKET_RIGHTS } from '../../shared/constants'
+import { MARKET_RIGHTS, MASTER_DATA_MANAGEMENT } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { MarketFilter } from '../../models/master-data/market.model'
 import { MarketService } from '../../services/master-data/market.service'
@@ -37,7 +37,7 @@ export class MarketComponent {
   loading: boolean = false
   localResult: any[] = []
   warehouseResult: any[] = []
-  MARKET_RIGHTS = MARKET_RIGHTS
+  MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
 
   constructor(
     private _service: MarketService,

@@ -5,7 +5,7 @@ import { GlobalService } from '../../services/global.service'
 import { LocalService } from '../../services/master-data/local.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { LAIGOPDIEUTIET_RIGHTS } from '../../shared/constants'
+import { LAIGOPDIEUTIET_RIGHTS, MASTER_DATA_MANAGEMENT } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { LaiGopDieuTietFilter } from '../../models/master-data/lai-gop-dieu-tiet.model'
 import { LaiGopDieuTietService } from '../../services/master-data/lai-gop-dieu-tiet.service'
@@ -42,7 +42,7 @@ export class LaiGopDieuTietComponent {
   errorDate: string = ''
   today = new Date()
   loading: boolean = false
-  LAIGOPDIEUTIET_RIGHTS = LAIGOPDIEUTIET_RIGHTS
+  MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
 
   constructor(
     private _service: LaiGopDieuTietService,

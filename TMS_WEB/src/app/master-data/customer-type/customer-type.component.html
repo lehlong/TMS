@@ -1,4 +1,4 @@
-<div class="container-list" [appPermission]="CUSTOMER_TYPE_RIGHTS.LIST">
+<div class="container-list" [appPermission]="MASTER_DATA_MANAGEMENT.CUSTOMER_TYPE_MANAGEMENT">
   <div class="site-page-header-ghost-wrapper">
     <nz-page-header nzBackIcon nzTitle="Kiểu khách hàng" nzSubtitle="Danh sách kiểu khách hàng" class="site-page-header">
       <nz-page-header-extra>
@@ -16,7 +16,7 @@
             </button>
           </nz-space>
           <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
-            [appPermission]="CUSTOMER_TYPE_RIGHTS.ADD">
+           >
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
           <!-- <button
@@ -112,13 +112,13 @@
 <ng-template #extra>
   <nz-space>
     <ng-container *ngIf="edit">
-      <button [nzLoading]="loading" [appPermission]="CUSTOMER_TYPE_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
+      <button [nzLoading]="loading"  *nzSpaceItem nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>
     <ng-container *ngIf="!edit">
-      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="CUSTOMER_TYPE_RIGHTS.ADD" nz-button nzType="primary"
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>

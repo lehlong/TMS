@@ -3,7 +3,7 @@ import { ShareModule } from '../../shared/share-module'
 import { GlobalService } from '../../services/global.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { MARKET_COMPETITOR_RIGHTS } from '../../shared/constants'
+import { MARKET_COMPETITOR_RIGHTS, MASTER_DATA_MANAGEMENT } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { MarketCompetitorFilter } from '../../models/master-data/market-competitor.model'
 import { MarketCompetitorService } from '../../services/master-data/market-competitor.service'
@@ -35,7 +35,7 @@ export class MarketCompetitorComponent {
   loading: boolean = false
   marketResult: any[] = []
   competitorResult: any[] = []
-  MARKET_COMPETITOR_RIGHTS = MARKET_COMPETITOR_RIGHTS
+  MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
 
   constructor(
     private _service: MarketCompetitorService,

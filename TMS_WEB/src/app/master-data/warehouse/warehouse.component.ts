@@ -3,7 +3,7 @@ import { ShareModule } from '../../shared/share-module'
 import { GlobalService } from '../../services/global.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { WAREHOUSE_RIGHTS } from '../../shared/constants'
+import { MASTER_DATA_MANAGEMENT, WAREHOUSE_RIGHTS } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { WarehouseFilter } from '../../models/master-data/warehouse.model'
 import { WarehouseService } from '../../services/master-data/warehouse.service'
@@ -29,7 +29,7 @@ export class WarehouseComponent {
   paginationResult = new PaginationResult()
   loading: boolean = false
   localResult: any[] = []
-  WAREHOUSE_RIGHTS = WAREHOUSE_RIGHTS
+  MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
 
   constructor(
     private _service: WarehouseService,

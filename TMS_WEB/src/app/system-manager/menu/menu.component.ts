@@ -10,6 +10,7 @@ import { GlobalService } from '../../services/global.service'
 import { MenuService } from '../../services/system-manager/menu.service'
 import { MenuRightComponent } from './menu-right/menu-right.component'
 import { NzMessageService } from 'ng-zorro-antd/message'
+import { ADMIN_RIGHTS } from '../../shared/constants'
 
 @Component({
   selector: 'app-menu',
@@ -40,7 +41,7 @@ export class MenuComponent {
     icon: [''],
     children: [null],
   })
-
+  ADMIN_RIGHTS = ADMIN_RIGHTS
   constructor(
     private _service: MenuService,
     private fb: NonNullableFormBuilder,

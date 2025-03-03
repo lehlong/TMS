@@ -3,7 +3,7 @@ import { ShareModule } from '../../shared/share-module'
 import { GlobalService } from '../../services/global.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { GOODS_RIGHTS, GIA_GIAO_TAP_DOAN_RIGHTS } from '../../shared/constants'
+import { GOODS_RIGHTS, GIA_GIAO_TAP_DOAN_RIGHTS, MASTER_DATA_MANAGEMENT } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { GiaGiaoTapDoanFilter } from '../../models/master-data/gia-giao-tap-doan.model'
 import { GiaGiaoTapDoanService } from '../../services/master-data/gia-giao-tap-doan.service'
@@ -39,7 +39,7 @@ export class GiaGiaoTapDoanComponent {
   goodsResult: any[] = []
   loading: boolean = false
   GOODS_RIGHTS = GOODS_RIGHTS
-  GIA_GIAO_TAP_DOAN_RIGHTS = GIA_GIAO_TAP_DOAN_RIGHTS
+  MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
 
   constructor(
     private _service: GiaGiaoTapDoanService,

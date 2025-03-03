@@ -8,6 +8,7 @@ import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
 import {
   CALCULATE_RESULT_LIST_RIGHTS,
   CALCULATE_RESULT_RIGHT,
+  IMPORT_BATCH,
 } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { CalculateResultListFilter } from '../../models/calculate-result-list/calculate-result-list.model'
@@ -37,9 +38,8 @@ export class CalculateResultListComponent {
   paginationResult = new PaginationResult()
   loading: boolean = false
   isName: boolean = false
-  CALCULATE_RESULT_LIST_RIGHTS = CALCULATE_RESULT_LIST_RIGHTS
+  IMPORT_BATCH = IMPORT_BATCH
 
-  CALCULATE_RESULT_RIGHT = CALCULATE_RESULT_RIGHT
   constructor(
     private _service: CalculateResultListService,
     private fb: NonNullableFormBuilder,

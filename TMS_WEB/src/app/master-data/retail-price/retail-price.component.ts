@@ -3,7 +3,7 @@ import { ShareModule } from '../../shared/share-module'
 import { GlobalService } from '../../services/global.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { LOCAL_RIGHTS, GOODS_RIGHTS, RETAIL_PRICE_RIGHTS } from '../../shared/constants'
+import { LOCAL_RIGHTS, GOODS_RIGHTS, RETAIL_PRICE_RIGHTS, MASTER_DATA_MANAGEMENT } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { RetailPriceFilter } from '../../models/master-data/retail-price.model'
 import { RetailPriceService } from '../../services/master-data/retail-price.service'
@@ -38,7 +38,7 @@ export class RetailPriceComponent {
   goodsResult: any[] = []
   loading: boolean = false
   GOODS_RIGHTS = GOODS_RIGHTS
-  RETAIL_PRICE_RIGHTS = RETAIL_PRICE_RIGHTS
+  MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
 
   constructor(
     private _service: RetailPriceService,

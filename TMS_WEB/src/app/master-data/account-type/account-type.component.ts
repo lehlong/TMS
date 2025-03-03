@@ -27,7 +27,7 @@ export class AccountTypeComponent {
   filter = new AccountTypeFilter()
   paginationResult = new PaginationResult()
   loading: boolean = false
-  ACCOUNTTYPE_RIGHTS = ACCOUNTTYPE_RIGHTS
+ 
   constructor(
     private _service: AccountTypeService,
     private fb: NonNullableFormBuilder,

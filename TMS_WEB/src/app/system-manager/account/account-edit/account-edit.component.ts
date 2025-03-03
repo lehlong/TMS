@@ -375,8 +375,6 @@ export class AccountEditComponent {
         })
         .subscribe({
           next: (data) => {
-            console.log('data', data)
-
             if (this.globalService.getUserInfo().userName) {
               this.authService
                 .getRightOfUser({

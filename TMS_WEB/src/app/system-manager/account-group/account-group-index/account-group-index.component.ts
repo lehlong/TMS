@@ -6,7 +6,7 @@ import {AccountGroupService} from '../../../services/system-manager/account-grou
 import {PaginationResult} from '../../../models/base.model';
 import {AccountGroupCreateComponent} from '../account-group-create/account-group-create.component';
 import {AccountGroupEditComponent} from '../account-group-edit/account-group-edit.component';
-import { ACCOUNT_GROUP_RIGHTS } from '../../../shared/constants';
+import { ACCOUNT_GROUP_RIGHTS, ADMIN_RIGHTS } from '../../../shared/constants';
 @Component({
   selector: 'app-account-group-index',
   standalone: true,
@@ -23,7 +23,7 @@ export class AccountGroupIndexComponent {
   showEdit: boolean = false;
   idDetail: number | string = 0;
   loading: boolean = false;
-  ACCOUNT_GROUP_RIGHTS = ACCOUNT_GROUP_RIGHTS;
+  ADMIN_RIGHTS = ADMIN_RIGHTS
   constructor(private _service: AccountGroupService, private globalService: GlobalService) {
     this.globalService.setBreadcrumb([
       {

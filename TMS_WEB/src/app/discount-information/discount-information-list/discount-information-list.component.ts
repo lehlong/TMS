@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { DiscountInformationListService } from '../../services/discount-information/discount-information-list.service';
 import { ShareModule } from '../../shared/share-module';
 import { GlobalService } from '../../services/global.service';
-import { DISCOUNT_INFORMATION_LIST_RIGHTS } from '../../shared/constants'
+import { COMPETITOR_ANALYSIS, DISCOUNT_INFORMATION_LIST_RIGHTS } from '../../shared/constants'
 import { DiscountInformationListFilter } from '../../models/discount-information-list/discount-information-list.model'
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -46,7 +46,7 @@ export class DiscountInformationListComponent{
   }
   list: any[] = []
   loading: boolean = false
-  DISCOUNT_INFORMATION_LIST_RIGHTS = DISCOUNT_INFORMATION_LIST_RIGHTS
+  COMPETITOR_ANALYSIS = COMPETITOR_ANALYSIS
 
   constructor(
     private fb: NonNullableFormBuilder,

@@ -39,6 +39,7 @@ import {
 } from 'ckeditor5'
 import { ConfigTemplateService } from '../../services/system-manager/config-template.service'
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
+import { ADMIN_RIGHTS } from '../../shared/constants'
 
 @Component({
   selector: 'config-template-email',
@@ -60,7 +61,7 @@ export class ConfixTemplateEmailComponent implements AfterViewInit, OnInit {
   public Editor = ClassicEditor
   public isLayoutReady = false
   public config: EditorConfig = {}
-
+  ADMIN_RIGHTS = ADMIN_RIGHTS
   constructor(
     private fb: NonNullableFormBuilder,
     private _service : ConfigTemplateService,

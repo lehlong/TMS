@@ -1,4 +1,4 @@
-<div class="container-list" [appPermission]="ACCOUNT_GROUP_RIGHTS.LIST">
+<div class="container-list" [appPermission]="ADMIN_RIGHTS.USER_GROUP_MANAGEMENT">
   <!-- cấp quyền cho phép sử dụng chức năng nhóm tài khoản -->
   <div class="site-page-header-ghost-wrapper">
     <nz-page-header nzBackIcon nzTitle="Nhóm tài khoản" nzSubtitle="Danh sách nhóm tài khoản" class="site-page-header">
@@ -17,7 +17,7 @@
             </button>
           </nz-space>
           <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
-            [appPermission]="ACCOUNT_GROUP_RIGHTS.ADD">
+           >
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
           <!-- <button
@@ -74,7 +74,7 @@
           <td nzAlign="center">
             <span nz-popconfirm nzPopconfirmTitle="Bạn muốn xoá loại hàng hóa này ?" nzPopconfirmPlacement="bottom"
               (nzOnConfirm)="deleteItem(data.id)" class="!text-red-500 cursor-pointer" nz-icon nzType="delete"
-              nzTheme="outline" [appPermission]="ACCOUNT_GROUP_RIGHTS.DELETE"></span>
+              nzTheme="outline" ></span>
           </td>
         </tr>
       </tbody>

@@ -1,4 +1,4 @@
-<div class="container-list" [appPermission]="CALCULATE_RESULT_LIST_RIGHTS.LIST">
+<div class="container-list" [appPermission]="IMPORT_BATCH.IMPORT_BATCH_LIST">
   <div class="site-page-header-ghost-wrapper">
     <nz-page-header
       nzBackIcon
@@ -37,7 +37,7 @@
             class="!flex !items-center"
             nzType="primary"
             nz-button
-            [appPermission]="CALCULATE_RESULT_RIGHT.ADD"
+            [appPermission]="IMPORT_BATCH.CREATE_NEW_IMPORT_BATCH"
           >
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
@@ -47,7 +47,7 @@
   </div>
   <div
     class="overflow-auto flex-grow"
-    [appPermission]="CALCULATE_RESULT_RIGHT.LIST"
+    [appPermission]="IMPORT_BATCH.VIEW_IMPORT_BATCH_DETAILS"
   >
     <nz-table
       [nzScroll]="{ x: 'max-content' }"
@@ -410,7 +410,7 @@
       <button
         [nzLoading]="loading"
         *nzSpaceItem
-        [appPermission]="CALCULATE_RESULT_LIST_RIGHTS.ADD"
+        [appPermission]="IMPORT_BATCH.UPDATE_IMPORT_BATCH"
         nz-button
         nzType="primary"
         class="!flex !items-center"

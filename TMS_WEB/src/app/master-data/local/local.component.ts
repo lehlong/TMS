@@ -5,7 +5,7 @@ import { GlobalService } from '../../services/global.service'
 import { LocalService } from '../../services/master-data/local.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { LOCAL_RIGHTS } from '../../shared/constants'
+import { LOCAL_RIGHTS, MASTER_DATA_MANAGEMENT } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 @Component({
   selector: 'app-local',
@@ -27,7 +27,7 @@ export class LocalComponent {
   filter = new LocalFilter()
   paginationResult = new PaginationResult()
   loading: boolean = false
-  LOCAL_RIGHTS = LOCAL_RIGHTS
+  MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
   constructor(
     private _service: LocalService,
     private fb: NonNullableFormBuilder,

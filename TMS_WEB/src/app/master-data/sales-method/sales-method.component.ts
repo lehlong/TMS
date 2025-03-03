@@ -5,7 +5,7 @@ import { GlobalService } from '../../services/global.service'
 import { LocalService } from '../../services/master-data/local.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { LOCAL_RIGHTS, GOODS_RIGHTS } from '../../shared/constants'
+import { LOCAL_RIGHTS, GOODS_RIGHTS, MASTER_DATA_MANAGEMENT } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { SalesMethodFilter } from '../../models/master-data/sales-method.model'
 import { SalesMethodService } from '../../services/master-data/sales-method.service'
@@ -29,7 +29,7 @@ export class SalesMethodComponent {
   filter = new SalesMethodFilter()
   paginationResult = new PaginationResult()
   loading: boolean = false
-  TYPE_OF_GOODS = GOODS_RIGHTS
+  MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
 
   constructor(
     private _service: SalesMethodService,

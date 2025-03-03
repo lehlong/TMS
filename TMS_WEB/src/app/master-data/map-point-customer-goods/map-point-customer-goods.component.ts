@@ -5,7 +5,7 @@ import { GlobalService } from '../../services/global.service'
 import { MapPointCustomerGoodsService } from '../../services/master-data/map-point-customer-goods.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { MAP_POINT_CUSTOMER_GOODS_RIGHTS } from '../../shared/constants'
+import { MAP_POINT_CUSTOMER_GOODS_RIGHTS, MASTER_DATA_MANAGEMENT } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { DeliveryPointService } from '../../services/master-data/delivery-point.service'
 import { CustomerService } from '../../services/master-data/customer.service'
@@ -35,7 +35,7 @@ export class MapPointCustomerGoodsComponent {
   filter = new MapPointCustomerGoodsFilter()
   paginationResult = new PaginationResult()
   loading: boolean = false
-  MAP_POINT_CUSTOMER_GOODS_RIGHTS = MAP_POINT_CUSTOMER_GOODS_RIGHTS
+  MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
   lstDeliveryPoint: any[] = []
   lstCustomer: any[] = []
   lstGoods: any[] = []

@@ -5,7 +5,7 @@ import { GlobalService } from '../../services/global.service'
 import { LocalService } from '../../services/master-data/local.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { LOCAL_RIGHTS, GOODS_RIGHTS } from '../../shared/constants'
+import { LOCAL_RIGHTS, GOODS_RIGHTS, MASTER_DATA_MANAGEMENT } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { GoodsFilter } from '../../models/master-data/goods.model'
 import { GoodsService } from '../../services/master-data/goods.service'
@@ -32,7 +32,7 @@ export class GoodsComponent {
   filter = new GoodsFilter()
   paginationResult = new PaginationResult()
   loading: boolean = false
-  GOODS_RIGHTS = GOODS_RIGHTS
+  MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
   lstType: any[] = []
 
   constructor(

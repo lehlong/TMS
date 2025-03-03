@@ -4,7 +4,7 @@ import { CalculateResultService } from '../../services/calculate-result/calculat
 import { GlobalService } from '../../services/global.service'
 import { ActivatedRoute } from '@angular/router'
 import { GoodsService } from '../../services/master-data/goods.service'
-import { CALCULATE_RESULT_RIGHT } from '../../shared/constants/access-right.constants'
+import { CALCULATE_RESULT_RIGHT, IMPORT_BATCH } from '../../shared/constants/access-right.constants'
 import { environment } from '../../../environments/environment.prod'
 import { NzMessageService } from 'ng-zorro-antd/message'
 
@@ -31,7 +31,7 @@ export class CalculateResultComponent {
     ])
   }
   title: string = 'DỮ LIỆU GỐC'
-  CALCULATE_RESULT_RIGHT = CALCULATE_RESULT_RIGHT
+  IMPORT_BATCH = IMPORT_BATCH
   isVisibleHistory: boolean = false
   visibleDrawer: boolean = false
   isVisibleStatus: boolean = false

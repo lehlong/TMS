@@ -1,17 +1,17 @@
-<div class="container-list" [appPermission]="DISCOUNT_INFORMATION_LIST_RIGHTS.LIST">
+<div class="container-list" [appPermission]="COMPETITOR_ANALYSIS.COMPETITOR_ANALYSIS_BATCH_LIST">
   <div class="site-page-header-ghost-wrapper">
     <nz-page-header nzBackIcon nzTitle="Danh sách đợt phân tích" class="site-page-header">
       <nz-page-header-extra>
         <nz-space [nzWrap]="true" class="gap-[5px]">
           <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
-            [appPermission]="DISCOUNT_INFORMATION_LIST_RIGHTS.ADD">
+            [appPermission]="COMPETITOR_ANALYSIS.CREATE_NEW_COMPETITOR_ANALYSIS_BATCH">
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
         </nz-space>
       </nz-page-header-extra>
     </nz-page-header>
   </div>
-  <div class="overflow-auto flex-grow" [appPermission]="DISCOUNT_INFORMATION_LIST_RIGHTS.LIST">
+  <div class="overflow-auto flex-grow" >
     <nz-table [nzScroll]="{ x: 'max-content' }" nzTableLayout="fixed" [nzShowPagination]="false"
       [nzFrontPagination]="false" #headerTable [nzData]="list">
       <thead>
@@ -106,7 +106,7 @@
 <ng-template #extra>
   <nz-space>
     <ng-container>
-      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="DISCOUNT_INFORMATION_LIST_RIGHTS.ADD" nz-button
+      <button [nzLoading]="loading" *nzSpaceItem [appPermission]="COMPETITOR_ANALYSIS.UPDATE_COMPETITOR_ANALYSIS_BATCH"  nz-button
         nzType="primary" class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>

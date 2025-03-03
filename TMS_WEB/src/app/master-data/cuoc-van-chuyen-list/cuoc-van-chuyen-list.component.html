@@ -1,4 +1,4 @@
-<div class="container-list" [appPermission]="CUOC_VAN_CHUYEN_RIGHTS.LIST">
+<div class="container-list" [appPermission]="MASTER_DATA_MANAGEMENT.SHIPPING_COST_MANAGEMENT">
   <div class="site-page-header-ghost-wrapper">
     <nz-page-header
       nzBackIcon
@@ -38,7 +38,7 @@
             class="!flex !items-center"
             nzType="primary"
             nz-button
-            [appPermission]="CUOC_VAN_CHUYEN_RIGHTS.ADD"
+            
           >
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
@@ -184,7 +184,7 @@
     <ng-container *ngIf="edit">
       <button
         [nzLoading]="loading"
-        [appPermission]="CUOC_VAN_CHUYEN_RIGHTS.EDIT"
+       
         *nzSpaceItem
         nz-button
         nzType="primary"
@@ -198,7 +198,7 @@
       <button
         [nzLoading]="loading"
         *nzSpaceItem
-        [appPermission]="CUOC_VAN_CHUYEN_RIGHTS.ADD"
+      
         nz-button
         nzType="primary"
         class="!flex !items-center"

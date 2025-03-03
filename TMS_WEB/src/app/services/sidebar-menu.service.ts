@@ -15,4 +15,7 @@ export class SidebarMenuService {
   getMenuOfUser(params:any): Observable<any> {
     return this.commonService.get(this.endpoints.menuOfUser, params);
   }
+  getMenu(){
+    return this.commonService.get('Menu/GetMenu');
+  } 
 }

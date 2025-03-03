@@ -3,7 +3,7 @@ import { ShareModule } from '../../shared/share-module'
 import { GlobalService } from '../../services/global.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { CUOC_VAN_CHUYEN_LIST_RIGHTS } from '../../shared/constants'
+import { CUOC_VAN_CHUYEN_LIST_RIGHTS, MASTER_DATA_MANAGEMENT } from '../../shared/constants'
 import { NzButtonModule } from 'ng-zorro-antd/button'
 import { Router } from '@angular/router'
 import { NzIconModule } from 'ng-zorro-antd/icon'
@@ -36,7 +36,7 @@ export class CuocVanChuyenListComponent {
   filter = new CuocVanChuyenListFilter()
   paginationResult = new PaginationResult()
   loading: boolean = false
-  CUOC_VAN_CHUYEN_RIGHTS = CUOC_VAN_CHUYEN_LIST_RIGHTS
+  MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
 
   constructor(
     private _service: CuocVanChuyenListService,

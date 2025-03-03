@@ -136,6 +136,10 @@ export class MainLayoutComponent {
       .subscribe((res) => {
         this.dataSidebarMenu = this.transformMenuList(res?.children || [])
       })
+      // this.sidebarMenuService
+      // .getMenu().subscribe((res : any) => {
+      //   this.dataSidebarMenu = this.transformMenuList(res?.children || [])
+      // })
   }
 
   toggleSidebar() {

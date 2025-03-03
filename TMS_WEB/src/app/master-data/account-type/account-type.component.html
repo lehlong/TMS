@@ -1,4 +1,4 @@
-<div class="container-list" [appPermission]="ACCOUNTTYPE_RIGHTS.LIST">
+<div class="container-list" >
   <div class="site-page-header-ghost-wrapper">
     <nz-page-header nzBackIcon nzTitle="KIỂU NGƯỜI DÙNG" nzSubtitle="Danh sách kiểu người dùng"
       class="site-page-header">
@@ -17,7 +17,7 @@
             </button>
           </nz-space>
           <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
-            [appPermission]="ACCOUNTTYPE_RIGHTS.ADD">
+           >
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
           <!-- <button
@@ -121,13 +121,13 @@
 <ng-template #extra>
   <nz-space>
     <ng-container *ngIf="edit">
-      <button [nzLoading]="loading" [appPermission]="ACCOUNTTYPE_RIGHTS.EDIT" *nzSpaceItem nz-button nzType="primary"
+      <button [nzLoading]="loading"  *nzSpaceItem nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>
     <ng-container *ngIf="!edit">
-      <button [nzLoading]="loading" [appPermission]="ACCOUNTTYPE_RIGHTS.ADD" *nzSpaceItem nz-button nzType="primary"
+      <button [nzLoading]="loading"  *nzSpaceItem nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
