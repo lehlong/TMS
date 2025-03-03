@@ -15,13 +15,13 @@ namespace DMS.CORE.Entities.IN
         [Column("HEADER_CODE", TypeName = "VARCHAR(50)")]
         public string? HeaderCode { set; get; }
 
-        [Column("DAI_DIEN", TypeName = "VARCHAR(250)")]
+        [Column("DAI_DIEN", TypeName = "NVARCHAR(250)")]
         public string? DaiDien { get; set; }
 
-        [Column("NGUOI_DAI_DIEN", TypeName = "VARCHAR(250)")]
+        [Column("NGUOI_DAI_DIEN", TypeName = "NVARCHAR(250)")]
         public string? NguoiDaiDien { get; set; }
 
-        [Column("QUYET_DINH_SO", TypeName = "VARCHAR(250)")]
+        [Column("QUYET_DINH_SO", TypeName = "NVARCHAR(250)")]
         public string? QuyetDinhSo { get; set; }
     }
 }

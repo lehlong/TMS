@@ -451,7 +451,7 @@
                 <td class="align-right">{{ d.col5 | number }}</td>
                 <td class="align-right">{{ d.col6 | number }}</td>
                 <td class="align-right">{{ d.col7 | number }}</td>
-                
+
               </tr>
               }
             </tbody>
@@ -494,7 +494,7 @@
                           <td class="align-right">{{d.col3 | number}}</td>
                           <td class="align-right">{{d.col4 | number}}</td>
                           <td class="align-right">{{d.tangGiam3_4 | number}}</td>
-                          
+
                       </tr>
                       }
                   </tbody>
@@ -526,7 +526,7 @@
                         <td class="align-right">{{d.col1 | number}}</td>
                         <td class="align-right">{{d.col2 | number}}</td>
                         <td class="align-right">{{d.tangGiam1_2 | number}}</td>
-                        
+
                     </tr>
                     }
                 </tbody>
@@ -559,12 +559,12 @@
                                     <th class="bold-text">Vùng thị trường trung tâm </th>
                                   </tr>
                                     @for (d of dlgTable_7.data; track d) {
-                                      
+
                                     <tr *ngIf="d.type == 'TT' ">
                                         <td>{{d.colA}}</td>
                                         <td class="align-right">{{d.col1 | number}}</td>
                                         <td class="align-right">{{d.col2 | number}}</td>
-                                        <td class="align-right">{{d.tangGiam1_2 | number}}</td>                                     
+                                        <td class="align-right">{{d.tangGiam1_2 | number}}</td>
                                     </tr>
                                     }
                                     <tr>
@@ -576,7 +576,7 @@
                                         <td class="align-right">{{d.col1 | number}}</td>
                                         <td class="align-right">{{d.col2 | number}}</td>
                                         <td class="align-right">{{d.tangGiam1_2 | number}}</td>
-                                                                            
+
                                     </tr>
                                     }
                                 </tbody>
@@ -1294,6 +1294,7 @@
           </nz-table>
         </div>
       </nz-tab>
+
       <nz-tab nzTitle="PL1" (nzClick)="changeTitle('PL1')">
         <div [ngStyle]="{
             overflow: 'auto',
@@ -2108,7 +2109,7 @@
       </div>
       <div nz-col class="gutter-row" [nzSpan]="12">
         <div class="inner-box">
-          <label>Người Ký Thay</label>
+          <label>Người Ký</label>
           <input nz-input [(ngModel)]="model.nguoiKyTen.nguoiDaiDien" #nameInput="ngModel" required/>
         </div>
       </div>
@@ -2137,7 +2138,7 @@
         </tr>
         <tr>
           <th>Mức Tăng so V1</th>
-          <th>Giá niêm yết</th>
+          <th>Giá niêm yết V1</th>
         </tr>
       </thead>
       <tbody>

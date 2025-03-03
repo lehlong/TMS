@@ -1230,6 +1230,7 @@ namespace DMS.BUSINESS.Services.BU
                 return new CalculateResultModel();
             }
         }
+        
         public async Task<InsertModel> GetDataInput(string code)
         {
             
@@ -1265,6 +1266,7 @@ namespace DMS.BUSINESS.Services.BU
                 return new InsertModel();
             }
         }
+        
         public async Task UpdateDataInput(InsertModel model)
         {
             try
@@ -1321,6 +1323,7 @@ namespace DMS.BUSINESS.Services.BU
                 this.Exception = ex;
             }
         }
+        
         public async Task<List<TblBuHistoryAction>> GetHistoryAction(string code)
         {
             try
@@ -1333,6 +1336,7 @@ namespace DMS.BUSINESS.Services.BU
                 return new List<TblBuHistoryAction>();
             }
         }
+        
         public async Task<List<TblBuHistoryDownload>> GetHistoryFile(string code)
         {
             try
@@ -1345,6 +1349,7 @@ namespace DMS.BUSINESS.Services.BU
                 return new List<TblBuHistoryDownload>();
             }
         }
+        
         public async Task<List<TblMdCustomer>> GetCustomer()
         {
             try
@@ -1357,6 +1362,7 @@ namespace DMS.BUSINESS.Services.BU
                 return new List<TblMdCustomer>();
             }
         }
+        
         public void ExportExcel(ref MemoryStream outFileStream, string path, string headerId)
         {
             try
@@ -2387,24 +2393,28 @@ namespace DMS.BUSINESS.Services.BU
                 this.Exception = ex;
             }
         }
+        
         public ICellStyle GetCellStyleNumber(IWorkbook templateWorkbook)
         {
             ICellStyle styleCellNumber = templateWorkbook.CreateCellStyle();
             styleCellNumber.DataFormat = templateWorkbook.CreateDataFormat().GetFormat("#,##0");
             return styleCellNumber;
         }
+        
         public ICellStyle GetCellStyleNumberDecimal(IWorkbook templateWorkbook)
         {
             ICellStyle styleCellNumber = templateWorkbook.CreateCellStyle();
             styleCellNumber.DataFormat = templateWorkbook.CreateDataFormat().GetFormat("#,##0.000");
             return styleCellNumber;
         }
+        
         public ICellStyle GetCellStyleNumberDecimal2(IWorkbook templateWorkbook)
         {
             ICellStyle styleCellNumber = templateWorkbook.CreateCellStyle();
             styleCellNumber.DataFormat = templateWorkbook.CreateDataFormat().GetFormat("#,###.#0");
             return styleCellNumber;
         }
+        
         public ICellStyle GetCellStylePercentage(IWorkbook templateWorkbook)
         {
             ICellStyle styleCellPercentage = templateWorkbook.CreateCellStyle();
@@ -2447,6 +2457,7 @@ namespace DMS.BUSINESS.Services.BU
             }
             return path;
         }
+        
         public static IFormFile ConvertMemoryStreamToIFormFile(MemoryStream memoryStream, string fileName)
         {
             memoryStream.Position = 0; // Reset the stream position to the beginning
@@ -3445,6 +3456,7 @@ namespace DMS.BUSINESS.Services.BU
                 return $"{folderName}/{fileName}";
             }
         }
+        
         static void AppendWordFilesToNewDocument(string directoryPath, string newWordFilePath)
         {
             using (WordprocessingDocument sourceDocument = WordprocessingDocument.Open(directoryPath, false))
@@ -3463,6 +3475,7 @@ namespace DMS.BUSINESS.Services.BU
             }
 
         }
+        
         static Table CreateSampleTable()
         {
             Table table = new Table();
