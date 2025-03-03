@@ -160,6 +160,22 @@ export enum COMPETITOR_RIGHTS {
   DELETE = 'R0',
 }
 
+export enum CUOC_VAN_CHUYEN_RIGHTS {
+  LIST = 'R1.1.1',
+  EXCEL = 'R0',
+  ADD = 'R1.1.2',
+  EDIT = 'R1.1.2',
+  DELETE = 'R0',
+}
+
+export enum CUOC_VAN_CHUYEN_LIST_RIGHTS {
+  LIST = 'R1.1.1',
+  EXCEL = 'R0',
+  ADD = 'R1.1.2',
+  EDIT = 'R1.1.2',
+  DELETE = 'R0',
+}
+
 export enum DELIVERY_POINT_RIGHTS {
   LIST = 'R1.4.1',
   EXCEL = 'R0',

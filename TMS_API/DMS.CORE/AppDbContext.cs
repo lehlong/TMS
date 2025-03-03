@@ -168,7 +168,8 @@ namespace DMS.CORE
         public DbSet<TblMdSalesMethod> TblMdSalesMethod { get; set; }
         public DbSet<TblMdRetailPrice> TblMdRetailPrice { get; set; }
         public DbSet<TblMdMarket> TblMdMarket { get; set; }
-
+        public DbSet<TblMdCuocVanChuyen> TblMdCuocVanChuyen { get; set; }
+        public DbSet<TblMdCuocVanChuyenList> TblMdCuocVanChuyenList { get; set; }
 
         public DbSet<TblMdTemplateReport> tblMdTemplateReport { get; set; }
         public DbSet<TblMdTemplateReportElement> tblMdTemplateReportElement { get; set; }

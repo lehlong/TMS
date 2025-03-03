@@ -34,6 +34,8 @@ import { WarehouseComponent } from './warehouse/warehouse.component'
 import { CompetitorComponent } from './competitor/competitor.component'
 import { MapPointCustomerGoodsComponent } from './map-point-customer-goods/map-point-customer-goods.component'
 import { MarketCompetitorComponent } from './market-competitor/market-competitor.component'
+import { CuocVanChuyenComponent } from './cuoc-van-chuyen/cuoc-van-chuyen.component'
+import { CuocVanChuyenListComponent } from './cuoc-van-chuyen-list/cuoc-van-chuyen-list.component'
 export const masterDataRoutes: Routes = [
   { path: 'currency', component: CurrencyComponent },
   { path: 'unit', component: UnitComponent },
@@ -42,14 +44,20 @@ export const masterDataRoutes: Routes = [
   { path: 'opinion-type', component: OpinionTypeComponent },
   { path: 'audit-year', component: PeriodTimeComponent },
   { path: 'sales-method', component: SalesMethodComponent },
-  { path: 'template-list-tables/:code', component: TemplateListTablesComponent },
+  {
+    path: 'template-list-tables/:code',
+    component: TemplateListTablesComponent,
+  },
   { path: 'audit-period', component: AuditPeriodComponent },
   { path: 'mg-list-tables/:code', component: MgListTablesComponent },
   { path: 'mg-opinion-list', component: MgOpinionListComponent },
   { path: 'account-type', component: AccountTypeComponent },
   { path: 'list-audit', component: ListAuditComponent },
   { path: 'mg-list-tables-groups', component: MgListTablesGroupsComponent },
-  { path: 'template-list-tables-groups', component: TemplateListTablesGroupsComponent },
+  {
+    path: 'template-list-tables-groups',
+    component: TemplateListTablesGroupsComponent,
+  },
   { path: 'list-audit-edit/:code', component: ListAuditEditComponent },
   {
     path: 'template-list-tables-preview/:code',
@@ -63,20 +71,24 @@ export const masterDataRoutes: Routes = [
     path: 'audit-period-list-tables',
     component: AuditPeriodListTablesComponent,
   },
-  {path: 'report', component: ReportComponent,},
-  {path: 'goods', component: GoodsComponent,},
-  {path: 'market', component: MarketComponent,},
-  {path: 'retail-price', component: RetailPriceComponent,},
-  {path: 'lai-gop-dieu-tiet', component: LaiGopDieuTietComponent},
-  {path: 'customer', component: CustomerComponent},
-  {path: 'delivery-point', component: DeliveryPointComponent},
-  {path: 'gia-giao-tap-doan', component: GiaGiaoTapDoanComponent},
-  {path: 'muc-giam-pho-thong', component: MucGiamPhoThongComponent},
-  {path: 'tinh-toan-dau-ra', component: TinhToanDauRaComponent},
-  {path: 'customer-type', component: CustomerTypeComponent},
-  {path: 'warehouse', component: WarehouseComponent},
-  {path: 'competitor', component: CompetitorComponent},
-  {path: 'map-point-customer-goods', component: MapPointCustomerGoodsComponent},
-  {path: 'market-competitor', component: MarketCompetitorComponent},
-
+  { path: 'report', component: ReportComponent },
+  { path: 'goods', component: GoodsComponent },
+  { path: 'market', component: MarketComponent },
+  { path: 'retail-price', component: RetailPriceComponent },
+  { path: 'lai-gop-dieu-tiet', component: LaiGopDieuTietComponent },
+  { path: 'customer', component: CustomerComponent },
+  { path: 'delivery-point', component: DeliveryPointComponent },
+  { path: 'gia-giao-tap-doan', component: GiaGiaoTapDoanComponent },
+  { path: 'muc-giam-pho-thong', component: MucGiamPhoThongComponent },
+  { path: 'tinh-toan-dau-ra', component: TinhToanDauRaComponent },
+  { path: 'customer-type', component: CustomerTypeComponent },
+  { path: 'warehouse', component: WarehouseComponent },
+  { path: 'competitor', component: CompetitorComponent },
+  {
+    path: 'map-point-customer-goods',
+    component: MapPointCustomerGoodsComponent,
+  },
+  { path: 'market-competitor', component: MarketCompetitorComponent },
+  { path: 'cuoc-van-chuyen/detail/:code', component: CuocVanChuyenComponent },
+  { path: 'cuoc-van-chuyen-list', component: CuocVanChuyenListComponent },
 ]
