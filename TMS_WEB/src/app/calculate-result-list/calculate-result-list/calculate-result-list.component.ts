@@ -5,7 +5,10 @@ import { GlobalService } from '../../services/global.service'
 import { LocalService } from '../../services/master-data/local.service'
 import { PaginationResult } from '../../models/base.model'
 import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { CALCULATE_RESULT_LIST_RIGHTS, CALCULATE_RESULT_RIGHT } from '../../shared/constants'
+import {
+  CALCULATE_RESULT_LIST_RIGHTS,
+  CALCULATE_RESULT_RIGHT,
+} from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { CalculateResultListFilter } from '../../models/calculate-result-list/calculate-result-list.model'
 import { CalculateResultListService } from '../../services/calculate-result-list/calculate-result-list.service'
@@ -33,8 +36,7 @@ export class CalculateResultListComponent {
   filter = new CalculateResultListFilter()
   paginationResult = new PaginationResult()
   loading: boolean = false
-  isName : boolean = false
-  lst: any[] = []
+  isName: boolean = false
   CALCULATE_RESULT_LIST_RIGHTS = CALCULATE_RESULT_LIST_RIGHTS
 
   CALCULATE_RESULT_RIGHT = CALCULATE_RESULT_RIGHT
@@ -44,7 +46,7 @@ export class CalculateResultListComponent {
     private globalService: GlobalService,
     private message: NzMessageService,
     private _goodsService: GoodsService,
-    private router: Router
+    private router: Router,
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -56,7 +58,7 @@ export class CalculateResultListComponent {
       this.loading = value
     })
   }
-  model : any = {
+  model: any = {
     header: {},
     nguoiKyTen: {
       // nguoiKyThay: "Tổng Giám Đốc"
@@ -70,8 +72,8 @@ export class CalculateResultListComponent {
   }
 
   ngOnInit(): void {
-    this.search();
-    this.getAllGoods();
+    this.search()
+    this.getAllGoods()
     console.log('calculate')
   }
 
@@ -86,11 +88,9 @@ export class CalculateResultListComponent {
 
   search() {
     this.isSubmit = false
-    this._service.getall().subscribe({
+    this._service.searchCalculateResultList(this.filter).subscribe({
       next: (data) => {
-        this.lst = data
-        console.log(this.lst);
-
+        this.paginationResult = data
       },
       error: (response) => {
         console.log(response)
@@ -103,16 +103,16 @@ export class CalculateResultListComponent {
   }
 
   submitForm(): void {
-    if (this.model.header.name != ''){
+    if (this.model.header.name != '') {
       console.log(this.model)
 
       var m = {
-        model: this.model
+        model: this.model,
       }
       this._service.createData(this.model).subscribe({
         next: (data) => {
           console.log(data)
-        }
+        },
       })
     }
   }
@@ -185,13 +185,13 @@ export class CalculateResultListComponent {
     })
   }
 
-  onKeyUpCalculate(row : any){
+  onKeyUpCalculate(row: any) {
     row.v2_V1 = row.gblV2 - row.gblcsV1
     row.gny = row.gblcsV1 + row.mtsV1
     row.clgblv = row.gblV2 - row.gny
   }
 
-  checkName(_name: string){
-    _name == '' ? this.isName = true : this.isName = false
+  checkName(_name: string) {
+    _name == '' ? (this.isName = true) : (this.isName = false)
   }
 }
