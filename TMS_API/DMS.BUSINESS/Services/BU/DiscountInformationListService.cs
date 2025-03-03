@@ -106,6 +106,30 @@ namespace DMS.BUSINESS.Services.BU
 
             return null;
         }
+        public override async Task<PagedResponseDto> Search(BaseFilter filter)
+        {
+            try
+            {
+                var query = _dbContext.TblBuDiscountInformationList.AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(filter.KeyWord))
+                {
+                    query = query.Where(x =>
+                    x.Name.Contains(filter.KeyWord));
+                }
+                if (filter.IsActive.HasValue)
+                {
+                    query = query.Where(x => x.IsActive == filter.IsActive);
+                }
+                return await Paging(query, filter);
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
     }
 
     public class CompetitorModel

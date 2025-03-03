@@ -72,6 +72,24 @@ namespace DMS.API.Controllers.BU
             return Ok(transferObject);
         }
 
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
+        {
+            var transferObject = new TransferObject();
+            var result = await _service.Search(filter);
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
         //[HttpGet("GetDataInput")]
         //public async Task<IActionResult> GetDataInput(string code)
         //{

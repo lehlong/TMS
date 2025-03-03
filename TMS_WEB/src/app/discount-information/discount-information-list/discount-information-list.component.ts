@@ -1,23 +1,26 @@
-import { Component } from '@angular/core';
-import { DiscountInformationListService } from '../../services/discount-information/discount-information-list.service';
-import { ShareModule } from '../../shared/share-module';
-import { GlobalService } from '../../services/global.service';
-import { COMPETITOR_ANALYSIS, DISCOUNT_INFORMATION_LIST_RIGHTS } from '../../shared/constants'
+import { Component } from '@angular/core'
+import { DiscountInformationListService } from '../../services/discount-information/discount-information-list.service'
+import { ShareModule } from '../../shared/share-module'
+import { GlobalService } from '../../services/global.service'
+import {
+  COMPETITOR_ANALYSIS,
+  DISCOUNT_INFORMATION_LIST_RIGHTS,
+} from '../../shared/constants'
 import { DiscountInformationListFilter } from '../../models/discount-information-list/discount-information-list.model'
-import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { PaginationResult } from '../../models/base.model';
-import { GoodsService } from '../../services/master-data/goods.service';
-import { CompetitorService } from '../../services/master-data/competitor.service';
+import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
+import { Router } from '@angular/router'
+import { PaginationResult } from '../../models/base.model'
+import { GoodsService } from '../../services/master-data/goods.service'
+import { CompetitorService } from '../../services/master-data/competitor.service'
 
 @Component({
   selector: 'app-discount-information-list',
   standalone: true,
   imports: [ShareModule],
   templateUrl: './discount-information-list.component.html',
-  styleUrl: './discount-information-list.component.scss'
+  styleUrl: './discount-information-list.component.scss',
 })
-export class DiscountInformationListComponent{
+export class DiscountInformationListComponent {
   validateForm: FormGroup = this.fb.group({
     code: [''],
     name: ['', [Validators.required]],
@@ -35,14 +38,16 @@ export class DiscountInformationListComponent{
   code: any = null
   edit: boolean = false
   model: any = {
-    goodss: [{
-      code: '',
-      hs: []
-    }],
+    goodss: [
+      {
+        code: '',
+        hs: [],
+      },
+    ],
     header: {
       name: '',
-      fDate: ''
-    }
+      fDate: '',
+    },
   }
   list: any[] = []
   loading: boolean = false
@@ -54,44 +59,55 @@ export class DiscountInformationListComponent{
     private _goodsService: GoodsService,
     private _competitorService: CompetitorService,
     private globalService: GlobalService,
-    private router: Router
-  ){
+    private router: Router,
+  ) {
     this.globalService.setBreadcrumb([
       {
         name: 'Danh sách Phân tích',
         path: 'discount-information-list',
-      }
+      },
     ])
     this.globalService.getLoading().subscribe((value) => {
       this.loading = value
     })
   }
 
-  ngOnInit(){
-    this.getAll()
+  ngOnInit() {
+    this.search()
     this.getAllGoods()
     this.getAllCompetitor()
   }
 
-  getAll(){
+  search() {
+    this.isSubmit = false
+    this._service.searchDiscountInformationList(this.filter).subscribe({
+      next: (data) => {
+        this.paginationResult = data
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
+  }
+
+  getAll() {
     this._service.getAll().subscribe({
       next: (data) => {
         this.list = data
-        console.log(this.list);
+        console.log(this.list)
       },
       error: (resp) => {
-        console.log(resp);
-      }
+        console.log(resp)
+      },
     })
   }
 
   submitForm(): void {
-    if (this.model.header.name != ''){
-
+    if (this.model.header.name != '') {
       this._service.createData(this.model).subscribe({
         next: (data) => {
           console.log(data)
-        }
+        },
       })
     }
   }
@@ -120,7 +136,7 @@ export class DiscountInformationListComponent{
       SortColumn: name,
       IsDescending: value === 'descend',
     }
-    this.getAll()
+    this.search()
   }
 
   resetForm() {
@@ -135,12 +151,12 @@ export class DiscountInformationListComponent{
 
   reset() {
     this.filter = new DiscountInformationListFilter()
-    this.getAll()
+    this.search()
   }
 
   pageIndexChange(index: number): void {
     this.filter.currentPage = index
-    this.getAll()
+    this.search()
   }
 
   openEdit(data: any) {
@@ -150,7 +166,7 @@ export class DiscountInformationListComponent{
   pageSizeChange(size: number): void {
     this.filter.currentPage = 1
     this.filter.pageSize = size
-    this.getAll()
+    this.search()
   }
 
   getAllCompetitor() {
@@ -177,9 +193,7 @@ export class DiscountInformationListComponent{
     })
   }
 
-  checkName(_name: string){
-    _name == '' ? this.isName = true : this.isName = false
+  checkName(_name: string) {
+    _name == '' ? (this.isName = true) : (this.isName = false)
   }
-
-
 }
