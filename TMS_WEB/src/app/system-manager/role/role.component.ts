@@ -9,6 +9,7 @@ import { RightService } from '../../services/system-manager/right.service'
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
 import { GlobalService } from '../../services/global.service'
 import { NzMessageService } from 'ng-zorro-antd/message'
+import { ADMIN_RIGHTS } from '../../shared/constants'
 
 @Component({
   selector: 'app-role',
@@ -34,7 +35,7 @@ export class RoleComponent implements OnInit {
     children: [null],
     orderNumber: [null],
   })
-
+   ADMIN_RIGHTS = ADMIN_RIGHTS
   constructor(
     private _service: RightService,
     private fb: NonNullableFormBuilder,

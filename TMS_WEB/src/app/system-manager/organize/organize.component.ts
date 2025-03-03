@@ -9,6 +9,7 @@ import { OrganizeService } from '../../services/system-manager/organize.service'
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
 import { GlobalService } from '../../services/global.service'
 import { NzMessageService } from 'ng-zorro-antd/message'
+import { ADMIN_RIGHTS } from '../../shared/constants'
 
 @Component({
   selector: 'app-organize',
@@ -35,7 +36,7 @@ export class OrganizeComponent implements OnInit {
     orderNumber: [null],
     isActive: [true, [Validators.required]],
   })
-
+  ADMIN_RIGHTS = ADMIN_RIGHTS
   constructor(
     private _service: OrganizeService,
     private fb: NonNullableFormBuilder,

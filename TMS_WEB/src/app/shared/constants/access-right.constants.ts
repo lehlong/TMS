@@ -12,6 +12,10 @@ export enum CALCULATE_RESULT_RIGHT {
   TU_CHOI = 'R01.6.4'
 }
 
+export enum ADMIN_RIGHTS{
+  ORAGIZE = 'R110',
+  RIGHT = 'R111'
+}
 
 
 
