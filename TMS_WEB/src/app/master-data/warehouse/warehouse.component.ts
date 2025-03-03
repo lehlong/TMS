@@ -40,7 +40,7 @@ export class WarehouseComponent {
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách thị trường',
+        name: 'Danh sách kho',
         path: 'master-data/market',
       },
     ])

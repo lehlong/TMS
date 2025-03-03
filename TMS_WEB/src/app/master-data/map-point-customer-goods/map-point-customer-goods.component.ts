@@ -53,7 +53,7 @@ export class MapPointCustomerGoodsComponent {
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách vùng',
+        name: 'Danh sách người nhận hàng',
         path: 'master-data/local',
       },
     ])

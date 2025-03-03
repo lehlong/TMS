@@ -36,7 +36,7 @@ export class CompetitorComponent {
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách vùng',
+        name: 'Danh sách đối thủ',
         path: 'master-data/local',
       },
     ])
