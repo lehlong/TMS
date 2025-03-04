@@ -7,6 +7,7 @@ using DMS.BUSINESS.Models;
 using DMS.BUSINESS.Services.BU;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DMS.API.Controllers.BU
 {
@@ -15,7 +16,9 @@ namespace DMS.API.Controllers.BU
     public class CalculateResultListController(ICalculateResultListService service) : ControllerBase
     {
         public readonly ICalculateResultListService _service = service;
+
         [HttpGet("Search")]
+        [Authorize]
         public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
         {
             var transferObject = new TransferObject();
@@ -32,7 +35,9 @@ namespace DMS.API.Controllers.BU
             }
             return Ok(transferObject);
         }
+
         [HttpGet("GetAll")]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] BaseMdFilter filter)
         {
             var transferObject = new TransferObject();
@@ -49,6 +54,8 @@ namespace DMS.API.Controllers.BU
             }
             return Ok(transferObject);
         }
+
+        [Authorize]
         [HttpGet("GetObjectCreate")]
         public async Task<IActionResult> GetObjectCreate()
         {
@@ -66,7 +73,9 @@ namespace DMS.API.Controllers.BU
             }
             return Ok(transferObject);
         }
+
         [HttpPost("Insert")]
+        [Authorize]
         public async Task<IActionResult> Insert([FromBody] InsertModel model)
         {
             var transferObject = new TransferObject();
@@ -86,7 +95,9 @@ namespace DMS.API.Controllers.BU
             }
             return Ok(transferObject);
         }
+
         [HttpPut("Update")]
+        [Authorize]
         public async Task<IActionResult> Update([FromBody] CalculateResultListDto CalculateResultList)
         {
             var transferObject = new TransferObject();
@@ -105,7 +116,9 @@ namespace DMS.API.Controllers.BU
             }
             return Ok(transferObject);
         }
+
         [HttpDelete("Delete/{code}")]
+        [Authorize]
         public async Task<IActionResult> Delete([FromRoute] string code)
         {
             var transferObject = new TransferObject();
@@ -126,6 +139,7 @@ namespace DMS.API.Controllers.BU
         }
 
         [HttpGet("Export")]
+        [Authorize]
         public async Task<IActionResult> Export([FromQuery] BaseMdFilter filter)
         {
             var transferObject = new TransferObject();

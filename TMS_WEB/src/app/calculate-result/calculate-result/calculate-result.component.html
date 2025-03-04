@@ -725,11 +725,11 @@
                 <td class="align-right">{{ l.nonVAT | number }}</td>
                 }
                 @for (l of t.ln; track l) {
-                <td class="align-right">{{ l | number }}</td>
+                <td class="align-right">{{ l | number: '1.0-0' }}</td>
                 }
                 @for (l of t.bvmt; track l) {
-                <td class="align-right">{{ l.nonVAT | number }}</td>
-                <td class="align-right">{{ l.vat | number }}</td>
+                <td class="align-right">{{ l.nonVAT | number: '1.0-0' }}</td>
+                <td class="align-right">{{ l.vat | number: '1.0-0' }}</td>
                 }
               </tr>
               }

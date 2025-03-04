@@ -2,6 +2,7 @@
 using DMS.API.AppCode.Enum;
 using DMS.API.AppCode.Extensions;
 using DMS.BUSINESS.Services.BU;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DMS.API.Controllers.BU
@@ -18,6 +19,7 @@ namespace DMS.API.Controllers.BU
         }   
 
         [HttpGet("GetAll")]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] string Code)
         {
             var transferObject = new TransferObject();
@@ -54,6 +56,7 @@ namespace DMS.API.Controllers.BU
         //}
 
         [HttpPost("UpdateDataInput")]
+        [Authorize]
         public async Task<IActionResult> UpdateDataInput([FromBody] CompetitorModel model)
         {
             var transferObject = new TransferObject();
@@ -75,6 +78,7 @@ namespace DMS.API.Controllers.BU
         }
 
         [HttpGet("ExportExcel")]
+        [Authorize]
         public async Task<IActionResult> ExportExcel([FromQuery] string headerId)
         {
             var transferObject = new TransferObject();

@@ -31,7 +31,7 @@ namespace DMS.BUSINESS.Services.AD
         public async Task<OrganizeDto> BuildDataForTree()
         {
             var lstNode = new List<OrganizeDto>();
-            var rootNode = new OrganizeDto() { Id = "ORG", PId = "-ORG", Name = "Danh Sách Các Đơn Vị", Title = "1.1_  STC", Key = "ORG" };
+            var rootNode = new OrganizeDto() { Id = "ORG", PId = "-ORG", Name = "Danh Sách Các Đơn Vị", Title = "1.1_  PLXNA", Key = "ORG" };
             lstNode.Add(rootNode);
 
             var lstAllOrganize = (await this.GetAll()).OrderBy(x => x.OrderNumber).ToList();
@@ -73,7 +73,7 @@ namespace DMS.BUSINESS.Services.AD
             if(userType == "ACT_UNIT")
             {
                 var lstNode = new List<OrganizeDto>();
-                var rootNode = new OrganizeDto() { Id = "ORG", PId = "-ORG", Name = "Danh Sách Các Đơn Vị", Title = "1.1_  STC", Key = "ORG" };
+                var rootNode = new OrganizeDto() { Id = "ORG", PId = "-ORG", Name = "Danh Sách Các Đơn Vị", Title = "1.1_  PLXNA", Key = "ORG" };
                 lstNode.Add(rootNode);
                 var org = _dbContext.TblAdAccount.Where(x => x.UserName == userName).Select(x => x.OrganizeCode).FirstOrDefault();
                 var lstAllOrganize = _dbContext.tblAdOrganize.Where(x => x.Id == org).ToList();
@@ -113,7 +113,7 @@ namespace DMS.BUSINESS.Services.AD
             {
 
                 var lstNode = new List<OrganizeDto>();
-                var rootNode = new OrganizeDto() { Id = "ORG", PId = "-ORG", Name = "Danh Sách Các Đơn Vị", Title = "1.1_  STC", Key = "ORG" };
+                var rootNode = new OrganizeDto() { Id = "ORG", PId = "-ORG", Name = "Danh Sách Các Đơn Vị", Title = "1.1_  PLXNA", Key = "ORG" };
                 lstNode.Add(rootNode);
 
                 var lstAllOrganize = (await this.GetAll()).OrderBy(x => x.OrderNumber).ToList();

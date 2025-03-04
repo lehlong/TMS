@@ -21,7 +21,7 @@ namespace DMS.CORE.Entities.BU
         public string Name { get; set; }
 
         [Column("F_DATE", TypeName = "DATETIME")]
-        public DateTime FDate { get; set; }
+        public DateTime? FDate { get; set; }
 
     }
 }

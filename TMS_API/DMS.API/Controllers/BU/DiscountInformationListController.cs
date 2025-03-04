@@ -4,12 +4,14 @@ using DMS.API.AppCode.Extensions;
 using DMS.BUSINESS.Dtos.BU;
 using DMS.BUSINESS.Services.BU;
 using DocumentFormat.OpenXml.Math;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DMS.API.Controllers.BU
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DiscountInformationListController(IDiscountInformationListService service) : ControllerBase
     {
         public readonly IDiscountInformationListService _service = service;

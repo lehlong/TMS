@@ -4,6 +4,7 @@ using DMS.API.AppCode.Extensions;
 using DMS.BUSINESS.Dtos.BU;
 using DMS.BUSINESS.Models;
 using DMS.BUSINESS.Services.BU;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NPOI.HSSF.Record.Chart;
@@ -19,7 +20,9 @@ namespace DMS.API.Controllers.BU
         {
             _service = service;
         }
+
         [HttpGet("GetCalculateResult")]
+        [Authorize]
         public async Task<IActionResult> GetCalculateResult([FromQuery] string code)
         {
             var transferObject = new TransferObject();
@@ -38,6 +41,7 @@ namespace DMS.API.Controllers.BU
         }
 
         [HttpGet("GetDataInput")]
+        [Authorize]
         public async Task<IActionResult> GetDataInput([FromQuery] string code)
         {
             var transferObject = new TransferObject();
@@ -54,7 +58,9 @@ namespace DMS.API.Controllers.BU
             }
             return Ok(transferObject);
         }
+
         [HttpGet("GetHistoryAction")]
+        [Authorize]
         public async Task<IActionResult> GetHistoryAction([FromQuery] string code)
         {
             var transferObject = new TransferObject();
@@ -71,7 +77,9 @@ namespace DMS.API.Controllers.BU
             }
             return Ok(transferObject);
         }
+
         [HttpGet("GetHistoryFile")]
+        [Authorize]
         public async Task<IActionResult> GetHistoryFile([FromQuery] string code)
         {
             var transferObject = new TransferObject();
@@ -88,7 +96,9 @@ namespace DMS.API.Controllers.BU
             }
             return Ok(transferObject);
         }
+
         [HttpGet("GetCustomer")]
+        [Authorize]
         public async Task<IActionResult> GetCustomer()
         {
             var transferObject = new TransferObject();
@@ -107,6 +117,7 @@ namespace DMS.API.Controllers.BU
         }
 
         [HttpPost("UpdateDataInput")]
+        [Authorize]
         public async Task<IActionResult> UpdateDataInput([FromBody] InsertModel model)
         {
             var transferObject = new TransferObject();
@@ -128,6 +139,7 @@ namespace DMS.API.Controllers.BU
         }
 
         [HttpGet("ExportExcel")]
+        [Authorize]
         public async Task<IActionResult> ExportExcel([FromQuery] string headerId)
         {
             var transferObject = new TransferObject();
@@ -151,6 +163,7 @@ namespace DMS.API.Controllers.BU
         }
 
         [HttpPost("ExportWord")]
+        [Authorize]
         public async Task<IActionResult> ExportWord([FromBody] List<string> lstCustomerChecked, [FromQuery] string headerId)
         {
             var transferObject = new TransferObject();
@@ -171,6 +184,7 @@ namespace DMS.API.Controllers.BU
         }
 
         [HttpPost("ExportWordTrinhKy")]
+        [Authorize]
         public async Task<IActionResult> ExportWordTrinhky([FromBody] List<string> lstTrinhKyChecked, [FromQuery] string headerId)
         {
             var transferObject = new TransferObject();
@@ -191,6 +205,7 @@ namespace DMS.API.Controllers.BU
         }
 
         [HttpPost("ExportPDF")]
+        [Authorize]
         public async Task<IActionResult> ExportPDF([FromBody] List<string> lstCustomerChecked, [FromQuery] string headerId)
         {
             var transferObject = new TransferObject();

@@ -19,7 +19,7 @@ namespace DMS.BUSINESS.Dtos.BU
         public string Name { get; set; }
 
         [Description("Ngày bắt đầu")]
-        public DateTime FDate { get; set; }
+        public DateTime? FDate { get; set; }
 
 
         [Description("Trạng thái")]

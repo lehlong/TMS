@@ -12,6 +12,7 @@ import { Router } from '@angular/router'
 import { PaginationResult } from '../../models/base.model'
 import { GoodsService } from '../../services/master-data/goods.service'
 import { CompetitorService } from '../../services/master-data/competitor.service'
+import { CalculateResultListService } from '../../services/calculate-result-list/calculate-result-list.service'
 
 @Component({
   selector: 'app-discount-information-list',
@@ -32,6 +33,7 @@ export class DiscountInformationListComponent {
   paginationResult = new PaginationResult()
   filter = new DiscountInformationListFilter()
   visible: boolean = false
+  visibleDiscount: boolean = false
   isName: boolean = false
   goodsResult: any[] = []
   competitorResult: any[] = []
@@ -45,17 +47,20 @@ export class DiscountInformationListComponent {
       },
     ],
     header: {
+      code: '',
       name: '',
       fDate: '',
     },
   }
   list: any[] = []
+  lstCaculate: any[] = []
   loading: boolean = false
   COMPETITOR_ANALYSIS = COMPETITOR_ANALYSIS
 
   constructor(
     private fb: NonNullableFormBuilder,
     private _service: DiscountInformationListService,
+    private _caculateResultServicer: CalculateResultListService,
     private _goodsService: GoodsService,
     private _competitorService: CompetitorService,
     private globalService: GlobalService,
@@ -76,6 +81,7 @@ export class DiscountInformationListComponent {
     this.search()
     this.getAllGoods()
     this.getAllCompetitor()
+    this.searchLstCaculate()
   }
 
   search() {
@@ -90,6 +96,17 @@ export class DiscountInformationListComponent {
     })
   }
 
+  searchLstCaculate() {
+    this.isSubmit = false
+    this._caculateResultServicer.getall().subscribe({
+      next: (data) => {
+        this.lstCaculate = data
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
+  }
   getAll() {
     this._service.getAll().subscribe({
       next: (data) => {
@@ -111,9 +128,24 @@ export class DiscountInformationListComponent {
       })
     }
   }
+
   openCreate() {
     this.edit = false
     this.visible = true
+    // this._service.getObjectCreate(this.code).subscribe({
+    //   next: (data) => {
+    //     this.model = data
+    //     console.log(this.model)
+    //     this.visible = true
+    //   },
+    //   error: (err) => {
+    //     console.log(err)
+    //   },
+    // })
+  }
+
+  getOjCreByCode(){
+    this.visibleDiscount = true
     this._service.getObjectCreate(this.code).subscribe({
       next: (data) => {
         this.model = data

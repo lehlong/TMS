@@ -64,12 +64,15 @@ namespace DMS.BUSINESS.Services.BU
 
         public async Task<CompetitorModel> BuildObjectCreate(string code)
         {
+            var dateTimeNow = DateTime.Now;
+            var fdate = await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.FDate).FirstOrDefaultAsync();
             try
             {
                 var obj = new CompetitorModel();
-                obj.Header.Code = code != null ? code : Guid.NewGuid().ToString();
+                obj.Header.Code = code;
                 obj.Header.Name = await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.Name).FirstOrDefaultAsync() ?? "";
-                obj.Header.FDate = code != null ? await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.FDate).FirstOrDefaultAsync() : DateTime.Now;
+                //obj.Header.FDate = DateTime.Now;
+                obj.Header.FDate = await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.FDate).FirstOrDefaultAsync() != null ? await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.FDate).FirstOrDefaultAsync() : dateTimeNow;
                 obj.Header.IsActive = true;
 
                 var lstGoods = await _dbContext.TblMdGoods.OrderBy(x => x.Code).ToListAsync();
@@ -84,10 +87,10 @@ namespace DMS.BUSINESS.Services.BU
                     {
                         goods.HS.Add(new TblInDiscountCompetitor
                         {
-                            Code = code != null ? lstDiscountInformation.Where(x => x.GoodsCode == g.Code && x.CompetitorCode == c.Code).Select(x => x.Code).FirstOrDefault() : Guid.NewGuid().ToString(),
+                            Code = lstDiscountInformation.Where(x => x.GoodsCode == g.Code && x.CompetitorCode == c.Code).Select(x => x.Code).FirstOrDefault() ?? Guid.NewGuid().ToString(),
                             HeaderCode = obj.Header.Code,
                             GoodsCode = g.Code,
-                            Discount = code != null ? lstDiscountInformation.Where(x => x.GoodsCode == g.Code && x.CompetitorCode == c.Code).Sum(x => x.Discount ?? 0) : 0,
+                            Discount = lstDiscountInformation.Where(x => x.GoodsCode == g.Code && x.CompetitorCode == c.Code).Sum(x => x.Discount ?? 0.00M),
                             CompetitorCode = c.Code,
                             IsActive = true,
                         });

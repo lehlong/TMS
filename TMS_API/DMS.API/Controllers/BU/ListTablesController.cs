@@ -3,6 +3,7 @@ using DMS.API.AppCode.Enum;
 using DMS.API.AppCode.Extensions;
 using DMS.BUSINESS.Dtos.BU;
 using DMS.BUSINESS.Services.BU;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,7 @@ namespace DMS.API.Controllers.BU
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ListTablesController : ControllerBase
     {
         public readonly IListTablesService _service;
