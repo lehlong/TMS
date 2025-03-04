@@ -22,7 +22,7 @@
   <nz-tabset *nzDrawerContent>
     <nz-tab nzTitle="Thông tin">
       <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-        <app-input-clear placeholder="Nhập mã nhóm tài khoản" [required]="true" label="Mã nhóm tài khoản"
+        <app-input-clear  placeholder="Nhập mã nhóm tài khoản" [required]="true" label="Mã nhóm tài khoản"
           [control]="$any(validateForm).controls['name']">
         </app-input-clear>
         <app-input-clear type="textarea" placeholder="Nhập tên nhóm tài khoản" label="Tên nhóm tài khoản"

@@ -192,8 +192,8 @@ export class AccountGroupEditComponent implements OnInit {
     this.accountGroupService.GetDetail(id).subscribe({
       next: (data) => {
         this.nameShow = data.name
-        this.validateForm.setValue({
-          name: data.name,
+        this.validateForm.patchValue({
+          name: data.name ? data.name : '',
           notes: data.notes ? data.notes : '',
           isActive: data.isActive,
         })
@@ -245,7 +245,6 @@ export class AccountGroupEditComponent implements OnInit {
         id: this.id,
         ...this.validateForm.value,
       }
-
       this.accountGroupService
         .Update({ ...updateData, account_AccountGroups, listAccountGroupRight })
         .subscribe({
@@ -269,7 +268,8 @@ export class AccountGroupEditComponent implements OnInit {
             this.reset()
           },
           error: (response: any) => {
-            console.log(response)
+            console.log('hehe',response)
+           
           },
         })
     } else {
