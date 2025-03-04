@@ -42,6 +42,7 @@ namespace DMS.BUSINESS.Services.BU
         Task<string> GenarateWordTrinhKy(string headerId, string nameTeam);
         Task<string> GenarateWord(List<string> lstCustomerChecked, string headerId);
         Task<string> GenarateFile(List<string> lstCustomerChecked, string type, string headerId);
+        Task<string> ExportExcelTrinhKy(string headerId);
     }
     public class CalculateResultService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdGoods, GoodsDto>(dbContext, mapper), ICalculateResultService
     {
@@ -1362,7 +1363,196 @@ namespace DMS.BUSINESS.Services.BU
                 return new List<TblMdCustomer>();
             }
         }
-        
+        public async Task<string> ExportExcelTrinhKy(string headerId)
+        {
+            try
+            {
+
+                var data = await GetResult(headerId);
+                var header = await _dbContext.TblBuCalculateResultList.FindAsync(headerId);
+                var model = await GetDataInput(headerId);
+                var goods = await _dbContext.TblMdGoods.ToListAsync();
+                var NguoiKyTen = await _dbContext.TblInNguoiKyTen.FirstOrDefaultAsync(x => x.HeaderCode == headerId);
+                var A5 = $"  (Kèm theo Công văn số:                        /PLXNA ngày {header.FDate.Day:D2}/{header.FDate.Month:D2}/{header.FDate.Year} của Công ty Xăng dầu Nghệ An)";
+                var A24 = $" + Căn cứ Quyết định số {NguoiKyTen.QuyetDinhSo} ngày {header.FDate.Day:D2}/{header.FDate.Month:D2}/{header.FDate.Year} của Tổng giám đốc Tập đoàn Xăng dầu Việt Nam về việc qui định giá bán xăng dầu; ";
+                var B25 = $"Mức giá bán đăng ký này có hiệu lực thi hành kể từ 15 giờ 00 ngày {header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
+                // 1. Đường dẫn file gốc
+                var filePathTemplate = Path.Combine(Directory.GetCurrentDirectory(), "Template", "TempTrinhKy", "KeKhaiGiaChiTiet.xlsx");
+
+                // 2. Tạo thư mục lưu file
+                var folderName = Path.Combine($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}");
+                if (!Directory.Exists(folderName))
+                {
+                    Directory.CreateDirectory(folderName);
+                }
+
+                // 3. Tạo tên file mới
+                var fileName = $"{DateTime.Now:ddMMyyyy_HHmmss}_KeKhaiGiaChiTiet.xlsx";
+                var fullPath = Path.Combine(folderName, fileName);
+
+                // 4. Copy file từ Template sang Upload
+                File.Copy(filePathTemplate, fullPath, true);
+
+                // 5. Mở file để sửa
+                IWorkbook workbook;
+
+                using (var fs = new FileStream(fullPath, FileMode.Open, FileAccess.ReadWrite))
+                {
+                    workbook = new XSSFWorkbook(fs);
+                    ISheet sheet = workbook.GetSheetAt(0);
+                    IRow rowA5 = sheet.GetRow(4);
+                    ICell cellA5 = rowA5?.GetCell(0);
+
+                    if (cellA5 != null)
+                    {
+                        cellA5.SetCellValue(A5);
+                    }
+
+                    IRow rowA24 = sheet.GetRow(23);
+                    ICell cellA24 = rowA24?.GetCell(0);
+
+                    if (cellA24 != null)
+                    {
+                        cellA24.SetCellValue(A24);
+                    }
+
+                    IRow rowB25 = sheet.GetRow(24);
+                    ICell cellB25 = rowB25?.GetCell(1);
+
+                    if (cellB25 != null)
+                    {
+                        cellB25.SetCellValue(B25);
+                    }
+                    int rowIndex = 10; // Bắt đầu từ row 11 (index = 10)
+                    foreach (var item in data.DLG.Dlg_TDGBL)
+                    {
+                        IRow row = sheet.GetRow(rowIndex); // Chỉ lấy row, không cần CreateRow
+                            if (row != null && !item.Code.Trim().Equals("701001", StringComparison.OrdinalIgnoreCase))
+                         {
+                            // B11 -> colA
+                            ICell cellB = row.GetCell(1);
+                            if (cellB != null)
+                            {
+                                cellB.SetCellValue(item.ColA);
+                            }
+
+                            // E11 -> col1
+                            ICell cellE = row.GetCell(4);
+                            if (cellE != null && item.Col1.HasValue)
+                            {
+                                cellE.SetCellValue((double)item.Col1);
+                            }
+
+                            // F11 -> col2
+                            ICell cellF = row.GetCell(5);
+                            if (cellF != null && item.Col2.HasValue)
+                            {
+                                cellF.SetCellValue((double)item.Col2);
+                            }
+
+                            // G11 -> tangGiam1_2
+                            ICell cellG = row.GetCell(6);
+                            if (cellG != null && item.TangGiam1_2.HasValue)
+                            {
+                                cellG.SetCellValue((double)item.TangGiam1_2);
+                            }
+
+                            ICell cellH = row.GetCell(7);
+                            if (cellH != null)
+                            {
+                                if (item.Col1.HasValue && item.Col2.HasValue && item.Col1.Value != 0)
+                                {
+                                    double rateOfIncreaseAndDecrease = (double)((item.Col2.Value - item.Col1.Value) / item.Col1.Value);
+                                    cellH.SetCellValue(rateOfIncreaseAndDecrease);
+                                }
+                                else
+                                {
+                                    cellH.SetCellValue(0);
+                                }
+                            }
+
+                        }
+
+                        rowIndex++;
+                    }
+
+                    int rowIndex2 = 15;
+                    foreach (var item in data.DLG.Dlg_TDGBL)
+                    {
+                        IRow row = sheet.GetRow(rowIndex2); // Chỉ lấy row, không cần CreateRow
+                        if (row != null && !item.Code.Trim().Equals("701001", StringComparison.OrdinalIgnoreCase))
+                        {
+                            // B11 -> colA
+                            ICell cellB = row.GetCell(1);
+                            if (cellB != null)
+                            {
+                                cellB.SetCellValue(item.ColA);
+                            }
+
+                            // E11 -> col1
+                            ICell cellE = row.GetCell(4);
+                            if (cellE != null && item.Col3.HasValue)
+                            {
+                                cellE.SetCellValue((double)item.Col3);
+                            }
+
+                            // F11 -> col2
+                            ICell cellF = row.GetCell(5);
+                            if (cellF != null && item.Col4.HasValue)
+                            {
+                                cellF.SetCellValue((double)item.Col4);
+                            }
+
+                            // G11 -> tangGiam1_2
+                            ICell cellG = row.GetCell(6);
+                            if (cellG != null && item.TangGiam3_4.HasValue)
+                            {
+                                cellG.SetCellValue((double)item.TangGiam3_4);
+                            }
+
+                            ICell cellH = row.GetCell(7);
+                            if (cellH != null)
+                            {
+                                if (item.Col3.HasValue && item.Col4.HasValue && item.Col3.Value != 0)
+                                {
+                                    double rateOfIncreaseAndDecrease = (double)((item.Col4.Value - item.Col3.Value) / item.Col3.Value);
+                                    cellH.SetCellValue(rateOfIncreaseAndDecrease);
+                                }
+                                else
+                                {
+                                    cellH.SetCellValue(0);
+                                }
+                            }
+
+                        }
+
+                        rowIndex2++;
+                    }
+
+                    ISheet sheetCheck = workbook.GetSheetAt(0);
+                    IRow rowCheck = sheetCheck.GetRow(4);
+                    ICell cellCheck = rowCheck?.GetCell(0);
+                    Console.WriteLine($"Giá trị trước khi lưu file: {cellCheck?.StringCellValue}");
+
+                    // Ghi file
+                    using (var fsOut = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
+                    {
+                        workbook.Write(fsOut);
+                        Console.WriteLine("Ghi file thành công");
+                    }
+                    workbook.Close();
+                    return $"{folderName}/{fileName}";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi: {ex.Message}");
+                throw;
+            }
+        }
+
+
+
         public void ExportExcel(ref MemoryStream outFileStream, string path, string headerId)
         {
             try
@@ -3416,19 +3606,36 @@ namespace DMS.BUSINESS.Services.BU
             {
                 foreach (var n in lstCustomerChecked)
                 {
-                    var path = await GenarateWordTrinhKy(headerId, n);
-                    _dbContext.TblBuHistoryDownload.Add(new TblBuHistoryDownload
+                    if (n == "KeKhaiGiaChiTiet")
                     {
-                        Code = Guid.NewGuid().ToString(),
-                        HeaderCode = headerId,
-                        Name = path.Replace($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}/", ""),
-                        Type = "docx",
-                        Path = path
-                    });
-                    await _dbContext.SaveChangesAsync();
+                        var path = await ExportExcelTrinhKy(headerId);
+                        _dbContext.TblBuHistoryDownload.Add(new TblBuHistoryDownload
+                        {
+                            Code = Guid.NewGuid().ToString(),
+                            HeaderCode = headerId,
+                            Name = path.Replace($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}/", ""),
+                            Type = "xlsx",
+                            Path = path
+                        });
+                        await _dbContext.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        var path = await GenarateWordTrinhKy(headerId, n);
+                        _dbContext.TblBuHistoryDownload.Add(new TblBuHistoryDownload
+                        {
+                            Code = Guid.NewGuid().ToString(),
+                            HeaderCode = headerId,
+                            Name = path.Replace($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}/", ""),
+                            Type = "docx",
+                            Path = path
+                        });
+                        await _dbContext.SaveChangesAsync();
+                    }
                 }
                 return null;
             }
+           
             else
             {
                 var w = await GenarateWord(lstCustomerChecked, headerId);
@@ -3475,7 +3682,6 @@ namespace DMS.BUSINESS.Services.BU
             }
 
         }
-        
         static Table CreateSampleTable()
         {
             Table table = new Table();

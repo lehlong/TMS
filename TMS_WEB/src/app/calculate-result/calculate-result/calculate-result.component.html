@@ -1963,6 +1963,10 @@
           <td [nzChecked]="lstTrinhKyChecked.includes('KeKhaiGia')" (nzCheckedChange)="onItemTrinhKyChecked('KeKhaiGia', $event)"></td>
           <td> Kê Khai Giá</td>
         </tr>
+        <tr>
+          <td [nzChecked]="lstTrinhKyChecked.includes('KeKhaiGiaChiTiet')" (nzCheckedChange)="onItemTrinhKyChecked('KeKhaiGiaChiTiet', $event)"></td>
+          <td> Kê Khai Giá Chi Tiết</td>
+        </tr>
       </tbody>
     </nz-table>
   </ng-container>
