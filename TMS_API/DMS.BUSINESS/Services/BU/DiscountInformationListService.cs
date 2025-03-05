@@ -64,11 +64,14 @@ namespace DMS.BUSINESS.Services.BU
 
         public async Task<CompetitorModel> BuildObjectCreate(string code)
         {
+
             var dateTimeNow = DateTime.Now;
             var fdate = await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.FDate).FirstOrDefaultAsync();
             try
             {
+
                 var obj = new CompetitorModel();
+                obj.HeaderName = await _dbContext.TblBuCalculateResultList.Where(x => x.Code == code).Select(x => x.Name).FirstOrDefaultAsync() ?? "";
                 obj.Header.Code = code;
                 obj.Header.Name = await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.Name).FirstOrDefaultAsync() ?? "";
                 //obj.Header.FDate = DateTime.Now;
@@ -137,6 +140,8 @@ namespace DMS.BUSINESS.Services.BU
 
     public class CompetitorModel
     {
+        public string? HeaderName { get; set; }
+
         public TblBuDiscountInformationList Header { get; set; } = new TblBuDiscountInformationList();
         public List<GOODSs> goodss { get; set; } = new List<GOODSs>();
     }

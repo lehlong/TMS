@@ -25,7 +25,7 @@ export class DiscountInformationComponent {
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Kết quả tính toán đầu ra',
+        name: 'Kết quả phân tích',
         path: 'calculate-result',
       },
     ])
@@ -39,6 +39,7 @@ export class DiscountInformationComponent {
   edit: boolean = true
   visible: boolean = false
   isName: boolean = false
+  headerName: any = 'THÔNG TIN PHÂN TÍCH ĐỢT NHẬP - '
 
   code: any = ''
   title: any = 'Phân tích chiết khấu'
@@ -59,7 +60,8 @@ export class DiscountInformationComponent {
     header: {
       name: '',
       fData: ''
-    }
+    },
+    headerName: ''
   }
 
   ngOnInit() {
@@ -131,6 +133,7 @@ export class DiscountInformationComponent {
         this.visible = true
 
         this.model = data
+        this.headerName = this.headerName + data.headerName
         console.log(this.model);
 
       },
@@ -160,6 +163,7 @@ export class DiscountInformationComponent {
   }
 
   close() {
+    this.headerName = 'THÔNG TIN PHÂN TÍCH ĐỢT NHẬP - '
     this.visible = false
   }
 
