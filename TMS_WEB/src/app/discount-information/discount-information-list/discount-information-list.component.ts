@@ -13,6 +13,7 @@ import { PaginationResult } from '../../models/base.model'
 import { GoodsService } from '../../services/master-data/goods.service'
 import { CompetitorService } from '../../services/master-data/competitor.service'
 import { CalculateResultListService } from '../../services/calculate-result-list/calculate-result-list.service'
+import { NzMessageService } from 'ng-zorro-antd/message'
 
 @Component({
   selector: 'app-discount-information-list',
@@ -63,6 +64,7 @@ export class DiscountInformationListComponent {
     private _caculateResultServicer: CalculateResultListService,
     private _goodsService: GoodsService,
     private _competitorService: CompetitorService,
+    private message: NzMessageService,
     private globalService: GlobalService,
     private router: Router,
   ) {
@@ -120,6 +122,12 @@ export class DiscountInformationListComponent {
   }
 
   submitForm(): void {
+    if (this.model.header.name == '') {
+      this.message.error(
+        `Vui lòng nhập tên đợt nhập`,
+      )
+      // return
+    }
     if (this.model.header.name != '') {
       this._service.createData(this.model).subscribe({
         next: (data) => {

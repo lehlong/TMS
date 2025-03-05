@@ -103,6 +103,12 @@ export class CalculateResultListComponent {
   }
 
   submitForm(): void {
+    if (this.model.header.name == '') {
+      this.message.error(
+        `Vui lòng nhập tên đợt nhập`,
+      )
+      // return
+    }
     if (this.model.header.name != '') {
       console.log(this.model)
 

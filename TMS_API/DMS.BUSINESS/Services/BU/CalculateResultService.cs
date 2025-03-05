@@ -360,24 +360,23 @@ namespace DMS.BUSINESS.Services.BU
                     var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
                     var dlg_4 = data.DLG.Dlg_4;
                     var dlg_4_Old = data.DLG.Dlg_4_Old;
-                    var k = dlg_4_Old.FirstOrDefault();
                     foreach (var n in dlg_4)
+                    {
+                        if (g.Code == n.Code)
                         {
-                            if (g.Code == n.Code)
+                            var i = new DLG_7
                             {
-                                var i = new DLG_7
-                                {
-                                    Code = g.Code,
-                                    ColA = g.Name,
-                                    Type = n.Type,
-                                    Col1 = k.Col12, // lấy giá niêm yết ở kì trước
-                                    Col2 = n.Col12,
-                                    TangGiam1_2 = n.Col12 - k.Col12,
-                                };
+                                Code = g.Code,
+                                ColA = g.Name,
+                                Type = n.Type,
+                                Col1 = dlg_4_Old.Where(x => x.Code == g.Code).Where(x => x.Type == n.Type).Sum(x => x.Col12),
+                                Col2 = n.Col12,
+                                TangGiam1_2 = n.Col12 - dlg_4_Old.Where(x => x.Code == g.Code).Where(x => x.Type == n.Type).Sum(x => x.Col12),
+                            };
 
-                                data.DLG.Dlg_7.Add(i);
-                            }
+                            data.DLG.Dlg_7.Add(i);
                         }
+                    }
                 }
 
 
@@ -387,19 +386,19 @@ namespace DMS.BUSINESS.Services.BU
                     var hsmh = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
                     var dlg_4 = data.DLG.Dlg_4;
                     var dlg_4_Old = data.DLG.Dlg_4_Old;
-                    var k = dlg_4_Old.FirstOrDefault();
+
                     foreach (var n in dlg_4)
                     {
-                        if (g.Code == n.Code)
+                        if (g.Code == n.Code && n.Type == "TT")
                         {
                             var i = new DLG_8
                             {
                                 Code = g.Code,
                                 ColA = g.Name,
                                 Type = n.Type,
-                                Col1 = k.Col14, // lấy giá niêm yết ở kì trước
+                                Col1 = dlg_4_Old.Where(x => x.Code  == g.Code).Where(x => x.Type == "TT").Sum(x => x.Col14), 
                                 Col2 = n.Col14,
-                                TangGiam1_2 = n.Col14 - k.Col14,
+                                TangGiam1_2 = n.Col14 - dlg_4_Old.Where(x => x.Code == g.Code).Where(x => x.Type == "TT").Sum(x => x.Col14),
                             };
 
                             data.DLG.Dlg_8.Add(i);
