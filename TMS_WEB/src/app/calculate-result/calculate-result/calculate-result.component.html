@@ -1922,51 +1922,20 @@
 <nz-modal [(nzVisible)]="isVisibleLstTrinhKy" nzTitle="CHỌN TRÌNH KÝ" (nzOnCancel)="exportWordTrinhKy()"
   (nzOnOk)="confirmExportWordTrinhKy()" nzCancelText="Đóng">
   <ng-container *nzModalContent>
-    <nz-table #customerTable [nzData]="lstCustomer" nzSize="small">
+    <nz-table #customerTable [nzData]="lstTrinhKy" nzSize="small">
       <thead>
         <tr>
-          <th [(nzChecked)]="checked" (nzCheckedChange)="onAllChecked($event)"></th>
+          <th [(nzChecked)]="checked" (nzCheckedChange)="onAllCheckedLstTrinhKy($event)"></th>
           <th>Báo cáo</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td [nzChecked]="lstTrinhKyChecked.includes('CongDienKKGiaBanLe')" (nzCheckedChange)="onItemTrinhKyChecked('CongDienKKGiaBanLe', $event)"></td>
-          <td>Công Điện Kiểm Kê Giá Bán Lẻ</td>
-        </tr>
-
-        <tr>
-          <td [nzChecked]="lstTrinhKyChecked.includes('MucGiamGiaNQTM')" (nzCheckedChange)="onItemTrinhKyChecked('MucGiamGiaNQTM', $event)"></td>
-          <td>Mức Giảm Giá NQTM</td>
-        </tr>
-        <tr>
-          <td [nzChecked]="lstTrinhKyChecked.includes('QDGBanBuon')" (nzCheckedChange)="onItemTrinhKyChecked('QDGBanBuon', $event)"></td>
-          <td>Quyết Định Giá bán Buôn</td>
-        </tr>
-        <tr>
-          <td [nzChecked]="lstTrinhKyChecked.includes('QDGBanLe')" (nzCheckedChange)="onItemTrinhKyChecked('QDGBanLe', $event)"></td>
-          <td>Quyết Định Giá Bán lẻ</td>
-        </tr>
-        <tr>
-          <td [nzChecked]="lstTrinhKyChecked.includes('QDGCtyPTS')" (nzCheckedChange)="onItemTrinhKyChecked('QDGCtyPTS', $event)"></td>
-          <td>Quyết Định Công Ty PTS</td>
-        </tr>
-        <tr>
-          <td [nzChecked]="lstTrinhKyChecked.includes('QDGNoiDung')" (nzCheckedChange)="onItemTrinhKyChecked('QDGNoiDung', $event)"></td>
-          <td>Quyết Giá Nội Dung</td>
-        </tr>
-        <tr>
-          <td [nzChecked]="lstTrinhKyChecked.includes('ToTrinh')" (nzCheckedChange)="onItemTrinhKyChecked('ToTrinh', $event)"></td>
-          <td>Tờ Trình</td>
-        </tr>
-        <tr>
-          <td [nzChecked]="lstTrinhKyChecked.includes('KeKhaiGia')" (nzCheckedChange)="onItemTrinhKyChecked('KeKhaiGia', $event)"></td>
-          <td> Kê Khai Giá</td>
-        </tr>
-        <tr>
-          <td [nzChecked]="lstTrinhKyChecked.includes('KeKhaiGiaChiTiet')" (nzCheckedChange)="onItemTrinhKyChecked('KeKhaiGiaChiTiet', $event)"></td>
-          <td> Kê Khai Giá Chi Tiết</td>
-        </tr>
+        @for (data of lstTrinhKy; track data) {
+          <tr>
+            <td [nzChecked]="lstTrinhKyChecked.includes(data.code)" (nzCheckedChange)="onItemTrinhKyChecked('CongDienKKGiaBanLe', $event)"></td>
+            <td>{{ data.name }}</td>
+          </tr>
+          }
       </tbody>
     </nz-table>
   </ng-container>

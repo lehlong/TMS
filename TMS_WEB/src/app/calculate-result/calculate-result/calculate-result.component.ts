@@ -4,7 +4,10 @@ import { CalculateResultService } from '../../services/calculate-result/calculat
 import { GlobalService } from '../../services/global.service'
 import { ActivatedRoute } from '@angular/router'
 import { GoodsService } from '../../services/master-data/goods.service'
-import { CALCULATE_RESULT_RIGHT, IMPORT_BATCH } from '../../shared/constants/access-right.constants'
+import {
+  CALCULATE_RESULT_RIGHT,
+  IMPORT_BATCH,
+} from '../../shared/constants/access-right.constants'
 import { environment } from '../../../environments/environment.prod'
 import { NzMessageService } from 'ng-zorro-antd/message'
 
@@ -51,7 +54,7 @@ export class CalculateResultComponent {
       dlg_5: [],
       dlg_6: [],
       dlg_7: [],
-      dlg_8: []
+      dlg_8: [],
     },
     pt: [],
     db: [],
@@ -95,6 +98,17 @@ export class CalculateResultComponent {
   lstHistoryFile: any[] = []
   goodsResult: any[] = []
   lstCustomer: any[] = []
+  lstTrinhKy: any[] = [{
+     code: 'CongDienKKGiaBanLe', name: 'Công Điện Kiểm Kê Giá Bán Lẻ' },
+    { code: 'MucGiamGiaNQTM', name: 'Mức Giảm Giá NQTM' },
+    { code: 'QDGBanBuon', name: 'Quyết Định Giá bán Buôn' },
+    { code: 'QDGBanLe', name: 'Quyết Định Giá Bán lẻ' },
+    { code: 'QDGCtyPTS', name: 'Quyết Định Công Ty PTS' },
+    { code: 'QDGNoiDung', name: 'Quyết Giá Nội Dung' },
+    { code: 'ToTrinh', name: 'Tờ Trình' },
+    { code: 'KeKhaiGia', name: 'Kê Khai Giá' },
+    { code: 'KeKhaiGiaChiTiet', name: 'Kê Khai Giá Chi Tiết' },
+  ]
   ngOnInit() {
     this.route.paramMap.subscribe({
       next: (params) => {
@@ -125,8 +139,7 @@ export class CalculateResultComponent {
 
   onItemTrinhKyChecked(code: String, checked: boolean): void {
     this.updateTrinhKyCheckedSet(code, checked)
-    console.log(this.lstTrinhKyChecked);
-
+    console.log(this.lstTrinhKyChecked)
   }
 
   updateCheckedSet(code: any, checked: boolean): void {
@@ -152,6 +165,17 @@ export class CalculateResultComponent {
     }
   }
 
+  onAllCheckedLstTrinhKy(value: boolean): void {
+    this.lstTrinhKyChecked = []
+    if (value) {
+      this.lstTrinhKy.forEach((i) => {
+        this.lstTrinhKyChecked.push(i.code)
+      })
+    } else {
+      this.lstTrinhKyChecked = []
+    }
+  }
+
   confirmExportWord() {
     if (this.lstCustomerChecked.length == 0) {
       this.message.create(
@@ -160,48 +184,49 @@ export class CalculateResultComponent {
       )
       return
     } else {
-      this._service.ExportWord(this.lstCustomerChecked, this.headerId).subscribe({
-        next: (data) => {
-          this.isVisibleCustomer = false
-          this.lstCustomerChecked = []
-          var a = document.createElement('a')
-          a.href = environment.apiUrl + data
-          a.target = '_blank'
-          a.click()
-          a.remove()
-        },
-        error: (err) => {
-          console.log(err)
-        },
-      })
+      this._service
+        .ExportWord(this.lstCustomerChecked, this.headerId)
+        .subscribe({
+          next: (data) => {
+            this.isVisibleCustomer = false
+            this.lstCustomerChecked = []
+            var a = document.createElement('a')
+            a.href = environment.apiUrl + data
+            a.target = '_blank'
+            a.click()
+            a.remove()
+          },
+          error: (err) => {
+            console.log(err)
+          },
+        })
     }
   }
 
   confirmExportWordTrinhKy() {
     if (this.lstTrinhKyChecked.length == 0) {
-      this.message.create(
-        'warning',
-        'Vui lòng chọn trình ky xuất ra file',
-      )
+      this.message.create('warning', 'Vui lòng chọn trình ky xuất ra file')
       return
     } else {
-      this._service.ExportWordTrinhKy(this.lstTrinhKyChecked, this.headerId).subscribe({
-        next: (data) => {
-          this.isVisibleCustomer = false
-          this.lstTrinhKyChecked = []
-          var a = document.createElement('a')
-          a.href = environment.apiUrl + data
-          a.target = '_blank'
-          a.click()
-          a.remove()
-        },
-        error: (err) => {
-          console.log(err)
-        },
-      })
+      this._service
+        .ExportWordTrinhKy(this.lstTrinhKyChecked, this.headerId)
+        .subscribe({
+          next: (data) => {
+            this.isVisibleCustomer = false
+            this.lstTrinhKyChecked = []
+            var a = document.createElement('a')
+            a.href = environment.apiUrl + data
+            a.target = '_blank'
+            a.click()
+            a.remove()
+          },
+          error: (err) => {
+            console.log(err)
+          },
+        })
+        this.lstTrinhKyChecked = []
     }
   }
-
 
   confirmExportPDF() {
     if (this.lstCustomerChecked.length == 0) {
@@ -211,20 +236,22 @@ export class CalculateResultComponent {
       )
       return
     } else {
-      this._service.ExportPDF(this.lstCustomerChecked, this.headerId).subscribe({
-        next: (data) => {
-          this.isVisibleCustomer = false
-          this.lstCustomerChecked = []
-          var a = document.createElement('a')
-          a.href = environment.apiUrl + data
-          a.target = '_blank'
-          a.click()
-          a.remove()
-        },
-        error: (err) => {
-          console.log(err)
-        },
-      })
+      this._service
+        .ExportPDF(this.lstCustomerChecked, this.headerId)
+        .subscribe({
+          next: (data) => {
+            this.isVisibleCustomer = false
+            this.lstCustomerChecked = []
+            var a = document.createElement('a')
+            a.href = environment.apiUrl + data
+            a.target = '_blank'
+            a.click()
+            a.remove()
+          },
+          error: (err) => {
+            console.log(err)
+          },
+        })
     }
   }
 
@@ -313,7 +340,7 @@ export class CalculateResultComponent {
     this.isVisibleExport = false
     this.isVisibleCustomer = false
     this.isVisibleCustomerPDF = false
-    this.lstCustomerChecked = [];
+    this.lstCustomerChecked = []
   }
   reCalculate() {
     this.GetData(this.headerId)
@@ -325,7 +352,7 @@ export class CalculateResultComponent {
     this._service.GetDataInput(this.headerId).subscribe({
       next: (data) => {
         this.model = data
-        console.log(this.model);
+        console.log(this.model)
 
         this.visibleDrawer = true
       },
@@ -347,8 +374,7 @@ export class CalculateResultComponent {
     row.clgblv = row.gblV2 - row.gny
   }
   updateDataInput() {
-    if (this.model.header.name != ''){
-
+    if (this.model.header.name != '') {
       this._service.UpdateDataInput(this.model).subscribe({
         next: (data) => {
           console.log(data)
@@ -382,7 +408,7 @@ export class CalculateResultComponent {
   }
 
   exportWordTrinhKy() {
-        this.isVisibleLstTrinhKy = !this.isVisibleLstTrinhKy
+    this.isVisibleLstTrinhKy = !this.isVisibleLstTrinhKy
   }
 
   exportPDF() {
@@ -395,29 +421,27 @@ export class CalculateResultComponent {
   }
   onCurrentPageDataChange($event: any): void {}
 
-  fullScreen(){
+  fullScreen() {
     this.isZoom = true
     document.documentElement.requestFullscreen()
   }
-  closeFullScreen(){
+  closeFullScreen() {
     this.isZoom = false
-    document.exitFullscreen()
-      .then(() => {
-    })
-      .catch(() => {
-    })
+    document
+      .exitFullscreen()
+      .then(() => {})
+      .catch(() => {})
   }
 
   cancelSendSMS() {}
 
   confirmSendSMS() {}
 
-  openNewTab(url : string){
+  openNewTab(url: string) {
     window.open(url, '_blank')
   }
 
-
-  checkName(_name: string){
-    _name == '' ? this.isName = true : this.isName = false
+  checkName(_name: string) {
+    _name == '' ? (this.isName = true) : (this.isName = false)
   }
 }
