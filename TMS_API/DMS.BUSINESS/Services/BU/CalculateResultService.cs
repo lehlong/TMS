@@ -551,7 +551,11 @@ namespace DMS.BUSINESS.Services.BU
                         {
                             var _lg = c.LocalCode == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col13) : data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col13);
                             _c.LG.Add(Math.Round(_lg ?? 0));
-                            var vat = g.Type == "X" ? _rPt.GG.Where(x => x.Code == g.Code).Sum(x => x.VAT) + _c.Col9 + _c.Col8 : _rPt.GG.Where(x => x.Code == g.Code).Sum(x => x.VAT) + _c.Col10 + _c.Col8;
+                            //var vat = g.Type == "X" ? _rPt.GG.Where(x => x.Code == g.Code).Sum(x => x.VAT) + _c.Col9 + _c.Col8 : _rPt.GG.Where(x => x.Code == g.Code).Sum(x => x.VAT) + _c.Col10 + _c.Col8;
+                            var vat = g.Type == "X"
+                                            ? _rPt.GG.Where(x => x.Code == g.Code).Sum(x => x.VAT) + (g.Code == "601005" ? 0 : _c.Col9 + _c.Col8)
+                                            : _rPt.GG.Where(x => x.Code == g.Code).Sum(x => x.VAT) + (g.Code == "601005" ? 0 : _c.Col10 + _c.Col8);
+
                             var nonVat = vat == 0 ? 0 : vat / 1.1M;
                             _c.GG.Add(new DB_GG
                             {
