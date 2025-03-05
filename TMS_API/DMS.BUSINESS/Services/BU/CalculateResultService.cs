@@ -1308,13 +1308,13 @@ namespace DMS.BUSINESS.Services.BU
                 }
                 else
                 {
-                    model.Header.Status = model.Status.Code;
+                    model.Header.Status = model.Status.Code == "06" ? "01" : model.Status.Code == "07" ? "01" : model.Status.Code;
                     _dbContext.TblBuCalculateResultList.Update(model.Header);
                     var h = new TblBuHistoryAction()
                     {
                         Code = Guid.NewGuid().ToString(),
                         HeaderCode = model.Header.Code,
-                        Action = model.Status.Code == "02" ? "Trình duyệt" : model.Status.Code == "03" ? "Yêu cầu chỉnh sửa" : model.Status.Code == "04" ? "Phê duyệt" : "Từ chối",
+                        Action = model.Status.Code == "02" ? "Trình duyệt" : model.Status.Code == "03" ? "Yêu cầu chỉnh sửa" : model.Status.Code == "04" ? "Phê duyệt" : model.Status.Code == "05" ? "Từ chối" : model.Status.Code == "06" ? "Hủy trình duyệt" : "Hủy phê duyệt",
                         Contents = model.Status.Contents
                     };
                     _dbContext.TblBuHistoryAction.Add(h);

@@ -293,6 +293,14 @@ export class CalculateResultComponent {
         this.statusModel.title = 'TỪ CHỐI'
         this.statusModel.des = 'Bạn có muốn Từ chối dữ liệu này?'
         break
+      case '05':
+        this.statusModel.title = 'HỦY TRÌNH DUYỆT'
+        this.statusModel.des = 'Bạn có muốn Hủy trình duyệt dữ liệu này?'
+        break
+      case '06':
+        this.statusModel.title = 'HỦY PHÊ DUYỆT'
+        this.statusModel.des = 'Bạn có muốn Hủy phê duyệt dữ liệu này?'
+        break
     }
     this.model.status.code = status
     this.isVisibleStatus = true

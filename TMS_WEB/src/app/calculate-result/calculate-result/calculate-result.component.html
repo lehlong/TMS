@@ -4,29 +4,49 @@
       <nz-page-header-extra>
         <nz-space [nzWrap]="true" class="gap-[5px]">
           <button class="!flex !items-center" nzType="default" nz-button (click)="getDataHeader()"
-            [appPermission]="IMPORT_BATCH.UPDATE_IMPORT_BATCH">
+             *ngIf="model.header.status != null">
             <span nz-icon nzType="right-square"></span> Dữ liệu đầu vào
           </button>
           <button class="!flex !items-center" nzType="default" nz-button (click)="reCalculate()">
             <span nz-icon nzType="calculator"></span> Tính toán lại
           </button>
+
+
           <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('01', '02')"
             [appPermission]="IMPORT_BATCH.BROWSE_IMPORT_BATCH"
             *ngIf="model.header.status == '01' || model.header.status == '03'">
             <span nz-icon nzType="send"></span> Trình duyệt
           </button>
+
+          <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('05', '06')"
+            [appPermission]="IMPORT_BATCH.CANCEL_BROWSE"
+            *ngIf="model.header.status == '02'">
+            <span nz-icon nzType="close"></span> Hủy trình duyệt
+          </button>
+
           <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('02', '03')"
             [appPermission]="IMPORT_BATCH.REQUEST_IMPORT_BATCH_EDIT" *ngIf="model.header.status == '02'">
             <span nz-icon nzType="undo"></span> Yêu cầu chỉnh sửa
           </button>
+
           <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('03', '04')"
             [appPermission]="IMPORT_BATCH.APPROVE_IMPORT_BATCH" *ngIf="model.header.status == '02'">
             <span nz-icon nzType="check"></span> Phê duyệt
           </button>
+
+          <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('06', '07')"
+          [appPermission]="IMPORT_BATCH.CANCEL_APPROVAL"
+          *ngIf="model.header.status == '04'">
+            <span nz-icon nzType="close"></span> Hủy phê duyệt
+          </button>
+
           <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('04', '05')"
             [appPermission]="IMPORT_BATCH.REJECT_IMPORT_BATCH" *ngIf="model.header.status == '02'">
             <span nz-icon nzType="close"></span> Từ chối
           </button>
+
+
+
           <button class="!flex !items-center" nzType="default" nz-button (click)="showHistoryAction()"
             [appPermission]="IMPORT_BATCH.HISTORY">
             <span nz-icon nzType="history"></span> Lịch sử thực hiện
@@ -35,36 +55,38 @@
             [appPermission]="IMPORT_BATCH.HISTORY">
             <span nz-icon nzType="history"></span> Lịch sử xuất file
           </button>
+
           <button class="!flex !items-center btn-excel" nzType="primary" nz-button (click)="exportExcel()"
-            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL">
+            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL" *ngIf="model.header.status == '04'">
             <span nz-icon nzType="file-excel"></span> Xuất Excel
           </button>
           <button class="!flex !items-center" nzType="primary" nz-button (click)="exportWord()"
-            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL">
+            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL" *ngIf="model.header.status == '04'">
             <span nz-icon nzType="file-word"></span> Xuất Word
           </button>
 
           <button class="!flex !items-center" nzType="primary" nz-button (click)="exportWordTrinhKy()"
-            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL">
+            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL" *ngIf="model.header.status == '04'">
             <span nz-icon nzType="file-word"></span> Xuất Trình Ký
           </button>
 
           <button class="!flex !items-center btn-pdf" nzType="primary" nz-button (click)="exportPDF()"
-            [appPermission]="IMPORT_BATCH.EXPORT_TO_PDF">
+            [appPermission]="IMPORT_BATCH.EXPORT_TO_PDF" *ngIf="model.header.status == '04'">
             <span nz-icon nzType="file-pdf"></span> Xuất PDF
           </button>
           <button [appPermission]="IMPORT_BATCH.SEND_SMS" nz-popconfirm class="!flex !items-center btn-sms" nzType="primary"
             nzPopconfirmTitle="Bạn có chắc chắn gửi SMS thông báo cho các khách hàng?" (nzOnConfirm)="confirmSendSMS()"
             [nzCancelText]="'Huỷ'" [nzOkText]="'Gửi'" (nzOnCancel)="cancelSendSMS()" nzPopconfirmPlacement="bottom"
-            nz-button>
+            nz-button *ngIf="model.header.status == '04'">
             <span nz-icon nzType="message"></span> Gửi SMS
           </button>
           <button [appPermission]="IMPORT_BATCH.SEND_EMAIL" nz-popconfirm class="!flex !items-center btn-email" nzType="primary"
             nzPopconfirmTitle="Bạn có chắc chắn gửi Email thông báo cho các khách hàng?"
             (nzOnConfirm)="confirmSendSMS()" [nzCancelText]="'Huỷ'" [nzOkText]="'Gửi'" (nzOnCancel)="cancelSendSMS()"
-            nzPopconfirmPlacement="bottom" nz-button>
+            nzPopconfirmPlacement="bottom" nz-button *ngIf="model.header.status == '04'">
             <span nz-icon nzType="mail"></span> Gửi Email
           </button>
+
           <button nz-button nzType="default" (click)="fullScreen()">
             <span nz-icon nzType="fullscreen"></span>
           </button>
@@ -2208,7 +2230,7 @@
 </nz-drawer>
 
 <ng-template #extra>
-  <button nz-button nzType="primary" (click)="updateDataInput()">
+  <button nz-button nzType="primary" (click)="updateDataInput()" [appPermission]="IMPORT_BATCH.UPDATE_IMPORT_BATCH" [disabled]="model.header.status != 01 && model.header.status != 03 ">
     Cập nhật
   </button>
 </ng-template>
