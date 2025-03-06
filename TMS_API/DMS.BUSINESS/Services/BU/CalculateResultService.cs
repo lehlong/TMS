@@ -953,7 +953,7 @@ namespace DMS.BUSINESS.Services.BU
                         i.Col8 = Math.Round((i.Col9 ?? 0) + (i.Col10 ?? 0) + (i.Col11 ?? 0));
                         i.Col7 = i.Col6 == 0 ? 0 : Math.Round(i.Col6 / 1.1M ?? 0);
                         i.Col13 = i.Col12 == 0 ? 0 : Math.Round(i.Col12 / 1.1M ?? 0);
-                        i.Col14 = Math.Round(i.Col12 - i.Col10 * 1.1M ?? 0);
+                        i.Col14 = Math.Round((i.Col12 ?? 0) - (i.Col10 ?? 0) * 1.1M);
                         i.Col15 = i.Col14 == 0 ? 0 : Math.Round(i.Col14 / 1.1M ?? 0);
                         i.Col17 = Math.Round(i.Col7 - i.Col8 - i.Col15 - i.Col11 ?? 0);
                         i.Col16 = Math.Round(i.Col17 * 1.1M ?? 0);
