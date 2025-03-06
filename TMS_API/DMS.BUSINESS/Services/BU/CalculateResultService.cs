@@ -1591,6 +1591,53 @@ namespace DMS.BUSINESS.Services.BU
 
                 //Get Data
                 var data = GetResult(headerId);
+                #region Dữ liệu gốc
+                #region Thị trường Thành phố Vinh, TX Cửa Lò
+
+
+                #endregion
+
+                #region Các huyện thị còn lại trên địa bàn Nghệ An + địa bàn tỉnh Hà Tĩnh
+
+
+                #endregion
+
+                #region BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (PT bán lẻ - V2)
+
+
+                #endregion
+
+                #region BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (ngoài bán lẻ)
+
+
+                #endregion
+
+                #region BIỂU TÍNH GIÁ XUẤT NỘI DỤNG
+
+
+                #endregion
+
+                #region Thay đổi giá bán lẻ
+
+
+                #endregion
+
+                #region Thay đổi giá giao phương thức bán lẻ
+
+
+                #endregion
+
+                #region So sánh lãi gộp giữa
+
+
+                #endregion
+
+                #region So sánh chiết khấu giữa
+
+
+                #endregion
+
+                #endregion
 
                 #region Export PT
                 for (var i = 0; i < data.Result.PT.Count(); i++)
