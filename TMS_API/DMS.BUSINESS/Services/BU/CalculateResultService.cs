@@ -51,27 +51,26 @@ namespace DMS.BUSINESS.Services.BU
             try
             {
                 var data = new CalculateResultModel();
-                var lstGoods = await _dbContext.TblMdGoods.OrderBy(x => x.CreateDate).ToListAsync();
+                var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive == true).OrderBy(x => x.CreateDate).ToListAsync();
                 data.lstGoods = lstGoods;
                 var lstMarket = await _dbContext.TblMdMarket.OrderBy(x => x.Code).ToListAsync();
-                //var lstLGDT = await _dbContext.TblMdLaiGopDieuTiet.ToListAsync();
                 var lstCustomer = await _dbContext.TblMdCustomer.ToListAsync();
                 var lstCR = await _dbContext.TblBuCalculateResultList.OrderBy(x => x.FDate).ToListAsync();
                 
                 DateTime fDate = lstCR.FirstOrDefault(x => x.Code == code).FDate;
 
-                //var CodeOldCalculate = await _dbContext.TblBuCalculateResultList.Where();
-                var CodeOldCalculate = await _dbContext.TblBuCalculateResultList
-                                            .Where(x => x.FDate < fDate) // Lọc các trường có FDate nhỏ hơn ngày hiện tại
-                                            .Where(x => x.Status == "04") //lấy trường đã đươc phê duyệt
-                                            .OrderByDescending(x => x.FDate)
-                                            .Select(x => x.Code) // Chọn trường Code
-                                            .FirstOrDefaultAsync();
+                var OldCalculate = await _dbContext.TblBuCalculateResultList
+                                                    .Where(x => x.FDate < fDate) // Lọc các trường có FDate nhỏ hơn ngày hiện tại
+                                                    .Where(x => x.Status == "04") //lấy trường đã đươc phê duyệt
+                                                    .OrderByDescending(x => x.FDate)
+                                                    //.Select(x => x.Code) // Chọn trường Code
+                                                    .FirstOrDefaultAsync();
 
+                data.NameOld = OldCalculate.Name ?? "";
+                var dataVCLOld = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == OldCalculate.Code).ToListAsync();
+                var dataHSMHOld = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == OldCalculate.Code).ToListAsync();
                 var dataVCL = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == code).ToListAsync();
-                var dataVCLOld = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == CodeOldCalculate).ToListAsync();
                 var dataHSMH = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == code).ToListAsync();
-                var dataHSMHOld = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == CodeOldCalculate).ToListAsync();
                 var mappingBBDO = await _dbContext.TblMdMapPointCustomerGoods.ToListAsync();
                 var dataPoint = await _dbContext.TblMdDeliveryPoint.ToListAsync();
                 if (dataVCL.Count() == 0 || dataHSMH.Count() == 0)
@@ -251,186 +250,189 @@ namespace DMS.BUSINESS.Services.BU
 
                 #region
 
+                //if (OldCalculate != null)
+                //{
+                    foreach (var g in lstGoods)
+                    {
+                        var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
+                        var dlg1 = data.DLG.Dlg_1.Where(x => x.Code == g.Code).ToList();
+                        var k = new DLG_4_Old
+                        {
+                            Code = g.Code,
+                            Type = "TT",
+                            ColB = g.Name,
+                            Col1 = hsmho.Sum(x => x.HeSoVcf),
+                            Col2 = hsmho.Sum(x => x.ThueBvmt),
+                            Col3 = hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
+                            Col4 = hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
+                            Col5 = (hsmho.Sum(x => x.ThueBvmt) + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
+                            Col6 = dlg1.Sum(x => x.Col6),
+                            Col14 = hsmho.Sum(x => x.GiamGiaFob),
+                            Col10 = hsmho.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmho.Sum(x => x.LaiGopDieuTiet),
+                        };
+                        if (k.Col6 != 0)
+                        {
+                           k.Col7 = k.Col6 / 1.1M - k.Col2;
+                        }
+                        k.Col8 = k.Col6 - k.Col5;
+                        if (k.Col8 != 0)
+                        {
+                            k.Col9 = k.Col8 / 1.1M;
+                        }
+                        k.Col11 = k.Col1 * k.Col10 * 1.1M;
+                        k.Col13 = k.Col11 + k.Col9;
+                        k.Col12 = k.Col13 * 1.1M;
+                        k.Col15 = (k.Col12 - k.Col14) * k.Col1;
+                        k.Col16 = k.Col12 - k.Col14;
+                        data.DLG.Dlg_4_Old.Add(k);
+                    }
+
+                    foreach (var g in lstGoods)
+                    {
+                        var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
+                        var dlg1 = data.DLG.Dlg_3.Where(x => x.Code == g.Code).ToList();
+                        var k = new DLG_4_Old
+                        {
+                            Code = g.Code,
+                            Type = "OTHER",
+                            ColA = _oII.ToString(),
+                            ColB = g.Name,
+                            Col1 = hsmho.Sum(x => x.HeSoVcf),
+                            Col2 = hsmho.Sum(x => x.ThueBvmt),
+                            Col3 = hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
+                            Col4 = hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
+                            Col5 = (hsmho.Sum(x => x.ThueBvmt) + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
+                            Col6 = dlg1.Sum(x => x.Col7),
+                            Col14 = hsmho.Sum(x => x.GiamGiaFob),
+                            Col10 = hsmho.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmho.Sum(x => x.LaiGopDieuTiet),
+                        };
+                        if (k.Col6 != 0)
+                        {
+                            k.Col7 = k.Col6 / 1.1M - k.Col2;
+                        }
+                        k.Col8 = k.Col6 - k.Col5;
+                        if (k.Col8 != 0)
+                        {
+                            k.Col9 = k.Col8 / 1.1M;
+                        }
+                        k.Col11 = k.Col1 * k.Col10 * 1.1M;
+                        k.Col13 = k.Col11 + k.Col9;
+                        k.Col12 = k.Col13 * 1.1M;
+                        k.Col15 = (k.Col12 -k.Col14) * k.Col1;
+                        k.Col16 = k.Col12 - k.Col14;
+                        data.DLG.Dlg_4_Old.Add(k);
+
+                    }
+                    #endregion
+
+
+                    // thay dổi giá bán lẻ 
+                    foreach (var g in lstGoods)
+                    {
+                        var vcl = dataVCLOld.Where(x => x.GoodsCode == g.Code).ToList();
+                        //var hsmh = dataHSMH.Where(x => x.GoodsCode == g.Code).ToList();
+                        var dlg_1 = data.DLG.Dlg_1;
+                        foreach (var n in dlg_1)
+                        {
+                            if (g.Code == n.Code)
+                            {
+                                var i = new Dlg_TDGBL
+                                {
+                                    Code = g.Code,
+                                    ColA = g.Name,
+                                    Col1 = vcl.Sum(x => x.Gny), // lấy giá niêm yết ở kì trước
+                                    Col2 = n.Col6,
+                                    TangGiam1_2 = n.Col6 - vcl.Sum(x => x.Gny),
+                                    Col3 = vcl.Sum(x => x.GblV2), // lấy giá niêm yết ở kì trước
+                                    Col4 = n.Col3,
+                                    TangGiam3_4 = n.Col3 - vcl.Sum(x => x.GblV2),
+                                };
+
+                                data.DLG.Dlg_TDGBL.Add(i);
+                            }
+
+                        }
+                    }
+                    // Lãi gộp
+                    foreach (var g in lstGoods)
+                    {
+                        var hsmh = dataHSMH.Where(x => x.GoodsCode == g.Code).ToList();
+                        var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
+                        var dlg_4 = data.DLG.Dlg_4;
+                        var dlg_4_Old = data.DLG.Dlg_4_Old;
+                        foreach (var n in dlg_4)
+                        {
+                            if (g.Code == n.Code)
+                            {
+                                var i = new DLG_7
+                                {
+                                    Code = g.Code,
+                                    ColA = g.Name,
+                                    Type = n.Type,
+                                    Col1 = dlg_4_Old.Where(x => x.Code == g.Code).Where(x => x.Type == n.Type).Sum(x => x.Col12),
+                                    Col2 = n.Col12,
+                                    TangGiam1_2 = n.Col12 - dlg_4_Old.Where(x => x.Code == g.Code).Where(x => x.Type == n.Type).Sum(x => x.Col12),
+                                };
+
+                                data.DLG.Dlg_7.Add(i);
+                            }
+                        }
+                    }
+
+
+                    // Đề xuất mức giảm giá
+                    foreach (var g in lstGoods)
+                    {
+                        var hsmh = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
+                        var dlg_4 = data.DLG.Dlg_4;
+                        var dlg_4_Old = data.DLG.Dlg_4_Old;
+
+                        foreach (var n in dlg_4)
+                        {
+                            if (g.Code == n.Code && n.Type == "TT")
+                            {
+                                var i = new DLG_8
+                                {
+                                    Code = g.Code,
+                                    ColA = g.Name,
+                                    Type = n.Type,
+                                    Col1 = dlg_4_Old.Where(x => x.Code  == g.Code).Where(x => x.Type == "TT").Sum(x => x.Col14), 
+                                    Col2 = n.Col14,
+                                    TangGiam1_2 = n.Col14 - dlg_4_Old.Where(x => x.Code == g.Code).Where(x => x.Type == "TT").Sum(x => x.Col14),
+                                };
+
+                                data.DLG.Dlg_8.Add(i);
+                            }
+
+                        }
+                    }
+
+                    // thay đổi giá giao phương thức bán lẻ
+                    foreach (var g in lstGoods)
+                    {
+                        var hsmh = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
+                        //var hsmh = dataHSMH.Where(x => x.GoodsCode == g.Code).ToList();
+                        var dlg_3 = data.DLG.Dlg_3;
+                        foreach (var n in dlg_3)
+                        {
+                            if (g.Code == n.Code)
+                            {
+                                var i = new Dlg_TdGgptbl
+                                {
+                                    Code = g.Code,
+                                    ColA = g.Name,
+                                    Col1 = hsmh.Sum(x => x.L15ChuaVatBvmt), // lấy giá niêm yết ở kì trước
+                                    Col2 = n.Col3,
+                                    TangGiam1_2 = n.Col3 - hsmh.Sum(x => x.L15ChuaVatBvmt),
+                                };
+
+                                data.DLG.Dlg_TdGgptbl.Add(i);
+                            }
+
+                        }
+                    }
+                //}
                 
-                foreach (var g in lstGoods)
-                {
-                    var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
-                    var dlg1 = data.DLG.Dlg_1.Where(x => x.Code == g.Code).ToList();
-                    var k = new DLG_4_Old
-                    {
-                        Code = g.Code,
-                        Type = "TT",
-                        ColB = g.Name,
-                        Col1 = hsmho.Sum(x => x.HeSoVcf),
-                        Col2 = hsmho.Sum(x => x.ThueBvmt),
-                        Col3 = hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
-                        Col4 = hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
-                        Col5 = (hsmho.Sum(x => x.ThueBvmt) + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
-                        Col6 = dlg1.Sum(x => x.Col6),
-                        Col14 = hsmho.Sum(x => x.GiamGiaFob),
-                        Col10 = hsmho.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmho.Sum(x => x.LaiGopDieuTiet),
-                    };
-                    if (k.Col6 != 0)
-                    {
-                       k.Col7 = k.Col6 / 1.1M - k.Col2;
-                    }
-                    k.Col8 = k.Col6 - k.Col5;
-                    if (k.Col8 != 0)
-                    {
-                        k.Col9 = k.Col8 / 1.1M;
-                    }
-                    k.Col11 = k.Col1 * k.Col10 * 1.1M;
-                    k.Col13 = k.Col11 + k.Col9;
-                    k.Col12 = k.Col13 * 1.1M;
-                    k.Col15 = (k.Col12 - k.Col14) * k.Col1;
-                    k.Col16 = k.Col12 - k.Col14;
-                    data.DLG.Dlg_4_Old.Add(k);
-                }
-
-                foreach (var g in lstGoods)
-                {
-                    var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
-                    var dlg1 = data.DLG.Dlg_3.Where(x => x.Code == g.Code).ToList();
-                    var k = new DLG_4_Old
-                    {
-                        Code = g.Code,
-                        Type = "OTHER",
-                        ColA = _oII.ToString(),
-                        ColB = g.Name,
-                        Col1 = hsmho.Sum(x => x.HeSoVcf),
-                        Col2 = hsmho.Sum(x => x.ThueBvmt),
-                        Col3 = hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
-                        Col4 = hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
-                        Col5 = (hsmho.Sum(x => x.ThueBvmt) + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
-                        Col6 = dlg1.Sum(x => x.Col7),
-                        Col14 = hsmho.Sum(x => x.GiamGiaFob),
-                        Col10 = hsmho.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmho.Sum(x => x.LaiGopDieuTiet),
-                    };
-                    if (k.Col6 != 0)
-                    {
-                        k.Col7 = k.Col6 / 1.1M - k.Col2;
-                    }
-                    k.Col8 = k.Col6 - k.Col5;
-                    if (k.Col8 != 0)
-                    {
-                        k.Col9 = k.Col8 / 1.1M;
-                    }
-                    k.Col11 = k.Col1 * k.Col10 * 1.1M;
-                    k.Col13 = k.Col11 + k.Col9;
-                    k.Col12 = k.Col13 * 1.1M;
-                    k.Col15 = (k.Col12 -k.Col14) * k.Col1;
-                    k.Col16 = k.Col12 - k.Col14;
-                    data.DLG.Dlg_4_Old.Add(k);
-
-                }
-                #endregion
-
-
-                // thay dổi giá bán lẻ 
-                foreach (var g in lstGoods)
-                {
-                    var vcl = dataVCLOld.Where(x => x.GoodsCode == g.Code).ToList();
-                    //var hsmh = dataHSMH.Where(x => x.GoodsCode == g.Code).ToList();
-                    var dlg_1 = data.DLG.Dlg_1;
-                    foreach (var n in dlg_1)
-                    {
-                        if (g.Code == n.Code)
-                        {
-                            var i = new Dlg_TDGBL
-                            {
-                                Code = g.Code,
-                                ColA = g.Name,
-                                Col1 = vcl.Sum(x => x.Gny), // lấy giá niêm yết ở kì trước
-                                Col2 = n.Col6,
-                                TangGiam1_2 = n.Col6 - vcl.Sum(x => x.Gny),
-                                Col3 = vcl.Sum(x => x.GblV2), // lấy giá niêm yết ở kì trước
-                                Col4 = n.Col3,
-                                TangGiam3_4 = n.Col3 - vcl.Sum(x => x.GblV2),
-                            };
-
-                            data.DLG.Dlg_TDGBL.Add(i);
-                        }
-
-                    }
-                }
-                // Lãi gộp
-                foreach (var g in lstGoods)
-                {
-                    var hsmh = dataHSMH.Where(x => x.GoodsCode == g.Code).ToList();
-                    var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
-                    var dlg_4 = data.DLG.Dlg_4;
-                    var dlg_4_Old = data.DLG.Dlg_4_Old;
-                    foreach (var n in dlg_4)
-                    {
-                        if (g.Code == n.Code)
-                        {
-                            var i = new DLG_7
-                            {
-                                Code = g.Code,
-                                ColA = g.Name,
-                                Type = n.Type,
-                                Col1 = dlg_4_Old.Where(x => x.Code == g.Code).Where(x => x.Type == n.Type).Sum(x => x.Col12),
-                                Col2 = n.Col12,
-                                TangGiam1_2 = n.Col12 - dlg_4_Old.Where(x => x.Code == g.Code).Where(x => x.Type == n.Type).Sum(x => x.Col12),
-                            };
-
-                            data.DLG.Dlg_7.Add(i);
-                        }
-                    }
-                }
-
-
-                // Đề xuất mức giảm giá
-                foreach (var g in lstGoods)
-                {
-                    var hsmh = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
-                    var dlg_4 = data.DLG.Dlg_4;
-                    var dlg_4_Old = data.DLG.Dlg_4_Old;
-
-                    foreach (var n in dlg_4)
-                    {
-                        if (g.Code == n.Code && n.Type == "TT")
-                        {
-                            var i = new DLG_8
-                            {
-                                Code = g.Code,
-                                ColA = g.Name,
-                                Type = n.Type,
-                                Col1 = dlg_4_Old.Where(x => x.Code  == g.Code).Where(x => x.Type == "TT").Sum(x => x.Col14), 
-                                Col2 = n.Col14,
-                                TangGiam1_2 = n.Col14 - dlg_4_Old.Where(x => x.Code == g.Code).Where(x => x.Type == "TT").Sum(x => x.Col14),
-                            };
-
-                            data.DLG.Dlg_8.Add(i);
-                        }
-
-                    }
-                }
-
-                // thay đổi giá giao phương thức bán lẻ
-                foreach (var g in lstGoods)
-                {
-                    var hsmh = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
-                    //var hsmh = dataHSMH.Where(x => x.GoodsCode == g.Code).ToList();
-                    var dlg_3 = data.DLG.Dlg_3;
-                    foreach (var n in dlg_3)
-                    {
-                        if (g.Code == n.Code)
-                        {
-                            var i = new Dlg_TdGgptbl
-                            {
-                                Code = g.Code,
-                                ColA = g.Name,
-                                Col1 = hsmh.Sum(x => x.L15ChuaVatBvmt), // lấy giá niêm yết ở kì trước
-                                Col2 = n.Col3,
-                                TangGiam1_2 = n.Col3 - hsmh.Sum(x => x.L15ChuaVatBvmt),
-                            };
-
-                            data.DLG.Dlg_TdGgptbl.Add(i);
-                        }
-
-                    }
-                }
 
 
 
@@ -971,45 +973,49 @@ namespace DMS.BUSINESS.Services.BU
                 #region DO FO
                 var lstMapDOFO = mappingBBDO.Where(x => x.Type == "BBFO").ToList();
                 var _oDOFO = 1;
-                foreach (var _c in lstMapDOFO.Select(x => x.CustomerCode).ToList().Distinct().ToList())
+                foreach (var g in lstGoods)
                 {
-                    var g = lstGoods.FirstOrDefault(x => x.Code == lstMapDOFO.FirstOrDefault().GoodsCode);
-                    var lstPointCode = lstMapDOFO.Where(x => x.CustomerCode == _c).Select(x => x.DeliveryPointCode).ToList();
-                    var lstPoint = dataPoint.Where(x => lstPointCode.Contains(x.Code)).ToList();
+                    foreach (var _c in lstMapDOFO.Where(x => x.GoodsCode == g.Code).Select(x => x.CustomerCode).ToList().Distinct().ToList())
+                    {
+                        //var g = lstGoods.FirstOrDefault(x => x.Code == lstMapDOFO.FirstOrDefault().GoodsCode);
+                        var lstPointCode = lstMapDOFO.Where(x => x.CustomerCode == _c).Select(x => x.DeliveryPointCode).ToList();
+                        var lstPoint = dataPoint.Where(x => lstPointCode.Contains(x.Code)).ToList();
 
-                    data.BBFO.Add(new BBFO
-                    {
-                        ColA = _oDOFO.ToString(),
-                        ColB = lstCustomer.FirstOrDefault(x => x.Code == _c)?.Name,
-                        IsBold = true,
-                    });
-                    foreach (var p in lstPoint)
-                    {
-                        var _5 = lstMapDOFO.FirstOrDefault(x => x.CustomerCode == _c && x.DeliveryPointCode == p.Code);
-                        var i = new BBFO
+                        data.BBFO.Add(new BBFO
                         {
-                            ColA = "-",
-                            ColB = p.Name,
-                            ColC = g.Name,
-                            Col1 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col8) ?? 0),
-                            Col2 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col9) ?? 0),
-                            Col4 = data.PT.FirstOrDefault(x => x.IsBold == false)?.Col4,
-                            Col5 = _5?.CuocVcBq,
-                            Col6 = Math.Round(lstCustomer.FirstOrDefault(x => x.Code == _c)?.BankLoanInterest ?? 0),
-                        };
-                        i.Col3 = Math.Round(i.Col4 + i.Col5 + i.Col6 ?? 0);
-                        var _8 = data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col7);
-                        i.Col8 = _8 == 0 ? 0 : Math.Round(_8 / 100 ?? 0);
-                        i.Col7 = Math.Round(i.Col8 + i.Col3 - i.Col2 ?? 0);
-                        i.Col10 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col6) + i.Col7 ?? 0);
-                        i.Col9 = i.Col10 == 0 ? 0 : Math.Round(i.Col10 / 1.1M - data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col2) ?? 0);
+                            ColA = _oDOFO.ToString(),
+                            ColB = lstCustomer.FirstOrDefault(x => x.Code == _c)?.Name,
+                            IsBold = true,
+                        });
+                        foreach (var p in lstPoint)
+                        {
+                            var _5 = lstMapDOFO.FirstOrDefault(x => x.CustomerCode == _c && x.DeliveryPointCode == p.Code);
+                            var i = new BBFO
+                            {
+                                ColA = "-",
+                                ColB = p.Name,
+                                ColC = g.Name ?? "",
+                                Col1 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col8) ?? 0),
+                                Col2 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col9) ?? 0),
+                                Col4 = data.PT.FirstOrDefault(x => x.IsBold == false)?.Col4,
+                                Col5 = _5?.CuocVcBq,
+                                Col6 = Math.Round(lstCustomer.FirstOrDefault(x => x.Code == _c)?.BankLoanInterest ?? 0),
+                            };
+                            i.Col3 = Math.Round(i.Col4 + i.Col5 + i.Col6 ?? 0);
+                            var _8 = data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col7);
+                            i.Col8 = _8 == 0 ? 0 : Math.Round(_8 / 100 ?? 0);
+                            i.Col7 = Math.Round(i.Col8 + i.Col3 - i.Col2 ?? 0);
+                            i.Col10 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col6) + i.Col7 ?? 0);
+                            i.Col9 = i.Col10 == 0 ? 0 : Math.Round(i.Col10 / 1.1M - data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col2) ?? 0);
 
 
-                        data.BBFO.Add(i);
+                            data.BBFO.Add(i);
+                        }
+
+                        _oDOFO++;
                     }
-
-                    _oDOFO++;
                 }
+
                 #endregion
 
                 #region VK11 BB

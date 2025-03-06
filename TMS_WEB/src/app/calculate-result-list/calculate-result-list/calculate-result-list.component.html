@@ -41,8 +41,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let data of headerTable.data; let i = index" (click)="openEdit(data)">
-          <td>
+        <ng-container *ngFor="let data of headerTable.data; let i = index">
+
+          <tr (click)="openEdit(data)" *ngIf="data.isActive">
+            <td>
             {{
             (paginationResult.currentPage - 1) * paginationResult.pageSize +
             i +
@@ -63,9 +65,10 @@
             : data.status == '04'
             ? 'Phê duyệt'
             : 'Từ chối'
-            }}
+          }}
           </td>
         </tr>
+      </ng-container>
       </tbody>
     </nz-table>
   </div>

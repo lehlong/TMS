@@ -9,6 +9,7 @@ namespace DMS.BUSINESS.Models
 {
     public class CalculateResultModel
     {
+        public string? NameOld { get; set; }
         public List<PT> PT { get; set; } = new List<PT>();
         public List<TblMdGoods> lstGoods { get; set; }
         public DLG DLG { get; set; } = new DLG();

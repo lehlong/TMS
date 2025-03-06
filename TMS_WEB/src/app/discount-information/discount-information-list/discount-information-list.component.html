@@ -71,8 +71,10 @@
 
     <nz-form-control>
       <nz-select nzShowSearch nzAllowClear placeholder="Chọn Đợt Nhập" [(ngModel)]="code" (ngModelChange)="getOjCreByCode()">
-        <nz-option cdkScrollable *ngFor="let item of lstCaculate" [nzLabel]="item.name" [nzValue]="item.code">
-        </nz-option>
+        <ng-container *ngFor="let item of lstCaculate">
+          <nz-option cdkScrollable *ngIf="item.isActive" [nzLabel]="item.name" [nzValue]="item.code">
+          </nz-option>
+        </ng-container>
       </nz-select>
     </nz-form-control>
 

@@ -45,6 +45,7 @@ export class CalculateResultComponent {
   isName: boolean = false
 
   data: any = {
+    nameOld: '',
     lstGoods: [],
     dlg: {
       dlg_1: [],

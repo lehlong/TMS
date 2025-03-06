@@ -478,6 +478,7 @@
               }
             </tbody>
           </nz-table>
+          <nz-divider nzText="SO SÁNH VỚI KỲ - {{data.nameOld}}" nzOrientation="left"></nz-divider>
 
           <nz-divider nzText="THAY ĐỔI GIÁ BÁN LẺ" nzOrientation="left"></nz-divider>
           <div nz-row [nzGutter]="16">
@@ -576,32 +577,32 @@
                       <th class="align-center">Tăng/Giảm</th>
                     </tr>
                   </thead>
-                                <tbody>
-                                  <tr>
-                                    <th class="bold-text">Vùng thị trường trung tâm </th>
-                                  </tr>
-                                    @for (d of dlgTable_7.data; track d) {
+                    <tbody>
+                      <tr>
+                        <th class="bold-text">Vùng thị trường trung tâm </th>
+                      </tr>
+                        @for (d of dlgTable_7.data; track d) {
 
-                                    <tr *ngIf="d.type == 'TT' ">
-                                        <td>{{d.colA}}</td>
-                                        <td class="align-right">{{d.col1 | number}}</td>
-                                        <td class="align-right">{{d.col2 | number}}</td>
-                                        <td class="align-right">{{d.tangGiam1_2 | number}}</td>
-                                    </tr>
-                                    }
-                                    <tr>
-                                      <th class="bold-text">Các vùng thị trường còn lại </th>
-                                    </tr>
-                                    @for (d of dlgTable_7.data; track d) {
-                                      <tr *ngIf="d.type === 'OTHER' ">
-                                        <td>{{d.colA}}</td>
-                                        <td class="align-right">{{d.col1 | number}}</td>
-                                        <td class="align-right">{{d.col2 | number}}</td>
-                                        <td class="align-right">{{d.tangGiam1_2 | number}}</td>
+                        <tr *ngIf="d.type == 'TT' ">
+                            <td>{{d.colA}}</td>
+                            <td class="align-right">{{d.col1 | number}}</td>
+                            <td class="align-right">{{d.col2 | number}}</td>
+                            <td class="align-right">{{d.tangGiam1_2 | number}}</td>
+                        </tr>
+                        }
+                        <tr>
+                          <th class="bold-text">Các vùng thị trường còn lại </th>
+                        </tr>
+                        @for (d of dlgTable_7.data; track d) {
+                          <tr *ngIf="d.type === 'OTHER' ">
+                            <td>{{d.colA}}</td>
+                            <td class="align-right">{{d.col1 | number}}</td>
+                            <td class="align-right">{{d.col2 | number}}</td>
+                            <td class="align-right">{{d.tangGiam1_2 | number}}</td>
 
-                                    </tr>
-                                    }
-                                </tbody>
+                        </tr>
+                        }
+                    </tbody>
                 </nz-table>
               </div>
             </div>
