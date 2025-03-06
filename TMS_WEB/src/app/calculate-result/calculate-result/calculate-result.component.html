@@ -66,7 +66,7 @@
           </button>
 
           <button class="!flex !items-center" nzType="primary" nz-button (click)="exportWordTrinhKy()"
-            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL" *ngIf="model.header.status == '04'">
+            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL">
             <span nz-icon nzType="file-word"></span> Xuất Trình Ký
           </button>
 
@@ -1953,11 +1953,11 @@
       </thead>
       <tbody>
         @for (data of lstTrinhKy; track data) {
-          <tr>
-            <td [nzChecked]="lstTrinhKyChecked.includes(data.code)" (nzCheckedChange)="onItemTrinhKyChecked('CongDienKKGiaBanLe', $event)"></td>
+          <tr *ngIf="model.header.status != '04' ? data.status == true : true">
+            <td [nzChecked]="lstTrinhKyChecked.includes(data.code)" (nzCheckedChange)="onItemTrinhKyChecked(data.code, $event)"></td>
             <td>{{ data.name }}</td>
           </tr>
-          }
+        }
       </tbody>
     </nz-table>
   </ng-container>

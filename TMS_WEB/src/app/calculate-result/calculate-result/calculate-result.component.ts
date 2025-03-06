@@ -99,15 +99,15 @@ export class CalculateResultComponent {
   goodsResult: any[] = []
   lstCustomer: any[] = []
   lstTrinhKy: any[] = [{
-     code: 'CongDienKKGiaBanLe', name: 'Công Điện Kiểm Kê Giá Bán Lẻ' },
-    { code: 'MucGiamGiaNQTM', name: 'Mức Giảm Giá NQTM' },
-    { code: 'QDGBanBuon', name: 'Quyết Định Giá bán Buôn' },
-    { code: 'QDGBanLe', name: 'Quyết Định Giá Bán lẻ' },
-    { code: 'QDGCtyPTS', name: 'Quyết Định Công Ty PTS' },
-    { code: 'QDGNoiDung', name: 'Quyết Giá Nội Dung' },
-    { code: 'ToTrinh', name: 'Tờ Trình' },
-    { code: 'KeKhaiGia', name: 'Kê Khai Giá' },
-    { code: 'KeKhaiGiaChiTiet', name: 'Kê Khai Giá Chi Tiết' },
+     code: 'CongDienKKGiaBanLe', name: 'Công Điện Kiểm Kê Giá Bán Lẻ',status: true },
+    { code: 'MucGiamGiaNQTM', name: 'Mức Giảm Giá NQTM',status: false },
+    { code: 'QDGBanBuon', name: 'Quyết Định Giá bán Buôn',status: false },
+    { code: 'QDGBanLe', name: 'Quyết Định Giá Bán lẻ',status: true },
+    { code: 'QDGCtyPTS', name: 'Quyết Định Công Ty PTS',status: false },
+    { code: 'QDGNoiDung', name: 'Quyết Giá Nội Dung',status: false },
+    { code: 'ToTrinh', name: 'Tờ Trình',status: false },
+    { code: 'KeKhaiGia', name: 'Kê Khai Giá',status: true },
+    { code: 'KeKhaiGiaChiTiet', name: 'Kê Khai Giá Chi Tiết',status: true },
   ]
   ngOnInit() {
     this.route.paramMap.subscribe({
