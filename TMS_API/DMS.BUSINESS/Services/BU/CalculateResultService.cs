@@ -1575,10 +1575,6 @@ namespace DMS.BUSINESS.Services.BU
                 templateWorkbook = new XSSFWorkbook(fs);
                 fs.Close();
 
-
-                var startRowPT = 7;
-                ISheet sheetPT = templateWorkbook.GetSheetAt(1);
-
                 //Define Style
                 var styleCellNumber = GetCellStyleNumber(templateWorkbook);
 
@@ -1587,7 +1583,6 @@ namespace DMS.BUSINESS.Services.BU
                 font.FontName = "Times New Roman";
 
                 ICellStyle styleCellBold = templateWorkbook.CreateCellStyle(); // chữ in đậm
-                styleCellBold.CloneStyleFrom(sheetPT.GetRow(1).Cells[0].CellStyle);
                 var fontBold = templateWorkbook.CreateFont();
                 fontBold.Boldweight = (short)FontBoldWeight.Bold;
                 fontBold.FontHeightInPoints = 12;
@@ -1875,12 +1870,19 @@ namespace DMS.BUSINESS.Services.BU
                 #endregion
 
                 #region Export PT
+
+                var startRowPT = 7;
+                //var rowKy = 
+                ISheet sheetPT = templateWorkbook.GetSheetAt(1);
+                styleCellBold.CloneStyleFrom(sheetPT.GetRow(1).Cells[0].CellStyle);
+
                 for (var i = 0; i < data.Result.PT.Count(); i++)
                 {
-                    var dataRow = data.Result.PT[i];
                     IRow rowCur = ReportUtilities.CreateRow(ref sheetPT, startRowPT++, 38);
+                    var dataRow = data.Result.PT[i];
                     rowCur.Cells[0].SetCellValue(dataRow.ColA);
                     rowCur.Cells[1].SetCellValue(dataRow.ColB);
+
                     rowCur.Cells[2].CellStyle = styleCellNumber;
                     rowCur.Cells[2].SetCellValue(dataRow.Col1 == 0 ? 0 : Convert.ToDouble(dataRow.Col1));
 
@@ -1941,6 +1943,12 @@ namespace DMS.BUSINESS.Services.BU
                         rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
                         rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
                         rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+
+                    if (data.Result.PT.Count() - i == 1)
+                    {
+                        rowCur.Cells[1].SetCellValue("Lập biểu");
+
                     }
                 }
 
