@@ -26,6 +26,7 @@ using NPOI.HPSF;
 using NPOI.SS.Formula.Functions;
 using DMS.CORE.Entities.IN;
 using Aspose.Words.Tables;
+using System.Data;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -1592,23 +1593,254 @@ namespace DMS.BUSINESS.Services.BU
                 //Get Data
                 var data = GetResult(headerId);
                 #region Dữ liệu gốc
+
+                ISheet sheetGLG = templateWorkbook.GetSheetAt(0);
+
                 #region Thị trường Thành phố Vinh, TX Cửa Lò
 
+                var startRowdlg_1 = 4;
+                //styleCellBold.CloneStyleFrom(sheetGLG.GetRow(1).Cells[0].CellStyle);
+                for (var i = 0; i < data.Result.DLG.Dlg_1.Count(); i++)
+                {
+                    var dataDlg1 = data.Result.DLG.Dlg_1[i];
+                    int rowIndex = startRowdlg_1 + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
+
+                    if (row != null)
+                    {
+                        ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
+                        cell4.CellStyle = styleCellNumber;
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg1.Col2.HasValue ? Convert.ToDouble(dataDlg1.Col2.Value) : 0);
+
+                        ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
+                        cell5.CellStyle = styleCellNumber;
+                        cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell5.SetCellValue(dataDlg1.Col3.HasValue ? Convert.ToDouble(dataDlg1.Col3.Value) : 0);
+
+                        ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
+                        cell6.CellStyle = styleCellNumber;
+                        cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell6.SetCellValue(dataDlg1.Col4.HasValue ? Convert.ToDouble(dataDlg1.Col4.Value) : 0);
+
+                        ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
+                        cell7.CellStyle = styleCellNumber;
+                        cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell7.SetCellValue(dataDlg1.Col5.HasValue ? Convert.ToDouble(dataDlg1.Col5.Value) : 0);
+
+                        ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
+                        cell8.CellStyle = styleCellNumber;
+                        cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell8.SetCellValue(dataDlg1.Col6.HasValue ? Convert.ToDouble(dataDlg1.Col6.Value) : 0);
+
+                        ICell cell9 = row.GetCell(9) ?? row.CreateCell(9);
+                        cell9.CellStyle = styleCellNumber;
+                        cell9.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell9.SetCellValue(dataDlg1.Col7.HasValue ? Convert.ToDouble(dataDlg1.Col7.Value) : 0);
+                    }
+                }
 
                 #endregion
 
                 #region Các huyện thị còn lại trên địa bàn Nghệ An + địa bàn tỉnh Hà Tĩnh
 
+                var startRowdlg_2 = 11;
+                for (var i = 0; i < data.Result.DLG.Dlg_2.Count(); i++)
+                {
+                    var dataDlg2 = data.Result.DLG.Dlg_2[i];
+                    int rowIndex = startRowdlg_2 + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
+
+                    if (row != null)
+                    {
+                        ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
+                        cell4.CellStyle = styleCellNumber;
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg2.Col2.HasValue ? Convert.ToDouble(dataDlg2.Col2.Value) : 0);
+                    }
+                }
 
                 #endregion
 
                 #region BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (PT bán lẻ - V2)
 
+                var startRowdlg_3 = 41;
+                for (var i = 0; i < data.Result.DLG.Dlg_3.Count(); i++)
+                {
+                    var dataDlg3 = data.Result.DLG.Dlg_3[i];
+                    int rowIndex = startRowdlg_3 + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
+
+                    if (row != null)
+                    {
+                        ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
+                        cell0.CellStyle = styleCellNumber;
+                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell0.SetCellValue(dataDlg3.ColA);
+
+                        ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
+                        cell1.CellStyle = styleCellNumber;
+                        cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell1.SetCellValue(dataDlg3.ColB);
+
+                        ICell cell2 = row.GetCell(2) ?? row.CreateCell(2);
+                        cell2.CellStyle = styleCellNumber;
+                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell2.SetCellValue(dataDlg3.Col1.HasValue ? Convert.ToDouble(dataDlg3.Col1) : 0);
+
+                        ICell cell3 = row.GetCell(3) ?? row.CreateCell(3);
+                        cell3.CellStyle = styleCellNumber;
+                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell3.SetCellValue(dataDlg3.Col2.HasValue ? Convert.ToDouble(dataDlg3.Col2.Value) : 0);
+
+                        ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
+                        cell4.CellStyle = styleCellNumber;
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg3.Col3.HasValue ? Convert.ToDouble(dataDlg3.Col3.Value) : 0);
+
+                        ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
+                        cell5.CellStyle = styleCellNumber;
+                        cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell5.SetCellValue(dataDlg3.Col4.HasValue ? Convert.ToDouble(dataDlg3.Col4.Value) : 0);
+
+                        ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
+                        cell6.CellStyle = styleCellNumber;
+                        cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell6.SetCellValue(dataDlg3.Col5.HasValue ? Convert.ToDouble(dataDlg3.Col5.Value) : 0);
+
+                        ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
+                        cell7.CellStyle = styleCellNumber;
+                        cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell7.SetCellValue(dataDlg3.Col6.HasValue ? Convert.ToDouble(dataDlg3.Col6.Value) : 0);
+
+                        ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
+                        cell8.CellStyle = styleCellNumber;
+                        cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell8.SetCellValue(dataDlg3.Col7.HasValue ? Convert.ToDouble(dataDlg3.Col7.Value) : 0);
+
+                        ICell cell10 = row.GetCell(10) ?? row.CreateCell(10);
+                        cell10.CellStyle = styleCellNumber;
+                        cell10.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell10.SetCellValue(dataDlg3.Col8.HasValue ? Convert.ToDouble(dataDlg3.Col8.Value) : 0);
+
+                        ICell cell11 = row.GetCell(12) ?? row.CreateCell(12);
+                        cell11.CellStyle = styleCellNumber;
+                        cell11.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell11.SetCellValue(dataDlg3.Col9.HasValue ? Convert.ToDouble(dataDlg3.Col9.Value) : 0);
+
+                        ICell cell12 = row.GetCell(14) ?? row.CreateCell(14);
+                        cell12.CellStyle = styleCellNumber;
+                        cell12.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell12.SetCellValue(dataDlg3.Col10.HasValue ? Convert.ToDouble(dataDlg3.Col10.Value) : 0);
+                    }
+                }
 
                 #endregion
 
                 #region BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (ngoài bán lẻ)
 
+                var startRowdlg_4 = 80;
+                for (var i = 0; i < data.Result.DLG.Dlg_4.Count(); i++)
+                {
+                    var dataDlg3 = data.Result.DLG.Dlg_4[i];
+
+                    if (dataDlg3.Type != null)
+                    {
+                        int rowIndex = startRowdlg_4 + i;
+                        IRow row = sheetGLG.GetRow(rowIndex);
+                        if (row != null) {
+                            ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
+                            cell0.CellStyle = styleCellNumber;
+                            cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell0.SetCellValue(dataDlg3.ColA);
+
+                            ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
+                            cell1.CellStyle = styleCellNumber;
+                            cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell1.SetCellValue(dataDlg3.ColB);
+
+                            ICell cell2 = row.GetCell(2) ?? row.CreateCell(2);
+                            cell2.CellStyle = styleCellNumber;
+                            cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell2.SetCellValue(dataDlg3.Col1.HasValue ? Convert.ToDouble(dataDlg3.Col1) : 0);
+
+                            ICell cell3 = row.GetCell(3) ?? row.CreateCell(3);
+                            cell3.CellStyle = styleCellNumber;
+                            cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell3.SetCellValue(dataDlg3.Col2.HasValue ? Convert.ToDouble(dataDlg3.Col2.Value) : 0);
+
+                            ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
+                            cell4.CellStyle = styleCellNumber;
+                            cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell4.SetCellValue(dataDlg3.Col3.HasValue ? Convert.ToDouble(dataDlg3.Col3.Value) : 0);
+
+                            ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
+                            cell5.CellStyle = styleCellNumber;
+                            cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell5.SetCellValue(dataDlg3.Col4.HasValue ? Convert.ToDouble(dataDlg3.Col4.Value) : 0);
+
+                            ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
+                            cell6.CellStyle = styleCellNumber;
+                            cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell6.SetCellValue(dataDlg3.Col5.HasValue ? Convert.ToDouble(dataDlg3.Col5.Value) : 0);
+
+                            ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
+                            cell7.CellStyle = styleCellNumber;
+                            cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell7.SetCellValue(dataDlg3.Col6.HasValue ? Convert.ToDouble(dataDlg3.Col6.Value) : 0);
+
+                            ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
+                            cell8.CellStyle = styleCellNumber;
+                            cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell8.SetCellValue(dataDlg3.Col7.HasValue ? Convert.ToDouble(dataDlg3.Col7.Value) : 0);
+
+                            ICell cell9 = row.GetCell(9) ?? row.CreateCell(9);
+                            cell9.CellStyle = styleCellNumber;
+                            cell9.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell9.SetCellValue(dataDlg3.Col8.HasValue ? Convert.ToDouble(dataDlg3.Col8.Value) : 0);
+
+                            ICell cell10 = row.GetCell(10) ?? row.CreateCell(10);
+                            cell10.CellStyle = styleCellNumber;
+                            cell10.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell10.SetCellValue(dataDlg3.Col9.HasValue ? Convert.ToDouble(dataDlg3.Col9.Value) : 0);
+
+                            ICell cell11 = row.GetCell(11) ?? row.CreateCell(11);
+                            cell11.CellStyle = styleCellNumber;
+                            cell11.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell11.SetCellValue(dataDlg3.Col10.HasValue ? Convert.ToDouble(dataDlg3.Col10.Value) : 0);
+
+                            ICell cell12 = row.GetCell(12) ?? row.CreateCell(12);
+                            cell12.CellStyle = styleCellNumber;
+                            cell12.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell12.SetCellValue(dataDlg3.Col11.HasValue ? Convert.ToDouble(dataDlg3.Col11.Value) : 0);
+
+                            ICell cell13 = row.GetCell(13) ?? row.CreateCell(13);
+                            cell13.CellStyle = styleCellNumber;
+                            cell13.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell13.SetCellValue(dataDlg3.Col12.HasValue ? Convert.ToDouble(dataDlg3.Col12.Value) : 0);
+
+                            ICell cell14 = row.GetCell(14) ?? row.CreateCell(14);
+                            cell14.CellStyle = styleCellNumber;
+                            cell14.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell14.SetCellValue(dataDlg3.Col13.HasValue ? Convert.ToDouble(dataDlg3.Col13.Value) : 0);
+
+                            ICell cell15 = row.GetCell(15) ?? row.CreateCell(15);
+                            cell15.CellStyle = styleCellNumber;
+                            cell15.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell15.SetCellValue(dataDlg3.Col14.HasValue ? Convert.ToDouble(dataDlg3.Col14.Value) : 0);
+
+                            ICell cell16 = row.GetCell(16) ?? row.CreateCell(16);
+                            cell16.CellStyle = styleCellNumber;
+                            cell16.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell16.SetCellValue(dataDlg3.Col15.HasValue ? Convert.ToDouble(dataDlg3.Col15.Value) : 0);
+
+                            ICell cell17 = row.GetCell(17) ?? row.CreateCell(17);
+                            cell17.CellStyle = styleCellNumber;
+                            cell17.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell17.SetCellValue(dataDlg3.Col16.HasValue ? Convert.ToDouble(dataDlg3.Col16.Value) : 0);
+                        }
+                    }
+                }
 
                 #endregion
 
