@@ -95,12 +95,14 @@ namespace DMS.BUSINESS.Services.BU
                         Col6 = vcl.Sum(x => x.Gny),
                         Col7 = vcl.Sum(x => x.Clgblv),
                     });
+
                     data.DLG.Dlg_2.Add(new DLG_2
                     {
                         Code = g.Code,
                         Col1 = g.Name,
                         Col2 = vcl.Sum(x => x.GblV2),
                     });
+
                     var _dlg3 = new DLG_3
                     {
                         Code = g.Code,
@@ -256,8 +258,9 @@ namespace DMS.BUSINESS.Services.BU
                     foreach (var g in lstGoods)
                     {
                         var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
-                        var dlg1 = data.DLG.Dlg_1.Where(x => x.Code == g.Code).ToList();
-                        var k = new DLG_4_Old
+                        var vclo = dataVCLOld.Where(x => x.GoodsCode == g.Code).ToList();
+                    //var dlg1 = data.DLG.Dlg_1.Where(x => x.Code == g.Code).ToList();
+                    var k = new DLG_4_Old
                         {
                             Code = g.Code,
                             Type = "TT",
@@ -267,7 +270,7 @@ namespace DMS.BUSINESS.Services.BU
                             Col3 = hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
                             Col4 = hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
                             Col5 = (hsmho.Sum(x => x.ThueBvmt) + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
-                            Col6 = dlg1.Sum(x => x.Col6),
+                            Col6 = vclo.Sum(x => x.Gny),
                             Col14 = hsmho.Sum(x => x.GiamGiaFob),
                             Col10 = hsmho.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmho.Sum(x => x.LaiGopDieuTiet),
                         };
