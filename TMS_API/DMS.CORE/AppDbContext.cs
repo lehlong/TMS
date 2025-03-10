@@ -171,6 +171,8 @@ namespace DMS.CORE
         public DbSet<TblMdCuocVanChuyen> TblMdCuocVanChuyen { get; set; }
         public DbSet<TblMdCuocVanChuyenList> TblMdCuocVanChuyenList { get; set; }
 
+        public DbSet<TblMdSigner> TblMdSigner { get; set; }
+
         public DbSet<TblMdTemplateReport> tblMdTemplateReport { get; set; }
         public DbSet<TblMdTemplateReportElement> tblMdTemplateReportElement { get; set; }
         public DbSet<TblMdTemplateReportMapping> tblMdTemplateReportMapping { get; set; }

@@ -10,6 +10,8 @@ import {
 } from '../../shared/constants/access-right.constants'
 import { environment } from '../../../environments/environment.prod'
 import { NzMessageService } from 'ng-zorro-antd/message'
+import { SignerService } from '../../services/master-data/signer.service'
+import { FormControl } from '@angular/forms'
 
 @Component({
   selector: 'app-calculate-result',
@@ -25,6 +27,7 @@ export class CalculateResultComponent {
     private route: ActivatedRoute,
     private _goodsService: GoodsService,
     private message: NzMessageService,
+    private _signerService: SignerService,
   ) {
     this.globalService.setBreadcrumb([
       {
@@ -33,6 +36,9 @@ export class CalculateResultComponent {
       },
     ])
   }
+
+  nguoiKyControl = new FormControl({name:"",position:""});
+
   title: string = 'DỮ LIỆU GỐC'
   IMPORT_BATCH = IMPORT_BATCH
   isVisibleHistory: boolean = false
@@ -123,12 +129,16 @@ export class CalculateResultComponent {
         })
       },
     })
+    this.selectedValue = this.signerResult.find(item => item.code === this.model.nguoiKyTen.code);
     this.getAllGoods()
+    this.getAllSigner()
   }
 
   checked = false
   lstCustomerChecked: any[] = []
   lstTrinhKyChecked: any[] = []
+  signerResult: any[] = []
+  selectedValue = {}
 
   updateTrinhKyCheckedSet(code: any, checked: boolean): void {
     if (checked) {
@@ -202,6 +212,17 @@ export class CalculateResultComponent {
           },
         })
     }
+  }
+
+  getAllSigner() {
+    this._signerService.getall().subscribe({
+      next: (data) => {
+        this.signerResult = data
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
   }
 
   confirmExportWordTrinhKy() {
@@ -383,7 +404,9 @@ export class CalculateResultComponent {
     row.clgblv = row.gblV2 - row.gny
   }
   updateDataInput() {
-    if (this.model.header.name != '') {
+    if (this.model.header.name != '' && this.model.header.name != '') {
+      this.model.nguoiKyTen.daiDien = this.nguoiKyControl.value?.name || '';
+      this.model.nguoiKyTen.nguoiDaiDien = this.nguoiKyControl.value?.position || '';
       this._service.UpdateDataInput(this.model).subscribe({
         next: (data) => {
           console.log(data)

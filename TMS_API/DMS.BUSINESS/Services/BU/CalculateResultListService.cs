@@ -35,7 +35,6 @@ namespace DMS.BUSINESS.Services.BU
             try
             {
                 _dbContext.TblBuCalculateResultList.Add(model.Header);
-                _dbContext.TblInNguoiKyTen.Add(model.NguoiKyTen);
                 _dbContext.TblInHeSoMatHang.AddRange(model.HS1);
                 _dbContext.TblInVinhCuaLo.AddRange(model.HS2);
                 var h = new TblBuHistoryAction()
@@ -130,6 +129,8 @@ namespace DMS.BUSINESS.Services.BU
             {
                 var obj = new InsertModel();
                 obj.Header.Code = Guid.NewGuid().ToString();
+                obj.Header.SignerCode = "TongGiamDoc";
+                obj.Header.QuyetDinhSo = "";
                 obj.Header.IsActive = true;
                 obj.Header.FDate = DateTime.Now;
                 obj.Header.CreateDate = DateTime.Now;
@@ -138,12 +139,6 @@ namespace DMS.BUSINESS.Services.BU
                 obj.Header.DeleteDate = DateTime.Now;
                 obj.Header.Name = "";
                 obj.Header.Status = "01";
-
-                obj.NguoiKyTen.Code = Guid.NewGuid().ToString();
-                obj.NguoiKyTen.HeaderCode = obj.Header.Code;
-                obj.NguoiKyTen.NguoiDaiDien = "";
-                obj.NguoiKyTen.DaiDien = "";
-                obj.NguoiKyTen.QuyetDinhSo = "";
 
                 var lstGoods = await _dbContext.TblMdGoods.Where(x=>x.IsActive==true).OrderBy(x => x.CreateDate).ToListAsync();
                 foreach (var g in lstGoods)
@@ -185,7 +180,7 @@ namespace DMS.BUSINESS.Services.BU
     public class InsertModel
     {
         public TblBuCalculateResultList Header { get; set; } = new TblBuCalculateResultList();
-        public TblInNguoiKyTen? NguoiKyTen { get; set; } = new TblInNguoiKyTen();
+        public TblMdSigner? NguoiKyTen { get; set; } = new TblMdSigner();
         public List<TblInHeSoMatHang> HS1 { get; set; } = new List<TblInHeSoMatHang>();
         public List<TblInVinhCuaLo> HS2 { get; set; } = new List<TblInVinhCuaLo>();
         public Status Status { get; set; } = new Status();

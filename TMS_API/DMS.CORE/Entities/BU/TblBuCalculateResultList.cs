@@ -25,5 +25,12 @@ namespace DMS.CORE.Entities.BU
 
         [Column("STATUS", TypeName = "NVARCHAR(50)")]
         public string? Status { get; set; }
+
+        [Column("SIGNER_CODE", TypeName = "NVARCHAR(50)")]
+        public string? SignerCode { get; set; }
+
+        [Column("QUYET_DINH_SO", TypeName = "NVARCHAR(50)")]
+        public string? QuyetDinhSo { get; set; }
+
     }   
 }

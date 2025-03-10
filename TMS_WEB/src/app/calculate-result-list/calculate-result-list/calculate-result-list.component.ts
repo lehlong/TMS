@@ -4,7 +4,7 @@ import { LocalFilter } from '../../models/master-data/local.model'
 import { GlobalService } from '../../services/global.service'
 import { LocalService } from '../../services/master-data/local.service'
 import { PaginationResult } from '../../models/base.model'
-import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
+import { FormGroup, Validators, NonNullableFormBuilder, FormControl } from '@angular/forms'
 import {
   CALCULATE_RESULT_LIST_RIGHTS,
   CALCULATE_RESULT_RIGHT,
@@ -15,10 +15,12 @@ import { CalculateResultListFilter } from '../../models/calculate-result-list/ca
 import { CalculateResultListService } from '../../services/calculate-result-list/calculate-result-list.service'
 import { GoodsService } from '../../services/master-data/goods.service'
 import { Router } from '@angular/router'
+import { SignerService } from '../../services/master-data/signer.service'
+import { NzSelectModule } from 'ng-zorro-antd/select'
 @Component({
   selector: 'app-local',
   standalone: true,
-  imports: [ShareModule],
+  imports: [ShareModule,NzSelectModule],
   templateUrl: './calculate-result-list.component.html',
   styleUrl: './calculate-result-list.component.scss',
 })
@@ -30,6 +32,8 @@ export class CalculateResultListComponent {
     fDate: [''],
     isActive: [true, [Validators.required]],
   })
+
+  nguoiKyControl = new FormControl({code:"",name:"",position:""});
 
   isSubmit: boolean = false
   visible: boolean = false
@@ -46,6 +50,7 @@ export class CalculateResultListComponent {
     private globalService: GlobalService,
     private message: NzMessageService,
     private _goodsService: GoodsService,
+    private _signerService: SignerService,
     private router: Router,
   ) {
     this.globalService.setBreadcrumb([
@@ -61,12 +66,15 @@ export class CalculateResultListComponent {
   model: any = {
     header: {},
     nguoiKyTen: {
-      // nguoiKyThay: "Tổng Giám Đốc"
+
+      nguoiDaiDien: "",
+      daiDien: ""
     },
     hS1: [],
     hS2: [],
   }
   goodsResult: any[] = []
+  signerResult: any[] = []
   ngOnDestroy() {
     this.globalService.setBreadcrumb([])
   }
@@ -74,6 +82,7 @@ export class CalculateResultListComponent {
   ngOnInit(): void {
     this.search()
     this.getAllGoods()
+    this.getAllSigner()
     console.log('calculate')
   }
 
@@ -109,17 +118,25 @@ export class CalculateResultListComponent {
       )
       // return
     }
+    else if(this.nguoiKyControl.value?.name == ''){
+      this.message.error(
+        `Vui chọn người ký`,
+      )
+    }
     if (this.model.header.name != '') {
+      this.model.header.signerCode = this.nguoiKyControl.value?.code || '';
+      this.model.nguoiKyTen.daiDien = this.nguoiKyControl.value?.name || '';
+      this.model.nguoiKyTen.nguoiDaiDien = this.nguoiKyControl.value?.position || '';
       console.log(this.model)
 
       var m = {
         model: this.model,
       }
-      this._service.createData(this.model).subscribe({
-        next: (data) => {
-          console.log(data)
-        },
-      })
+      // this._service.createData(this.model).subscribe({
+      //   next: (data) => {
+      //     console.log(data)
+      //   },
+      // })
     }
   }
 
@@ -184,6 +201,18 @@ export class CalculateResultListComponent {
     this._goodsService.getall().subscribe({
       next: (data) => {
         this.goodsResult = data
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
+  }
+
+  getAllSigner() {
+    this.isSubmit = false
+    this._signerService.getall().subscribe({
+      next: (data) => {
+        this.signerResult = data
       },
       error: (response) => {
         console.log(response)

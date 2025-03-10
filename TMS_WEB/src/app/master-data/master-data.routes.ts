@@ -36,6 +36,7 @@ import { MapPointCustomerGoodsComponent } from './map-point-customer-goods/map-p
 import { MarketCompetitorComponent } from './market-competitor/market-competitor.component'
 import { CuocVanChuyenComponent } from './cuoc-van-chuyen/cuoc-van-chuyen.component'
 import { CuocVanChuyenListComponent } from './cuoc-van-chuyen-list/cuoc-van-chuyen-list.component'
+import { SignerComponent } from './signer/signer.component'
 export const masterDataRoutes: Routes = [
   { path: 'currency', component: CurrencyComponent },
   { path: 'unit', component: UnitComponent },
@@ -91,4 +92,5 @@ export const masterDataRoutes: Routes = [
   { path: 'market-competitor', component: MarketCompetitorComponent },
   { path: 'cuoc-van-chuyen/detail/:code', component: CuocVanChuyenComponent },
   { path: 'cuoc-van-chuyen-list', component: CuocVanChuyenListComponent },
+  { path: 'signer', component: SignerComponent },
 ]

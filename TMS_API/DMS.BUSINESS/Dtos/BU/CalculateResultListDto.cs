@@ -21,6 +21,12 @@ namespace DMS.BUSINESS.Dtos.BU
         [Description("Ngày bắt đầu")]
         public DateTime FDate { get; set; }
 
+        [Description("Mã người ký")]
+        public string SignerCode { get; set; }
+
+        [Description("Quyết định số")]
+        public string QuyetDinhSo { get; set; }
+
         [Description("Status")]
         public string? Status { get; set; }
 

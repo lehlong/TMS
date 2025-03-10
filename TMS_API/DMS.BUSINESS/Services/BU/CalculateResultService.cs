@@ -27,6 +27,8 @@ using NPOI.SS.Formula.Functions;
 using DMS.CORE.Entities.IN;
 using Aspose.Words.Tables;
 using System.Data;
+using System.Globalization;
+using NPOI.SS.Util;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -1252,26 +1254,8 @@ namespace DMS.BUSINESS.Services.BU
             
             try
             {
-                var nguoiKyTen = new TblInNguoiKyTen();
-                nguoiKyTen.Code = Guid.NewGuid().ToString();
-                nguoiKyTen.HeaderCode = code;
-                nguoiKyTen.NguoiDaiDien = "";
-                nguoiKyTen.DaiDien = "";
-                nguoiKyTen.QuyetDinhSo = "";
-
                 var data = new InsertModel();
-                //data.NguoiKyTen = await _dbContext.TblInNguoiKyTen.FindAsync(code) == null ? nguoiKyTen : await _dbContext.TblInNguoiKyTen.FindAsync(code);
-                var checkNull = await _dbContext.TblInNguoiKyTen.FirstOrDefaultAsync(x => x.HeaderCode == code);
-
-                if (checkNull == null)
-                {
-                    data.NguoiKyTen = nguoiKyTen;
-                }
-                else
-                {
-                    data.NguoiKyTen = await _dbContext.TblInNguoiKyTen.FirstOrDefaultAsync(x => x.HeaderCode == code);
-                }
-
+ 
                 data.Header = await _dbContext.TblBuCalculateResultList.FindAsync(code);
                 data.HS1 = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == code).ToListAsync();
                 data.HS2 = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == code).ToListAsync();
@@ -1287,22 +1271,6 @@ namespace DMS.BUSINESS.Services.BU
         {
             try
             {
-                var checkNull = await _dbContext.TblInNguoiKyTen.FirstOrDefaultAsync(x => x.Code == model.NguoiKyTen.Code);
-                //var checkNull = await _dbContext.TblInNguoiKyTen.FindAsync(model.NguoiKyTen.Code);
-                if (checkNull == null)
-                {
-                    _dbContext.TblInNguoiKyTen.Add(model.NguoiKyTen);
-                }
-                else
-                {
-                    //checkNull = null;
-                    checkNull.NguoiDaiDien = model.NguoiKyTen.NguoiDaiDien;
-                    checkNull.DaiDien = model.NguoiKyTen.DaiDien;
-                    checkNull.QuyetDinhSo = model.NguoiKyTen.QuyetDinhSo;
-
-                    //_dbContext.TblInNguoiKyTen.UpdateRange(model.NguoiKyTen);
-                }
-
                 _dbContext.TblInHeSoMatHang.UpdateRange(model.HS1);
                 _dbContext.TblInVinhCuaLo.UpdateRange(model.HS2);
                 
@@ -1566,12 +1534,21 @@ namespace DMS.BUSINESS.Services.BU
             }
         }
 
-
-
         public void ExportExcel(ref MemoryStream outFileStream, string path, string headerId)
         {
             try
             {
+                //Get Data
+                var nguoiKyTen = _dbContext.TblInNguoiKyTen
+                            .Where(x => x.HeaderCode == headerId)
+                            .ToList()
+                            .FirstOrDefault();
+
+                var header = _dbContext.TblBuCalculateResultList
+                                       .Where(x => x.Code == headerId)
+                                       .ToList()
+                                       .FirstOrDefault();
+                var data = GetResult(headerId);
                 FileStream fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite);
                 IWorkbook templateWorkbook;
                 templateWorkbook = new XSSFWorkbook(fs);
@@ -1601,21 +1578,23 @@ namespace DMS.BUSINESS.Services.BU
                 cell2Style.BorderLeft = BorderStyle.Thin;
                 cell2Style.BorderRight = BorderStyle.Thin;
 
-                //Get Data
-                var data = GetResult(headerId);
+                var Date = header.FDate.ToString("dd/MM/yyyy");
+                var Date_2 = header.FDate.ToString("'ngày' dd 'tháng' MM 'năm' yyyy", CultureInfo.InvariantCulture);
+                var Date_3 = header.FDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+                var Hour = header.FDate.ToString("HH'h'mm", CultureInfo.InvariantCulture);
+                var Time = header.FDate.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
+                var QuyetDinhSo = nguoiKyTen.QuyetDinhSo;
+                var startRowdlg_1  = 4;
                 #region Dữ liệu gốc
 
                 ISheet sheetGLG = templateWorkbook.GetSheetAt(0);
-                var header = GetDataInput(headerId);
                 #region Thị trường Thành phố Vinh, TX Cửa Lò
 
                 IRow rowHeader_dlg_1 = sheetGLG.GetRow(1);
                 ICell header_dlg_1 = rowHeader_dlg_1.GetCell(1) ?? rowHeader_dlg_1.CreateCell(1);
-                //header_dlg_1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                //header_dlg_1.SetCellValue($"1. Thị trường Thành phố Vinh, TX Cửa Lò (áp dụng từ 15h00 ngày {header.Result.Header.FDate.Date}/{header.Result.Header.FDate.Month}/{header.Result.Header.FDate.Year})");
+                header_dlg_1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_dlg_1.SetCellValue($"1. Thị trường Thành phố Vinh, TX Cửa Lò (áp dụng từ {Hour} ngày {Date})");
 
-                var startRowdlg_1 = 4;
-                //styleCellBold.CloneStyleFrom(sheetGLG.GetRow(1).Cells[0].CellStyle);
                 for (var i = 0; i < data.Result.DLG.Dlg_1.Count(); i++)
                 {
                     var dataDlg1 = data.Result.DLG.Dlg_1[i];
@@ -1659,7 +1638,6 @@ namespace DMS.BUSINESS.Services.BU
                         cell9.SetCellValue(dataDlg1.Col7.HasValue ? Convert.ToDouble(dataDlg1.Col7.Value) : 0);
                     }
                 }
-
                 #endregion
 
                 #region Các huyện thị còn lại trên địa bàn Nghệ An + địa bàn tỉnh Hà Tĩnh
@@ -1694,295 +1672,321 @@ namespace DMS.BUSINESS.Services.BU
 
                 #region BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (PT bán lẻ - V2)
 
-                //IRow rowHeader_dlg_3 = sheetGLG.GetRow(36);
-                //ICell header_dlg_3 = rowHeader_dlg_3.GetCell(1) ?? rowHeader_dlg_3.CreateCell(1);
-                //header_dlg_3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                //header_dlg_3.SetCellValue($"Tính từ 15h00 ngày {header.Result.Header.FDate.Day}/{header.Result.Header.FDate.Month}/{header.Result.Header.FDate.Year} theo CĐ số {header.Result.NguoiKyTen.QuyetDinhSo} ngày {header.Result.Header.FDate.Day}/{header.Result.Header.FDate.Month}/{header.Result.Header.FDate.Year}; QĐ giá bán lẻ số {header.Result.NguoiKyTen.QuyetDinhSo} ngày {header.Result.Header.FDate.Day}/{header.Result.Header.FDate.Month}/{header.Result.Header.FDate.Year} và theo VCF Hè Thu");
+                IRow rowHeader_dlg_3 = sheetGLG.GetRow(36);
+                ICell header_dlg_3 = rowHeader_dlg_3.GetCell(0) ?? rowHeader_dlg_3.CreateCell(0);
+                header_dlg_3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_dlg_3.SetCellValue($"Tính từ {Hour} ngày {Date} theo CĐ số {QuyetDinhSo} ngày {Date}; QĐ giá bán lẻ số 682/PLX-TGĐ ngày {Date} và theo VCF Hè Thu");
+
+                IRow rowFooter_dlg_3 = sheetGLG.GetRow(46);
+                ICell footer_dlg_3 = rowFooter_dlg_3.GetCell(9) ?? rowFooter_dlg_3.CreateCell(9);
+                footer_dlg_3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                footer_dlg_3.SetCellValue($"Vinh, {Date_2}");
 
                 var startRowdlg_3 = 41;
                 for (var i = 0; i < data.Result.DLG.Dlg_3.Count(); i++)
                 {
-                    var dataDlg3 = data.Result.DLG.Dlg_3[i];
-                    int rowIndex = startRowdlg_3 + i;
-                    IRow row = sheetGLG.GetRow(rowIndex);
+                   var dataDlg3 = data.Result.DLG.Dlg_3[i];
+                   int rowIndex = startRowdlg_3 + i;
+                   IRow row = sheetGLG.GetRow(rowIndex);
 
-                    if (row != null)
-                    {
-                        ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
-                        cell0.CellStyle = styleCellNumber;
-                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell0.SetCellValue(dataDlg3.ColA);
+                   if (row != null)
+                   {
+                       ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
+                       cell0.CellStyle = styleCellNumber;
+                       cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell0.SetCellValue(dataDlg3.ColA);
 
-                        ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
-                        cell1.CellStyle = styleCellNumber;
-                        cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell1.SetCellValue(dataDlg3.ColB);
+                       ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
+                       cell1.CellStyle = styleCellNumber;
+                       cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell1.SetCellValue(dataDlg3.ColB);
 
-                        ICell cell2 = row.GetCell(2) ?? row.CreateCell(2);
-                        cell2.CellStyle = cell2Style;
-                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell2.SetCellValue(dataDlg3.Col1.HasValue ? Convert.ToDouble(dataDlg3.Col1) : 0);
+                       ICell cell2 = row.GetCell(2) ?? row.CreateCell(2);
+                       cell2.CellStyle = cell2Style;
+                       cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell2.SetCellValue(dataDlg3.Col1.HasValue ? Convert.ToDouble(dataDlg3.Col1) : 0);
 
-                        ICell cell3 = row.GetCell(3) ?? row.CreateCell(3);
-                        cell3.CellStyle = styleCellNumber;
-                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell3.SetCellValue(dataDlg3.Col2.HasValue ? Convert.ToDouble(dataDlg3.Col2.Value) : 0);
+                       ICell cell3 = row.GetCell(3) ?? row.CreateCell(3);
+                       cell3.CellStyle = styleCellNumber;
+                       cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell3.SetCellValue(dataDlg3.Col2.HasValue ? Convert.ToDouble(dataDlg3.Col2.Value) : 0);
 
-                        ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
-                        cell4.CellStyle = styleCellNumber;
-                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell4.SetCellValue(dataDlg3.Col3.HasValue ? Convert.ToDouble(dataDlg3.Col3.Value) : 0);
+                       ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
+                       cell4.CellStyle = styleCellNumber;
+                       cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell4.SetCellValue(dataDlg3.Col3.HasValue ? Convert.ToDouble(dataDlg3.Col3.Value) : 0);
 
-                        ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
-                        cell5.CellStyle = styleCellNumber;
-                        cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell5.SetCellValue(dataDlg3.Col4.HasValue ? Convert.ToDouble(dataDlg3.Col4.Value) : 0);
+                       ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
+                       cell5.CellStyle = styleCellNumber;
+                       cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell5.SetCellValue(dataDlg3.Col4.HasValue ? Convert.ToDouble(dataDlg3.Col4.Value) : 0);
 
-                        ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
-                        cell6.CellStyle = styleCellNumber;
-                        cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell6.SetCellValue(dataDlg3.Col5.HasValue ? Convert.ToDouble(dataDlg3.Col5.Value) : 0);
+                       ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
+                       cell6.CellStyle = styleCellNumber;
+                       cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell6.SetCellValue(dataDlg3.Col5.HasValue ? Convert.ToDouble(dataDlg3.Col5.Value) : 0);
 
-                        ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
-                        cell7.CellStyle = styleCellNumber;
-                        cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell7.SetCellValue(dataDlg3.Col6.HasValue ? Convert.ToDouble(dataDlg3.Col6.Value) : 0);
+                       ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
+                       cell7.CellStyle = styleCellNumber;
+                       cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell7.SetCellValue(dataDlg3.Col6.HasValue ? Convert.ToDouble(dataDlg3.Col6.Value) : 0);
 
-                        ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
-                        cell8.CellStyle = styleCellNumber;
-                        cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell8.SetCellValue(dataDlg3.Col7.HasValue ? Convert.ToDouble(dataDlg3.Col7.Value) : 0);
+                       ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
+                       cell8.CellStyle = styleCellNumber;
+                       cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell8.SetCellValue(dataDlg3.Col7.HasValue ? Convert.ToDouble(dataDlg3.Col7.Value) : 0);
 
-                        ICell cell10 = row.GetCell(10) ?? row.CreateCell(10);
-                        cell10.CellStyle = styleCellNumber;
-                        cell10.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell10.SetCellValue(dataDlg3.Col8.HasValue ? Convert.ToDouble(dataDlg3.Col8.Value) : 0);
+                       ICell cell10 = row.GetCell(10) ?? row.CreateCell(10);
+                       cell10.CellStyle = styleCellNumber;
+                       cell10.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell10.SetCellValue(dataDlg3.Col8.HasValue ? Convert.ToDouble(dataDlg3.Col8.Value) : 0);
 
-                        ICell cell11 = row.GetCell(12) ?? row.CreateCell(12);
-                        cell11.CellStyle = styleCellNumber;
-                        cell11.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell11.SetCellValue(dataDlg3.Col9.HasValue ? Convert.ToDouble(dataDlg3.Col9.Value) : 0);
+                       ICell cell11 = row.GetCell(12) ?? row.CreateCell(12);
+                       cell11.CellStyle = styleCellNumber;
+                       cell11.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell11.SetCellValue(dataDlg3.Col9.HasValue ? Convert.ToDouble(dataDlg3.Col9.Value) : 0);
 
-                        ICell cell12 = row.GetCell(14) ?? row.CreateCell(14);
-                        cell12.CellStyle = styleCellNumber;
-                        cell12.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell12.SetCellValue(dataDlg3.Col10.HasValue ? Convert.ToDouble(dataDlg3.Col10.Value) : 0);
-                    }
+                       ICell cell12 = row.GetCell(14) ?? row.CreateCell(14);
+                       cell12.CellStyle = styleCellNumber;
+                       cell12.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell12.SetCellValue(dataDlg3.Col10.HasValue ? Convert.ToDouble(dataDlg3.Col10.Value) : 0);
+                   }
                 }
 
                 #endregion
 
                 #region BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (ngoài bán lẻ)
 
+                IRow rowHeader_dlg_4 = sheetGLG.GetRow(74);
+                ICell header_dlg_4 = rowHeader_dlg_4.GetCell(0) ?? rowHeader_dlg_4.CreateCell(0);
+                header_dlg_4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_dlg_4.SetCellValue($"Tính từ {Hour} ngày {Date} theo CĐ số {QuyetDinhSo} ngày {Date}; QĐ giá bán lẻ số 682/PLX-TGĐ ngày {Date} và theo VCF Hè Thu");
+
+                IRow rowFooter_dlg_4 = sheetGLG.GetRow(91);
+                ICell footer_dlg_4 = rowFooter_dlg_4.GetCell(9) ?? rowFooter_dlg_4.CreateCell(9);
+                footer_dlg_4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                footer_dlg_4.SetCellValue($"Vinh, {Date_2}");
+
                 var startRowdlg_4 = 80;
-                //IRow rowHeader_dlg_4 = sheetGLG.GetRow(74);
-                //ICell header_dlg_4 = rowHeader_dlg_4.GetCell(1) ?? rowHeader_dlg_4.CreateCell(1);
-                //header_dlg_4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                //header_dlg_4.SetCellValue($"Tính từ 15h00 ngày {header.FDate.Day}/{header.FDate.Month}/{header.FDate.Year} theo CĐ số {NguoiKyTen?.QuyetDinhSo} ngày {header.FDate.Day}/{header.FDate.Month}/{header.FDate.Year}; QĐ giá bán lẻ số {NguoiKyTen?.QuyetDinhSo} ngày {header.FDate.Day}/{header.FDate.Month}/{header.FDate.Year} và theo VCF Hè Thu");
+
                 for (var i = 0; i < data.Result.DLG.Dlg_4.Count(); i++)
                 {
-                    var dataDlg4 = data.Result.DLG.Dlg_4[i];
+                   var dataDlg4 = data.Result.DLG.Dlg_4[i];
 
-                    if (dataDlg4.Type != null)
-                    {
-                        int rowIndex = startRowdlg_4 + i;
-                        IRow row = sheetGLG.GetRow(rowIndex);
-                        if (row != null) {
-                            ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
-                            cell0.CellStyle = styleCellNumber;
-                            cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell0.SetCellValue(dataDlg4.ColA);
+                   if (dataDlg4.Type != null)
+                   {
+                       int rowIndex = startRowdlg_4 + i;
+                       IRow row = sheetGLG.GetRow(rowIndex);
+                       if (row != null) {
+                           ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
+                           cell0.CellStyle = styleCellNumber;
+                           cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell0.SetCellValue(dataDlg4.ColA);
 
-                            ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
-                            cell1.CellStyle = styleCellNumber;
-                            cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell1.SetCellValue(dataDlg4.ColB);
+                           ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
+                           cell1.CellStyle = styleCellNumber;
+                           cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell1.SetCellValue(dataDlg4.ColB);
 
-                            ICell cell2 = row.GetCell(2) ?? row.CreateCell(2);
-                            cell2.CellStyle = cell2Style;
-                            cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell2.SetCellValue(dataDlg4.Col1.HasValue ? Convert.ToDouble(dataDlg4.Col1) : 0);
+                           ICell cell2 = row.GetCell(2) ?? row.CreateCell(2);
+                           cell2.CellStyle = cell2Style;
+                           cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell2.SetCellValue(dataDlg4.Col1.HasValue ? Convert.ToDouble(dataDlg4.Col1) : 0);
 
-                            ICell cell3 = row.GetCell(3) ?? row.CreateCell(3);
-                            cell3.CellStyle = styleCellNumber;
-                            cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell3.SetCellValue(dataDlg4.Col2.HasValue ? Convert.ToDouble(dataDlg4.Col2.Value) : 0);
+                           ICell cell3 = row.GetCell(3) ?? row.CreateCell(3);
+                           cell3.CellStyle = styleCellNumber;
+                           cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell3.SetCellValue(dataDlg4.Col2.HasValue ? Convert.ToDouble(dataDlg4.Col2.Value) : 0);
 
-                            ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
-                            cell4.CellStyle = styleCellNumber;
-                            cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell4.SetCellValue(dataDlg4.Col3.HasValue ? Convert.ToDouble(dataDlg4.Col3.Value) : 0);
+                           ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
+                           cell4.CellStyle = styleCellNumber;
+                           cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell4.SetCellValue(dataDlg4.Col3.HasValue ? Convert.ToDouble(dataDlg4.Col3.Value) : 0);
 
-                            ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
-                            cell5.CellStyle = styleCellNumber;
-                            cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell5.SetCellValue(dataDlg4.Col4.HasValue ? Convert.ToDouble(dataDlg4.Col4.Value) : 0);
+                           ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
+                           cell5.CellStyle = styleCellNumber;
+                           cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell5.SetCellValue(dataDlg4.Col4.HasValue ? Convert.ToDouble(dataDlg4.Col4.Value) : 0);
 
-                            ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
-                            cell6.CellStyle = styleCellNumber;
-                            cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell6.SetCellValue(dataDlg4.Col5.HasValue ? Convert.ToDouble(dataDlg4.Col5.Value) : 0);
+                           ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
+                           cell6.CellStyle = styleCellNumber;
+                           cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell6.SetCellValue(dataDlg4.Col5.HasValue ? Convert.ToDouble(dataDlg4.Col5.Value) : 0);
 
-                            ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
-                            cell7.CellStyle = styleCellNumber;
-                            cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell7.SetCellValue(dataDlg4.Col6.HasValue ? Convert.ToDouble(dataDlg4.Col6.Value) : 0);
+                           ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
+                           cell7.CellStyle = styleCellNumber;
+                           cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell7.SetCellValue(dataDlg4.Col6.HasValue ? Convert.ToDouble(dataDlg4.Col6.Value) : 0);
 
-                            ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
-                            cell8.CellStyle = styleCellNumber;
-                            cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell8.SetCellValue(dataDlg4.Col7.HasValue ? Convert.ToDouble(dataDlg4.Col7.Value) : 0);
+                           ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
+                           cell8.CellStyle = styleCellNumber;
+                           cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell8.SetCellValue(dataDlg4.Col7.HasValue ? Convert.ToDouble(dataDlg4.Col7.Value) : 0);
 
-                            ICell cell9 = row.GetCell(9) ?? row.CreateCell(9);
-                            cell9.CellStyle = styleCellNumber;
-                            cell9.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell9.SetCellValue(dataDlg4.Col8.HasValue ? Convert.ToDouble(dataDlg4.Col8.Value) : 0);
+                           ICell cell9 = row.GetCell(9) ?? row.CreateCell(9);
+                           cell9.CellStyle = styleCellNumber;
+                           cell9.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell9.SetCellValue(dataDlg4.Col8.HasValue ? Convert.ToDouble(dataDlg4.Col8.Value) : 0);
 
-                            ICell cell10 = row.GetCell(10) ?? row.CreateCell(10);
-                            cell10.CellStyle = styleCellNumber;
-                            cell10.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell10.SetCellValue(dataDlg4.Col9.HasValue ? Convert.ToDouble(dataDlg4.Col9.Value) : 0);
+                           ICell cell10 = row.GetCell(10) ?? row.CreateCell(10);
+                           cell10.CellStyle = styleCellNumber;
+                           cell10.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell10.SetCellValue(dataDlg4.Col9.HasValue ? Convert.ToDouble(dataDlg4.Col9.Value) : 0);
 
-                            ICell cell11 = row.GetCell(11) ?? row.CreateCell(11);
-                            cell11.CellStyle = styleCellNumber;
-                            cell11.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell11.SetCellValue(dataDlg4.Col10.HasValue ? Convert.ToDouble(dataDlg4.Col10.Value) : 0);
+                           ICell cell11 = row.GetCell(11) ?? row.CreateCell(11);
+                           cell11.CellStyle = styleCellNumber;
+                           cell11.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell11.SetCellValue(dataDlg4.Col10.HasValue ? Convert.ToDouble(dataDlg4.Col10.Value) : 0);
 
-                            ICell cell12 = row.GetCell(12) ?? row.CreateCell(12);
-                            cell12.CellStyle = styleCellNumber;
-                            cell12.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell12.SetCellValue(dataDlg4.Col11.HasValue ? Convert.ToDouble(dataDlg4.Col11.Value) : 0);
+                           ICell cell12 = row.GetCell(12) ?? row.CreateCell(12);
+                           cell12.CellStyle = styleCellNumber;
+                           cell12.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell12.SetCellValue(dataDlg4.Col11.HasValue ? Convert.ToDouble(dataDlg4.Col11.Value) : 0);
 
-                            ICell cell13 = row.GetCell(13) ?? row.CreateCell(13);
-                            cell13.CellStyle = styleCellNumber;
-                            cell13.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell13.SetCellValue(dataDlg4.Col12.HasValue ? Convert.ToDouble(dataDlg4.Col12.Value) : 0);
+                           ICell cell13 = row.GetCell(13) ?? row.CreateCell(13);
+                           cell13.CellStyle = styleCellNumber;
+                           cell13.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell13.SetCellValue(dataDlg4.Col12.HasValue ? Convert.ToDouble(dataDlg4.Col12.Value) : 0);
 
-                            ICell cell14 = row.GetCell(14) ?? row.CreateCell(14);
-                            cell14.CellStyle = styleCellNumber;
-                            cell14.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell14.SetCellValue(dataDlg4.Col13.HasValue ? Convert.ToDouble(dataDlg4.Col13.Value) : 0);
+                           ICell cell14 = row.GetCell(14) ?? row.CreateCell(14);
+                           cell14.CellStyle = styleCellNumber;
+                           cell14.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell14.SetCellValue(dataDlg4.Col13.HasValue ? Convert.ToDouble(dataDlg4.Col13.Value) : 0);
 
-                            ICell cell15 = row.GetCell(15) ?? row.CreateCell(15);
-                            cell15.CellStyle = styleCellNumber;
-                            cell15.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell15.SetCellValue(dataDlg4.Col14.HasValue ? Convert.ToDouble(dataDlg4.Col14.Value) : 0);
+                           ICell cell15 = row.GetCell(15) ?? row.CreateCell(15);
+                           cell15.CellStyle = styleCellNumber;
+                           cell15.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell15.SetCellValue(dataDlg4.Col14.HasValue ? Convert.ToDouble(dataDlg4.Col14.Value) : 0);
 
-                            ICell cell16 = row.GetCell(16) ?? row.CreateCell(16);
-                            cell16.CellStyle = styleCellNumber;
-                            cell16.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell16.SetCellValue(dataDlg4.Col15.HasValue ? Convert.ToDouble(dataDlg4.Col15.Value) : 0);
+                           ICell cell16 = row.GetCell(16) ?? row.CreateCell(16);
+                           cell16.CellStyle = styleCellNumber;
+                           cell16.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell16.SetCellValue(dataDlg4.Col15.HasValue ? Convert.ToDouble(dataDlg4.Col15.Value) : 0);
 
-                            ICell cell17 = row.GetCell(17) ?? row.CreateCell(17);
-                            cell17.CellStyle = styleCellNumber;
-                            cell17.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell17.SetCellValue(dataDlg4.Col16.HasValue ? Convert.ToDouble(dataDlg4.Col16.Value) : 0);
-                        }
-                    }
+                           ICell cell17 = row.GetCell(17) ?? row.CreateCell(17);
+                           cell17.CellStyle = styleCellNumber;
+                           cell17.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell17.SetCellValue(dataDlg4.Col16.HasValue ? Convert.ToDouble(dataDlg4.Col16.Value) : 0);
+                       }
+                   }
                 }
 
                 #endregion
 
                 #region BIỂU TÍNH GIÁ XUẤT NỘI DỤNG
-                //IRow rowHeader_dlg_5 = sheetGLG.GetRow(110);
-                //ICell header_dlg_5 = rowHeader_dlg_5.GetCell(1) ?? rowHeader_dlg_5.CreateCell(1);
-                //header_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                //header_dlg_5.SetCellValue($"Tính từ 15h00 ngày {header.FDate.Day}/{header.FDate.Month}/{header.FDate.Year} theo CĐ số {NguoiKyTen?.QuyetDinhSo} ngày {header.FDate.Day}/{header.FDate.Month}/{header.FDate.Year}; QĐ giá bán lẻ số {NguoiKyTen?.QuyetDinhSo} ngày {header.FDate.Day}/{header.FDate.Month}/{header.FDate.Year} và theo VCF Hè Thu");
+                IRow rowHeader_dlg_5 = sheetGLG.GetRow(110);
+                ICell header_dlg_5 = rowHeader_dlg_5.GetCell(0) ?? rowHeader_dlg_5.CreateCell(0);
+                header_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_dlg_5.SetCellValue($"Tính từ {Hour} ngày {Date} theo CĐ số {QuyetDinhSo} ngày {Date}; QĐ giá bán lẻ số {QuyetDinhSo} ngày {Date} và theo VCF Hè Thu");
+                              
+                IRow rowFooter_dlg_5 = sheetGLG.GetRow(122);
+                ICell footer_dlg_5 = rowFooter_dlg_5.GetCell(9) ?? rowFooter_dlg_5.CreateCell(9);
+                footer_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                footer_dlg_5.SetCellValue($"Vinh,  {Date_2}");
+
                 var startRowdlg_5 = 115;
                 for (var i = 0; i < data.Result.DLG.Dlg_5.Count(); i++)
                 {
-                    var dataDlg5 = data.Result.DLG.Dlg_5[i];
-                    int rowIndex = startRowdlg_5 + i;
-                    IRow row = sheetGLG.GetRow(rowIndex);
+                   var dataDlg5 = data.Result.DLG.Dlg_5[i];
+                   int rowIndex = startRowdlg_5 + i;
+                   IRow row = sheetGLG.GetRow(rowIndex);
 
-                    if (row != null)
-                    {
-                        ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
-                        cell0.CellStyle = styleCellNumber;
-                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell0.SetCellValue(dataDlg5.ColA);
+                   if (row != null)
+                   {
+                       ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
+                       cell0.CellStyle = styleCellNumber;
+                       cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell0.SetCellValue(dataDlg5.ColA);
 
-                        ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
-                        cell1.CellStyle = styleCellNumber;
-                        cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell1.SetCellValue(dataDlg5.ColB);
+                       ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
+                       cell1.CellStyle = styleCellNumber;
+                       cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell1.SetCellValue(dataDlg5.ColB);
 
-                        ICell cell2 = row.GetCell(3) ?? row.CreateCell(3);
-                        cell2.CellStyle = cell2Style;
-                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell2.SetCellValue(dataDlg5.Col1.HasValue ? Convert.ToDouble(dataDlg5.Col1) : 0);
+                       ICell cell2 = row.GetCell(3) ?? row.CreateCell(3);
+                       cell2.CellStyle = cell2Style;
+                       cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell2.SetCellValue(dataDlg5.Col1.HasValue ? Convert.ToDouble(dataDlg5.Col1) : 0);
 
-                        ICell cell3 = row.GetCell(5) ?? row.CreateCell(5);
-                        cell3.CellStyle = styleCellNumber;
-                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell3.SetCellValue(dataDlg5.Col2.HasValue ? Convert.ToDouble(dataDlg5.Col2.Value) : 0);
+                       ICell cell3 = row.GetCell(5) ?? row.CreateCell(5);
+                       cell3.CellStyle = styleCellNumber;
+                       cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell3.SetCellValue(dataDlg5.Col2.HasValue ? Convert.ToDouble(dataDlg5.Col2.Value) : 0);
 
-                        ICell cell4 = row.GetCell(8) ?? row.CreateCell(8);
-                        cell4.CellStyle = styleCellNumber;
-                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell4.SetCellValue(dataDlg5.Col3.HasValue ? Convert.ToDouble(dataDlg5.Col3.Value) : 0);
+                       ICell cell4 = row.GetCell(8) ?? row.CreateCell(8);
+                       cell4.CellStyle = styleCellNumber;
+                       cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell4.SetCellValue(dataDlg5.Col3.HasValue ? Convert.ToDouble(dataDlg5.Col3.Value) : 0);
 
-                        ICell cell5 = row.GetCell(10) ?? row.CreateCell(10);
-                        cell5.CellStyle = styleCellNumber;
-                        cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell5.SetCellValue(dataDlg5.Col4.HasValue ? Convert.ToDouble(dataDlg5.Col4.Value) : 0);
+                       ICell cell5 = row.GetCell(10) ?? row.CreateCell(10);
+                       cell5.CellStyle = styleCellNumber;
+                       cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell5.SetCellValue(dataDlg5.Col4.HasValue ? Convert.ToDouble(dataDlg5.Col4.Value) : 0);
 
-                        ICell cell6 = row.GetCell(12) ?? row.CreateCell(12);
-                        cell6.CellStyle = styleCellNumber;
-                        cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell6.SetCellValue(dataDlg5.Col5.HasValue ? Convert.ToDouble(dataDlg5.Col5.Value) : 0);
-                    }
+                       ICell cell6 = row.GetCell(12) ?? row.CreateCell(12);
+                       cell6.CellStyle = styleCellNumber;
+                       cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell6.SetCellValue(dataDlg5.Col5.HasValue ? Convert.ToDouble(dataDlg5.Col5.Value) : 0);
+                   }
                 }
 
                 #endregion
 
                 #region Thay đổi giá bán lẻ
+                IRow rowHeader_tt = sheetGLG.GetRow(38);
+                ICell header_tt = rowHeader_tt.GetCell(21) ?? rowHeader_tt.CreateCell(21);
+                header_tt.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_tt.SetCellValue($"Thay đổi giá bán lẻ {Hour} ngày {Date} (Tp Vinh, TX Cửa Lò)");
+
+                ICell header_Vcl = rowHeader_tt.GetCell(24) ?? rowHeader_tt.CreateCell(24);
+                header_Vcl.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_Vcl.SetCellValue($"Thay đổi giá bán lẻ {Hour} ngày {Date} (Vùng còn lại)");
 
                 var startRowdlg_TDGBL = 41;
                 for (var i = 0; i < data.Result.DLG.Dlg_TDGBL.Count(); i++)
                 {
-                    var dataDlg_TDGBL = data.Result.DLG.Dlg_TDGBL[i];
-                    int rowIndex = startRowdlg_TDGBL + i;
-                    IRow row = sheetGLG.GetRow(rowIndex);
+                   var dataDlg_TDGBL = data.Result.DLG.Dlg_TDGBL[i];
+                   int rowIndex = startRowdlg_TDGBL + i;
+                   IRow row = sheetGLG.GetRow(rowIndex);
 
-                    if (row != null)
-                    {
+                   if (row != null)
+                   {
 
-                        ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
-                        cell0.CellStyle = styleCellNumber;
-                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell0.SetCellValue(dataDlg_TDGBL.ColA);
+                       ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                       cell0.CellStyle = styleCellNumber;
+                       cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell0.SetCellValue(dataDlg_TDGBL.ColA);
 
-                        ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
-                        cell0.CellStyle = styleCellNumber;
-                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell2.SetCellValue(dataDlg_TDGBL.Col1.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col1) : 0);
+                       ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                       cell0.CellStyle = styleCellNumber;
+                       cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell2.SetCellValue(dataDlg_TDGBL.Col1.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col1) : 0);
 
-                        ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
-                        cell3.CellStyle = styleCellNumber;
-                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell3.SetCellValue(dataDlg_TDGBL.Col2.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col2.Value) : 0);
+                       ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                       cell3.CellStyle = styleCellNumber;
+                       cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell3.SetCellValue(dataDlg_TDGBL.Col2.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col2.Value) : 0);
 
-                        ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
-                        cell4.CellStyle = styleCellNumber;
-                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell4.SetCellValue(dataDlg_TDGBL.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_TDGBL.TangGiam1_2.Value) : 0);
+                       ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                       cell4.CellStyle = styleCellNumber;
+                       cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell4.SetCellValue(dataDlg_TDGBL.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_TDGBL.TangGiam1_2.Value) : 0);
 
-                        ICell cell5 = row.GetCell(24) ?? row.CreateCell(24);
-                        cell5.CellStyle = styleCellNumber;
-                        cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell5.SetCellValue(dataDlg_TDGBL.Col3.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col3.Value) : 0);
+                       ICell cell5 = row.GetCell(24) ?? row.CreateCell(24);
+                       cell5.CellStyle = styleCellNumber;
+                       cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell5.SetCellValue(dataDlg_TDGBL.Col3.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col3.Value) : 0);
 
-                        ICell cell6 = row.GetCell(25) ?? row.CreateCell(25);
-                        cell6.CellStyle = styleCellNumber;
-                        cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell6.SetCellValue(dataDlg_TDGBL.Col4.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col4.Value) : 0);
+                       ICell cell6 = row.GetCell(25) ?? row.CreateCell(25);
+                       cell6.CellStyle = styleCellNumber;
+                       cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell6.SetCellValue(dataDlg_TDGBL.Col4.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col4.Value) : 0);
 
-                        ICell cell7 = row.GetCell(26) ?? row.CreateCell(26);
-                        cell7.CellStyle = styleCellNumber;
-                        cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell7.SetCellValue(dataDlg_TDGBL.TangGiam3_4.HasValue ? Convert.ToDouble(dataDlg_TDGBL.TangGiam3_4.Value) : 0);
-                    }
+                       ICell cell7 = row.GetCell(26) ?? row.CreateCell(26);
+                       cell7.CellStyle = styleCellNumber;
+                       cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell7.SetCellValue(dataDlg_TDGBL.TangGiam3_4.HasValue ? Convert.ToDouble(dataDlg_TDGBL.TangGiam3_4.Value) : 0);
+                   }
                 }
 
                 #endregion
@@ -1992,33 +1996,33 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowdlg_TdGgptbl = 49;
                 for (var i = 0; i < data.Result.DLG.Dlg_TdGgptbl.Count(); i++)
                 {
-                    var dataDlg_TdGgptbl = data.Result.DLG.Dlg_TdGgptbl[i];
-                    int rowIndex = startRowdlg_TdGgptbl + i;
-                    IRow row = sheetGLG.GetRow(rowIndex);
+                   var dataDlg_TdGgptbl = data.Result.DLG.Dlg_TdGgptbl[i];
+                   int rowIndex = startRowdlg_TdGgptbl + i;
+                   IRow row = sheetGLG.GetRow(rowIndex);
 
-                    if (row != null)
-                    {
+                   if (row != null)
+                   {
 
-                        ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
-                        cell0.CellStyle = styleCellNumber;
-                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell0.SetCellValue(dataDlg_TdGgptbl.ColA);
+                       ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                       cell0.CellStyle = styleCellNumber;
+                       cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell0.SetCellValue(dataDlg_TdGgptbl.ColA);
 
-                        ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
-                        cell0.CellStyle = styleCellNumber;
-                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell2.SetCellValue(dataDlg_TdGgptbl.Col1.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.Col1) : 0);
+                       ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                       cell0.CellStyle = styleCellNumber;
+                       cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell2.SetCellValue(dataDlg_TdGgptbl.Col1.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.Col1) : 0);
 
-                        ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
-                        cell3.CellStyle = styleCellNumber;
-                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell3.SetCellValue(dataDlg_TdGgptbl.Col2.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.Col2.Value) : 0);
+                       ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                       cell3.CellStyle = styleCellNumber;
+                       cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell3.SetCellValue(dataDlg_TdGgptbl.Col2.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.Col2.Value) : 0);
 
-                        ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
-                        cell4.CellStyle = styleCellNumber;
-                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell4.SetCellValue(dataDlg_TdGgptbl.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.TangGiam1_2.Value) : 0);
-                    }
+                       ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                       cell4.CellStyle = styleCellNumber;
+                       cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell4.SetCellValue(dataDlg_TdGgptbl.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.TangGiam1_2.Value) : 0);
+                   }
                 }
 
                 #endregion
@@ -2027,108 +2031,119 @@ namespace DMS.BUSINESS.Services.BU
 
                 int rowIndexTT = 12;
                 int rowIndexOther = 17;
-                //IRow rowHeader_dlg_7 = sheetGLG.GetRow(80);
-                //ICell header_dlg_7 = rowHeader_dlg_7.GetCell(20) ?? rowHeader_dlg_7.CreateCell(20);
-                //header_dlg_7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                //header_dlg_7.SetCellValue($"1.Lãi gộp từ 15h00 ngày {header.FDate.Day}/{ header.FDate.Month}/{header.FDate.Year} và tính theo VCF Hè Thu từ tháng 5 - 10 hàng năm");
+                IRow rowHeader_dlg_7 = sheetGLG.GetRow(8);
+                ICell header_dlg_7 = rowHeader_dlg_7.GetCell(20) ?? rowHeader_dlg_7.CreateCell(20);
+                header_dlg_7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_dlg_7.SetCellValue($"1.Lãi gộp từ {Hour} ngày {Date} và tính theo VCF Hè Thu từ tháng 5 - 10 hàng năm");
                 foreach (var dataDlg_Dlg7 in data.Result.DLG.Dlg_7)
                 {
-                    if (dataDlg_Dlg7.Type == "TT")
-                    {
-                        IRow row = sheetGLG.GetRow(rowIndexTT);
-                        if (row != null)
-                        {
-                            ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
-                            cell0.CellStyle = styleCellNumber;
-                            cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell0.SetCellValue(dataDlg_Dlg7.ColA);
+                   if (dataDlg_Dlg7.Type == "TT")
+                   {
+                       IRow row = sheetGLG.GetRow(rowIndexTT);
+                       if (row != null)
+                       {
+                           ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                           cell0.CellStyle = styleCellNumber;
+                           cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell0.SetCellValue(dataDlg_Dlg7.ColA);
 
-                            ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
-                            cell2.CellStyle = styleCellNumber;
-                            cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell2.SetCellValue(dataDlg_Dlg7.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col1) : 0);
+                           ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                           cell2.CellStyle = styleCellNumber;
+                           cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell2.SetCellValue(dataDlg_Dlg7.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col1) : 0);
 
-                            ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
-                            cell3.CellStyle = styleCellNumber;
-                            cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell3.SetCellValue(dataDlg_Dlg7.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col2.Value) : 0);
+                           ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                           cell3.CellStyle = styleCellNumber;
+                           cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell3.SetCellValue(dataDlg_Dlg7.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col2.Value) : 0);
 
-                            ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
-                            cell4.CellStyle = styleCellNumber;
-                            cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell4.SetCellValue(dataDlg_Dlg7.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.TangGiam1_2.Value) : 0);
-                        }
-                        rowIndexTT++; // Tăng dòng sau mỗi lần lặp
-                    }
-                    else if (dataDlg_Dlg7.Type == "OTHER")
-                    {
-                        IRow row = sheetGLG.GetRow(rowIndexOther);
-                        if (row != null)
-                        {
-                            ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
-                            cell0.CellStyle = styleCellNumber;
-                            cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell0.SetCellValue(dataDlg_Dlg7.ColA);
+                           ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                           cell4.CellStyle = styleCellNumber;
+                           cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell4.SetCellValue(dataDlg_Dlg7.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.TangGiam1_2.Value) : 0);
+                       }
+                       rowIndexTT++; // Tăng dòng sau mỗi lần lặp
+                   }
+                   else if (dataDlg_Dlg7.Type == "OTHER")
+                   {
+                       IRow row = sheetGLG.GetRow(rowIndexOther);
+                       if (row != null)
+                       {
+                           ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                           cell0.CellStyle = styleCellNumber;
+                           cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell0.SetCellValue(dataDlg_Dlg7.ColA);
 
-                            ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
-                            cell2.CellStyle = styleCellNumber;
-                            cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell2.SetCellValue(dataDlg_Dlg7.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col1) : 0);
+                           ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                           cell2.CellStyle = styleCellNumber;
+                           cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell2.SetCellValue(dataDlg_Dlg7.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col1) : 0);
 
-                            ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
-                            cell3.CellStyle = styleCellNumber;
-                            cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell3.SetCellValue(dataDlg_Dlg7.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col2.Value) : 0);
+                           ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                           cell3.CellStyle = styleCellNumber;
+                           cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell3.SetCellValue(dataDlg_Dlg7.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col2.Value) : 0);
 
-                            ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
-                            cell4.CellStyle = styleCellNumber;
-                            cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                            cell4.SetCellValue(dataDlg_Dlg7.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.TangGiam1_2.Value) : 0);
-                        }
-                        rowIndexOther++; // Tăng dòng sau mỗi lần lặp
-                    }
+                           ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                           cell4.CellStyle = styleCellNumber;
+                           cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                           cell4.SetCellValue(dataDlg_Dlg7.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.TangGiam1_2.Value) : 0);
+                       }
+                       rowIndexOther++; // Tăng dòng sau mỗi lần lặp
+                   }
                 }
 
 
                 #endregion
 
                 #region So sánh chiết khấu giữa
-                //IRow rowHeader_dlg_8 = sheetGLG.GetRow(96);
-                //ICell header_dlg_8 = rowHeader_dlg_8.GetCell(20) ?? rowHeader_dlg_8.CreateCell(20);
-                //header_dlg_8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                //header_dlg_8.SetCellValue($"2. Đề xuất mức giảm giá từ 15h00 ngày {header.FDate.Day}/{header.FDate.Month}/{header.FDate.Year}");
+                IRow rowHeader_dlg_8 = sheetGLG.GetRow(23);
+                ICell header_dlg_8 = rowHeader_dlg_8.GetCell(20) ?? rowHeader_dlg_8.CreateCell(20);
+                header_dlg_8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_dlg_8.SetCellValue($"2. Đề xuất mức giảm giá từ {Hour} ngày {Date}");
                 var startRowdlg_Dlg8 = 26;
                 for (var i = 0; i < data.Result.DLG.Dlg_8.Count(); i++)
                 {
-                    var dataDlg_Dlg8 = data.Result.DLG.Dlg_8[i];
-                    int rowIndex = startRowdlg_Dlg8 + i;
-                    IRow row = sheetGLG.GetRow(rowIndex);
+                   var dataDlg_Dlg8 = data.Result.DLG.Dlg_8[i];
+                   int rowIndex = startRowdlg_Dlg8 + i;
+                   IRow row = sheetGLG.GetRow(rowIndex);
 
-                    if (row != null)
-                    {
-                        ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
-                        cell0.CellStyle = styleCellNumber;
-                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell0.SetCellValue(dataDlg_Dlg8.ColA);
+                   if (row != null)
+                   {
+                       ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                       cell0.CellStyle = styleCellNumber;
+                       cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell0.SetCellValue(dataDlg_Dlg8.ColA);
 
-                        ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
-                        cell0.CellStyle = styleCellNumber;
-                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell2.SetCellValue(dataDlg_Dlg8.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg8.Col1) : 0);
+                       ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                       cell0.CellStyle = styleCellNumber;
+                       cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell2.SetCellValue(dataDlg_Dlg8.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg8.Col1) : 0);
 
-                        ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
-                        cell3.CellStyle = styleCellNumber;
-                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell3.SetCellValue(dataDlg_Dlg8.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg8.Col2.Value) : 0);
+                       ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                       cell3.CellStyle = styleCellNumber;
+                       cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell3.SetCellValue(dataDlg_Dlg8.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg8.Col2.Value) : 0);
 
-                        ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
-                        cell4.CellStyle = styleCellNumber;
-                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell4.SetCellValue(dataDlg_Dlg8.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg8.TangGiam1_2.Value) : 0);
-                    }
+                       ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                       cell4.CellStyle = styleCellNumber;
+                       cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                       cell4.SetCellValue(dataDlg_Dlg8.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg8.TangGiam1_2.Value) : 0);
+                   }
 
                 }
 
+                #endregion
+
+                #region Valid
+                IRow rowHeader_valid = sheetGLG.GetRow(4);
+                ICell header_valid = rowHeader_valid.GetCell(20) ?? rowHeader_valid.CreateCell(20);
+                header_valid.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_valid.SetCellValue($"{Date_3}");
+
+                ICell header_valid_time = rowHeader_valid.GetCell(21) ?? rowHeader_valid.CreateCell(21);
+                header_valid_time.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_valid_time.SetCellValue($"{Time}");
                 #endregion
 
                 #endregion
@@ -2772,370 +2787,370 @@ namespace DMS.BUSINESS.Services.BU
 
                 #endregion
 
-                #region Export VK11-PT
+                //#region Export VK11-PT
 
-                var startRowVK11PT = 2;
-                ISheet sheetVK11PT = templateWorkbook.GetSheetAt(11);
-                styleCellBold.CloneStyleFrom(sheetVK11PT.GetRow(1).Cells[0].CellStyle);
+                //var startRowVK11PT = 2;
+                //ISheet sheetVK11PT = templateWorkbook.GetSheetAt(11);
+                //styleCellBold.CloneStyleFrom(sheetVK11PT.GetRow(1).Cells[0].CellStyle);
 
 
-                for (var i = 0; i < data.Result.VK11PT.Count(); i++)
-                {
-                    var dataRow = data.Result.VK11PT[i];
-                    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11PT, startRowVK11PT++, 20);
-                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
-                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
-                    rowCur.Cells[2].SetCellValue(dataRow.Col1);
+                //for (var i = 0; i < data.Result.VK11PT.Count(); i++)
+                //{
+                //    var dataRow = data.Result.VK11PT[i];
+                //    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11PT, startRowVK11PT++, 20);
+                //    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                //    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                //    rowCur.Cells[2].SetCellValue(dataRow.Col1);
 
-                    rowCur.Cells[3].CellStyle = styleCellNumber;
-                    rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
+                //    rowCur.Cells[3].CellStyle = styleCellNumber;
+                //    rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
 
-                    rowCur.Cells[4].CellStyle = styleCellNumber;
-                    rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+                //    rowCur.Cells[4].CellStyle = styleCellNumber;
+                //    rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
 
-                    rowCur.Cells[5].SetCellValue(dataRow.Col4);
-                    rowCur.Cells[6].SetCellValue(dataRow.Col5);
-                    rowCur.Cells[7].SetCellValue(dataRow.Col6);
-                    rowCur.Cells[8].SetCellValue(dataRow.Col7);
-                    rowCur.Cells[9].SetCellValue(dataRow.Col8);
+                //    rowCur.Cells[5].SetCellValue(dataRow.Col4);
+                //    rowCur.Cells[6].SetCellValue(dataRow.Col5);
+                //    rowCur.Cells[7].SetCellValue(dataRow.Col6);
+                //    rowCur.Cells[8].SetCellValue(dataRow.Col7);
+                //    rowCur.Cells[9].SetCellValue(dataRow.Col8);
 
-                    rowCur.Cells[10].CellStyle = styleCellNumber;
-                    rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+                //    rowCur.Cells[10].CellStyle = styleCellNumber;
+                //    rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
                     
-                    rowCur.Cells[11].SetCellValue(dataRow.Col10);
+                //    rowCur.Cells[11].SetCellValue(dataRow.Col10);
 
-                    rowCur.Cells[12].CellStyle = styleCellNumber;
-                    rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
+                //    rowCur.Cells[12].CellStyle = styleCellNumber;
+                //    rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
                     
 
-                    rowCur.Cells[13].SetCellValue(dataRow.Col12);
-                    rowCur.Cells[14].SetCellValue(dataRow.Col13);
-                    rowCur.Cells[15].SetCellValue(dataRow.Col14);
-                    rowCur.Cells[16].SetCellValue(dataRow.Col15);
-                    rowCur.Cells[17].SetCellValue(dataRow.Col16);
-                    rowCur.Cells[18].SetCellValue(dataRow.Col17);
-                    rowCur.Cells[19].SetCellValue(dataRow.Col18);
+                //    rowCur.Cells[13].SetCellValue(dataRow.Col12);
+                //    rowCur.Cells[14].SetCellValue(dataRow.Col13);
+                //    rowCur.Cells[15].SetCellValue(dataRow.Col14);
+                //    rowCur.Cells[16].SetCellValue(dataRow.Col15);
+                //    rowCur.Cells[17].SetCellValue(dataRow.Col16);
+                //    rowCur.Cells[18].SetCellValue(dataRow.Col17);
+                //    rowCur.Cells[19].SetCellValue(dataRow.Col18);
 
 
-                    for (var j = 0; j < 20; j++)
-                    {
-                        if (dataRow.IsBold)
-                        {
-                            rowCur.Cells[j].CellStyle = styleCellBold;
-                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
-                        }
-                        else
-                        {
-                            rowCur.Cells[j].CellStyle.SetFont(font);
-                        }
-                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
-                    }
-                }
+                //    for (var j = 0; j < 20; j++)
+                //    {
+                //        if (dataRow.IsBold)
+                //        {
+                //            rowCur.Cells[j].CellStyle = styleCellBold;
+                //            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                //        }
+                //        else
+                //        {
+                //            rowCur.Cells[j].CellStyle.SetFont(font);
+                //        }
+                //        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                //    }
+                //}
 
-                #endregion
+                //#endregion
 
-                #region Export VK11-DB
+                //#region Export VK11-DB
 
-                var startRowVK11DB = 2;
-                ISheet sheetVK11DB = templateWorkbook.GetSheetAt(12);
-                styleCellBold.CloneStyleFrom(sheetVK11DB.GetRow(1).Cells[0].CellStyle);
+                //var startRowVK11DB = 2;
+                //ISheet sheetVK11DB = templateWorkbook.GetSheetAt(12);
+                //styleCellBold.CloneStyleFrom(sheetVK11DB.GetRow(1).Cells[0].CellStyle);
 
-                for (var i = 0; i < data.Result.VK11DB.Count(); i++)
-                {
-                    var dataRow = data.Result.VK11DB[i];
-                    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11DB, startRowVK11DB++, 21);
-                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
-                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
-                    rowCur.Cells[2].SetCellValue(dataRow.ColC);
-                    rowCur.Cells[3].SetCellValue(dataRow.Col1);
+                //for (var i = 0; i < data.Result.VK11DB.Count(); i++)
+                //{
+                //    var dataRow = data.Result.VK11DB[i];
+                //    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11DB, startRowVK11DB++, 21);
+                //    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                //    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                //    rowCur.Cells[2].SetCellValue(dataRow.ColC);
+                //    rowCur.Cells[3].SetCellValue(dataRow.Col1);
 
-                    rowCur.Cells[4].CellStyle = styleCellNumber;
-                    rowCur.Cells[4].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
+                //    rowCur.Cells[4].CellStyle = styleCellNumber;
+                //    rowCur.Cells[4].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
 
-                    rowCur.Cells[5].CellStyle = styleCellNumber;
-                    rowCur.Cells[5].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+                //    rowCur.Cells[5].CellStyle = styleCellNumber;
+                //    rowCur.Cells[5].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
 
-                    rowCur.Cells[6].SetCellValue(dataRow.Col4);
-                    rowCur.Cells[7].SetCellValue(dataRow.Col5);
-                    rowCur.Cells[8].SetCellValue(dataRow.Col6);
-                    rowCur.Cells[9].SetCellValue(dataRow.Col7);
-                    rowCur.Cells[10].SetCellValue(dataRow.Col8);
+                //    rowCur.Cells[6].SetCellValue(dataRow.Col4);
+                //    rowCur.Cells[7].SetCellValue(dataRow.Col5);
+                //    rowCur.Cells[8].SetCellValue(dataRow.Col6);
+                //    rowCur.Cells[9].SetCellValue(dataRow.Col7);
+                //    rowCur.Cells[10].SetCellValue(dataRow.Col8);
 
-                    rowCur.Cells[11].CellStyle = styleCellNumber;
-                    rowCur.Cells[11].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+                //    rowCur.Cells[11].CellStyle = styleCellNumber;
+                //    rowCur.Cells[11].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
 
-                    rowCur.Cells[12].SetCellValue(dataRow.Col10);
+                //    rowCur.Cells[12].SetCellValue(dataRow.Col10);
 
-                    rowCur.Cells[13].CellStyle = styleCellNumber;
-                    rowCur.Cells[13].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
+                //    rowCur.Cells[13].CellStyle = styleCellNumber;
+                //    rowCur.Cells[13].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
 
-                    rowCur.Cells[14].SetCellValue(dataRow.Col12);
-                    rowCur.Cells[15].SetCellValue(dataRow.Col13);
-                    rowCur.Cells[16].SetCellValue(dataRow.Col14);
-                    rowCur.Cells[17].SetCellValue(dataRow.Col15);
-                    rowCur.Cells[18].SetCellValue(dataRow.Col16);
-                    rowCur.Cells[19].SetCellValue(dataRow.Col17);
-                    rowCur.Cells[20].SetCellValue(dataRow.Col18);
+                //    rowCur.Cells[14].SetCellValue(dataRow.Col12);
+                //    rowCur.Cells[15].SetCellValue(dataRow.Col13);
+                //    rowCur.Cells[16].SetCellValue(dataRow.Col14);
+                //    rowCur.Cells[17].SetCellValue(dataRow.Col15);
+                //    rowCur.Cells[18].SetCellValue(dataRow.Col16);
+                //    rowCur.Cells[19].SetCellValue(dataRow.Col17);
+                //    rowCur.Cells[20].SetCellValue(dataRow.Col18);
 
-                    for (var j = 0; j < 21; j++)
-                    {
-                        if (dataRow.IsBold)
-                        {
-                            rowCur.Cells[j].CellStyle = styleCellBold;
-                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
-                        }
-                        else
-                        {
-                            rowCur.Cells[j].CellStyle.SetFont(font);
-                        }
-                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
-                    }
-                }
+                //    for (var j = 0; j < 21; j++)
+                //    {
+                //        if (dataRow.IsBold)
+                //        {
+                //            rowCur.Cells[j].CellStyle = styleCellBold;
+                //            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                //        }
+                //        else
+                //        {
+                //            rowCur.Cells[j].CellStyle.SetFont(font);
+                //        }
+                //        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                //    }
+                //}
 
-                #endregion
+                //#endregion
 
-                #region Export VK11-FOB
+                //#region Export VK11-FOB
 
-                var startRowVK11FOB = 3;
-                ISheet sheetVK11FOB = templateWorkbook.GetSheetAt(13);
+                //var startRowVK11FOB = 3;
+                //ISheet sheetVK11FOB = templateWorkbook.GetSheetAt(13);
 
-                for (var i = 0; i < data.Result.VK11FOB.Count(); i++)
-                {
-                    var dataRow = data.Result.VK11FOB[i];
-                    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11FOB, startRowVK11FOB++, 21);
-                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
-                    //rowCur.Cells[1].SetCellValue(dataRow.ColB);
-                    rowCur.Cells[1].SetCellValue(dataRow.ColC == null ? dataRow.ColB : dataRow.ColC);
-                    //rowCur.Cells[1].SetCellValue(dataRow.ColC);
+                //for (var i = 0; i < data.Result.VK11FOB.Count(); i++)
+                //{
+                //    var dataRow = data.Result.VK11FOB[i];
+                //    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11FOB, startRowVK11FOB++, 21);
+                //    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                //    //rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                //    rowCur.Cells[1].SetCellValue(dataRow.ColC == null ? dataRow.ColB : dataRow.ColC);
+                //    //rowCur.Cells[1].SetCellValue(dataRow.ColC);
 
-                    rowCur.Cells[2].SetCellValue(dataRow.Col1);
+                //    rowCur.Cells[2].SetCellValue(dataRow.Col1);
 
-                    rowCur.Cells[3].CellStyle = styleCellNumber;
-                    rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
+                //    rowCur.Cells[3].CellStyle = styleCellNumber;
+                //    rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
 
-                    rowCur.Cells[4].CellStyle = styleCellNumber;
-                    rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+                //    rowCur.Cells[4].CellStyle = styleCellNumber;
+                //    rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
 
-                    rowCur.Cells[5].SetCellValue(dataRow.Col4);
-                    rowCur.Cells[6].SetCellValue(dataRow.Col5);
-                    rowCur.Cells[7].SetCellValue(dataRow.Col6);
-                    rowCur.Cells[8].SetCellValue(dataRow.Col7);
-                    rowCur.Cells[9].SetCellValue(dataRow.Col8);
+                //    rowCur.Cells[5].SetCellValue(dataRow.Col4);
+                //    rowCur.Cells[6].SetCellValue(dataRow.Col5);
+                //    rowCur.Cells[7].SetCellValue(dataRow.Col6);
+                //    rowCur.Cells[8].SetCellValue(dataRow.Col7);
+                //    rowCur.Cells[9].SetCellValue(dataRow.Col8);
 
-                    rowCur.Cells[10].CellStyle = styleCellNumber;
-                    rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+                //    rowCur.Cells[10].CellStyle = styleCellNumber;
+                //    rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
 
-                    rowCur.Cells[11].SetCellValue(dataRow.Col10);
+                //    rowCur.Cells[11].SetCellValue(dataRow.Col10);
 
-                    rowCur.Cells[12].CellStyle = styleCellNumber;
-                    rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
+                //    rowCur.Cells[12].CellStyle = styleCellNumber;
+                //    rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
 
-                    rowCur.Cells[13].SetCellValue(dataRow.Col12);
-                    rowCur.Cells[14].SetCellValue(dataRow.Col13);
-                    rowCur.Cells[15].SetCellValue(dataRow.Col14);
-                    rowCur.Cells[16].SetCellValue(dataRow.Col15);
-                    rowCur.Cells[17].SetCellValue(dataRow.Col16);
-                    rowCur.Cells[18].SetCellValue(dataRow.Col17);
-                    rowCur.Cells[19].SetCellValue(dataRow.Col18);
+                //    rowCur.Cells[13].SetCellValue(dataRow.Col12);
+                //    rowCur.Cells[14].SetCellValue(dataRow.Col13);
+                //    rowCur.Cells[15].SetCellValue(dataRow.Col14);
+                //    rowCur.Cells[16].SetCellValue(dataRow.Col15);
+                //    rowCur.Cells[17].SetCellValue(dataRow.Col16);
+                //    rowCur.Cells[18].SetCellValue(dataRow.Col17);
+                //    rowCur.Cells[19].SetCellValue(dataRow.Col18);
 
-                    for (var j = 0; j < 20; j++)
-                    {
-                        if (dataRow.IsBold)
-                        {
-                            rowCur.Cells[j].CellStyle = styleCellBold;
-                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
-                        }
-                        else
-                        {
-                            rowCur.Cells[j].CellStyle.SetFont(font);
-                        }
-                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
-                    }
-                }
+                //    for (var j = 0; j < 20; j++)
+                //    {
+                //        if (dataRow.IsBold)
+                //        {
+                //            rowCur.Cells[j].CellStyle = styleCellBold;
+                //            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                //        }
+                //        else
+                //        {
+                //            rowCur.Cells[j].CellStyle.SetFont(font);
+                //        }
+                //        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                //    }
+                //}
 
-                #endregion
+                //#endregion
 
-                #region Export VK11-TNPP
+                //#region Export VK11-TNPP
 
-                var startRowVK11TNPP = 3;
-                ISheet sheetVK11TNPP = templateWorkbook.GetSheetAt(14);
+                //var startRowVK11TNPP = 3;
+                //ISheet sheetVK11TNPP = templateWorkbook.GetSheetAt(14);
 
-                for (var i = 0; i < data.Result.VK11TNPP.Count(); i++)
-                {
-                    var dataRow = data.Result.VK11TNPP[i];
-                    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11TNPP, startRowVK11TNPP++, 20);
-                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                //for (var i = 0; i < data.Result.VK11TNPP.Count(); i++)
+                //{
+                //    var dataRow = data.Result.VK11TNPP[i];
+                //    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11TNPP, startRowVK11TNPP++, 20);
+                //    rowCur.Cells[0].SetCellValue(dataRow.ColA);
 
-                    //rowCur.Cells[1].SetCellValue(dataRow.ColB);
-                    rowCur.Cells[1].SetCellValue(dataRow.ColC == null ? dataRow.ColB : dataRow.ColC);
+                //    //rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                //    rowCur.Cells[1].SetCellValue(dataRow.ColC == null ? dataRow.ColB : dataRow.ColC);
 
-                    rowCur.Cells[2].SetCellValue(dataRow.Col1);
+                //    rowCur.Cells[2].SetCellValue(dataRow.Col1);
 
-                    rowCur.Cells[3].CellStyle = styleCellNumber;
-                    rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
+                //    rowCur.Cells[3].CellStyle = styleCellNumber;
+                //    rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
 
-                    rowCur.Cells[4].CellStyle = styleCellNumber;
-                    rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+                //    rowCur.Cells[4].CellStyle = styleCellNumber;
+                //    rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
 
-                    rowCur.Cells[5].SetCellValue(dataRow.Col4);
-                    rowCur.Cells[6].SetCellValue(dataRow.Col5);
-                    rowCur.Cells[7].SetCellValue(dataRow.Col6);
-                    rowCur.Cells[8].SetCellValue(dataRow.Col7);
-                    rowCur.Cells[9].SetCellValue(dataRow.Col8);
+                //    rowCur.Cells[5].SetCellValue(dataRow.Col4);
+                //    rowCur.Cells[6].SetCellValue(dataRow.Col5);
+                //    rowCur.Cells[7].SetCellValue(dataRow.Col6);
+                //    rowCur.Cells[8].SetCellValue(dataRow.Col7);
+                //    rowCur.Cells[9].SetCellValue(dataRow.Col8);
 
-                    rowCur.Cells[10].CellStyle = styleCellNumber;
-                    rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+                //    rowCur.Cells[10].CellStyle = styleCellNumber;
+                //    rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
 
-                    rowCur.Cells[11].SetCellValue(dataRow.Col10);
+                //    rowCur.Cells[11].SetCellValue(dataRow.Col10);
 
-                    rowCur.Cells[12].CellStyle = styleCellNumber;
-                    rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
+                //    rowCur.Cells[12].CellStyle = styleCellNumber;
+                //    rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
 
-                    rowCur.Cells[13].SetCellValue(dataRow.Col12);
-                    rowCur.Cells[14].SetCellValue(dataRow.Col13);
-                    rowCur.Cells[15].SetCellValue(dataRow.Col14);
-                    rowCur.Cells[16].SetCellValue(dataRow.Col15);
-                    rowCur.Cells[17].SetCellValue(dataRow.Col16);
-                    rowCur.Cells[18].SetCellValue(dataRow.Col17);
-                    rowCur.Cells[19].SetCellValue(dataRow.Col18);
+                //    rowCur.Cells[13].SetCellValue(dataRow.Col12);
+                //    rowCur.Cells[14].SetCellValue(dataRow.Col13);
+                //    rowCur.Cells[15].SetCellValue(dataRow.Col14);
+                //    rowCur.Cells[16].SetCellValue(dataRow.Col15);
+                //    rowCur.Cells[17].SetCellValue(dataRow.Col16);
+                //    rowCur.Cells[18].SetCellValue(dataRow.Col17);
+                //    rowCur.Cells[19].SetCellValue(dataRow.Col18);
 
-                    for (var j = 0; j < 20; j++)
-                    {
-                        if (dataRow.IsBold)
-                        {
-                            rowCur.Cells[j].CellStyle = styleCellBold;
-                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
-                        }
-                        else
-                        {
-                            rowCur.Cells[j].CellStyle.SetFont(font);
-                        }
-                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
-                    }
-                }
+                //    for (var j = 0; j < 20; j++)
+                //    {
+                //        if (dataRow.IsBold)
+                //        {
+                //            rowCur.Cells[j].CellStyle = styleCellBold;
+                //            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                //        }
+                //        else
+                //        {
+                //            rowCur.Cells[j].CellStyle.SetFont(font);
+                //        }
+                //        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                //    }
+                //}
 
-                #endregion
+                //#endregion
 
-                #region Export VK11-BB
+                //#region Export VK11-BB
 
-                var startRowVK11BB = 3;
-                ISheet sheetVK11BB = templateWorkbook.GetSheetAt(15);
+                //var startRowVK11BB = 3;
+                //ISheet sheetVK11BB = templateWorkbook.GetSheetAt(15);
 
-                for (var i = 0; i < data.Result.VK11BB.Count(); i++)
-                {
-                    var dataRow = data.Result.VK11BB[i];
-                    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11BB, startRowVK11BB++, 18);
-                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                //for (var i = 0; i < data.Result.VK11BB.Count(); i++)
+                //{
+                //    var dataRow = data.Result.VK11BB[i];
+                //    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11BB, startRowVK11BB++, 18);
+                //    rowCur.Cells[0].SetCellValue(dataRow.ColA);
 
-                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
-                    rowCur.Cells[2].SetCellValue(dataRow.ColC);
+                //    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                //    rowCur.Cells[2].SetCellValue(dataRow.ColC);
 
-                    rowCur.Cells[3].SetCellValue(dataRow.Col1);
-                    rowCur.Cells[4].SetCellValue(dataRow.Col2);
-                    rowCur.Cells[5].SetCellValue(dataRow.Col3);
-                    rowCur.Cells[6].SetCellValue(dataRow.Col4);
-                    rowCur.Cells[7].SetCellValue(dataRow.Col5);
+                //    rowCur.Cells[3].SetCellValue(dataRow.Col1);
+                //    rowCur.Cells[4].SetCellValue(dataRow.Col2);
+                //    rowCur.Cells[5].SetCellValue(dataRow.Col3);
+                //    rowCur.Cells[6].SetCellValue(dataRow.Col4);
+                //    rowCur.Cells[7].SetCellValue(dataRow.Col5);
 
-                    rowCur.Cells[8].CellStyle = styleCellNumber;
-                    rowCur.Cells[8].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+                //    rowCur.Cells[8].CellStyle = styleCellNumber;
+                //    rowCur.Cells[8].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
 
-                    rowCur.Cells[9].SetCellValue(dataRow.Col7);
-                    rowCur.Cells[10].SetCellValue(dataRow.Col8);
-                    rowCur.Cells[11].SetCellValue(dataRow.Col9);
-                    rowCur.Cells[12].SetCellValue(dataRow.Col10);
-                    rowCur.Cells[13].SetCellValue(dataRow.Col11);
+                //    rowCur.Cells[9].SetCellValue(dataRow.Col7);
+                //    rowCur.Cells[10].SetCellValue(dataRow.Col8);
+                //    rowCur.Cells[11].SetCellValue(dataRow.Col9);
+                //    rowCur.Cells[12].SetCellValue(dataRow.Col10);
+                //    rowCur.Cells[13].SetCellValue(dataRow.Col11);
 
-                    rowCur.Cells[14].SetCellValue(dataRow.Col12);
-                    rowCur.Cells[15].SetCellValue(dataRow.Col13);
-                    rowCur.Cells[16].SetCellValue(dataRow.Col14);
-                    rowCur.Cells[17].SetCellValue(dataRow.Col15);
+                //    rowCur.Cells[14].SetCellValue(dataRow.Col12);
+                //    rowCur.Cells[15].SetCellValue(dataRow.Col13);
+                //    rowCur.Cells[16].SetCellValue(dataRow.Col14);
+                //    rowCur.Cells[17].SetCellValue(dataRow.Col15);
 
-                    for (var j = 0; j < 18; j++)
-                    {
-                        if (dataRow.IsBold)
-                        {
-                            rowCur.Cells[j].CellStyle = styleCellBold;
-                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
-                        }
-                        else
-                        {
-                            rowCur.Cells[j].CellStyle.SetFont(font);
-                        }
-                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
-                    }
-                }
+                //    for (var j = 0; j < 18; j++)
+                //    {
+                //        if (dataRow.IsBold)
+                //        {
+                //            rowCur.Cells[j].CellStyle = styleCellBold;
+                //            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                //        }
+                //        else
+                //        {
+                //            rowCur.Cells[j].CellStyle.SetFont(font);
+                //        }
+                //        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                //    }
+                //}
 
-                #endregion
+                //#endregion
 
-                #region Export TongHop
+                //#region Export TongHop
 
-                var startRowTH = 3;
-                ISheet sheetTH = templateWorkbook.GetSheetAt(17);
+                //var startRowTH = 3;
+                //ISheet sheetTH = templateWorkbook.GetSheetAt(17);
 
-                for (var i = 0; i < data.Result.Summary.Count(); i++)
-                {
-                    var dataRow = data.Result.Summary[i];
-                    IRow rowCur = ReportUtilities.CreateRow(ref sheetTH, startRowTH++, 21);
-                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                //for (var i = 0; i < data.Result.Summary.Count(); i++)
+                //{
+                //    var dataRow = data.Result.Summary[i];
+                //    IRow rowCur = ReportUtilities.CreateRow(ref sheetTH, startRowTH++, 21);
+                //    rowCur.Cells[0].SetCellValue(dataRow.ColA);
 
-                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
-                    rowCur.Cells[2].SetCellValue(dataRow.ColC);
-                    rowCur.Cells[3].SetCellValue(dataRow.ColD);
+                //    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                //    rowCur.Cells[2].SetCellValue(dataRow.ColC);
+                //    rowCur.Cells[3].SetCellValue(dataRow.ColD);
 
-                    rowCur.Cells[6].SetCellValue(dataRow.Col1);
-                    rowCur.Cells[7].SetCellValue(dataRow.Col2);
-                    rowCur.Cells[8].SetCellValue(dataRow.Col3);
-                    rowCur.Cells[9].SetCellValue(dataRow.Col4);
-                    rowCur.Cells[10].SetCellValue(dataRow.Col5);
+                //    rowCur.Cells[6].SetCellValue(dataRow.Col1);
+                //    rowCur.Cells[7].SetCellValue(dataRow.Col2);
+                //    rowCur.Cells[8].SetCellValue(dataRow.Col3);
+                //    rowCur.Cells[9].SetCellValue(dataRow.Col4);
+                //    rowCur.Cells[10].SetCellValue(dataRow.Col5);
 
-                    rowCur.Cells[11].CellStyle = styleCellNumber;
-                    rowCur.Cells[11].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+                //    rowCur.Cells[11].CellStyle = styleCellNumber;
+                //    rowCur.Cells[11].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
 
-                    rowCur.Cells[12].SetCellValue(dataRow.Col7);
-                    rowCur.Cells[13].SetCellValue(dataRow.Col8);
-                    rowCur.Cells[14].SetCellValue(dataRow.Col9);
-                    rowCur.Cells[15].SetCellValue(dataRow.Col10);
-                    rowCur.Cells[16].SetCellValue(dataRow.Col11);
+                //    rowCur.Cells[12].SetCellValue(dataRow.Col7);
+                //    rowCur.Cells[13].SetCellValue(dataRow.Col8);
+                //    rowCur.Cells[14].SetCellValue(dataRow.Col9);
+                //    rowCur.Cells[15].SetCellValue(dataRow.Col10);
+                //    rowCur.Cells[16].SetCellValue(dataRow.Col11);
 
-                    rowCur.Cells[17].SetCellValue(dataRow.Col12);
-                    rowCur.Cells[18].SetCellValue(dataRow.Col13);
-                    rowCur.Cells[19].SetCellValue(dataRow.Col14);
-                    rowCur.Cells[20].SetCellValue(dataRow.Col15);
+                //    rowCur.Cells[17].SetCellValue(dataRow.Col12);
+                //    rowCur.Cells[18].SetCellValue(dataRow.Col13);
+                //    rowCur.Cells[19].SetCellValue(dataRow.Col14);
+                //    rowCur.Cells[20].SetCellValue(dataRow.Col15);
 
-                    for (var j = 0; j < 21; j++)
-                    {
-                        if (dataRow.IsBold)
-                        {
-                            rowCur.Cells[j].CellStyle = styleCellBold;
-                            rowCur.Cells[j].CellStyle.SetFont(fontBold);
-                        }
-                        else
-                        {
-                            rowCur.Cells[j].CellStyle.SetFont(font);
-                        }
-                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
-                    }
-                }
+                //    for (var j = 0; j < 21; j++)
+                //    {
+                //        if (dataRow.IsBold)
+                //        {
+                //            rowCur.Cells[j].CellStyle = styleCellBold;
+                //            rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                //        }
+                //        else
+                //        {
+                //            rowCur.Cells[j].CellStyle.SetFont(font);
+                //        }
+                //        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                //        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                //    }
+                //}
 
-                #endregion
+                //#endregion
 
                 templateWorkbook.Write(outFileStream);
             }

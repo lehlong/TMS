@@ -2088,29 +2088,33 @@
       <div nz-col class="gutter-row" [nzSpan]="7">
         <div class="inner-box">
           <label>Quyết định số</label>
-          <input nz-input [(ngModel)]="model.nguoiKyTen.quyetDinhSo" #nameInput="ngModel" required/>
+          <input nz-input [(ngModel)]="model.header.quyetDinhSo" #nameInput="ngModel" required/>
 
         </div>
       </div>
     </div>
 
     <nz-divider nzText="Người ký " nzOrientation="left"></nz-divider>
-    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-      <div nz-col class="gutter-row" [nzSpan]="12">
-        <div class="inner-box">
-          <label>Ký thay</label>
-          <input nz-input [(ngModel)]="model.nguoiKyTen.daiDien" #nameInput="ngModel" required/>
-
-        </div>
-      </div>
-      <div nz-col class="gutter-row" [nzSpan]="12">
-        <div class="inner-box">
-          <label>Người Ký</label>
-          <input nz-input [(ngModel)]="model.nguoiKyTen.nguoiDaiDien" #nameInput="ngModel" required/>
-        </div>
-      </div>
-
-    </div>
+    <nz-form-item>
+      <nz-form-control nzErrorTip="Không được để trống">
+        <nz-select
+        nzShowSearch
+        nzAllowClear
+        [nzPlaceHolder]="'Chọn người ký'"
+        [formControl]="nguoiKyControl"
+        [(ngModel)]="selectedValue"
+        >
+      
+          
+          <nz-option
+            *ngFor="let item of signerResult"
+            [nzLabel]="item.position + ' - ' + item.name"
+            [nzValue]="item">
+          </nz-option>
+    
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
 
     <nz-divider nzText="HỆ SỐ MẶT HÀNG" nzOrientation="left"></nz-divider>
 
