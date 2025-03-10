@@ -52,6 +52,7 @@ namespace DMS.BUSINESS.Services.BU
             try
             {
                 var data = new CalculateResultModel();
+                //var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive == true).OrderBy(x => x.CreateDate).ToListAsync();
                 var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive == true).OrderBy(x => x.CreateDate).ToListAsync();
                 data.lstGoods = lstGoods;
                 var lstMarket = await _dbContext.TblMdMarket.OrderBy(x => x.Code).ToListAsync();
@@ -109,10 +110,11 @@ namespace DMS.BUSINESS.Services.BU
                         ColA = _oDlg.ToString(),
                         ColB = g.Name,
                         Col1 = hsmh.Sum(x => x.HeSoVcf),
-                        Col2 = hsmh.Sum(x => x.ThueBvmt),
+                        //Col2 = hsmh.Sum(x => x.ThueBvmt),
+                        Col2 = g.ThueBvmt,
                         Col3 = hsmh.Sum(x => x.L15ChuaVatBvmt),
                         Col4 = hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmt),
-                        Col5 = (hsmh.Sum(x => x.ThueBvmt) + hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmt)) * 1.1M,
+                        Col5 = (g.ThueBvmt + hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmt)) * 1.1M,
                         Col6 = vcl.Sum(x => x.GblcsV1),
                         Col7 = vcl.Sum(x => x.GblV2),
                     };
@@ -130,10 +132,10 @@ namespace DMS.BUSINESS.Services.BU
                         ColA = _oDlg.ToString(),
                         ColB = g.Name,
                         Col1 = hsmh.Sum(x => x.HeSoVcf),
-                        Col2 = hsmh.Sum(x => x.ThueBvmt),
+                        Col2 = g.ThueBvmt,
                         Col3 = hsmh.Sum(x => x.L15ChuaVatBvmt),
                         Col4 = hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmt),
-                        Col5 = (hsmh.Sum(x => x.ThueBvmt) + hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmt)) * 1.1M,
+                        Col5 = (g.ThueBvmt + hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmt)) * 1.1M,
                     };
                     data.DLG.Dlg_5.Add(_dlg5);
 
@@ -143,7 +145,7 @@ namespace DMS.BUSINESS.Services.BU
                         ColA = _oDlg.ToString(),
                         ColB = g.Name,
                         Col1 = hsmh.Sum(x => x.HeSoVcf),
-                        Col2 = hsmh.Sum(x => x.ThueBvmt),
+                        Col2 = g.ThueBvmt,
                         Col4 = hsmh.Sum(x => x.L15ChuaVatBvmt),
                         Col5 = 0,
 
@@ -180,10 +182,10 @@ namespace DMS.BUSINESS.Services.BU
                         ColA = _oI.ToString(),
                         ColB = g.Name,
                         Col1 = hsmh.Sum(x => x.HeSoVcf),
-                        Col2 = hsmh.Sum(x => x.ThueBvmt),
+                        Col2 = g.ThueBvmt,
                         Col3 = hsmh.Sum(x => x.L15ChuaVatBvmtNbl),
                         Col4 = hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmtNbl),
-                        Col5 = (hsmh.Sum(x => x.ThueBvmt) + hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
+                        Col5 = (g.ThueBvmt + hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
                         Col6 = dlg1.Sum(x => x.Col6),
                         Col14 = hsmh.Sum(x => x.GiamGiaFob),
                         Col10 = hsmh.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmh.Sum(x => x.LaiGopDieuTiet),
@@ -225,10 +227,10 @@ namespace DMS.BUSINESS.Services.BU
                         ColA = _oII.ToString(),
                         ColB = g.Name,
                         Col1 = hsmh.Sum(x => x.HeSoVcf),
-                        Col2 = hsmh.Sum(x => x.ThueBvmt),
+                        Col2 = g.ThueBvmt,
                         Col3 = hsmh.Sum(x => x.L15ChuaVatBvmtNbl),
                         Col4 = hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmtNbl),
-                        Col5 = (hsmh.Sum(x => x.ThueBvmt) + hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
+                        Col5 = (g.ThueBvmt + hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
                         Col6 = dlg1.Sum(x => x.Col7),
                         Col14 = hsmh.Sum(x => x.GiamGiaFob),
                         Col10 = hsmh.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmh.Sum(x => x.LaiGopDieuTiet),
@@ -266,10 +268,10 @@ namespace DMS.BUSINESS.Services.BU
                             Type = "TT",
                             ColB = g.Name,
                             Col1 = hsmho.Sum(x => x.HeSoVcf),
-                            Col2 = hsmho.Sum(x => x.ThueBvmt),
+                            Col2 = g.ThueBvmt,
                             Col3 = hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
                             Col4 = hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
-                            Col5 = (hsmho.Sum(x => x.ThueBvmt) + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
+                            Col5 = (g.ThueBvmt + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
                             Col6 = vclo.Sum(x => x.Gny),
                             Col14 = hsmho.Sum(x => x.GiamGiaFob),
                             Col10 = hsmho.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmho.Sum(x => x.LaiGopDieuTiet),
@@ -302,10 +304,10 @@ namespace DMS.BUSINESS.Services.BU
                             ColA = _oII.ToString(),
                             ColB = g.Name,
                             Col1 = hsmho.Sum(x => x.HeSoVcf),
-                            Col2 = hsmho.Sum(x => x.ThueBvmt),
+                            Col2 = g.ThueBvmt,
                             Col3 = hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
                             Col4 = hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
-                            Col5 = (hsmho.Sum(x => x.ThueBvmt) + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
+                            Col5 = (g.ThueBvmt + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
                             Col6 = dlg1.Sum(x => x.Col7),
                             Col14 = hsmho.Sum(x => x.GiamGiaFob),
                             Col10 = hsmho.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmho.Sum(x => x.LaiGopDieuTiet),

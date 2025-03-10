@@ -27,7 +27,7 @@ namespace DMS.BUSINESS.Dtos.MD
         public string Type { get; set; }
 
         [Description("Thuế bảo vệ môi trường")]
-        public float ThueBvmt { get; set; }
+        public decimal ThueBvmt { get; set; }
 
         [Description("Ngày tạo")]
         public DateTime createDate { get; set; }
