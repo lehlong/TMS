@@ -129,7 +129,6 @@ export class CalculateResultComponent {
         })
       },
     })
-    this.selectedValue = this.signerResult.find(item => item.code === this.model.nguoiKyTen.code);
     this.getAllGoods()
     this.getAllSigner()
   }
@@ -218,6 +217,7 @@ export class CalculateResultComponent {
     this._signerService.getall().subscribe({
       next: (data) => {
         this.signerResult = data
+        this.selectedValue = this.signerResult.find(item => item.code === this.model.header.signerCode);
       },
       error: (response) => {
         console.log(response)
@@ -404,9 +404,7 @@ export class CalculateResultComponent {
     row.clgblv = row.gblV2 - row.gny
   }
   updateDataInput() {
-    if (this.model.header.name != '' && this.model.header.name != '') {
-      this.model.nguoiKyTen.daiDien = this.nguoiKyControl.value?.name || '';
-      this.model.nguoiKyTen.nguoiDaiDien = this.nguoiKyControl.value?.position || '';
+    if (this.model.header.name != '') {
       this._service.UpdateDataInput(this.model).subscribe({
         next: (data) => {
           console.log(data)

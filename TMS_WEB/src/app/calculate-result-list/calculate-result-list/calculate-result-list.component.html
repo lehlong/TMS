@@ -130,7 +130,9 @@
         nzShowSearch
         nzAllowClear
         [nzPlaceHolder]="'Chọn người ký'"
-        [formControl]="nguoiKyControl">
+        [formControl]="nguoiKyControl"
+        [(ngModel)]="selectedValue"
+        >
       
           
           <nz-option

@@ -1355,9 +1355,9 @@ namespace DMS.BUSINESS.Services.BU
                 var header = await _dbContext.TblBuCalculateResultList.FindAsync(headerId);
                 var model = await GetDataInput(headerId);
                 var goods = await _dbContext.TblMdGoods.ToListAsync();
-                var NguoiKyTen = await _dbContext.TblInNguoiKyTen.FirstOrDefaultAsync(x => x.HeaderCode == headerId);
+                var NguoiKyTen = await _dbContext.TblMdSigner.FirstOrDefaultAsync(x => x.Code == header.SignerCode);
                 var A5 = $"  (Kèm theo Công văn số:                        /PLXNA ngày {header.FDate.Day:D2}/{header.FDate.Month:D2}/{header.FDate.Year} của Công ty Xăng dầu Nghệ An)";
-                var A24 = $" + Căn cứ Quyết định số {NguoiKyTen.QuyetDinhSo} ngày {header.FDate.Day:D2}/{header.FDate.Month:D2}/{header.FDate.Year} của Tổng giám đốc Tập đoàn Xăng dầu Việt Nam về việc qui định giá bán xăng dầu; ";
+                var A24 = $" + Căn cứ Quyết định số {header.QuyetDinhSo} ngày {header.FDate.Day:D2}/{header.FDate.Month:D2}/{header.FDate.Year} của Tổng giám đốc Tập đoàn Xăng dầu Việt Nam về việc qui định giá bán xăng dầu; ";
                 var B25 = $"Mức giá bán đăng ký này có hiệu lực thi hành kể từ 15 giờ 00 ngày {header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
                 // 1. Đường dẫn file gốc
                 var filePathTemplate = Path.Combine(Directory.GetCurrentDirectory(), "Template", "TempTrinhKy", "KeKhaiGiaChiTiet.xlsx");
@@ -1539,15 +1539,17 @@ namespace DMS.BUSINESS.Services.BU
             try
             {
                 //Get Data
-                var nguoiKyTen = _dbContext.TblInNguoiKyTen
-                            .Where(x => x.HeaderCode == headerId)
-                            .ToList()
-                            .FirstOrDefault();
+   
 
                 var header = _dbContext.TblBuCalculateResultList
                                        .Where(x => x.Code == headerId)
                                        .ToList()
                                        .FirstOrDefault();
+
+                var nguoiKyTen = _dbContext.TblMdSigner
+               .Where(x => x.Code == header.SignerCode)
+               .ToList()
+               .FirstOrDefault();
                 var data = GetResult(headerId);
                 FileStream fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite);
                 IWorkbook templateWorkbook;
@@ -1583,7 +1585,7 @@ namespace DMS.BUSINESS.Services.BU
                 var Date_3 = header.FDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                 var Hour = header.FDate.ToString("HH'h'mm", CultureInfo.InvariantCulture);
                 var Time = header.FDate.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
-                var QuyetDinhSo = nguoiKyTen.QuyetDinhSo;
+                var QuyetDinhSo = header.QuyetDinhSo;
                 var startRowdlg_1  = 4;
                 #region Dữ liệu gốc
 
@@ -3267,7 +3269,7 @@ namespace DMS.BUSINESS.Services.BU
             var header = await _dbContext.TblBuCalculateResultList.FindAsync(headerId);
             var model = await GetDataInput(headerId);
             var goods = await _dbContext.TblMdGoods.ToListAsync();
-            var NguoiKyTen = await _dbContext.TblInNguoiKyTen.FirstOrDefaultAsync(x => x.HeaderCode == headerId);  //
+            var NguoiKyTen = await _dbContext.TblMdSigner.FirstOrDefaultAsync(x => x.Code == header.SignerCode);
             var f_date = $"{header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
             var date = $"{header.FDate.Day}/{header.FDate.Month}/{header.FDate.Year}";
             var f_date_hour = $"kể từ {header.FDate.Hour} giờ {header.FDate.Minute} ngày {header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
@@ -3342,13 +3344,13 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, text);
                                 break;
                             case "##QUYET_DINH_SO@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.QuyetDinhSo ?? "");
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, header.QuyetDinhSo ?? "");
                                 break;
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                             case "##TABLE_TT@@":
                                 Paragraph paragraph = body.Descendants<Paragraph>()
@@ -3459,13 +3461,13 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, date);
                                 break;
                             case "##QUYET_DINH_SO@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.QuyetDinhSo);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, header.QuyetDinhSo);
                                 break;
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                             case "##TABLE_ND@@":
                                 Paragraph paragraph = body.Descendants<Paragraph>()
@@ -3553,13 +3555,13 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, date);
                                 break;
                             case "##QUYET_DINH_SO@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.QuyetDinhSo);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, header.QuyetDinhSo);
                                 break;
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                             case "##TABLE_PTS@@":
                                 Paragraph paragraph = body.Descendants<Paragraph>()
@@ -3648,13 +3650,13 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date_hour);
                                 break;
                             case "##QUYET_DINH_SO@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.QuyetDinhSo);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, header.QuyetDinhSo);
                                 break;
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                         }
 
@@ -3682,13 +3684,13 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date_hour);
                                 break;
                             case "##QUYET_DINH_SO@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.QuyetDinhSo);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, header.QuyetDinhSo);
                                 break;
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                         }
 
@@ -3710,10 +3712,10 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date);
                                 break;                          
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                         }
 
@@ -3903,13 +3905,13 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, date);
                                 break;
                             case "##QUYET_DINH_SO@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.QuyetDinhSo);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, header.QuyetDinhSo);
                                 break;
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.DaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.NguoiDaiDien);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                             case "##TABLE_TT@@":
                                 Paragraph paragraph = body.Descendants<Paragraph>()

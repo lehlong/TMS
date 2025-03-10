@@ -180,7 +180,6 @@ namespace DMS.BUSINESS.Services.BU
     public class InsertModel
     {
         public TblBuCalculateResultList Header { get; set; } = new TblBuCalculateResultList();
-        public TblMdSigner? NguoiKyTen { get; set; } = new TblMdSigner();
         public List<TblInHeSoMatHang> HS1 { get; set; } = new List<TblInHeSoMatHang>();
         public List<TblInVinhCuaLo> HS2 { get; set; } = new List<TblInVinhCuaLo>();
         public Status Status { get; set; } = new Status();

@@ -75,6 +75,7 @@ export class CalculateResultListComponent {
   }
   goodsResult: any[] = []
   signerResult: any[] = []
+  selectedValue = {}
   ngOnDestroy() {
     this.globalService.setBreadcrumb([])
   }
@@ -125,18 +126,16 @@ export class CalculateResultListComponent {
     }
     if (this.model.header.name != '') {
       this.model.header.signerCode = this.nguoiKyControl.value?.code || '';
-      this.model.nguoiKyTen.daiDien = this.nguoiKyControl.value?.name || '';
-      this.model.nguoiKyTen.nguoiDaiDien = this.nguoiKyControl.value?.position || '';
       console.log(this.model)
 
       var m = {
         model: this.model,
       }
-      // this._service.createData(this.model).subscribe({
-      //   next: (data) => {
-      //     console.log(data)
-      //   },
-      // })
+      this._service.createData(this.model).subscribe({
+        next: (data) => {
+          console.log(data)
+        },
+      })
     }
   }
 
@@ -213,6 +212,7 @@ export class CalculateResultListComponent {
     this._signerService.getall().subscribe({
       next: (data) => {
         this.signerResult = data
+        this.selectedValue = this.signerResult.find(item => item.code === "TongGiamDoc");
       },
       error: (response) => {
         console.log(response)
