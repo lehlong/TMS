@@ -92,11 +92,10 @@ export class CalculateResultComponent {
 
   model: any = {
     header: {},
-    nguoiKyTen: {},
     hS1: [],
     hS2: [],
     status: {
-      code: '',
+      code: '01',
       contents: '',
     },
   }
@@ -405,15 +404,15 @@ export class CalculateResultComponent {
   }
   updateDataInput() {
     if (this.model.header.name != '') {
-      this._service.UpdateDataInput(this.model).subscribe({
-        next: (data) => {
-          console.log(data)
-          window.location.reload()
-        },
-        error: (err) => {
-          console.log(err)
-        },
-      })
+      console.log(this.model)
+      // this._service.UpdateDataInput(this.model).subscribe({
+      //   next: (data) => {
+      //     // window.location.reload()
+      //   },
+      //   error: (err) => {
+      //     console.log(err)
+      //   },
+      // })
     }
   }
 

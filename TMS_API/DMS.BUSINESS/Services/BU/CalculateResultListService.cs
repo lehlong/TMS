@@ -140,7 +140,7 @@ namespace DMS.BUSINESS.Services.BU
                 obj.Header.Name = "";
                 obj.Header.Status = "01";
 
-                var lstGoods = await _dbContext.TblMdGoods.Where(x=>x.IsActive==true).OrderBy(x => x.CreateDate).ToListAsync();
+                var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive==true).OrderBy(x => x.CreateDate).ToListAsync();
                 foreach (var g in lstGoods)
                 {
                     obj.HS1.Add(new TblInHeSoMatHang

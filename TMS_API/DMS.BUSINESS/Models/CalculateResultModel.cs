@@ -1,4 +1,5 @@
-﻿using DMS.CORE.Entities.MD;
+﻿using DMS.CORE.Entities.BU;
+using DMS.CORE.Entities.MD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace DMS.BUSINESS.Models
         public List<PT> PT { get; set; } = new List<PT>();
         public List<TblMdGoods> lstGoods { get; set; }
         public DLG DLG { get; set; } = new DLG();
+        public TblBuCalculateResultList HEADER_CR { get; set; } = new TblBuCalculateResultList();
         public List<DB> DB { get; set; } = new List<DB>();
         public List<PT09> PT09 { get; set; } = new List<PT09>();
         public List<PL1> PL1 { get; set; } = new List<PL1>();

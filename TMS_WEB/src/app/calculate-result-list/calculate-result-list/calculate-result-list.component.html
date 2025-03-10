@@ -208,12 +208,14 @@
         <tr>
           <th [nzAlign]="'center'">Mặt hàng</th>
           <th [nzAlign]="'center'">Hệ số VFC BQ mùa miền</th>
-          <th [nzAlign]="'center'">Thuế BVMT</th>
+          <!-- <th [nzAlign]="'center'">Thuế BVMT</th> -->
           <th [nzAlign]="'center'">
+            Giá giao <br />
             L15 chưa VAT và BVMT <br />
             (PT bán lẻ - V2)
           </th>
           <th [nzAlign]="'center'">
+            Giá giao <br />
             L15 chưa VAT và BVMT <br />
             (ngoài bán lẻ)
           </th>
@@ -240,9 +242,9 @@
           <td>
             <input class="input-v" nz-input [(ngModel)]="data.heSoVcf" type="number" />
           </td>
-          <td>
+          <!-- <td>
             <input class="input-v" nz-input [(ngModel)]="data.thueBvmt" type="number" />
-          </td>
+          </td> -->
           <td>
             <input class="input-v" nz-input [(ngModel)]="data.l15ChuaVatBvmt" type="number" />
           </td>

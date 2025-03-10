@@ -4,7 +4,7 @@
       <nz-page-header-extra>
         <nz-space [nzWrap]="true" class="gap-[5px]">
           <button class="!flex !items-center" nzType="default" nz-button (click)="getDataHeader()"
-             *ngIf="model.header.status != null">
+            *ngIf="model.header.status != null">
             <span nz-icon nzType="right-square"></span> Dữ liệu đầu vào
           </button>
           <button class="!flex !items-center" nzType="default" nz-button (click)="reCalculate()">
@@ -19,8 +19,7 @@
           </button>
 
           <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('05', '06')"
-            [appPermission]="IMPORT_BATCH.CANCEL_BROWSE"
-            *ngIf="model.header.status == '02'">
+            [appPermission]="IMPORT_BATCH.CANCEL_BROWSE" *ngIf="model.header.status == '02'">
             <span nz-icon nzType="close"></span> Hủy trình duyệt
           </button>
 
@@ -35,8 +34,7 @@
           </button>
 
           <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('06', '07')"
-          [appPermission]="IMPORT_BATCH.CANCEL_APPROVAL"
-          *ngIf="model.header.status == '04'">
+            [appPermission]="IMPORT_BATCH.CANCEL_APPROVAL" *ngIf="model.header.status == '04'">
             <span nz-icon nzType="close"></span> Hủy phê duyệt
           </button>
 
@@ -74,14 +72,14 @@
             [appPermission]="IMPORT_BATCH.EXPORT_TO_PDF" *ngIf="model.header.status == '04'">
             <span nz-icon nzType="file-pdf"></span> Xuất PDF
           </button>
-          <button [appPermission]="IMPORT_BATCH.SEND_SMS" nz-popconfirm class="!flex !items-center btn-sms" nzType="primary"
-            nzPopconfirmTitle="Bạn có chắc chắn gửi SMS thông báo cho các khách hàng?" (nzOnConfirm)="confirmSendSMS()"
-            [nzCancelText]="'Huỷ'" [nzOkText]="'Gửi'" (nzOnCancel)="cancelSendSMS()" nzPopconfirmPlacement="bottom"
-            nz-button *ngIf="model.header.status == '04'">
+          <button [appPermission]="IMPORT_BATCH.SEND_SMS" nz-popconfirm class="!flex !items-center btn-sms"
+            nzType="primary" nzPopconfirmTitle="Bạn có chắc chắn gửi SMS thông báo cho các khách hàng?"
+            (nzOnConfirm)="confirmSendSMS()" [nzCancelText]="'Huỷ'" [nzOkText]="'Gửi'" (nzOnCancel)="cancelSendSMS()"
+            nzPopconfirmPlacement="bottom" nz-button *ngIf="model.header.status == '04'">
             <span nz-icon nzType="message"></span> Gửi SMS
           </button>
-          <button [appPermission]="IMPORT_BATCH.SEND_EMAIL" nz-popconfirm class="!flex !items-center btn-email" nzType="primary"
-            nzPopconfirmTitle="Bạn có chắc chắn gửi Email thông báo cho các khách hàng?"
+          <button [appPermission]="IMPORT_BATCH.SEND_EMAIL" nz-popconfirm class="!flex !items-center btn-email"
+            nzType="primary" nzPopconfirmTitle="Bạn có chắc chắn gửi Email thông báo cho các khách hàng?"
             (nzOnConfirm)="confirmSendSMS()" [nzCancelText]="'Huỷ'" [nzOkText]="'Gửi'" (nzOnCancel)="cancelSendSMS()"
             nzPopconfirmPlacement="bottom" nz-button *ngIf="model.header.status == '04'">
             <span nz-icon nzType="mail"></span> Gửi Email
@@ -508,18 +506,18 @@
                     </tr>
                   </thead>
                   <tbody>
-                      @for (d of dlg_tdgbl.data; track d) {
-                      <tr>
-                          <td>{{d.colA}}</td>
-                          <td class="align-right">{{d.col1 | number}}</td>
-                          <td class="align-right">{{d.col2 | number}}</td>
-                          <td class="align-right">{{d.tangGiam1_2 | number}}</td>
-                          <td class="align-right">{{d.col3 | number}}</td>
-                          <td class="align-right">{{d.col4 | number}}</td>
-                          <td class="align-right">{{d.tangGiam3_4 | number}}</td>
+                    @for (d of dlg_tdgbl.data; track d) {
+                    <tr>
+                      <td>{{d.colA}}</td>
+                      <td class="align-right">{{d.col1 | number}}</td>
+                      <td class="align-right">{{d.col2 | number}}</td>
+                      <td class="align-right">{{d.tangGiam1_2 | number}}</td>
+                      <td class="align-right">{{d.col3 | number}}</td>
+                      <td class="align-right">{{d.col4 | number}}</td>
+                      <td class="align-right">{{d.tangGiam3_4 | number}}</td>
 
-                      </tr>
-                      }
+                    </tr>
+                    }
                   </tbody>
                 </nz-table>
               </div>
@@ -545,14 +543,14 @@
                   <tbody>
                     @for (d of dlg_TdGgptbl.data; track d) {
                     <tr>
-                        <td>{{d.colA}}</td>
-                        <td class="align-right">{{d.col1 | number}}</td>
-                        <td class="align-right">{{d.col2 | number}}</td>
-                        <td class="align-right">{{d.tangGiam1_2 | number}}</td>
+                      <td>{{d.colA}}</td>
+                      <td class="align-right">{{d.col1 | number}}</td>
+                      <td class="align-right">{{d.col2 | number}}</td>
+                      <td class="align-right">{{d.tangGiam1_2 | number}}</td>
 
                     </tr>
                     }
-                </tbody>
+                  </tbody>
                 </nz-table>
               </div>
             </div>
@@ -577,32 +575,32 @@
                       <th class="align-center">Tăng/Giảm</th>
                     </tr>
                   </thead>
-                    <tbody>
-                      <tr>
-                        <th class="bold-text">Vùng thị trường trung tâm </th>
-                      </tr>
-                        @for (d of dlgTable_7.data; track d) {
+                  <tbody>
+                    <tr>
+                      <th class="bold-text">Vùng thị trường trung tâm </th>
+                    </tr>
+                    @for (d of dlgTable_7.data; track d) {
 
-                        <tr *ngIf="d.type == 'TT' ">
-                            <td>{{d.colA}}</td>
-                            <td class="align-right">{{d.col1 | number: '1.0-0'}}</td>
-                            <td class="align-right">{{d.col2 | number: '1.0-0'}}</td>
-                            <td class="align-right">{{d.tangGiam1_2 | number: '1.0-0'}}</td>
-                        </tr>
-                        }
-                        <tr>
-                          <th class="bold-text">Các vùng thị trường còn lại </th>
-                        </tr>
-                        @for (d of dlgTable_7.data; track d) {
-                          <tr *ngIf="d.type === 'OTHER' ">
-                            <td>{{d.colA}}</td>
-                            <td class="align-right">{{d.col1 | number: '1.0-0'}}</td>
-                            <td class="align-right">{{d.col2 | number: '1.0-0'}}</td>
-                            <td class="align-right">{{d.tangGiam1_2 | number: '1.0-0'}}</td>
+                    <tr *ngIf="d.type == 'TT' ">
+                      <td>{{d.colA}}</td>
+                      <td class="align-right">{{d.col1 | number: '1.0-0'}}</td>
+                      <td class="align-right">{{d.col2 | number: '1.0-0'}}</td>
+                      <td class="align-right">{{d.tangGiam1_2 | number: '1.0-0'}}</td>
+                    </tr>
+                    }
+                    <tr>
+                      <th class="bold-text">Các vùng thị trường còn lại </th>
+                    </tr>
+                    @for (d of dlgTable_7.data; track d) {
+                    <tr *ngIf="d.type === 'OTHER' ">
+                      <td>{{d.colA}}</td>
+                      <td class="align-right">{{d.col1 | number: '1.0-0'}}</td>
+                      <td class="align-right">{{d.col2 | number: '1.0-0'}}</td>
+                      <td class="align-right">{{d.tangGiam1_2 | number: '1.0-0'}}</td>
 
-                        </tr>
-                        }
-                    </tbody>
+                    </tr>
+                    }
+                  </tbody>
                 </nz-table>
               </div>
             </div>
@@ -633,7 +631,7 @@
                       <td class="align-right">{{d.tangGiam1_2 | number}}</td>
                     </tr>
                     }
-                </tbody>
+                  </tbody>
                 </nz-table>
               </div>
             </div>
@@ -1941,7 +1939,7 @@
   </ng-container>
 </nz-modal>
 
- <!-- danh sach trình ký -->
+<!-- danh sach trình ký -->
 <nz-modal [(nzVisible)]="isVisibleLstTrinhKy" nzTitle="CHỌN TRÌNH KÝ" (nzOnCancel)="exportWordTrinhKy()"
   (nzOnOk)="confirmExportWordTrinhKy()" nzCancelText="Đóng">
   <ng-container *nzModalContent>
@@ -1954,10 +1952,11 @@
       </thead>
       <tbody>
         @for (data of lstTrinhKy; track data) {
-          <tr *ngIf="model.header.status != '04' ? data.status == true : true">
-            <td [nzChecked]="lstTrinhKyChecked.includes(data.code)" (nzCheckedChange)="onItemTrinhKyChecked(data.code, $event)"></td>
-            <td>{{ data.name }}</td>
-          </tr>
+        <tr *ngIf="model.header.status != '04' ? data.status == true : true">
+          <td [nzChecked]="lstTrinhKyChecked.includes(data.code)"
+            (nzCheckedChange)="onItemTrinhKyChecked(data.code, $event)"></td>
+          <td>{{ data.name }}</td>
+        </tr>
         }
       </tbody>
     </nz-table>
@@ -2072,7 +2071,7 @@
       <div nz-col class="gutter-row" [nzSpan]="11">
         <div class="inner-box">
           <label>Tên đợt nhập</label>
-          <input nz-input [(ngModel)]="model.header.name" (keyup)="checkName(model.header.name)"/>
+          <input nz-input [(ngModel)]="model.header.name" (keyup)="checkName(model.header.name)" />
 
           <div *ngIf="isName" style="color: red">
             Tên đợt nhập là bắt buộc!
@@ -2082,14 +2081,14 @@
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="inner-box">
           <label>Ngày hiệu lực</label>
-          <br/>
+          <br />
           <nz-date-picker nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss" [(ngModel)]="model.header.fDate"></nz-date-picker>
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="7">
         <div class="inner-box">
           <label>Quyết định số</label>
-          <input nz-input [(ngModel)]="model.header.quyetDinhSo" #nameInput="ngModel" required/>
+          <input nz-input [(ngModel)]="model.header.quyetDinhSo" #nameInput="ngModel" required />
 
         </div>
       </div>
@@ -2098,21 +2097,12 @@
     <nz-divider nzText="Người ký " nzOrientation="left"></nz-divider>
     <nz-form-item>
       <nz-form-control nzErrorTip="Không được để trống">
-        <nz-select
-        nzShowSearch
-        nzAllowClear
-        [nzPlaceHolder]="'Chọn người ký'"
-        [formControl]="nguoiKyControl"
-        [(ngModel)]="selectedValue"
-        >
-      
-          
-          <nz-option
-            *ngFor="let item of signerResult"
-            [nzLabel]="item.position + ' - ' + item.name"
-            [nzValue]="item">
+        <nz-select nzShowSearch nzAllowClear [nzPlaceHolder]="'Chọn người ký'" [formControl]="model.header.signerCode"
+          [(ngModel)]="model.header.signerCode">
+
+          <nz-option *ngFor="let item of signerResult" [nzLabel]="item.position + ' - ' + item.name" [nzValue]="item.code">
           </nz-option>
-    
+
         </nz-select>
       </nz-form-control>
     </nz-form-item>
@@ -2180,12 +2170,14 @@
         <tr>
           <th [nzAlign]="'center'">Mặt hàng</th>
           <th [nzAlign]="'center'">Hệ số VFC BQ mùa miền</th>
-          <th [nzAlign]="'center'">Thuế BVMT</th>
+          <!-- <th [nzAlign]="'center'">Thuế BVMT</th> -->
           <th [nzAlign]="'center'">
+            Giá giao <br />
             L15 chưa VAT và BVMT <br />
             (PT bán lẻ - V2)
           </th>
           <th [nzAlign]="'center'">
+            Giá giao <br />
             L15 chưa VAT và BVMT <br />
             (ngoài bán lẻ)
           </th>
@@ -2213,9 +2205,9 @@
           <td>
             <input class="input-v" nz-input [(ngModel)]="data.heSoVcf" type="number" />
           </td>
-          <td>
+          <!-- <td>
             <input class="input-v" nz-input [(ngModel)]="data.thueBvmt" type="number" />
-          </td>
+          </td> -->
           <td>
             <input class="input-v" nz-input [(ngModel)]="data.l15ChuaVatBvmt" type="number" />
           </td>
@@ -2236,7 +2228,8 @@
 </nz-drawer>
 
 <ng-template #extra>
-  <button nz-button nzType="primary" (click)="updateDataInput()" [appPermission]="IMPORT_BATCH.UPDATE_IMPORT_BATCH" [disabled]="model.header.status != 01 && model.header.status != 03 ">
+  <button nz-button nzType="primary" (click)="updateDataInput()" [appPermission]="IMPORT_BATCH.UPDATE_IMPORT_BATCH"
+    [disabled]="model.header.status != 01 && model.header.status != 03 ">
     Cập nhật
   </button>
 </ng-template>

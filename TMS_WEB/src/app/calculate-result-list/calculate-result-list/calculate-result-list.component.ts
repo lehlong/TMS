@@ -65,11 +65,6 @@ export class CalculateResultListComponent {
   }
   model: any = {
     header: {},
-    nguoiKyTen: {
-
-      nguoiDaiDien: "",
-      daiDien: ""
-    },
     hS1: [],
     hS2: [],
   }

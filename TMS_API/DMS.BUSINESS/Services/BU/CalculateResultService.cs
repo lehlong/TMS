@@ -60,7 +60,8 @@ namespace DMS.BUSINESS.Services.BU
                 var lstMarket = await _dbContext.TblMdMarket.OrderBy(x => x.Code).ToListAsync();
                 var lstCustomer = await _dbContext.TblMdCustomer.ToListAsync();
                 var lstCR = await _dbContext.TblBuCalculateResultList.OrderBy(x => x.FDate).ToListAsync();
-                
+                data.HEADER_CR = lstCR.FirstOrDefault(x => x.Code == code);
+
                 DateTime fDate = lstCR.FirstOrDefault(x => x.Code == code).FDate;
 
                 var OldCalculate = await _dbContext.TblBuCalculateResultList
@@ -799,7 +800,10 @@ namespace DMS.BUSINESS.Services.BU
                             Col10 = "VND",
                             Col11 = 1,
                             Col12 = "L",
-                            Col13 = "C"
+                            Col13 = "C",
+                            Col14 = fDate.ToString("dd.MM.yyyy"),
+                            Col15 = fDate.ToString("HH:mm"),
+                            Col16 = $"31.12.9999",
                         };
                         data.VK11PT.Add(_i);
                         _o++;
@@ -835,7 +839,10 @@ namespace DMS.BUSINESS.Services.BU
                             Col10 = "VND",
                             Col11 = 1,
                             Col12 = "L",
-                            Col13 = "C"
+                            Col13 = "C",
+                            Col14 = fDate.ToString("dd.MM.yyyy"),
+                            Col15 = fDate.ToString("HH:mm"),
+                            Col16 = $"31.12.9999",
                         };
                         data.VK11DB.Add(_i);
                         _o++;
@@ -871,7 +878,10 @@ namespace DMS.BUSINESS.Services.BU
                             Col10 = "VND",
                             Col11 = 1,
                             Col12 = "L",
-                            Col13 = "C"
+                            Col13 = "C",
+                            Col14 = fDate.ToString("dd.MM.yyyy"),
+                            Col15 = fDate.ToString("HH:mm"),
+                            Col16 = $"31.12.9999",
                         };
                         data.VK11FOB.Add(_i);
                         _o++;
@@ -907,7 +917,10 @@ namespace DMS.BUSINESS.Services.BU
                             Col10 = "VND",
                             Col11 = 1,
                             Col12 = "L",
-                            Col13 = "C"
+                            Col13 = "C",
+                            Col14 = fDate.ToString("dd.MM.yyyy"),
+                            Col15 = fDate.ToString("HH:mm"),
+                            Col16 = $"31.12.9999",
                         };
                         data.VK11TNPP.Add(_i);
                         _o++;
@@ -1045,6 +1058,9 @@ namespace DMS.BUSINESS.Services.BU
                         Col8 = "1",
                         Col9 = "L",
                         Col10 = "C",
+                        Col11 = fDate.ToString("dd.MM.yyyy"),
+                        Col12 = fDate.ToString("HH:mm"),
+                        Col13 = $"31.12.9999",
                         IsBold = i.IsBold,
                     });
                 }
@@ -1075,6 +1091,9 @@ namespace DMS.BUSINESS.Services.BU
                         Col8 = "1",
                         Col9 = "L",
                         Col10 = "C",
+                        Col11 = fDate.ToString("dd.MM.yyyy"),
+                        Col12 = fDate.ToString("HH:mm"),
+                        Col13 = $"31.12.9999",
                         IsBold = i.IsBold,
                     });
                 }
@@ -1104,6 +1123,9 @@ namespace DMS.BUSINESS.Services.BU
                         Col8 = "1",
                         Col9 = "L",
                         Col10 = "C",
+                        Col11 = fDate.ToString("dd.MM.yyyy"),
+                        Col12 = fDate.ToString("HH:mm"),
+                        Col13 = $"31.12.9999",
                         IsBold = i.IsBold,
                     });
                 }
@@ -1132,6 +1154,9 @@ namespace DMS.BUSINESS.Services.BU
                         Col8 = "1",
                         Col9 = "L",
                         Col10 = "C",
+                        Col11 = fDate.ToString("dd.MM.yyyy"),
+                        Col12 = fDate.ToString("HH:mm"),
+                        Col13 = $"31.12.9999",
                         IsBold = i.IsBold,
                     });
                 }
@@ -1160,6 +1185,9 @@ namespace DMS.BUSINESS.Services.BU
                         Col8 = "1",
                         Col9 = "L",
                         Col10 = "C",
+                        Col11 = fDate.ToString("dd.MM.yyyy"),
+                        Col12 = fDate.ToString("HH:mm"),
+                        Col13 = $"31.12.9999",
                         IsBold = i.IsBold,
                     });
                 }
@@ -1189,6 +1217,9 @@ namespace DMS.BUSINESS.Services.BU
                         Col8 = "1",
                         Col9 = "L",
                         Col10 = "C",
+                        Col11 = fDate.ToString("dd.MM.yyyy"),
+                        Col12 = fDate.ToString("HH:mm"),
+                        Col13 = $"31.12.9999",
                         IsBold = i.IsBold,
                     });
                 }
@@ -1259,6 +1290,7 @@ namespace DMS.BUSINESS.Services.BU
                 data.Header = await _dbContext.TblBuCalculateResultList.FindAsync(code);
                 data.HS1 = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == code).ToListAsync();
                 data.HS2 = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == code).ToListAsync();
+                data.Status.Code = "01";
                 return data;
             }
             catch (Exception ex)
@@ -1277,13 +1309,15 @@ namespace DMS.BUSINESS.Services.BU
                 if (model.Header.Status == model.Status.Code)
                 {
                     model.Header.Status = "01";
-                    _dbContext.TblBuCalculateResultList.Update(model.Header);
+                    _dbContext.TblBuCalculateResultList.Update(model.Header);   
                     var h = new TblBuHistoryAction()
                     {
                         Code = Guid.NewGuid().ToString(),
                         HeaderCode = model.Header.Code,
                         Action = "Cập nhật thông tin",
                     };
+                    _dbContext.TblBuHistoryAction.Add(h);
+
                 }
                 else
                 {

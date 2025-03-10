@@ -44,7 +44,7 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('email', $event)">Email</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('address', $event)">Địa chỉ</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('paymentTerm', $event)">Hạn thanh toán</th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('localCode', $event)" nzAlign="center">Vùng</th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('localCode', $event)" nzAlign="center">Vùng giá</th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('marketCode', $event)" nzAlign="center">Thị trường
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('gap', $event)">Cự ly BQ <br> (Km)</th>
@@ -170,9 +170,9 @@
       </div>
       <div nz-row nzJustify="space-evenly">
         <nz-form-item nz-col nzSpan="11">
-          <nz-form-label>Vùng</nz-form-label>
+          <nz-form-label>Vùng giá</nz-form-label>
           <nz-form-control>
-            <nz-select nzShowSearch nzAllowClear placeholder="Chọn Vùng" formControlName="localCode"
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn Vùng Giá" formControlName="localCode"
               (ngModelChange)="searchMarket()">
               <nz-option cdkScrollable *ngFor="let item of localResult" [nzLabel]="item.code + ' - ' + item.name"
                 [nzValue]="item.code">
