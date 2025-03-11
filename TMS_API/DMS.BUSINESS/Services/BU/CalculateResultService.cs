@@ -3,7 +3,7 @@ using DMS.BUSINESS.Common;
 using DMS.BUSINESS.Dtos.BU;
 using DMS.CORE.Entities.BU;
 using DMS.CORE;
-
+using System.Diagnostics;
 using DMS.CORE.Entities.MD;
 using DMS.BUSINESS.Dtos.MD;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +29,6 @@ using Aspose.Words.Tables;
 using System.Data;
 using System.Globalization;
 using NPOI.SS.Util;
-using System.Diagnostics;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -42,6 +41,7 @@ namespace DMS.BUSINESS.Services.BU
         Task<List<TblMdCustomer>> GetCustomer();
         Task UpdateDataInput(InsertModel model);
         void ExportExcel(ref MemoryStream outFileStream, string path, string headerId);
+        //void ExportExcel(ref MemoryStream outFileStream, string path, string headerId, CalculateResultModel data);
         Task<string> SaveFileHistory(MemoryStream outFileStream, string headerId);
         Task<string> GenarateWordTrinhKy(string headerId, string nameTeam);
         Task<string> GenarateWord(List<string> lstCustomerChecked, string headerId);
@@ -260,78 +260,79 @@ namespace DMS.BUSINESS.Services.BU
 
                 //if (OldCalculate != null)
                 //{
-                    foreach (var g in lstGoods)
-                    {
-                        var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
-                        var vclo = dataVCLOld.Where(x => x.GoodsCode == g.Code).ToList();
-                    //var dlg1 = data.DLG.Dlg_1.Where(x => x.Code == g.Code).ToList();
+                foreach (var g in lstGoods)
+                {
+                    var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
+                    var vclo = dataVCLOld.Where(x => x.GoodsCode == g.Code).ToList();
+                //var dlg1 = data.DLG.Dlg_1.Where(x => x.Code == g.Code).ToList();
                     var k = new DLG_4_Old
-                        {
-                            Code = g.Code,
-                            Type = "TT",
-                            ColB = g.Name,
-                            Col1 = hsmho.Sum(x => x.HeSoVcf),
-                            Col2 = hsmho.Sum(x => x.ThueBvmt),
-                            Col3 = hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
-                            Col4 = hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
-                            Col5 = (hsmho.Sum(x => x.ThueBvmt) + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
-                            Col6 = vclo.Sum(x => x.Gny),
-                            Col14 = hsmho.Sum(x => x.GiamGiaFob),
-                            Col10 = hsmho.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmho.Sum(x => x.LaiGopDieuTiet),
-                        };
-                        if (k.Col6 != 0)
-                        {
-                           k.Col7 = k.Col6 / 1.1M - k.Col2;
-                        }
-                        k.Col8 = k.Col6 - k.Col5;
-                        if (k.Col8 != 0)
-                        {
-                            k.Col9 = k.Col8 / 1.1M;
-                        }
-                        k.Col11 = k.Col1 * k.Col10 * 1.1M;
-                        k.Col13 = k.Col11 + k.Col9;
-                        k.Col12 = k.Col13 * 1.1M;
-                        k.Col15 = (k.Col12 - k.Col14) * k.Col1;
-                        k.Col16 = k.Col12 - k.Col14;
-                        data.DLG.Dlg_4_Old.Add(k);
-                    }
-
-                    foreach (var g in lstGoods)
                     {
-                        var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
-                        var dlg1 = data.DLG.Dlg_3.Where(x => x.Code == g.Code).ToList();
-                        var k = new DLG_4_Old
-                        {
-                            Code = g.Code,
-                            Type = "OTHER",
-                            ColA = _oII.ToString(),
-                            ColB = g.Name,
-                            Col1 = hsmho.Sum(x => x.HeSoVcf),
-                            Col2 = hsmho.Sum(x => x.ThueBvmt),
-                            Col3 = hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
-                            Col4 = hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
-                            Col5 = (hsmho.Sum(x => x.ThueBvmt) + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
-                            Col6 = dlg1.Sum(x => x.Col7),
-                            Col14 = hsmho.Sum(x => x.GiamGiaFob),
-                            Col10 = hsmho.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmho.Sum(x => x.LaiGopDieuTiet),
-                        };
-                        if (k.Col6 != 0)
-                        {
-                            k.Col7 = k.Col6 / 1.1M - k.Col2;
-                        }
-                        k.Col8 = k.Col6 - k.Col5;
-                        if (k.Col8 != 0)
-                        {
-                            k.Col9 = k.Col8 / 1.1M;
-                        }
-                        k.Col11 = k.Col1 * k.Col10 * 1.1M;
-                        k.Col13 = k.Col11 + k.Col9;
-                        k.Col12 = k.Col13 * 1.1M;
-                        k.Col15 = (k.Col12 -k.Col14) * k.Col1;
-                        k.Col16 = k.Col12 - k.Col14;
-                        data.DLG.Dlg_4_Old.Add(k);
-
+                        Code = g.Code,
+                        Type = "TT",
+                        ColB = g.Name,
+                        Col1 = hsmho.Sum(x => x.HeSoVcf),
+                        Col2 = hsmho.Sum(x => x.ThueBvmt),
+                        Col3 = hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
+                        Col4 = hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
+                        Col5 = (hsmho.Sum(x => x.ThueBvmt) + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
+                        Col6 = vclo.Sum(x => x.Gny),
+                        Col14 = hsmho.Sum(x => x.GiamGiaFob),
+                        Col10 = hsmho.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmho.Sum(x => x.LaiGopDieuTiet),
+                    };
+                    if (k.Col6 != 0)
+                    {
+                        k.Col7 = k.Col6 / 1.1M - k.Col2;
                     }
+                    k.Col8 = k.Col6 - k.Col5;
+                    if (k.Col8 != 0)
+                    {
+                        k.Col9 = k.Col8 / 1.1M;
+                    }
+                    k.Col11 = k.Col1 * k.Col10 * 1.1M;
+                    k.Col13 = k.Col11 + k.Col9;
+                    k.Col12 = k.Col13 * 1.1M;
+                    k.Col15 = (k.Col12 - k.Col14) * k.Col1;
+                    k.Col16 = k.Col12 - k.Col14;
+                    data.DLG.Dlg_4_Old.Add(k);
+                }
+
+                foreach (var g in lstGoods)
+                {
+                    var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
+                    var vclo = dataVCLOld.Where(x => x.GoodsCode == g.Code).ToList();
+                    //var dlg1 = data.DLG.Dlg_3.Where(x => x.Code == g.Code).ToList();
+                    var k = new DLG_4_Old
+                    {
+                        Code = g.Code,
+                        Type = "OTHER",
+                        ColA = _oII.ToString(),
+                        ColB = g.Name,
+                        Col1 = hsmho.Sum(x => x.HeSoVcf),
+                        Col2 = hsmho.Sum(x => x.ThueBvmt),
+                        Col3 = hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
+                        Col4 = hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl),
+                        Col5 = (hsmho.Sum(x => x.ThueBvmt) + hsmho.Sum(x => x.HeSoVcf) * hsmho.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
+                        Col6 = vclo.Sum(x => x.GblV2),
+                        Col14 = hsmho.Sum(x => x.GiamGiaFob),
+                        Col10 = hsmho.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmho.Sum(x => x.LaiGopDieuTiet),
+                    };
+                    if (k.Col6 != 0)
+                    {
+                        k.Col7 = k.Col6 / 1.1M - k.Col2;
+                    }
+                    k.Col8 = k.Col6 - k.Col5;
+                    if (k.Col8 != 0)
+                    {
+                        k.Col9 = k.Col8 / 1.1M;
+                    }
+                    k.Col11 = k.Col1 * k.Col10 * 1.1M;
+                    k.Col13 = k.Col11 + k.Col9;
+                    k.Col12 = k.Col13 * 1.1M;
+                    k.Col15 = (k.Col12 -k.Col14) * k.Col1;
+                    k.Col16 = k.Col12 - k.Col14;
+                    data.DLG.Dlg_4_Old.Add(k);
+
+                }
                     #endregion
 
 
@@ -870,7 +871,7 @@ namespace DMS.BUSINESS.Services.BU
                             ColC = c.Name,
                             Col1 = m?.Name,
                             Col2 = c.Gap,
-                            Col4 = "09",
+                            Col4 = "10",
                             Col5 = c.Code,
                             Col6 = g.Code,
                             Col7 = "L",
@@ -909,7 +910,7 @@ namespace DMS.BUSINESS.Services.BU
                             ColC = c.Name,
                             Col1 = m?.Name,
                             Col2 = c.Gap,
-                            Col4 = "10",
+                            Col4 = "9",
                             Col5 = c.Code,
                             Col6 = g.Code,
                             Col7 = "L",
@@ -1745,72 +1746,72 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowdlg_3 = 41;
                 for (var i = 0; i < data.Result.DLG.Dlg_3.Count(); i++)
                 {
-                   var dataDlg3 = data.Result.DLG.Dlg_3[i];
-                   int rowIndex = startRowdlg_3 + i;
-                   IRow row = sheetGLG.GetRow(rowIndex);
+                    var dataDlg3 = data.Result.DLG.Dlg_3[i];
+                    int rowIndex = startRowdlg_3 + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
 
-                   if (row != null)
-                   {
-                       ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
-                       cell0.CellStyle = styleCellNumber;
-                       cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell0.SetCellValue(dataDlg3.ColA);
+                    if (row != null)
+                    {
+                        ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
+                        cell0.CellStyle = styleCellNumber;
+                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell0.SetCellValue(dataDlg3.ColA);
 
-                       ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
-                       cell1.CellStyle = styleCellNumber;
-                       cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell1.SetCellValue(dataDlg3.ColB);
+                        ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
+                        cell1.CellStyle = styleCellNumber;
+                        cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell1.SetCellValue(dataDlg3.ColB);
 
-                       ICell cell2 = row.GetCell(2) ?? row.CreateCell(2);
-                       cell2.CellStyle = cell2Style;
-                       cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell2.SetCellValue(dataDlg3.Col1.HasValue ? Convert.ToDouble(dataDlg3.Col1) : 0);
+                        ICell cell2 = row.GetCell(2) ?? row.CreateCell(2);
+                        cell2.CellStyle = cell2Style;
+                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell2.SetCellValue(dataDlg3.Col1.HasValue ? Convert.ToDouble(dataDlg3.Col1) : 0);
 
-                       ICell cell3 = row.GetCell(3) ?? row.CreateCell(3);
-                       cell3.CellStyle = styleCellNumber;
-                       cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell3.SetCellValue(dataDlg3.Col2.HasValue ? Convert.ToDouble(dataDlg3.Col2.Value) : 0);
+                        ICell cell3 = row.GetCell(3) ?? row.CreateCell(3);
+                        cell3.CellStyle = styleCellNumber;
+                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell3.SetCellValue(dataDlg3.Col2.HasValue ? Convert.ToDouble(dataDlg3.Col2.Value) : 0);
 
-                       ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
-                       cell4.CellStyle = styleCellNumber;
-                       cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell4.SetCellValue(dataDlg3.Col3.HasValue ? Convert.ToDouble(dataDlg3.Col3.Value) : 0);
+                        ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
+                        cell4.CellStyle = styleCellNumber;
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg3.Col3.HasValue ? Convert.ToDouble(dataDlg3.Col3.Value) : 0);
 
-                       ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
-                       cell5.CellStyle = styleCellNumber;
-                       cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell5.SetCellValue(dataDlg3.Col4.HasValue ? Convert.ToDouble(dataDlg3.Col4.Value) : 0);
+                        ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
+                        cell5.CellStyle = styleCellNumber;
+                        cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell5.SetCellValue(dataDlg3.Col4.HasValue ? Convert.ToDouble(dataDlg3.Col4.Value) : 0);
 
-                       ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
-                       cell6.CellStyle = styleCellNumber;
-                       cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell6.SetCellValue(dataDlg3.Col5.HasValue ? Convert.ToDouble(dataDlg3.Col5.Value) : 0);
+                        ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
+                        cell6.CellStyle = styleCellNumber;
+                        cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell6.SetCellValue(dataDlg3.Col5.HasValue ? Convert.ToDouble(dataDlg3.Col5.Value) : 0);
 
-                       ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
-                       cell7.CellStyle = styleCellNumber;
-                       cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell7.SetCellValue(dataDlg3.Col6.HasValue ? Convert.ToDouble(dataDlg3.Col6.Value) : 0);
+                        ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
+                        cell7.CellStyle = styleCellNumber;
+                        cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell7.SetCellValue(dataDlg3.Col6.HasValue ? Convert.ToDouble(dataDlg3.Col6.Value) : 0);
 
-                       ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
-                       cell8.CellStyle = styleCellNumber;
-                       cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell8.SetCellValue(dataDlg3.Col7.HasValue ? Convert.ToDouble(dataDlg3.Col7.Value) : 0);
+                        ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
+                        cell8.CellStyle = styleCellNumber;
+                        cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell8.SetCellValue(dataDlg3.Col7.HasValue ? Convert.ToDouble(dataDlg3.Col7.Value) : 0);
 
-                       ICell cell10 = row.GetCell(10) ?? row.CreateCell(10);
-                       cell10.CellStyle = styleCellNumber;
-                       cell10.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell10.SetCellValue(dataDlg3.Col8.HasValue ? Convert.ToDouble(dataDlg3.Col8.Value) : 0);
+                        ICell cell10 = row.GetCell(10) ?? row.CreateCell(10);
+                        cell10.CellStyle = styleCellNumber;
+                        cell10.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell10.SetCellValue(dataDlg3.Col8.HasValue ? Convert.ToDouble(dataDlg3.Col8.Value) : 0);
 
-                       ICell cell11 = row.GetCell(12) ?? row.CreateCell(12);
-                       cell11.CellStyle = styleCellNumber;
-                       cell11.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell11.SetCellValue(dataDlg3.Col9.HasValue ? Convert.ToDouble(dataDlg3.Col9.Value) : 0);
+                        ICell cell11 = row.GetCell(12) ?? row.CreateCell(12);
+                        cell11.CellStyle = styleCellNumber;
+                        cell11.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell11.SetCellValue(dataDlg3.Col9.HasValue ? Convert.ToDouble(dataDlg3.Col9.Value) : 0);
 
-                       ICell cell12 = row.GetCell(14) ?? row.CreateCell(14);
-                       cell12.CellStyle = styleCellNumber;
-                       cell12.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell12.SetCellValue(dataDlg3.Col10.HasValue ? Convert.ToDouble(dataDlg3.Col10.Value) : 0);
-                   }
+                        ICell cell12 = row.GetCell(14) ?? row.CreateCell(14);
+                        cell12.CellStyle = styleCellNumber;
+                        cell12.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell12.SetCellValue(dataDlg3.Col10.HasValue ? Convert.ToDouble(dataDlg3.Col10.Value) : 0);
+                    }
                 }
 
                 #endregion
@@ -1852,104 +1853,105 @@ namespace DMS.BUSINESS.Services.BU
 
                 for (var i = 0; i < data.Result.DLG.Dlg_4.Count(); i++)
                 {
-                   var dataDlg4 = data.Result.DLG.Dlg_4[i];
+                    var dataDlg4 = data.Result.DLG.Dlg_4[i];
 
-                   if (dataDlg4.Type != null)
-                   {
-                       int rowIndex = startRowdlg_4 + i;
-                       IRow row = sheetGLG.GetRow(rowIndex);
-                       if (row != null) {
-                           ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
-                           cell0.CellStyle = styleCellNumber;
-                           cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell0.SetCellValue(dataDlg4.ColA);
+                    if (dataDlg4.Type != null)
+                    {
+                        int rowIndex = startRowdlg_4 + i;
+                        IRow row = sheetGLG.GetRow(rowIndex);
+                        if (row != null)
+                        {
+                            ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
+                            cell0.CellStyle = styleCellNumber;
+                            cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell0.SetCellValue(dataDlg4.ColA);
 
-                           ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
-                           cell1.CellStyle = styleCellNumber;
-                           cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell1.SetCellValue(dataDlg4.ColB);
+                            ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
+                            cell1.CellStyle = styleCellNumber;
+                            cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell1.SetCellValue(dataDlg4.ColB);
 
-                           ICell cell2 = row.GetCell(2) ?? row.CreateCell(2);
-                           cell2.CellStyle = cell2Style;
-                           cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell2.SetCellValue(dataDlg4.Col1.HasValue ? Convert.ToDouble(dataDlg4.Col1) : 0);
+                            ICell cell2 = row.GetCell(2) ?? row.CreateCell(2);
+                            cell2.CellStyle = cell2Style;
+                            cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell2.SetCellValue(dataDlg4.Col1.HasValue ? Convert.ToDouble(dataDlg4.Col1) : 0);
 
-                           ICell cell3 = row.GetCell(3) ?? row.CreateCell(3);
-                           cell3.CellStyle = styleCellNumber;
-                           cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell3.SetCellValue(dataDlg4.Col2.HasValue ? Convert.ToDouble(dataDlg4.Col2.Value) : 0);
+                            ICell cell3 = row.GetCell(3) ?? row.CreateCell(3);
+                            cell3.CellStyle = styleCellNumber;
+                            cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell3.SetCellValue(dataDlg4.Col2.HasValue ? Convert.ToDouble(dataDlg4.Col2.Value) : 0);
 
-                           ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
-                           cell4.CellStyle = styleCellNumber;
-                           cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell4.SetCellValue(dataDlg4.Col3.HasValue ? Convert.ToDouble(dataDlg4.Col3.Value) : 0);
+                            ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
+                            cell4.CellStyle = styleCellNumber;
+                            cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell4.SetCellValue(dataDlg4.Col3.HasValue ? Convert.ToDouble(dataDlg4.Col3.Value) : 0);
 
-                           ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
-                           cell5.CellStyle = styleCellNumber;
-                           cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell5.SetCellValue(dataDlg4.Col4.HasValue ? Convert.ToDouble(dataDlg4.Col4.Value) : 0);
+                            ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
+                            cell5.CellStyle = styleCellNumber;
+                            cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell5.SetCellValue(dataDlg4.Col4.HasValue ? Convert.ToDouble(dataDlg4.Col4.Value) : 0);
 
-                           ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
-                           cell6.CellStyle = styleCellNumber;
-                           cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell6.SetCellValue(dataDlg4.Col5.HasValue ? Convert.ToDouble(dataDlg4.Col5.Value) : 0);
+                            ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
+                            cell6.CellStyle = styleCellNumber;
+                            cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell6.SetCellValue(dataDlg4.Col5.HasValue ? Convert.ToDouble(dataDlg4.Col5.Value) : 0);
 
-                           ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
-                           cell7.CellStyle = styleCellNumber;
-                           cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell7.SetCellValue(dataDlg4.Col6.HasValue ? Convert.ToDouble(dataDlg4.Col6.Value) : 0);
+                            ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
+                            cell7.CellStyle = styleCellNumber;
+                            cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell7.SetCellValue(dataDlg4.Col6.HasValue ? Convert.ToDouble(dataDlg4.Col6.Value) : 0);
 
-                           ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
-                           cell8.CellStyle = styleCellNumber;
-                           cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell8.SetCellValue(dataDlg4.Col7.HasValue ? Convert.ToDouble(dataDlg4.Col7.Value) : 0);
+                            ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
+                            cell8.CellStyle = styleCellNumber;
+                            cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell8.SetCellValue(dataDlg4.Col7.HasValue ? Convert.ToDouble(dataDlg4.Col7.Value) : 0);
 
-                           ICell cell9 = row.GetCell(9) ?? row.CreateCell(9);
-                           cell9.CellStyle = styleCellNumber;
-                           cell9.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell9.SetCellValue(dataDlg4.Col8.HasValue ? Convert.ToDouble(dataDlg4.Col8.Value) : 0);
+                            ICell cell9 = row.GetCell(9) ?? row.CreateCell(9);
+                            cell9.CellStyle = styleCellNumber;
+                            cell9.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell9.SetCellValue(dataDlg4.Col8.HasValue ? Convert.ToDouble(dataDlg4.Col8.Value) : 0);
 
-                           ICell cell10 = row.GetCell(10) ?? row.CreateCell(10);
-                           cell10.CellStyle = styleCellNumber;
-                           cell10.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell10.SetCellValue(dataDlg4.Col9.HasValue ? Convert.ToDouble(dataDlg4.Col9.Value) : 0);
+                            ICell cell10 = row.GetCell(10) ?? row.CreateCell(10);
+                            cell10.CellStyle = styleCellNumber;
+                            cell10.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell10.SetCellValue(dataDlg4.Col9.HasValue ? Convert.ToDouble(dataDlg4.Col9.Value) : 0);
 
-                           ICell cell11 = row.GetCell(11) ?? row.CreateCell(11);
-                           cell11.CellStyle = styleCellNumber;
-                           cell11.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell11.SetCellValue(dataDlg4.Col10.HasValue ? Convert.ToDouble(dataDlg4.Col10.Value) : 0);
+                            ICell cell11 = row.GetCell(11) ?? row.CreateCell(11);
+                            cell11.CellStyle = styleCellNumber;
+                            cell11.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell11.SetCellValue(dataDlg4.Col10.HasValue ? Convert.ToDouble(dataDlg4.Col10.Value) : 0);
 
-                           ICell cell12 = row.GetCell(12) ?? row.CreateCell(12);
-                           cell12.CellStyle = styleCellNumber;
-                           cell12.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell12.SetCellValue(dataDlg4.Col11.HasValue ? Convert.ToDouble(dataDlg4.Col11.Value) : 0);
+                            ICell cell12 = row.GetCell(12) ?? row.CreateCell(12);
+                            cell12.CellStyle = styleCellNumber;
+                            cell12.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell12.SetCellValue(dataDlg4.Col11.HasValue ? Convert.ToDouble(dataDlg4.Col11.Value) : 0);
 
-                           ICell cell13 = row.GetCell(13) ?? row.CreateCell(13);
-                           cell13.CellStyle = styleCellNumber;
-                           cell13.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell13.SetCellValue(dataDlg4.Col12.HasValue ? Convert.ToDouble(dataDlg4.Col12.Value) : 0);
+                            ICell cell13 = row.GetCell(13) ?? row.CreateCell(13);
+                            cell13.CellStyle = styleCellNumber;
+                            cell13.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell13.SetCellValue(dataDlg4.Col12.HasValue ? Convert.ToDouble(dataDlg4.Col12.Value) : 0);
 
-                           ICell cell14 = row.GetCell(14) ?? row.CreateCell(14);
-                           cell14.CellStyle = styleCellNumber;
-                           cell14.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell14.SetCellValue(dataDlg4.Col13.HasValue ? Convert.ToDouble(dataDlg4.Col13.Value) : 0);
+                            ICell cell14 = row.GetCell(14) ?? row.CreateCell(14);
+                            cell14.CellStyle = styleCellNumber;
+                            cell14.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell14.SetCellValue(dataDlg4.Col13.HasValue ? Convert.ToDouble(dataDlg4.Col13.Value) : 0);
 
-                           ICell cell15 = row.GetCell(15) ?? row.CreateCell(15);
-                           cell15.CellStyle = styleCellNumber;
-                           cell15.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell15.SetCellValue(dataDlg4.Col14.HasValue ? Convert.ToDouble(dataDlg4.Col14.Value) : 0);
+                            ICell cell15 = row.GetCell(15) ?? row.CreateCell(15);
+                            cell15.CellStyle = styleCellNumber;
+                            cell15.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell15.SetCellValue(dataDlg4.Col14.HasValue ? Convert.ToDouble(dataDlg4.Col14.Value) : 0);
 
-                           ICell cell16 = row.GetCell(16) ?? row.CreateCell(16);
-                           cell16.CellStyle = styleCellNumber;
-                           cell16.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell16.SetCellValue(dataDlg4.Col15.HasValue ? Convert.ToDouble(dataDlg4.Col15.Value) : 0);
+                            ICell cell16 = row.GetCell(16) ?? row.CreateCell(16);
+                            cell16.CellStyle = styleCellNumber;
+                            cell16.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell16.SetCellValue(dataDlg4.Col15.HasValue ? Convert.ToDouble(dataDlg4.Col15.Value) : 0);
 
-                           ICell cell17 = row.GetCell(17) ?? row.CreateCell(17);
-                           cell17.CellStyle = styleCellNumber;
-                           cell17.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell17.SetCellValue(dataDlg4.Col16.HasValue ? Convert.ToDouble(dataDlg4.Col16.Value) : 0);
-                       }
-                   }
+                            ICell cell17 = row.GetCell(17) ?? row.CreateCell(17);
+                            cell17.CellStyle = styleCellNumber;
+                            cell17.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell17.SetCellValue(dataDlg4.Col16.HasValue ? Convert.ToDouble(dataDlg4.Col16.Value) : 0);
+                        }
+                    }
                 }
 
                 #endregion
@@ -1959,12 +1961,12 @@ namespace DMS.BUSINESS.Services.BU
                 ICell header_dlg_5 = rowHeader_dlg_5.GetCell(0) ?? rowHeader_dlg_5.CreateCell(0);
                 header_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                 header_dlg_5.SetCellValue($"Tính từ {Hour} ngày {Date} theo CĐ số {QuyetDinhSo} ngày {Date}; QĐ giá bán lẻ số {QuyetDinhSo} ngày {Date} và theo VCF Hè Thu");
-                              
+
                 IRow rowFooter_dlg_5 = sheetGLG.GetRow(122);
                 ICell footer_dlg_5 = rowFooter_dlg_5.GetCell(9) ?? rowFooter_dlg_5.CreateCell(9);
                 footer_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                 footer_dlg_5.SetCellValue($"Vinh,  {Date_2}");
-               
+
                 if (header.SignerCode == "TongGiamDoc")
                 {
                     IRow rowFooter_Ky_dlg_5 = sheetGLG.GetRow(123);
@@ -1990,47 +1992,47 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowdlg_5 = 115;
                 for (var i = 0; i < data.Result.DLG.Dlg_5.Count(); i++)
                 {
-                   var dataDlg5 = data.Result.DLG.Dlg_5[i];
-                   int rowIndex = startRowdlg_5 + i;
-                   IRow row = sheetGLG.GetRow(rowIndex);
+                    var dataDlg5 = data.Result.DLG.Dlg_5[i];
+                    int rowIndex = startRowdlg_5 + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
 
-                   if (row != null)
-                   {
-                       ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
-                       cell0.CellStyle = styleCellNumber;
-                       cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell0.SetCellValue(dataDlg5.ColA);
+                    if (row != null)
+                    {
+                        ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
+                        cell0.CellStyle = styleCellNumber;
+                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell0.SetCellValue(dataDlg5.ColA);
 
-                       ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
-                       cell1.CellStyle = styleCellNumber;
-                       cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell1.SetCellValue(dataDlg5.ColB);
+                        ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
+                        cell1.CellStyle = styleCellNumber;
+                        cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell1.SetCellValue(dataDlg5.ColB);
 
-                       ICell cell2 = row.GetCell(3) ?? row.CreateCell(3);
-                       cell2.CellStyle = cell2Style;
-                       cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell2.SetCellValue(dataDlg5.Col1.HasValue ? Convert.ToDouble(dataDlg5.Col1) : 0);
+                        ICell cell2 = row.GetCell(3) ?? row.CreateCell(3);
+                        cell2.CellStyle = cell2Style;
+                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell2.SetCellValue(dataDlg5.Col1.HasValue ? Convert.ToDouble(dataDlg5.Col1) : 0);
 
-                       ICell cell3 = row.GetCell(5) ?? row.CreateCell(5);
-                       cell3.CellStyle = styleCellNumber;
-                       cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell3.SetCellValue(dataDlg5.Col2.HasValue ? Convert.ToDouble(dataDlg5.Col2.Value) : 0);
+                        ICell cell3 = row.GetCell(5) ?? row.CreateCell(5);
+                        cell3.CellStyle = styleCellNumber;
+                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell3.SetCellValue(dataDlg5.Col2.HasValue ? Convert.ToDouble(dataDlg5.Col2.Value) : 0);
 
-                       ICell cell4 = row.GetCell(8) ?? row.CreateCell(8);
-                       cell4.CellStyle = styleCellNumber;
-                       cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell4.SetCellValue(dataDlg5.Col3.HasValue ? Convert.ToDouble(dataDlg5.Col3.Value) : 0);
+                        ICell cell4 = row.GetCell(8) ?? row.CreateCell(8);
+                        cell4.CellStyle = styleCellNumber;
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg5.Col3.HasValue ? Convert.ToDouble(dataDlg5.Col3.Value) : 0);
 
-                       ICell cell5 = row.GetCell(10) ?? row.CreateCell(10);
-                       cell5.CellStyle = styleCellNumber;
-                       cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell5.SetCellValue(dataDlg5.Col4.HasValue ? Convert.ToDouble(dataDlg5.Col4.Value) : 0);
+                        ICell cell5 = row.GetCell(10) ?? row.CreateCell(10);
+                        cell5.CellStyle = styleCellNumber;
+                        cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell5.SetCellValue(dataDlg5.Col4.HasValue ? Convert.ToDouble(dataDlg5.Col4.Value) : 0);
 
-                       ICell cell6 = row.GetCell(12) ?? row.CreateCell(12);
-                       cell6.CellStyle = styleCellNumber;
-                       cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell6.SetCellValue(dataDlg5.Col5.HasValue ? Convert.ToDouble(dataDlg5.Col5.Value) : 0);
-                   }
+                        ICell cell6 = row.GetCell(12) ?? row.CreateCell(12);
+                        cell6.CellStyle = styleCellNumber;
+                        cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell6.SetCellValue(dataDlg5.Col5.HasValue ? Convert.ToDouble(dataDlg5.Col5.Value) : 0);
+                    }
                 }
 
                 #endregion
@@ -2048,48 +2050,48 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowdlg_TDGBL = 41;
                 for (var i = 0; i < data.Result.DLG.Dlg_TDGBL.Count(); i++)
                 {
-                   var dataDlg_TDGBL = data.Result.DLG.Dlg_TDGBL[i];
-                   int rowIndex = startRowdlg_TDGBL + i;
-                   IRow row = sheetGLG.GetRow(rowIndex);
+                    var dataDlg_TDGBL = data.Result.DLG.Dlg_TDGBL[i];
+                    int rowIndex = startRowdlg_TDGBL + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
 
-                   if (row != null)
-                   {
+                    if (row != null)
+                    {
 
-                       ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
-                       cell0.CellStyle = styleCellNumber;
-                       cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell0.SetCellValue(dataDlg_TDGBL.ColA);
+                        ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                        cell0.CellStyle = styleCellNumber;
+                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell0.SetCellValue(dataDlg_TDGBL.ColA);
 
-                       ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
-                       cell0.CellStyle = styleCellNumber;
-                       cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell2.SetCellValue(dataDlg_TDGBL.Col1.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col1) : 0);
+                        ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                        cell0.CellStyle = styleCellNumber;
+                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell2.SetCellValue(dataDlg_TDGBL.Col1.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col1) : 0);
 
-                       ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
-                       cell3.CellStyle = styleCellNumber;
-                       cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell3.SetCellValue(dataDlg_TDGBL.Col2.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col2.Value) : 0);
+                        ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                        cell3.CellStyle = styleCellNumber;
+                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell3.SetCellValue(dataDlg_TDGBL.Col2.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col2.Value) : 0);
 
-                       ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
-                       cell4.CellStyle = styleCellNumber;
-                       cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell4.SetCellValue(dataDlg_TDGBL.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_TDGBL.TangGiam1_2.Value) : 0);
+                        ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                        cell4.CellStyle = styleCellNumber;
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg_TDGBL.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_TDGBL.TangGiam1_2.Value) : 0);
 
-                       ICell cell5 = row.GetCell(24) ?? row.CreateCell(24);
-                       cell5.CellStyle = styleCellNumber;
-                       cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell5.SetCellValue(dataDlg_TDGBL.Col3.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col3.Value) : 0);
+                        ICell cell5 = row.GetCell(24) ?? row.CreateCell(24);
+                        cell5.CellStyle = styleCellNumber;
+                        cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell5.SetCellValue(dataDlg_TDGBL.Col3.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col3.Value) : 0);
 
-                       ICell cell6 = row.GetCell(25) ?? row.CreateCell(25);
-                       cell6.CellStyle = styleCellNumber;
-                       cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell6.SetCellValue(dataDlg_TDGBL.Col4.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col4.Value) : 0);
+                        ICell cell6 = row.GetCell(25) ?? row.CreateCell(25);
+                        cell6.CellStyle = styleCellNumber;
+                        cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell6.SetCellValue(dataDlg_TDGBL.Col4.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col4.Value) : 0);
 
-                       ICell cell7 = row.GetCell(26) ?? row.CreateCell(26);
-                       cell7.CellStyle = styleCellNumber;
-                       cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell7.SetCellValue(dataDlg_TDGBL.TangGiam3_4.HasValue ? Convert.ToDouble(dataDlg_TDGBL.TangGiam3_4.Value) : 0);
-                   }
+                        ICell cell7 = row.GetCell(26) ?? row.CreateCell(26);
+                        cell7.CellStyle = styleCellNumber;
+                        cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell7.SetCellValue(dataDlg_TDGBL.TangGiam3_4.HasValue ? Convert.ToDouble(dataDlg_TDGBL.TangGiam3_4.Value) : 0);
+                    }
                 }
 
                 #endregion
@@ -2099,33 +2101,33 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowdlg_TdGgptbl = 49;
                 for (var i = 0; i < data.Result.DLG.Dlg_TdGgptbl.Count(); i++)
                 {
-                   var dataDlg_TdGgptbl = data.Result.DLG.Dlg_TdGgptbl[i];
-                   int rowIndex = startRowdlg_TdGgptbl + i;
-                   IRow row = sheetGLG.GetRow(rowIndex);
+                    var dataDlg_TdGgptbl = data.Result.DLG.Dlg_TdGgptbl[i];
+                    int rowIndex = startRowdlg_TdGgptbl + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
 
-                   if (row != null)
-                   {
+                    if (row != null)
+                    {
 
-                       ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
-                       cell0.CellStyle = styleCellNumber;
-                       cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell0.SetCellValue(dataDlg_TdGgptbl.ColA);
+                        ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                        cell0.CellStyle = styleCellNumber;
+                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell0.SetCellValue(dataDlg_TdGgptbl.ColA);
 
-                       ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
-                       cell0.CellStyle = styleCellNumber;
-                       cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell2.SetCellValue(dataDlg_TdGgptbl.Col1.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.Col1) : 0);
+                        ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                        cell0.CellStyle = styleCellNumber;
+                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell2.SetCellValue(dataDlg_TdGgptbl.Col1.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.Col1) : 0);
 
-                       ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
-                       cell3.CellStyle = styleCellNumber;
-                       cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell3.SetCellValue(dataDlg_TdGgptbl.Col2.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.Col2.Value) : 0);
+                        ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                        cell3.CellStyle = styleCellNumber;
+                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell3.SetCellValue(dataDlg_TdGgptbl.Col2.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.Col2.Value) : 0);
 
-                       ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
-                       cell4.CellStyle = styleCellNumber;
-                       cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell4.SetCellValue(dataDlg_TdGgptbl.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.TangGiam1_2.Value) : 0);
-                   }
+                        ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                        cell4.CellStyle = styleCellNumber;
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg_TdGgptbl.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.TangGiam1_2.Value) : 0);
+                    }
                 }
 
                 #endregion
@@ -2140,60 +2142,60 @@ namespace DMS.BUSINESS.Services.BU
                 header_dlg_7.SetCellValue($"1.Lãi gộp từ {Hour} ngày {Date} và tính theo VCF Hè Thu từ tháng 5 - 10 hàng năm");
                 foreach (var dataDlg_Dlg7 in data.Result.DLG.Dlg_7)
                 {
-                   if (dataDlg_Dlg7.Type == "TT")
-                   {
-                       IRow row = sheetGLG.GetRow(rowIndexTT);
-                       if (row != null)
-                       {
-                           ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
-                           cell0.CellStyle = styleCellNumber;
-                           cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell0.SetCellValue(dataDlg_Dlg7.ColA);
+                    if (dataDlg_Dlg7.Type == "TT")
+                    {
+                        IRow row = sheetGLG.GetRow(rowIndexTT);
+                        if (row != null)
+                        {
+                            ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                            cell0.CellStyle = styleCellNumber;
+                            cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell0.SetCellValue(dataDlg_Dlg7.ColA);
 
-                           ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
-                           cell2.CellStyle = styleCellNumber;
-                           cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell2.SetCellValue(dataDlg_Dlg7.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col1) : 0);
+                            ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                            cell2.CellStyle = styleCellNumber;
+                            cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell2.SetCellValue(dataDlg_Dlg7.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col1) : 0);
 
-                           ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
-                           cell3.CellStyle = styleCellNumber;
-                           cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell3.SetCellValue(dataDlg_Dlg7.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col2.Value) : 0);
+                            ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                            cell3.CellStyle = styleCellNumber;
+                            cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell3.SetCellValue(dataDlg_Dlg7.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col2.Value) : 0);
 
-                           ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
-                           cell4.CellStyle = styleCellNumber;
-                           cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell4.SetCellValue(dataDlg_Dlg7.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.TangGiam1_2.Value) : 0);
-                       }
-                       rowIndexTT++; // Tăng dòng sau mỗi lần lặp
-                   }
-                   else if (dataDlg_Dlg7.Type == "OTHER")
-                   {
-                       IRow row = sheetGLG.GetRow(rowIndexOther);
-                       if (row != null)
-                       {
-                           ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
-                           cell0.CellStyle = styleCellNumber;
-                           cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell0.SetCellValue(dataDlg_Dlg7.ColA);
+                            ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                            cell4.CellStyle = styleCellNumber;
+                            cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell4.SetCellValue(dataDlg_Dlg7.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.TangGiam1_2.Value) : 0);
+                        }
+                        rowIndexTT++; // Tăng dòng sau mỗi lần lặp
+                    }
+                    else if (dataDlg_Dlg7.Type == "OTHER")
+                    {
+                        IRow row = sheetGLG.GetRow(rowIndexOther);
+                        if (row != null)
+                        {
+                            ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                            cell0.CellStyle = styleCellNumber;
+                            cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell0.SetCellValue(dataDlg_Dlg7.ColA);
 
-                           ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
-                           cell2.CellStyle = styleCellNumber;
-                           cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell2.SetCellValue(dataDlg_Dlg7.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col1) : 0);
+                            ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                            cell2.CellStyle = styleCellNumber;
+                            cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell2.SetCellValue(dataDlg_Dlg7.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col1) : 0);
 
-                           ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
-                           cell3.CellStyle = styleCellNumber;
-                           cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell3.SetCellValue(dataDlg_Dlg7.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col2.Value) : 0);
+                            ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                            cell3.CellStyle = styleCellNumber;
+                            cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell3.SetCellValue(dataDlg_Dlg7.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col2.Value) : 0);
 
-                           ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
-                           cell4.CellStyle = styleCellNumber;
-                           cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                           cell4.SetCellValue(dataDlg_Dlg7.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.TangGiam1_2.Value) : 0);
-                       }
-                       rowIndexOther++; // Tăng dòng sau mỗi lần lặp
-                   }
+                            ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                            cell4.CellStyle = styleCellNumber;
+                            cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell4.SetCellValue(dataDlg_Dlg7.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.TangGiam1_2.Value) : 0);
+                        }
+                        rowIndexOther++; // Tăng dòng sau mỗi lần lặp
+                    }
                 }
 
 
@@ -2207,32 +2209,32 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowdlg_Dlg8 = 26;
                 for (var i = 0; i < data.Result.DLG.Dlg_8.Count(); i++)
                 {
-                   var dataDlg_Dlg8 = data.Result.DLG.Dlg_8[i];
-                   int rowIndex = startRowdlg_Dlg8 + i;
-                   IRow row = sheetGLG.GetRow(rowIndex);
+                    var dataDlg_Dlg8 = data.Result.DLG.Dlg_8[i];
+                    int rowIndex = startRowdlg_Dlg8 + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
 
-                   if (row != null)
-                   {
-                       ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
-                       cell0.CellStyle = styleCellNumber;
-                       cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell0.SetCellValue(dataDlg_Dlg8.ColA);
+                    if (row != null)
+                    {
+                        ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                        cell0.CellStyle = styleCellNumber;
+                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell0.SetCellValue(dataDlg_Dlg8.ColA);
 
-                       ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
-                       cell0.CellStyle = styleCellNumber;
-                       cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell2.SetCellValue(dataDlg_Dlg8.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg8.Col1) : 0);
+                        ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                        cell0.CellStyle = styleCellNumber;
+                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell2.SetCellValue(dataDlg_Dlg8.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg8.Col1) : 0);
 
-                       ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
-                       cell3.CellStyle = styleCellNumber;
-                       cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell3.SetCellValue(dataDlg_Dlg8.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg8.Col2.Value) : 0);
+                        ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                        cell3.CellStyle = styleCellNumber;
+                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell3.SetCellValue(dataDlg_Dlg8.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg8.Col2.Value) : 0);
 
-                       ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
-                       cell4.CellStyle = styleCellNumber;
-                       cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                       cell4.SetCellValue(dataDlg_Dlg8.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg8.TangGiam1_2.Value) : 0);
-                   }
+                        ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                        cell4.CellStyle = styleCellNumber;
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg_Dlg8.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg8.TangGiam1_2.Value) : 0);
+                    }
 
                 }
 
@@ -2326,17 +2328,15 @@ namespace DMS.BUSINESS.Services.BU
                         rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
                     }
 
-                  
+
                 }
                 IRow rowCurPt = ReportUtilities.CreateRow(ref sheetPT, startRowPT += 2, 38);
                 rowCurPt.RowStyle = templateWorkbook.CreateCellStyle();
                 rowCurPt.RowStyle.SetFont(Boldweight);
                 rowCurPt.Cells[1].SetCellValue("LẬP BIỂU");
                 rowCurPt.Cells[6].SetCellValue("P. KINH DOANH XD");
-             
                 rowCurPt.Cells[12].SetCellValue("PHÒNG TCKT");
                 rowCurPt.Cells[24].SetCellValue("DUYỆT");
-                // no border rowCurPT
 
 
 
@@ -2544,6 +2544,7 @@ namespace DMS.BUSINESS.Services.BU
                 rowCurFob.Cells[7].SetCellValue("P. KINH DOANH XD");
                 rowCurFob.Cells[12].SetCellValue("KẾ  TOÁN TRƯỞNG");
                 rowCurFob.Cells[24].SetCellValue("DUYỆT");
+
                 #endregion
 
                 #region Export PT09
@@ -2614,7 +2615,7 @@ namespace DMS.BUSINESS.Services.BU
                         rowCur.Cells[30 + iBV].CellStyle = styleCellNumber;
                         rowCur.Cells[30 + iBV].SetCellValue(dataRow.BVMT[gg].VAT == 0 ? 0 : Convert.ToDouble(dataRow.BVMT[gg].VAT));
                         iBV += 2;
-                    }   
+                    }
 
                     for (var j = 0; j < 38; j++)
                     {
@@ -2632,6 +2633,7 @@ namespace DMS.BUSINESS.Services.BU
                 rowCurPT09.Cells[7].SetCellValue("P. KINH DOANH XD");
                 rowCurPT09.Cells[12].SetCellValue("KẾ  TOÁN TRƯỞNG");
                 rowCurPT09.Cells[24].SetCellValue("DUYỆT");
+
                 #endregion
 
                 #region Export BB ĐO
@@ -2725,21 +2727,20 @@ namespace DMS.BUSINESS.Services.BU
 
                 if (header.SignerCode == "TongGiamDoc")
                 {
-
                     IRow Row2 = sheetBBDO.GetRow(rowCurBBDO.RowNum + 4) ?? sheetBBDO.CreateRow(rowCurBBDO.RowNum + 1);
-                 
-                    sheetBBDO.AddMergedRegion(new CellRangeAddress(rowCurBBDO.RowNum , rowCurBBDO.RowNum, 12, 13));
+
+                    sheetBBDO.AddMergedRegion(new CellRangeAddress(rowCurBBDO.RowNum, rowCurBBDO.RowNum, 12, 13));
                     sheetBBDO.AddMergedRegion(new CellRangeAddress(rowCurBBDO.RowNum + 4, rowCurBBDO.RowNum + 4, 12, 13));
                     Row2.RowStyle = templateWorkbook.CreateCellStyle();
-                  
+
                     Row2.RowStyle.SetFont(Boldweight);
                     Row2.RowStyle.Alignment = HorizontalAlignment.Center;
                     rowCurBBDO.RowStyle.Alignment = HorizontalAlignment.Center;
-                     ICell cell2 = Row2.GetCell(12) ?? Row2.CreateCell(12);
-                   
+                    ICell cell2 = Row2.GetCell(12) ?? Row2.CreateCell(12);
+
                     rowCurBBDO.Cells[12].SetCellValue($"{nguoiKy.Position}");
                     cell2.SetCellValue($"{nguoiKy.Name}");
-                  
+
 
                 }
                 else
@@ -2760,6 +2761,7 @@ namespace DMS.BUSINESS.Services.BU
                     cell2.SetCellValue($"{nguoiKy.Position}");
                     cell3.SetCellValue($"{nguoiKy.Name}");
                 }
+
                 #endregion
 
                 #region Export BB FO
@@ -3053,7 +3055,6 @@ namespace DMS.BUSINESS.Services.BU
                     cell2.SetCellValue($"{nguoiKy.Position}");
                     cell3.SetCellValue($"{nguoiKy.Name}");
                 }
-
                 #endregion
 
                 #region Export PL4
@@ -3496,6 +3497,7 @@ namespace DMS.BUSINESS.Services.BU
                 }
 
                 #endregion
+
                 stopwatch.Stop();
                 Console.WriteLine("RunTime: " + stopwatch.ElapsedMilliseconds);
                 templateWorkbook.Write(outFileStream);
@@ -3718,9 +3720,12 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, header.QuyetDinhSo ?? "");
                                 break;
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Code != "TongGiamDoc" ? "KT.GIÁM ĐỐC CÔNG TY" : "");
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                break;
+                            case "##TEN@@":
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                             case "##TABLE_TT@@":
@@ -3813,6 +3818,7 @@ namespace DMS.BUSINESS.Services.BU
                 //    AppendWordFilesToNewDocument(filePathTemplate, fullPath);
                 //}
             }
+
             else if (nameTemp == "QDGNoiDung")
             {
                 var dlg5 = data.DLG.Dlg_5;
@@ -3835,9 +3841,12 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, header.QuyetDinhSo);
                                 break;
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Code != "TongGiamDoc" ? "KT.GIÁM ĐỐC CÔNG TY" : "");
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                break;
+                            case "##TEN@@":
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                             case "##TABLE_ND@@":
@@ -3907,6 +3916,7 @@ namespace DMS.BUSINESS.Services.BU
                     }
                 }
             }
+
             else if (nameTemp == "QDGCtyPTS")
             {
                 var dlg6 = data.DLG.Dlg_6;
@@ -3929,9 +3939,12 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, header.QuyetDinhSo);
                                 break;
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Code != "TongGiamDoc" ? "KT.GIÁM ĐỐC CÔNG TY" : "");
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                break;
+                            case "##TEN@@":
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                             case "##TABLE_PTS@@":
@@ -4000,6 +4013,7 @@ namespace DMS.BUSINESS.Services.BU
                     }
                 }
             }
+
             else if (nameTemp == "QDGBanBuon")
             {
                 using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
@@ -4024,9 +4038,12 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, header.QuyetDinhSo);
                                 break;
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Code != "TongGiamDoc" ? "KT.GIÁM ĐỐC CÔNG TY" : "");
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                break;
+                            case "##TEN@@":
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                         }
@@ -4034,6 +4051,7 @@ namespace DMS.BUSINESS.Services.BU
                     }
                 }
             }
+            
             else if(nameTemp == "MucGiamGiaNQTM")
             {
                 using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
@@ -4058,9 +4076,12 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, header.QuyetDinhSo);
                                 break;
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Code != "TongGiamDoc" ? "KT.GIÁM ĐỐC CÔNG TY" : "");
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                break;
+                            case "##TEN@@":
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                         }
@@ -4068,6 +4089,7 @@ namespace DMS.BUSINESS.Services.BU
                     }
                 } 
             }
+            
             else if (nameTemp == "KeKhaiGia")
             {
                 using (WordprocessingDocument doc = WordprocessingDocument.Open(fullPath, true))
@@ -4081,11 +4103,14 @@ namespace DMS.BUSINESS.Services.BU
                         {
                             case "##F_DATE@@":
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date);
-                                break;                          
+                                break;
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Code != "TongGiamDoc" ? "KT.GIÁM ĐỐC CÔNG TY" : "");
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                break;
+                            case "##TEN@@":
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                         }
@@ -4093,6 +4118,7 @@ namespace DMS.BUSINESS.Services.BU
                     }
                 }
             }
+            
             else if (nameTemp == "ToTrinh")
             {
                 var dlg7 = data.DLG.Dlg_7;
@@ -4282,9 +4308,12 @@ namespace DMS.BUSINESS.Services.BU
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, header.QuyetDinhSo);
                                 break;
                             case "##DAI_DIEN@@":
-                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Code != "TongGiamDoc" ? "KT.GIÁM ĐỐC CÔNG TY" : "");
                                 break;
                             case "##NGUOI_DAI_DIEN@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Position);
+                                break;
+                            case "##TEN@@":
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, NguoiKyTen.Name);
                                 break;
                             case "##TABLE_TT@@":

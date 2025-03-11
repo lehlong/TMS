@@ -19,11 +19,11 @@ namespace DMS.CORE.Entities.MD
         [Column("NAME", TypeName = "NVARCHAR(255)")]
         public string Name { set; get; }
 
-        [Column("PHONE", TypeName = "VARCHAR(50)")]
-        public string? Phone { set; get; }
+        //[Column("PHONE", TypeName = "VARCHAR(50)")]
+        //public string? Phone { set; get; }
 
-        [Column("EMAIL", TypeName = "NVARCHAR(255)")]
-        public string? Email { set; get; }
+        //[Column("EMAIL", TypeName = "NVARCHAR(255)")]
+        //public string? Email { set; get; }
 
         [Column("ADDRESS", TypeName = "NVARCHAR(255)")]
         public string? Address { set; get; }

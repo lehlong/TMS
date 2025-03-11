@@ -23,11 +23,11 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Tên")]
         public string Name { get; set; }
 
-        [Description("Số điện thoại")]
-        public string? Phone { get; set; }
+        //[Description("Số điện thoại")]
+        //public string? Phone { get; set; }
 
-        [Description("email")]
-        public string? Email { get; set; }
+        //[Description("email")]
+        //public string? Email { get; set; }
 
         [Description("địa chỉ")]
         public string? Address { get; set; }
