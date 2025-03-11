@@ -978,10 +978,10 @@ namespace DMS.BUSINESS.Services.BU
                         i.Col17 = Math.Round(i.Col7 - i.Col8 - i.Col15 - i.Col11 ?? 0);
                         i.Col16 = Math.Round(i.Col17 * 1.1M ?? 0);
                         //i.Col19 = Math.Round(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col14  ?? 0);
-                      
-                        i.Col19 =  (e.CustomerCode== "305152" ||e.CustomerCode== "308417") ? ((data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col16)==0 ? 0 : (int)((Math.Floor((data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col16 ?? 0)- (decimal)0.5) -5)/100)*100) :(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col16 ??0) ;
 
-                        i.Col18 = i.Col19 == 0 ? 0 : Math.Round(i.Col19 / 1.1M - data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col2) ?? 0);
+                        //i.Col19 =  (e.CustomerCode== "305152" ||e.CustomerCode== "308417") ? ((data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col16)==0 ? 0 : (int)((Math.Floor((data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col16 ?? 0)- (decimal)0.5) -5)/100)*100) :(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col16 ??0) ;
+                        i.Col19 = (data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col14);
+                         i.Col18 = i.Col19 == 0 ? 0 : Math.Round(i.Col19 / 1.1M - data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col2) ?? 0);
 
                         data.BBDO.Add(i);
                         _o++;
@@ -3377,6 +3377,7 @@ namespace DMS.BUSINESS.Services.BU
 
             #region Fill dữ liệu
             var data = await GetResult(headerId);
+
             var header = await _dbContext.TblBuCalculateResultList.FindAsync(headerId);
             var model = await GetDataInput(headerId);
             var goods = await _dbContext.TblMdGoods.ToListAsync();
@@ -3384,6 +3385,32 @@ namespace DMS.BUSINESS.Services.BU
             var f_date = $"{header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
             var date = $"{header.FDate.Day}/{header.FDate.Month}/{header.FDate.Year}";
             var f_date_hour = $"kể từ {header.FDate.Hour} giờ {header.FDate.Minute} ngày {header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
+
+            var OldCalculate = await _dbContext.TblBuCalculateResultList
+                                    .Where(x => x.FDate < header.FDate)
+                                    .Where(x => x.Status == "04")
+                                    .OrderByDescending(x => x.FDate)
+                                    .FirstOrDefaultAsync();
+            var model_Old = await GetDataInput(OldCalculate.Code);
+            var data__DLG_DLG_2_Old = new List<DLG_2>();
+            var dataVCL = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == OldCalculate.Code).ToListAsync();
+            if (dataVCL.Count() == 0)
+            {
+                return "lỗi k có dữ liệu dataVCL hoặc dataHSMH";
+            }
+            foreach (var g in goods)
+            {
+                var vcl = dataVCL.Where(x => x.GoodsCode == g.Code).ToList();
+
+                data__DLG_DLG_2_Old.Add(new DLG_2
+                {
+                    Code = g.Code,
+                    Col1 = g.Name,
+                    Col2 = vcl.Sum(x => x.GblV2),
+                });
+
+            }
+              
             TableCell CreateCell(string text, bool isBold = true, int fontSize = 26, bool isCenter = true, string width = "2400", int? gridSpan = null, int v = 0)
             {
                 Run run = new Run(new Text(text));
@@ -4015,6 +4042,9 @@ namespace DMS.BUSINESS.Services.BU
                             case "##DATE@@":
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, date);
                                 break;
+                            case "##F_DATE_HOUR@@":
+                                wordDocumentService.ReplaceStringInWordDocumennt(doc, t, f_date_hour);
+                                break;
                             case "##QUYET_DINH_SO@@":
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, header.QuyetDinhSo);
                                 break;
@@ -4041,6 +4071,7 @@ namespace DMS.BUSINESS.Services.BU
                                    );
                                     table.AppendChild(tblProperties);
 
+                                    Console.WriteLine("Dữ liệu model đợt cũ" + model_Old.Header.Name);
                                     #region Gendata table
                                     var o = 1;
                                     var goodsList = goods.Where(x => x.IsActive == true)
@@ -4048,14 +4079,18 @@ namespace DMS.BUSINESS.Services.BU
                                                          .ToList();
                                     foreach (var i in goodsList)
                                     {
+                                        
                                         var HS2Item = model.HS2.FirstOrDefault(x => x.GoodsCode == i.Code);
-                                        if (HS2Item != null)
+                                        var HS2Item_Old = model_Old.HS2.FirstOrDefault(x => x.GoodsCode == i.Code);
+                                        Console.WriteLine("Dữ liệu model đợt cũ" + HS2Item_Old.Gny);
+                                        if (HS2Item != null && HS2Item_Old != null)
                                         {
                                             TableRow row = new TableRow();
                                             row.Append(CreateCell("+ " + i.Name, true, 26, false, "3500"));
                                             row.Append(CreateCell(":", false, 26, true, "1"));
                                             row.Append(CreateCell(HS2Item.Gny.ToString("N0"), true, 26, false, "2400"));
                                             row.Append(CreateCell("đ/lít thực tế", false, 26, false, "2400"));
+                                            row.Append(CreateCell(HS2Item.Gny != HS2Item_Old.Gny ? "Thay đổi" : "Không thay đổi", false, 26, false, "2400"));
                                             table.Append(row);
                                             o++;
                                         }
@@ -4084,19 +4119,24 @@ namespace DMS.BUSINESS.Services.BU
 
                                     #region Gendata table
                                     var o = 1;
-                                    foreach (var i in data.DLG.Dlg_2)
+                                    
+                                    for (int index = 0; index < data.DLG.Dlg_2.Count; index++)
                                     {
-                                        if(i.Code != "701001")
+                                        var i = data.DLG.Dlg_2[index];
+                                        var i_Old = data__DLG_DLG_2_Old.FirstOrDefault(x => x.Col1 == i.Col1);
+                                        if (i.Code != "701001")
                                         {
                                             TableRow row = new TableRow();
                                             row.Append(CreateCell("+ " + i.Col1, true, 26, false, "3500"));
                                             row.Append(CreateCell(":", false, 26, true, "1"));
                                             row.Append(CreateCell(i.Col2.Value.ToString("N0"), true, 26, false, "2400"));
                                             row.Append(CreateCell("đ/lít thực tế", false, 26, false, "2400"));
+                                            row.Append(CreateCell(i.Col2 != i_Old.Col2 ? "Thay đổi" : "Không thay đổi", false, 26, false, "2400"));
                                             table.Append(row);
                                             o++;
                                         }
                                     }
+
 
                                     #endregion
 
