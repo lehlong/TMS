@@ -29,6 +29,7 @@ using Aspose.Words.Tables;
 using System.Data;
 using System.Globalization;
 using NPOI.SS.Util;
+using System.Diagnostics;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -1580,6 +1581,8 @@ namespace DMS.BUSINESS.Services.BU
                                                        .ToList()
                                                        .FirstOrDefault();
                 var data = GetResult(headerId);
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
                 FileStream fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite);
                 IWorkbook templateWorkbook;
                 templateWorkbook = new XSSFWorkbook(fs);
@@ -2330,12 +2333,14 @@ namespace DMS.BUSINESS.Services.BU
                 rowCurPt.RowStyle.SetFont(Boldweight);
                 rowCurPt.Cells[1].SetCellValue("LẬP BIỂU");
                 rowCurPt.Cells[6].SetCellValue("P. KINH DOANH XD");
-                rowCurPt.Cells[24].SetCellValue("PHÒNG TCKT");
+             
+                rowCurPt.Cells[12].SetCellValue("PHÒNG TCKT");
+                rowCurPt.Cells[24].SetCellValue("DUYỆT");
                 // no border rowCurPT
 
-                
 
-               
+
+
 
                 #endregion
 
@@ -2432,6 +2437,13 @@ namespace DMS.BUSINESS.Services.BU
                         rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
                     }
                 }
+                IRow rowCurDB = ReportUtilities.CreateRow(ref sheetDB, startRowDB++, 43);
+                rowCurDB.RowStyle = templateWorkbook.CreateCellStyle();
+                rowCurDB.RowStyle.SetFont(Boldweight);
+                rowCurDB.Cells[1].SetCellValue("LẬP BIỂU");
+                rowCurDB.Cells[7].SetCellValue("P. KINH DOANH XD");
+                rowCurDB.Cells[12].SetCellValue("KẾ  TOÁN TRƯỞNG");
+                rowCurDB.Cells[24].SetCellValue("DUYỆT");
 
                 #endregion
 
@@ -2525,7 +2537,13 @@ namespace DMS.BUSINESS.Services.BU
                         rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
                     }
                 }
-
+                IRow rowCurFob = ReportUtilities.CreateRow(ref sheetFOB, startRowFOB++, 40);
+                rowCurFob.RowStyle = templateWorkbook.CreateCellStyle();
+                rowCurFob.RowStyle.SetFont(Boldweight);
+                rowCurFob.Cells[1].SetCellValue("LẬP BIỂU");
+                rowCurFob.Cells[7].SetCellValue("P. KINH DOANH XD");
+                rowCurFob.Cells[12].SetCellValue("KẾ  TOÁN TRƯỞNG");
+                rowCurFob.Cells[24].SetCellValue("DUYỆT");
                 #endregion
 
                 #region Export PT09
@@ -2607,7 +2625,13 @@ namespace DMS.BUSINESS.Services.BU
                         rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
                     }
                 }
-
+                IRow rowCurPT09 = ReportUtilities.CreateRow(ref sheetPT09, startRowPT09++, 39);
+                rowCurPT09.RowStyle = templateWorkbook.CreateCellStyle();
+                rowCurPT09.RowStyle.SetFont(Boldweight);
+                rowCurPT09.Cells[1].SetCellValue("LẬP BIỂU");
+                rowCurPT09.Cells[7].SetCellValue("P. KINH DOANH XD");
+                rowCurPT09.Cells[12].SetCellValue("KẾ  TOÁN TRƯỞNG");
+                rowCurPT09.Cells[24].SetCellValue("DUYỆT");
                 #endregion
 
                 #region Export BB ĐO
@@ -2692,7 +2716,50 @@ namespace DMS.BUSINESS.Services.BU
                         rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
                     }
                 }
+                IRow rowCurBBDO = ReportUtilities.CreateRow(ref sheetBBDO, startRowBBDO++, 23);
+                rowCurBBDO.RowStyle = templateWorkbook.CreateCellStyle();
+                rowCurBBDO.RowStyle.SetFont(Boldweight);
+                rowCurBBDO.Cells[1].SetCellValue("LẬP BIỂU");
+                rowCurBBDO.Cells[4].SetCellValue("P.KDXD");
+                rowCurBBDO.Cells[7].SetCellValue("PHÒNG TCKT");
 
+                if (header.SignerCode == "TongGiamDoc")
+                {
+
+                    IRow Row2 = sheetBBDO.GetRow(rowCurBBDO.RowNum + 4) ?? sheetBBDO.CreateRow(rowCurBBDO.RowNum + 1);
+                 
+                    sheetBBDO.AddMergedRegion(new CellRangeAddress(rowCurBBDO.RowNum , rowCurBBDO.RowNum, 12, 13));
+                    sheetBBDO.AddMergedRegion(new CellRangeAddress(rowCurBBDO.RowNum + 4, rowCurBBDO.RowNum + 4, 12, 13));
+                    Row2.RowStyle = templateWorkbook.CreateCellStyle();
+                  
+                    Row2.RowStyle.SetFont(Boldweight);
+                    Row2.RowStyle.Alignment = HorizontalAlignment.Center;
+                    rowCurBBDO.RowStyle.Alignment = HorizontalAlignment.Center;
+                     ICell cell2 = Row2.GetCell(12) ?? Row2.CreateCell(12);
+                   
+                    rowCurBBDO.Cells[12].SetCellValue($"{nguoiKy.Position}");
+                    cell2.SetCellValue($"{nguoiKy.Name}");
+                  
+
+                }
+                else
+                {
+                    IRow Row2 = sheetBBDO.GetRow(rowCurBBDO.RowNum + 1) ?? sheetBBDO.CreateRow(rowCurBBDO.RowNum + 1);
+                    IRow Row3 = sheetBBDO.GetRow(rowCurBBDO.RowNum + 4) ?? sheetBBDO.CreateRow(rowCurBBDO.RowNum + 1);
+                    sheetBBDO.AddMergedRegion(new CellRangeAddress(rowCurBBDO.RowNum + 1, rowCurBBDO.RowNum + 1, 12, 13));
+                    sheetBBDO.AddMergedRegion(new CellRangeAddress(rowCurBBDO.RowNum + 4, rowCurBBDO.RowNum + 4, 12, 13));
+                    Row2.RowStyle = templateWorkbook.CreateCellStyle();
+                    Row3.RowStyle = templateWorkbook.CreateCellStyle();
+                    Row2.RowStyle.SetFont(Boldweight);
+                    Row2.RowStyle.Alignment = HorizontalAlignment.Center;
+                    Row3.RowStyle.Alignment = HorizontalAlignment.Center;
+                    Row3.RowStyle.SetFont(Boldweight);
+                    ICell cell2 = Row2.GetCell(12) ?? Row2.CreateCell(12);
+                    ICell cell3 = Row3.GetCell(12) ?? Row3.CreateCell(12);
+                    rowCurBBDO.Cells[12].SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+                    cell2.SetCellValue($"{nguoiKy.Position}");
+                    cell3.SetCellValue($"{nguoiKy.Name}");
+                }
                 #endregion
 
                 #region Export BB FO
@@ -2789,7 +2856,50 @@ namespace DMS.BUSINESS.Services.BU
                     }
 
                 }
+                IRow rowCurPL1 = ReportUtilities.CreateRow(ref sheetPL1, startRowPL1++, 7);
+                rowCurPL1.RowStyle = templateWorkbook.CreateCellStyle();
+                rowCurPL1.RowStyle.SetFont(Boldweight);
+                rowCurPL1.Cells[0].SetCellValue("LẬP BIỂU");
+                rowCurPL1.Cells[2].SetCellValue("P.KDXD");
+                rowCurPL1.Cells[4].SetCellValue("P.TCKT");
 
+                if (header.SignerCode == "TongGiamDoc")
+                {
+
+                    IRow Row2 = sheetPL1.GetRow(rowCurPL1.RowNum + 4) ?? sheetPL1.CreateRow(rowCurPL1.RowNum + 1);
+
+                    sheetPL1.AddMergedRegion(new CellRangeAddress(rowCurPL1.RowNum, rowCurPL1.RowNum, 5, 6));
+                    sheetPL1.AddMergedRegion(new CellRangeAddress(rowCurPL1.RowNum + 4, rowCurPL1.RowNum + 4, 5, 6));
+                    Row2.RowStyle = templateWorkbook.CreateCellStyle();
+
+                    Row2.RowStyle.SetFont(Boldweight);
+                    Row2.RowStyle.Alignment = HorizontalAlignment.Center;
+                    rowCurPL1.RowStyle.Alignment = HorizontalAlignment.Center;
+                    ICell cell2 = Row2.GetCell(5) ?? Row2.CreateCell(5);
+
+                    rowCurPL1.Cells[5].SetCellValue($"{nguoiKy.Position}");
+                    cell2.SetCellValue($"{nguoiKy.Name}");
+
+
+                }
+                else
+                {
+                    IRow Row2 = sheetPL1.GetRow(rowCurPL1.RowNum + 1) ?? sheetPL1.CreateRow(rowCurPL1.RowNum + 1);
+                    IRow Row3 = sheetPL1.GetRow(rowCurPL1.RowNum + 4) ?? sheetPL1.CreateRow(rowCurPL1.RowNum + 1);
+                    sheetPL1.AddMergedRegion(new CellRangeAddress(rowCurPL1.RowNum + 1, rowCurPL1.RowNum + 1, 5, 6));
+                    sheetBBDO.AddMergedRegion(new CellRangeAddress(rowCurPL1.RowNum + 4, rowCurPL1.RowNum + 4, 5, 6));
+                    Row2.RowStyle = templateWorkbook.CreateCellStyle();
+                    Row3.RowStyle = templateWorkbook.CreateCellStyle();
+                    Row2.RowStyle.SetFont(Boldweight);
+                    Row2.RowStyle.Alignment = HorizontalAlignment.Center;
+                    Row3.RowStyle.Alignment = HorizontalAlignment.Center;
+                    Row3.RowStyle.SetFont(Boldweight);
+                    ICell cell2 = Row2.GetCell(5) ?? Row2.CreateCell(5);
+                    ICell cell3 = Row3.GetCell(5) ?? Row3.CreateCell(5);
+                    rowCurBBDO.Cells[5].SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+                    cell2.SetCellValue($"{nguoiKy.Position}");
+                    cell3.SetCellValue($"{nguoiKy.Name}");
+                }
                 #endregion
 
                 #region Export PL2
@@ -2822,7 +2932,50 @@ namespace DMS.BUSINESS.Services.BU
                         rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
                     }
                 }
+                IRow rowCurPL2 = ReportUtilities.CreateRow(ref sheetPL2, startRowPL2++, 7);
+                rowCurPL2.RowStyle = templateWorkbook.CreateCellStyle();
+                rowCurPL2.RowStyle.SetFont(Boldweight);
+                rowCurPL2.Cells[0].SetCellValue("LẬP BIỂU");
+                rowCurPL2.Cells[2].SetCellValue("P.KDXD");
+                rowCurPL2.Cells[4].SetCellValue("P.TCKT");
 
+                if (header.SignerCode == "TongGiamDoc")
+                {
+
+                    IRow Row2 = sheetPL2.GetRow(rowCurPL2.RowNum + 4) ?? sheetPL2.CreateRow(rowCurPL2.RowNum + 1);
+
+                    sheetPL2.AddMergedRegion(new CellRangeAddress(rowCurPL2.RowNum, rowCurPL2.RowNum, 5, 6));
+                    sheetPL2.AddMergedRegion(new CellRangeAddress(rowCurPL2.RowNum + 4, rowCurPL2.RowNum + 4, 5, 6));
+                    Row2.RowStyle = templateWorkbook.CreateCellStyle();
+
+                    Row2.RowStyle.SetFont(Boldweight);
+                    Row2.RowStyle.Alignment = HorizontalAlignment.Center;
+                    rowCurPL2.RowStyle.Alignment = HorizontalAlignment.Center;
+                    ICell cell2 = Row2.GetCell(5) ?? Row2.CreateCell(5);
+
+                    rowCurPL2.Cells[5].SetCellValue($"{nguoiKy.Position}");
+                    cell2.SetCellValue($"{nguoiKy.Name}");
+
+
+                }
+                else
+                {
+                    IRow Row2 = sheetPL2.GetRow(rowCurPL2.RowNum + 1) ?? sheetPL2.CreateRow(rowCurPL2.RowNum + 1);
+                    IRow Row3 = sheetPL2.GetRow(rowCurPL2.RowNum + 4) ?? sheetPL2.CreateRow(rowCurPL2.RowNum + 1);
+                    sheetPL2.AddMergedRegion(new CellRangeAddress(rowCurPL2.RowNum + 1, rowCurPL2.RowNum + 1, 5, 6));
+                    sheetBBDO.AddMergedRegion(new CellRangeAddress(rowCurPL2.RowNum + 4, rowCurPL2.RowNum + 4, 5, 6));
+                    Row2.RowStyle = templateWorkbook.CreateCellStyle();
+                    Row3.RowStyle = templateWorkbook.CreateCellStyle();
+                    Row2.RowStyle.SetFont(Boldweight);
+                    Row2.RowStyle.Alignment = HorizontalAlignment.Center;
+                    Row3.RowStyle.Alignment = HorizontalAlignment.Center;
+                    Row3.RowStyle.SetFont(Boldweight);
+                    ICell cell2 = Row2.GetCell(5) ?? Row2.CreateCell(5);
+                    ICell cell3 = Row3.GetCell(5) ?? Row3.CreateCell(5);
+                    rowCurBBDO.Cells[5].SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+                    cell2.SetCellValue($"{nguoiKy.Position}");
+                    cell3.SetCellValue($"{nguoiKy.Name}");
+                }
                 #endregion
 
                 #region Export PL3
@@ -2855,6 +3008,50 @@ namespace DMS.BUSINESS.Services.BU
                         rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
                     }
 
+                }
+                IRow rowCurPL3 = ReportUtilities.CreateRow(ref sheetPL3, startRowPL3++, 7);
+                rowCurPL3.RowStyle = templateWorkbook.CreateCellStyle();
+                rowCurPL3.RowStyle.SetFont(Boldweight);
+                rowCurPL3.Cells[0].SetCellValue("LẬP BIỂU");
+                rowCurPL3.Cells[2].SetCellValue("P.KDXD");
+                rowCurPL3.Cells[4].SetCellValue("P.TCKT");
+
+                if (header.SignerCode == "TongGiamDoc")
+                {
+
+                    IRow Row2 = sheetPL3.GetRow(rowCurPL3.RowNum + 4) ?? sheetPL3.CreateRow(rowCurPL3.RowNum + 1);
+
+                    sheetPL3.AddMergedRegion(new CellRangeAddress(rowCurPL3.RowNum, rowCurPL3.RowNum, 5, 6));
+                    sheetPL3.AddMergedRegion(new CellRangeAddress(rowCurPL3.RowNum + 4, rowCurPL3.RowNum + 4, 5, 6));
+                    Row2.RowStyle = templateWorkbook.CreateCellStyle();
+
+                    Row2.RowStyle.SetFont(Boldweight);
+                    Row2.RowStyle.Alignment = HorizontalAlignment.Center;
+                    rowCurPL3.RowStyle.Alignment = HorizontalAlignment.Center;
+                    ICell cell2 = Row2.GetCell(5) ?? Row2.CreateCell(5);
+
+                    rowCurPL3.Cells[5].SetCellValue($"{nguoiKy.Position}");
+                    cell2.SetCellValue($"{nguoiKy.Name}");
+
+
+                }
+                else
+                {
+                    IRow Row2 = sheetPL3.GetRow(rowCurPL3.RowNum + 1) ?? sheetPL3.CreateRow(rowCurPL3.RowNum + 1);
+                    IRow Row3 = sheetPL3.GetRow(rowCurPL3.RowNum + 4) ?? sheetPL3.CreateRow(rowCurPL3.RowNum + 1);
+                    sheetPL3.AddMergedRegion(new CellRangeAddress(rowCurPL3.RowNum + 1, rowCurPL3.RowNum + 1, 5, 6));
+                    sheetBBDO.AddMergedRegion(new CellRangeAddress(rowCurPL3.RowNum + 4, rowCurPL3.RowNum + 4, 5, 6));
+                    Row2.RowStyle = templateWorkbook.CreateCellStyle();
+                    Row3.RowStyle = templateWorkbook.CreateCellStyle();
+                    Row2.RowStyle.SetFont(Boldweight);
+                    Row2.RowStyle.Alignment = HorizontalAlignment.Center;
+                    Row3.RowStyle.Alignment = HorizontalAlignment.Center;
+                    Row3.RowStyle.SetFont(Boldweight);
+                    ICell cell2 = Row2.GetCell(5) ?? Row2.CreateCell(5);
+                    ICell cell3 = Row3.GetCell(5) ?? Row3.CreateCell(5);
+                    rowCurBBDO.Cells[5].SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+                    cell2.SetCellValue($"{nguoiKy.Position}");
+                    cell3.SetCellValue($"{nguoiKy.Name}");
                 }
 
                 #endregion
@@ -2889,7 +3086,50 @@ namespace DMS.BUSINESS.Services.BU
                         rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
                     }
                 }
+                IRow rowCurPL4 = ReportUtilities.CreateRow(ref sheetPL4, startRowPL4++, 7);
+                rowCurPL4.RowStyle = templateWorkbook.CreateCellStyle();
+                rowCurPL4.RowStyle.SetFont(Boldweight);
+                rowCurPL4.Cells[0].SetCellValue("LẬP BIỂU");
+                rowCurPL4.Cells[2].SetCellValue("P.KDXD");
+                rowCurPL4.Cells[4].SetCellValue("P.TCKT");
 
+                if (header.SignerCode == "TongGiamDoc")
+                {
+
+                    IRow Row2 = sheetPL4.GetRow(rowCurPL4.RowNum + 4) ?? sheetPL4.CreateRow(rowCurPL4.RowNum + 1);
+
+                    sheetPL4.AddMergedRegion(new CellRangeAddress(rowCurPL4.RowNum, rowCurPL4.RowNum, 5, 6));
+                    sheetPL4.AddMergedRegion(new CellRangeAddress(rowCurPL4.RowNum + 4, rowCurPL4.RowNum + 4, 5, 6));
+                    Row2.RowStyle = templateWorkbook.CreateCellStyle();
+
+                    Row2.RowStyle.SetFont(Boldweight);
+                    Row2.RowStyle.Alignment = HorizontalAlignment.Center;
+                    rowCurPL4.RowStyle.Alignment = HorizontalAlignment.Center;
+                    ICell cell2 = Row2.GetCell(5) ?? Row2.CreateCell(5);
+
+                    rowCurPL4.Cells[5].SetCellValue($"{nguoiKy.Position}");
+                    cell2.SetCellValue($"{nguoiKy.Name}");
+
+
+                }
+                else
+                {
+                    IRow Row2 = sheetPL4.GetRow(rowCurPL4.RowNum + 1) ?? sheetPL4.CreateRow(rowCurPL4.RowNum + 1);
+                    IRow Row3 = sheetPL4.GetRow(rowCurPL4.RowNum + 4) ?? sheetPL4.CreateRow(rowCurPL4.RowNum + 1);
+                    sheetPL4.AddMergedRegion(new CellRangeAddress(rowCurPL4.RowNum + 1, rowCurPL4.RowNum + 1, 5, 6));
+                    sheetBBDO.AddMergedRegion(new CellRangeAddress(rowCurPL4.RowNum + 4, rowCurPL4.RowNum + 4, 5, 6));
+                    Row2.RowStyle = templateWorkbook.CreateCellStyle();
+                    Row3.RowStyle = templateWorkbook.CreateCellStyle();
+                    Row2.RowStyle.SetFont(Boldweight);
+                    Row2.RowStyle.Alignment = HorizontalAlignment.Center;
+                    Row3.RowStyle.Alignment = HorizontalAlignment.Center;
+                    Row3.RowStyle.SetFont(Boldweight);
+                    ICell cell2 = Row2.GetCell(5) ?? Row2.CreateCell(5);
+                    ICell cell3 = Row3.GetCell(5) ?? Row3.CreateCell(5);
+                    rowCurBBDO.Cells[12].SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+                    cell2.SetCellValue($"{nguoiKy.Position}");
+                    cell3.SetCellValue($"{nguoiKy.Name}");
+                }
                 #endregion
 
                 #region Export VK11-PT
@@ -3256,7 +3496,8 @@ namespace DMS.BUSINESS.Services.BU
                 }
 
                 #endregion
-
+                stopwatch.Stop();
+                Console.WriteLine("RunTime: " + stopwatch.ElapsedMilliseconds);
                 templateWorkbook.Write(outFileStream);
             }
             catch (Exception ex)
