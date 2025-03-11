@@ -1602,17 +1602,24 @@ namespace DMS.BUSINESS.Services.BU
                 fontBold.FontHeightInPoints = 12;
                 fontBold.FontName = "Times New Roman";
 
+               
+                var fontBoldROW = templateWorkbook.CreateFont();
+                fontBoldROW.IsBold = true;
+                fontBoldROW.FontHeightInPoints = 13;
+                fontBoldROW.FontName = "Times New Roman";
+                
+
                 ICellStyle cell2Style = templateWorkbook.CreateCellStyle();
                 cell2Style.CloneStyleFrom(styleCellNumber);
                 cell2Style.DataFormat = templateWorkbook.CreateDataFormat().GetFormat("#,##0.###;-#,##0.###;0");
-
+                
                 // Gán lại font và border nếu cần thiết
                 cell2Style.SetFont(font);
                 cell2Style.BorderBottom = BorderStyle.Thin;
                 cell2Style.BorderTop = BorderStyle.Thin;
                 cell2Style.BorderLeft = BorderStyle.Thin;
                 cell2Style.BorderRight = BorderStyle.Thin;
-
+               
                 var Date = header.FDate.ToString("dd/MM/yyyy");
                 var Date_2 = header.FDate.ToString("'ngày' dd 'tháng' MM 'năm' yyyy", CultureInfo.InvariantCulture);
                 var Date_3 = header.FDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
@@ -2261,8 +2268,14 @@ namespace DMS.BUSINESS.Services.BU
                   
                 }
                 IRow rowCurPt = ReportUtilities.CreateRow(ref sheetPT, startRowPT += 2, 38);
+                rowCurPt.RowStyle = templateWorkbook.CreateCellStyle();
+                rowCurPt.RowStyle.SetFont(fontBoldROW);
+                rowCurPt.Cells[1].SetCellValue("LẬP BIỂU");
+                rowCurPt.Cells[6].SetCellValue("P. KINH DOANH XD");
+                rowCurPt.Cells[24].SetCellValue("PHÒNG TCKT");
+                // no border rowCurPT
 
-                rowCurPt.Cells[1].SetCellValue("Lập biểu");
+                
 
                
 
