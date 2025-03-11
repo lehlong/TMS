@@ -1571,18 +1571,14 @@ namespace DMS.BUSINESS.Services.BU
         {
             try
             {
-                //Get Data
-   
-
                 var header = _dbContext.TblBuCalculateResultList
                                        .Where(x => x.Code == headerId)
                                        .ToList()
                                        .FirstOrDefault();
 
-                var nguoiKyTen = _dbContext.TblMdSigner
-               .Where(x => x.Code == header.SignerCode)
-               .ToList()
-               .FirstOrDefault();
+                var nguoiKy = _dbContext.TblMdSigner.Where(x => x.Code == header.SignerCode)
+                                                       .ToList()
+                                                       .FirstOrDefault();
                 var data = GetResult(headerId);
                 FileStream fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite);
                 IWorkbook templateWorkbook;
@@ -1598,15 +1594,11 @@ namespace DMS.BUSINESS.Services.BU
 
                 ICellStyle styleCellBold = templateWorkbook.CreateCellStyle(); // chữ in đậm
                 var fontBold = templateWorkbook.CreateFont();
-                fontBold.Boldweight = (short)FontBoldWeight.Bold;
-                fontBold.FontHeightInPoints = 12;
-                fontBold.FontName = "Times New Roman";
-
                
-                var fontBoldROW = templateWorkbook.CreateFont();
-                fontBoldROW.IsBold = true;
-                fontBoldROW.FontHeightInPoints = 13;
-                fontBoldROW.FontName = "Times New Roman";
+                var Boldweight = templateWorkbook.CreateFont();
+                Boldweight.IsBold = true;
+                Boldweight.FontHeightInPoints = 12;
+                Boldweight.FontName = "Times New Roman";
                 
 
                 ICellStyle cell2Style = templateWorkbook.CreateCellStyle();
@@ -1626,9 +1618,10 @@ namespace DMS.BUSINESS.Services.BU
                 var Hour = header.FDate.ToString("HH'h'mm", CultureInfo.InvariantCulture);
                 var Time = header.FDate.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
                 var QuyetDinhSo = header.QuyetDinhSo;
-                var startRowdlg_1  = 4;
+                
                 #region Dữ liệu gốc
 
+                var startRowdlg_1  = 4;
                 ISheet sheetGLG = templateWorkbook.GetSheetAt(0);
                 #region Thị trường Thành phố Vinh, TX Cửa Lò
 
@@ -1724,6 +1717,28 @@ namespace DMS.BUSINESS.Services.BU
                 footer_dlg_3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                 footer_dlg_3.SetCellValue($"Vinh, {Date_2}");
 
+                if (header.SignerCode == "TongGiamDoc")
+                {
+                    IRow rowFooter_Ky_dlg_3 = sheetGLG.GetRow(47);
+                    ICell footer_Ky_dlg_3 = rowFooter_Ky_dlg_3.GetCell(9) ?? rowFooter_Ky_dlg_3.CreateCell(9);
+                    footer_Ky_dlg_3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_3.SetCellValue($"{nguoiKy.Position}");
+                }
+                else
+                {
+
+                    IRow rowFooter_Ky_dlg_3 = sheetGLG.GetRow(47);
+                    ICell footer_Ky_dlg_3 = rowFooter_Ky_dlg_3.GetCell(9) ?? rowFooter_Ky_dlg_3.CreateCell(9);
+                    footer_Ky_dlg_3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_3.SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+
+                    IRow rowFooter_Ky_dlg_4 = sheetGLG.GetRow(48);
+                    ICell footer_Ky_dlg_4 = rowFooter_Ky_dlg_4.GetCell(9) ?? rowFooter_Ky_dlg_4.CreateCell(9);
+                    footer_Ky_dlg_4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_4.SetCellValue($"{nguoiKy.Position}");
+
+                }
+
                 var startRowdlg_3 = 41;
                 for (var i = 0; i < data.Result.DLG.Dlg_3.Count(); i++)
                 {
@@ -1809,6 +1824,27 @@ namespace DMS.BUSINESS.Services.BU
                 footer_dlg_4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                 footer_dlg_4.SetCellValue($"Vinh, {Date_2}");
 
+                if (header.SignerCode == "TongGiamDoc")
+                {
+                    IRow rowFooter_Ky_dlg_4 = sheetGLG.GetRow(92);
+                    ICell footer_Ky_dlg_4 = rowFooter_Ky_dlg_4.GetCell(9) ?? rowFooter_Ky_dlg_4.CreateCell(9);
+                    footer_Ky_dlg_4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_4.SetCellValue($"{nguoiKy.Position}");
+                }
+                else
+                {
+
+                    IRow rowFooter_Ky_dlg_4 = sheetGLG.GetRow(92);
+                    ICell footer_Ky_dlg_4 = rowFooter_Ky_dlg_4.GetCell(9) ?? rowFooter_Ky_dlg_4.CreateCell(9);
+                    footer_Ky_dlg_4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_4.SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+
+                    IRow rowFooter_Ky_dlg_5 = sheetGLG.GetRow(93);
+                    ICell footer_Ky_dlg_5 = rowFooter_Ky_dlg_5.GetCell(9) ?? rowFooter_Ky_dlg_5.CreateCell(9);
+                    footer_Ky_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_5.SetCellValue($"{nguoiKy.Position}");
+
+                }
                 var startRowdlg_4 = 80;
 
                 for (var i = 0; i < data.Result.DLG.Dlg_4.Count(); i++)
@@ -1925,6 +1961,28 @@ namespace DMS.BUSINESS.Services.BU
                 ICell footer_dlg_5 = rowFooter_dlg_5.GetCell(9) ?? rowFooter_dlg_5.CreateCell(9);
                 footer_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                 footer_dlg_5.SetCellValue($"Vinh,  {Date_2}");
+               
+                if (header.SignerCode == "TongGiamDoc")
+                {
+                    IRow rowFooter_Ky_dlg_5 = sheetGLG.GetRow(123);
+                    ICell footer_Ky_dlg_5 = rowFooter_Ky_dlg_5.GetCell(9) ?? rowFooter_Ky_dlg_5.CreateCell(9);
+                    footer_Ky_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_5.SetCellValue($"{nguoiKy.Position}");
+                }
+                else
+                {
+
+                    IRow rowFooter_Ky_dlg_5 = sheetGLG.GetRow(123);
+                    ICell footer_Ky_dlg_5 = rowFooter_Ky_dlg_5.GetCell(9) ?? rowFooter_Ky_dlg_5.CreateCell(9);
+                    footer_Ky_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_5.SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+
+                    IRow rowFooter_ngKy_dlg_5 = sheetGLG.GetRow(124);
+                    ICell footer_ngKy_dlg_5 = rowFooter_ngKy_dlg_5.GetCell(9) ?? rowFooter_ngKy_dlg_5.CreateCell(9);
+                    footer_ngKy_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_ngKy_dlg_5.SetCellValue($"{nguoiKy.Position}");
+
+                }
 
                 var startRowdlg_5 = 115;
                 for (var i = 0; i < data.Result.DLG.Dlg_5.Count(); i++)
@@ -2269,7 +2327,7 @@ namespace DMS.BUSINESS.Services.BU
                 }
                 IRow rowCurPt = ReportUtilities.CreateRow(ref sheetPT, startRowPT += 2, 38);
                 rowCurPt.RowStyle = templateWorkbook.CreateCellStyle();
-                rowCurPt.RowStyle.SetFont(fontBoldROW);
+                rowCurPt.RowStyle.SetFont(Boldweight);
                 rowCurPt.Cells[1].SetCellValue("LẬP BIỂU");
                 rowCurPt.Cells[6].SetCellValue("P. KINH DOANH XD");
                 rowCurPt.Cells[24].SetCellValue("PHÒNG TCKT");
@@ -2706,7 +2764,7 @@ namespace DMS.BUSINESS.Services.BU
 
                 var startRowPL1 = 8;
                 ISheet sheetPL1 = templateWorkbook.GetSheetAt(7);
-                styleCellBold.CloneStyleFrom(sheetPL1.GetRow(1).Cells[0].CellStyle);
+                //styleCellBold.CloneStyleFrom(sheetPL1.GetRow(1).Cells[0].CellStyle);
 
 
                 for (var i = 0; i < data.Result.PL1.Count(); i++)
@@ -2719,18 +2777,25 @@ namespace DMS.BUSINESS.Services.BU
                     var iGG = 0;
                     for (var gg = 0; gg < dataRow.GG.Count(); gg++)
                     {
+                        
+                        rowCur.Cells[2 + iGG].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[2 + iGG].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[2 + iGG].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[2 + iGG].CellStyle.BorderRight = BorderStyle.Thin;
+
                         rowCur.Cells[2 + iGG].CellStyle = styleCellNumber;
                         rowCur.Cells[2 + iGG].SetCellValue(dataRow.GG[gg] == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg]));
                         iGG += 1;
                     }
-                    for (var j = 0; j < 7; j++)
-                    {
-                        rowCur.Cells[j].CellStyle.SetFont(font);
-                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
-                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
-                    }
+
+                    //for (var j = 0; j < 7; j++)
+                    //{
+                    //    rowCur.Cells[j].CellStyle.SetFont(font);
+                    //    rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.None;
+                    //    rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.None;
+                    //    rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.None;
+                    //    rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.None;
+                    //}
                 }
 
                 #endregion
