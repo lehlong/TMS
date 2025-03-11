@@ -133,18 +133,18 @@
         [formControl]="nguoiKyControl"
         [(ngModel)]="selectedValue"
         >
-      
-          
+
+
           <nz-option
             *ngFor="let item of signerResult"
             [nzLabel]="item.position + ' - ' + item.name"
             [nzValue]="item">
           </nz-option>
-    
+
         </nz-select>
       </nz-form-control>
     </nz-form-item>
-    
+
     <nz-divider nzText="HỆ SỐ MẶT HÀNG" nzOrientation="left"></nz-divider>
 
     <nz-table #hs2Table [nzData]="model.hS2" nzSize="small">
@@ -208,7 +208,7 @@
         <tr>
           <th [nzAlign]="'center'">Mặt hàng</th>
           <th [nzAlign]="'center'">Hệ số VFC BQ mùa miền</th>
-          <!-- <th [nzAlign]="'center'">Thuế BVMT</th> -->
+          <th [nzAlign]="'center'">Thuế BVMT</th>
           <th [nzAlign]="'center'">
             Giá giao <br />
             L15 chưa VAT và BVMT <br />
@@ -242,9 +242,9 @@
           <td>
             <input class="input-v" nz-input [(ngModel)]="data.heSoVcf" type="number" />
           </td>
-          <!-- <td>
+          <td>
             <input class="input-v" nz-input [(ngModel)]="data.thueBvmt" type="number" />
-          </td> -->
+          </td>
           <td>
             <input class="input-v" nz-input [(ngModel)]="data.l15ChuaVatBvmt" type="number" />
           </td>

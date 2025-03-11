@@ -216,7 +216,9 @@ export class CalculateResultComponent {
     this._signerService.getall().subscribe({
       next: (data) => {
         this.signerResult = data
-        this.selectedValue = this.signerResult.find(item => item.code === this.model.header.signerCode);
+        console.log(data);
+
+        // this.selectedValue = this.signerResult.find(item => item.code === this.model.header.signerCode);
       },
       error: (response) => {
         console.log(response)
@@ -405,14 +407,14 @@ export class CalculateResultComponent {
   updateDataInput() {
     if (this.model.header.name != '') {
       console.log(this.model)
-      // this._service.UpdateDataInput(this.model).subscribe({
-      //   next: (data) => {
-      //     // window.location.reload()
-      //   },
-      //   error: (err) => {
-      //     console.log(err)
-      //   },
-      // })
+      this._service.UpdateDataInput(this.model).subscribe({
+        next: (data) => {
+          window.location.reload()
+        },
+        error: (err) => {
+          console.log(err)
+        },
+      })
     }
   }
 

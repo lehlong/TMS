@@ -2097,10 +2097,11 @@
     <nz-divider nzText="Người ký " nzOrientation="left"></nz-divider>
     <nz-form-item>
       <nz-form-control nzErrorTip="Không được để trống">
-        <nz-select nzShowSearch nzAllowClear [nzPlaceHolder]="'Chọn người ký'" [formControl]="model.header.signerCode"
+        <nz-select nzShowSearch nzAllowClear [nzPlaceHolder]="'Chọn người ký'"
           [(ngModel)]="model.header.signerCode">
 
-          <nz-option *ngFor="let item of signerResult" [nzLabel]="item.position + ' - ' + item.name" [nzValue]="item.code">
+          <nz-option *ngFor="let item of signerResult" [nzLabel]="item.position + ' - ' + item.name"
+            [nzValue]="item.code">
           </nz-option>
 
         </nz-select>
@@ -2170,7 +2171,7 @@
         <tr>
           <th [nzAlign]="'center'">Mặt hàng</th>
           <th [nzAlign]="'center'">Hệ số VFC BQ mùa miền</th>
-          <!-- <th [nzAlign]="'center'">Thuế BVMT</th> -->
+          <th [nzAlign]="'center'">Thuế BVMT</th>
           <th [nzAlign]="'center'">
             Giá giao <br />
             L15 chưa VAT và BVMT <br />
@@ -2205,9 +2206,9 @@
           <td>
             <input class="input-v" nz-input [(ngModel)]="data.heSoVcf" type="number" />
           </td>
-          <!-- <td>
+          <td>
             <input class="input-v" nz-input [(ngModel)]="data.thueBvmt" type="number" />
-          </td> -->
+          </td>
           <td>
             <input class="input-v" nz-input [(ngModel)]="data.l15ChuaVatBvmt" type="number" />
           </td>

@@ -148,6 +148,7 @@ namespace DMS.BUSINESS.Services.BU
                         Code = Guid.NewGuid().ToString(),
                         HeaderCode = obj.Header.Code,
                         GoodsCode = g.Code,
+                        ThueBvmt = g.ThueBvmt,
                         IsActive = true,
                         FromDate = DateTime.Now,
                         ToDate = DateTime.Now,
