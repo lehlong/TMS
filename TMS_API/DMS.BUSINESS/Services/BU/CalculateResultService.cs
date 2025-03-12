@@ -29,6 +29,7 @@ using Aspose.Words.Tables;
 using System.Data;
 using System.Globalization;
 using NPOI.SS.Util;
+using System.Net.Http.Headers;
 
 namespace DMS.BUSINESS.Services.BU
 {
@@ -1621,6 +1622,8 @@ namespace DMS.BUSINESS.Services.BU
                 var Date_3 = header.FDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                 var Hour = header.FDate.ToString("HH'h'mm", CultureInfo.InvariantCulture);
                 var Time = header.FDate.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
+                string valueHeader = $"Thực hiện: từ {Hour} ngày {Date}";
+                var CVA5 = $"  (Kèm theo Công văn số:                        /PLXNA ngày {header.FDate.Day:D2}/{header.FDate.Month:D2}/{header.FDate.Year} của Công ty Xăng dầu Nghệ An)";
                 var QuyetDinhSo = header.QuyetDinhSo;
                 
                 #region Dữ liệu gốc
@@ -2258,7 +2261,10 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowPT = 7;
                 ISheet sheetPT = templateWorkbook.GetSheetAt(1);
                 styleCellBold.CloneStyleFrom(sheetPT.GetRow(1).Cells[0].CellStyle);
-
+                IRow rowHeader_PT = sheetPT.GetRow(1);
+                ICell CellheaderPT = rowHeader_PT.CreateCell(0);
+                CellheaderPT.CellStyle.Alignment = HorizontalAlignment.Center;
+                CellheaderPT.SetCellValue(valueHeader);
                 for (var i = 0; i < data.Result.PT.Count(); i++)
                 {
                     IRow rowCur = ReportUtilities.CreateRow(ref sheetPT, startRowPT++, 38);
@@ -2348,7 +2354,10 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowDB = 7;
                 ISheet sheetDB = templateWorkbook.GetSheetAt(2);
                 styleCellBold.CloneStyleFrom(sheetDB.GetRow(1).Cells[0].CellStyle);
-
+                IRow rowHeader_DB = sheetDB.GetRow(1);
+                ICell CellheaderDB = rowHeader_DB.CreateCell(0);
+                CellheaderDB.CellStyle.Alignment = HorizontalAlignment.Center;
+                CellheaderDB.SetCellValue(valueHeader);
 
                 for (var i = 0; i < data.Result.DB.Count(); i++)
                 {
@@ -2452,7 +2461,10 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowFOB = 7;
                 ISheet sheetFOB = templateWorkbook.GetSheetAt(3);
                 styleCellBold.CloneStyleFrom(sheetFOB.GetRow(1).Cells[0].CellStyle);
-
+                IRow rowHeader_FOB = sheetFOB.GetRow(1);
+                ICell CellheaderFOB = rowHeader_FOB.CreateCell(0);
+                CellheaderFOB.CellStyle.Alignment = HorizontalAlignment.Center;
+                CellheaderFOB.SetCellValue(valueHeader);
 
                 for (var i = 0; i < data.Result.FOB.Count(); i++)
                 {
@@ -2552,7 +2564,10 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowPT09 = 7;
                 ISheet sheetPT09 = templateWorkbook.GetSheetAt(4);
                 styleCellBold.CloneStyleFrom(sheetPT09.GetRow(1).Cells[0].CellStyle);
-
+                IRow rowHeader_PT9 = sheetPT09.GetRow(1);
+                ICell CellheaderPT9 = rowHeader_PT9.CreateCell(0);
+                CellheaderPT9.CellStyle.Alignment = HorizontalAlignment.Center;
+                CellheaderPT9.SetCellValue($"Thực hiện: từ {Hour} ngày {Date}");
 
                 for (var i = 0; i < data.Result.PT09.Count(); i++)
                 {
@@ -2641,7 +2656,14 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowBBDO = 9;
                 ISheet sheetBBDO = templateWorkbook.GetSheetAt(5);
                 styleCellBold.CloneStyleFrom(sheetBBDO.GetRow(1).Cells[0].CellStyle);
-
+                IRow rowHeader_BBDO = sheetBBDO.GetRow(2);
+                ICell CellheaderBBDO = rowHeader_BBDO.CreateCell(0);
+                IRow rowHeader_BBDO2 = sheetBBDO.GetRow(3);
+                ICell CellheaderBBDO2 = rowHeader_BBDO2.CreateCell(0);
+                CellheaderBBDO.CellStyle.Alignment = HorizontalAlignment.Center;
+                CellheaderBBDO2.CellStyle.Alignment = HorizontalAlignment.Center;
+                CellheaderBBDO.SetCellValue(valueHeader);
+                CellheaderBBDO2.SetCellValue(CVA5);
 
                 for (var i = 0; i < data.Result.BBDO.Count(); i++)
                 {
@@ -2769,7 +2791,14 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowBBFO = 11;
                 ISheet sheetBBFO = templateWorkbook.GetSheetAt(6);
                 styleCellBold.CloneStyleFrom(sheetBBFO.GetRow(1).Cells[0].CellStyle);
-
+                IRow rowHeader_BBFO = sheetBBFO.GetRow(4);
+                ICell CellheaderBBFO = rowHeader_BBFO.CreateCell(0);
+                IRow rowHeader_BBFO2 = sheetBBFO.GetRow(5);
+                ICell CellheaderBBFO2 = rowHeader_BBFO2.CreateCell(0);
+                CellheaderBBFO.CellStyle.Alignment = HorizontalAlignment.Center;
+                CellheaderBBFO2.CellStyle.Alignment = HorizontalAlignment.Center;
+                CellheaderBBFO.SetCellValue(valueHeader);
+                CellheaderBBFO2.SetCellValue(CVA5);
 
                 for (var i = 0; i < data.Result.BBFO.Count(); i++)
                 {
@@ -2834,7 +2863,11 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowPL1 = 8;
                 ISheet sheetPL1 = templateWorkbook.GetSheetAt(7);
                 styleCellBold.CloneStyleFrom(sheetPL1.GetRow(1).Cells[0].CellStyle);
-
+                IRow rowHeader_PL1 = sheetPL1.GetRow(2);
+               
+                ICell CellheaderPL1 = rowHeader_PL1.CreateCell(0);
+                CellheaderPL1.CellStyle.Alignment = HorizontalAlignment.Center;
+                CellheaderPL1.SetCellValue($"Thực hiện: từ {Hour} ngày {Date}");
 
                 for (var i = 0; i < data.Result.PL1.Count(); i++)
                 {
@@ -2909,7 +2942,10 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowPL2 = 7;
                 ISheet sheetPL2 = templateWorkbook.GetSheetAt(8);
                 styleCellBold.CloneStyleFrom(sheetPL2.GetRow(1).Cells[0].CellStyle);
-
+                IRow rowHeader_PL2 = sheetPL2.GetRow(2);
+                ICell CellheaderPL2 = rowHeader_PL2.CreateCell(0);
+                CellheaderPL2.CellStyle.Alignment = HorizontalAlignment.Center;
+                CellheaderPL2.SetCellValue($"Thực hiện: từ {Hour} ngày {Date}");
 
                 for (var i = 0; i < data.Result.PL2.Count(); i++)
                 {
@@ -2985,7 +3021,10 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowPL3 = 7;
                 ISheet sheetPL3 = templateWorkbook.GetSheetAt(9);
                 styleCellBold.CloneStyleFrom(sheetPL3.GetRow(1).Cells[0].CellStyle);
-
+                IRow rowHeader_PL3 = sheetPL3.GetRow(2);
+                ICell CellheaderPL3 = rowHeader_PL3.CreateCell(0);
+                CellheaderPL3.CellStyle.Alignment = HorizontalAlignment.Center;
+                CellheaderPL3.SetCellValue($"Thực hiện: từ {Hour} ngày {Date}");
 
                 for (var i = 0; i < data.Result.PL3.Count(); i++)
                 {
@@ -3062,7 +3101,10 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowPL4 = 8;
                 ISheet sheetPL4 = templateWorkbook.GetSheetAt(10);
                 styleCellBold.CloneStyleFrom(sheetPL4.GetRow(1).Cells[0].CellStyle);
-
+                IRow rowHeader_PL4 = sheetPL4.GetRow(3);
+                ICell CellheaderPL4 = rowHeader_PL4.CreateCell(0);
+                CellheaderPL4.CellStyle.Alignment = HorizontalAlignment.Center;
+                CellheaderPL4.SetCellValue($"Thực hiện: từ {Hour} ngày {Date}");
 
                 for (var i = 0; i < data.Result.PL4.Count(); i++)
                 {
