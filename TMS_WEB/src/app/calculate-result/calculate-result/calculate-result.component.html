@@ -1778,7 +1778,56 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="PTS" (nzClick)="changeTitle('PTS')"> </nz-tab>
+      <nz-tab nzTitle="PTS" (nzClick)="changeTitle('PTS')"> 
+        <div [ngStyle]="{
+          overflow: 'auto',
+          height: isZoom ? '100vh' : 'calc(100vh - 206px)',
+        }">
+        <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #ptsTable
+          [nzData]="data.pts">
+          <thead>
+            <tr>
+              <th class="align-center">STT</th>
+              <th class="align-center">Phương thức</th>
+              <th class="align-center">Mã khách hàng</th>
+              <th class="align-center">
+                  Mã hàng hoá 
+              </th>
+              <th class="align-center">
+                ĐVT
+              </th>
+              <th class="align-center">Giá Chưa<br/>VAT&BVMT</th>
+              <th class="align-center">Unit</th>
+              <th class="align-center">Per</th>
+              <th class="align-center">ĐVT</th>
+              <th class="align-center">Hiệu lực từ</th>
+              <th class="align-center">đến</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (t of ptsTable.data; track t) {
+            <tr *ngIf="t.isBold" style="font-weight: bold">
+              <td></td>
+              <td colspan="19">{{ t.colB }}</td>
+            </tr>
+            <tr *ngIf="!t.isBold">
+              <td class="align-right">{{ t.colA }}</td>
+              <td class="align-right">{{ t.col1 }}</td>
+              <td class="align-right">{{ t.col2 }}</td>
+              <td class="align-right">{{ t.col3 }}</td>
+              <td class="align-right">{{ t.col4 }}</td>
+              <td class="align-right">{{ t.col5 }}</td>
+              <td class="align-right">{{ t.col6 }}</td>
+              <td class="align-right">{{ t.col7 }}</td>
+              <td class="align-right">{{ t.col8 }}</td>
+              <td class="align-right">{{ t.col9 }}</td>
+              <td class="align-right">{{ t.col10 }}</td>
+            </tr>
+            }
+          </tbody>
+        </nz-table>
+      </div>
+      </nz-tab>
 
       <nz-tab nzTitle="VK11 BB" (nzClick)="changeTitle('VK11 BB')">
         <div [ngStyle]="{

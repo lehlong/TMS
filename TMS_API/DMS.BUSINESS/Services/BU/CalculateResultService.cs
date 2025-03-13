@@ -930,7 +930,31 @@ namespace DMS.BUSINESS.Services.BU
                 }
                 #endregion
 
-                #region BBDO
+                #region PST
+                var customerPTS = lstCustomer.SingleOrDefault(c => c.Code == "310463");
+                var ptsIndex = 1;
+                foreach (var g in lstGoods)
+                {
+                    var hsmh = dataHSMH.Where(x => x.GoodsCode == g.Code).ToList();
+                    data.PTS.Add(new PTS
+                    {
+                        ColA = ptsIndex.ToString(),
+                        Col1 = "10",
+                        Col2 = customerPTS.Code,
+                        Col3 = g.Code,
+                        Col4 = "L15",              
+                        Col5 = customerPTS.PaymentTerm,
+                        Col6 = hsmh.Sum(x => x.L15ChuaVatBvmt),
+                        Col7 = 1,
+                        Col8 = "L15",
+                        Col9 = fDate.ToString("dd.MM.yyyy"),
+                        Col10 = "31.12.9999",
+                    });
+                    ptsIndex++;
+                }
+                #endregion
+
+                 #region BBDO
                 foreach (var g in lstGoods.OrderByDescending(x => x.CreateDate).ToList())
                 {
                     var c = mappingBBDO.Where(x => x.GoodsCode == g.Code && x.Type == "BBDO").ToList();
@@ -3429,6 +3453,51 @@ namespace DMS.BUSINESS.Services.BU
                     }
                 }
 
+                #endregion
+
+                #region PTS
+                var startRowPTS = 4;
+                ISheet sheetPTS = templateWorkbook.GetSheetAt(16);
+                styleCellBold.CloneStyleFrom(sheetPTS.GetRow(1).Cells[0].CellStyle);
+
+
+                for (var i = 0; i < data.Result.PTS.Count(); i++)
+                {
+                    var dataRow = data.Result.PTS[i];
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetPTS, startRowPTS++, 20);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[1].SetCellValue(dataRow.Col1);
+
+                    rowCur.Cells[2].SetCellValue(dataRow.Col2);
+
+
+                    rowCur.Cells[3].SetCellValue(dataRow.Col3);
+                    rowCur.Cells[4].SetCellValue(dataRow.Col4);
+                    rowCur.Cells[5].SetCellValue(dataRow.Col5);
+                    rowCur.Cells[6].SetCellValue("");
+                    rowCur.Cells[7].SetCellValue("");
+                    rowCur.Cells[8].SetCellValue("");
+
+                    rowCur.Cells[9].CellStyle = styleCellNumber;
+                    rowCur.Cells[9].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+                    rowCur.Cells[10].SetCellValue("");
+
+                    rowCur.Cells[11].CellStyle = styleCellNumber;
+                    rowCur.Cells[11].SetCellValue(dataRow.Col7 == 0 ? 0 : Convert.ToDouble(dataRow.Col7));
+                    rowCur.Cells[12].SetCellValue(dataRow.Col8);
+                    rowCur.Cells[13].SetCellValue("");
+                    rowCur.Cells[14].SetCellValue("");
+                    rowCur.Cells[15].SetCellValue(dataRow.Col9);
+                    rowCur.Cells[16].SetCellValue(dataRow.Col10);
+                    for (var j = 0; j < 20; j++)
+                    {
+                        rowCur.Cells[j].CellStyle.SetFont(font);
+                        rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                        rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    }
+                }
                 #endregion
 
                 #region Export VK11-BB

@@ -26,6 +26,7 @@ namespace DMS.BUSINESS.Models
         public List<VK11DB> VK11DB { get; set; } = new List<VK11DB>();
         public List<VK11FOB> VK11FOB { get; set; } = new List<VK11FOB>();
         public List<VK11TNPP> VK11TNPP { get; set; } = new List<VK11TNPP>();
+        public List<PTS> PTS { get; set; } = new List<PTS>();
         public List<VK11BB> VK11BB { get; set; } = new List<VK11BB>();
         public List<BBDO> BBDO { get; set; } = new List<BBDO>();
         public List<BBFO> BBFO { get; set; } = new List<BBFO>();
@@ -495,7 +496,18 @@ namespace DMS.BUSINESS.Models
     }
     public class PTS
     {
-
+        public string? ColA { get; set; }
+        public string? Col1 { get; set; }
+        public string? Col2 { get; set; }
+        public string? Col3 { get; set; }
+        public string? Col4 { get; set; }
+        public string? Col5 { get; set; }
+        public decimal? Col6 { get; set; }
+        public decimal? Col7 { get; set; }
+        public string? Col8 { get; set; }
+        public string? Col9 { get; set; }
+        public string? Col10 { get; set; }
+        public string? Col11 { get; set; }
     }
     public class VK11BB
     {
