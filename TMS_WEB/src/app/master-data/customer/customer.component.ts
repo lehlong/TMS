@@ -1,22 +1,39 @@
 import { Component } from '@angular/core'
 import { ShareModule } from '../../shared/share-module'
-import { LocalFilter } from '../../models/master-data/local.model'
 import { GlobalService } from '../../services/global.service'
 import { LocalService } from '../../services/master-data/local.service'
 import { PaginationResult } from '../../models/base.model'
-import { FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms'
-import { LOCAL_RIGHTS, CUSTOMER_RIGHTS, MASTER_DATA_MANAGEMENT } from '../../shared/constants'
+import {
+  FormGroup,
+  Validators,
+  NonNullableFormBuilder,
+  FormsModule,
+} from '@angular/forms'
+import { MASTER_DATA_MANAGEMENT } from '../../shared/constants'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { CustomerFilter } from '../../models/master-data/customer.model'
 import { CustomerService } from '../../services/master-data/customer.service'
 import { MarketService } from '../../services/master-data/market.service'
 import { SalesMethodService } from '../../services/master-data/sales-method.service'
-import { CustomerTypeComponent } from '../customer-type/customer-type.component'
 import { CustomerTypeService } from '../../services/master-data/customer-type.service'
+import { NzDividerModule } from 'ng-zorro-antd/divider'
+import { NzIconModule } from 'ng-zorro-antd/icon'
+import { NzInputModule } from 'ng-zorro-antd/input'
+import { NzSelectModule } from 'ng-zorro-antd/select'
+import { CustomerContactService } from '../../services/master-data/customer-contact.service'
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown'
 @Component({
   selector: 'app-local',
   standalone: true,
-  imports: [ShareModule],
+  imports: [
+    ShareModule,
+    FormsModule,
+    NzDividerModule,
+    NzIconModule,
+    NzInputModule,
+    NzSelectModule,
+    NzDropDownModule,
+  ],
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.scss',
 })
@@ -24,8 +41,6 @@ export class CustomerComponent {
   validateForm: FormGroup = this.fb.group({
     code: [''],
     name: ['', [Validators.required]],
-    phone: [''],
-    email: [''],//, Validators.email
     address: [''],
     paymentTerm: [''],
     gap: [0],
@@ -39,8 +54,128 @@ export class CustomerComponent {
     localCode: [''],
     marketCode: [''],
     isActive: [true, [Validators.required]],
-
   })
+  listOfPhone: {
+    type: string
+    code: string
+    customer_Code: string
+    value: string
+    isActive: boolean
+  }[] = []
+  listOfEmail: {
+    type: string
+    code: string
+    customer_Code: string
+    value: string
+    isActive: boolean
+  }[] = []
+
+  index = 0
+
+  contactList: any[] = []
+  listOfPhoneOptions: { [key: string]: string[] } = {} // Lưu danh sách số điện thoại theo customerCode
+  listOfEmailOptions: { [key: string]: string[] } = {} // Lưu danh sách email theo customerCode
+  readonly nzFilterOption = (): boolean => true
+  selectedPhones: { [key: string]: string } = {}
+  selectedEmails: { [key: string]: string } = {}
+
+  searchContactList(
+    contactValue: string,
+    type: 'phone' | 'email' | 'both',
+    customerCode: string,
+  ): void {
+    if (type === 'phone' || type === 'both') {
+      this.listOfPhoneOptions[customerCode] = this.contactList
+        .filter(
+          (item) =>
+            item.type === 'phone' && item.customer_Code === customerCode,
+        )
+        .map((item) => item.value)
+        .filter(
+          (value) =>
+            !contactValue ||
+            value.toLowerCase().includes(contactValue.toLowerCase()),
+        )
+    } else if (type === 'email' || type === 'both') {
+      this.listOfEmailOptions[customerCode] = this.contactList
+        .filter(
+          (item) =>
+            item.type === 'email' && item.customer_Code === customerCode,
+        )
+        .map((item) => item.value)
+        .filter(
+          (value) =>
+            !contactValue ||
+            value.toLowerCase().includes(contactValue.toLowerCase()),
+        )
+    }
+  }
+
+  updatePhoneValue(index: number, newValue: string): void {
+    this.listOfPhone[index] = { ...this.listOfPhone[index], value: newValue }
+  }
+
+  addItem(input: HTMLInputElement, isPhone: boolean): void {
+    const value = input.value.trim()
+
+    if (
+      isPhone &&
+      value &&
+      !this.listOfPhone.some((item) => item.value === value)
+    ) {
+      this.listOfPhone.push({
+        type: 'phone',
+        code: ``,
+        customer_Code: '',
+        value: value,
+        isActive: true,
+      })
+
+      // Cập nhật lại mảng để Angular nhận diện thay đổi
+      this.listOfPhone = [...this.listOfPhone]
+
+      // Xóa nội dung input sau khi thêm
+      input.value = ''
+    } else if (
+      !isPhone &&
+      value &&
+      !this.listOfEmail.some((item) => item.value === value)
+    ) {
+      this.listOfEmail.push({
+        type: 'email',
+        code: ``,
+        customer_Code: '',
+        value: value,
+        isActive: true,
+      })
+
+      // Cập nhật lại mảng để Angular nhận diện thay đổi
+      this.listOfEmail = [...this.listOfEmail]
+
+      // Xóa nội dung input sau khi thêm
+      input.value = ''
+    }
+  }
+
+  removeItem(index: number, isPhone: boolean, isUpdate: boolean): void {
+    if (isUpdate) {
+      if (isPhone) {
+        this.listOfPhone[index].isActive = false
+      } else {
+        this.listOfEmail[index].isActive = false
+      }
+    } else {
+      if (isPhone) {
+        this.listOfPhone.splice(index, 1)
+      } else {
+        this.listOfEmail.splice(index, 1)
+      }
+    }
+  }
+
+  trackByFn(index: number, item: any) {
+    return item.code
+  }
 
   isSubmit: boolean = false
   visible: boolean = false
@@ -62,6 +197,7 @@ export class CustomerComponent {
     private _customerTypeService: CustomerTypeService,
     private _localService: LocalService,
     private _salesMethodService: SalesMethodService,
+    private _customerContactService: CustomerContactService,
 
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
@@ -101,13 +237,55 @@ export class CustomerComponent {
 
   search() {
     this.isSubmit = false
-    this._service.searchCustomer(this.filter).subscribe({
-      next: (data) => {
-        // console.log(data);
-        this.paginationResult = data
+
+    this._customerContactService.getall().subscribe({
+      next: (contacts) => {
+        this.contactList = contacts
+
+        this._service.searchCustomer(this.filter).subscribe({
+          next: (data) => {
+            this.paginationResult = data
+            for (let i = 0; i < data.data.length; i++) {
+              const code = data.data[i].code
+
+              // Lọc số điện thoại
+              this.listOfPhoneOptions[code] = this.contactList
+                .filter(
+                  (item) =>
+                    item.type === 'phone' &&
+                    item.customer_Code === code &&
+                    item.isActive == true,
+                )
+                .map((item) => item.value)
+
+              // Lọc email
+              this.listOfEmailOptions[code] = this.contactList
+                .filter(
+                  (item) =>
+                    item.type === 'email' &&
+                    item.customer_Code === code &&
+                    item.isActive == true,
+                )
+                .map((item) => item.value)
+
+              // Gán giá trị mặc định cho selectedPhones nếu chưa có
+              if (this.listOfPhoneOptions[code]?.length) {
+                this.selectedPhones[code] = this.listOfPhoneOptions[code][0]
+              }
+
+              // Gán giá trị mặc định cho selectedEmails nếu chưa có
+              if (this.listOfEmailOptions[code]?.length) {
+                this.selectedEmails[code] = this.listOfEmailOptions[code][0]
+              }
+            }
+          },
+          error: (err) => {
+            console.error('Lỗi khi gọi API searchCustomer:', err)
+          },
+        })
       },
-      error: (response) => {
-        console.log(response)
+      error: (err) => {
+        console.error('Lỗi khi gọi API getall:', err)
       },
     })
   }
@@ -126,7 +304,7 @@ export class CustomerComponent {
   //   })
   // }
 
-  getAllLocal(){
+  getAllLocal() {
     this.isSubmit = false
     this._localService.getall().subscribe({
       next: (data) => {
@@ -138,11 +316,11 @@ export class CustomerComponent {
     })
   }
 
-  getAllMarket(){
+  getAllMarket() {
     this.isSubmit = false
     this._marketService.getall().subscribe({
       next: (data) => {
-        this.marketList= data
+        this.marketList = data
       },
       error: (response) => {
         console.log(response)
@@ -150,11 +328,11 @@ export class CustomerComponent {
     })
   }
 
-  getAllCustomerType(){
+  getAllCustomerType() {
     this.isSubmit = false
     this._customerTypeService.getall().subscribe({
       next: (data) => {
-        this.customerTypeList= data
+        this.customerTypeList = data
       },
       error: (response) => {
         console.log(response)
@@ -164,10 +342,13 @@ export class CustomerComponent {
 
   searchMarket() {
     this.isSubmit = false
-    this.marketResult = this.marketList.filter(market => market.localCode === this.validateForm.get('localCode')?.value)
+    this.marketResult = this.marketList.filter(
+      (market) =>
+        market.localCode === this.validateForm.get('localCode')?.value,
+    )
   }
 
-  getAllSalesMethod(){
+  getAllSalesMethod() {
     this.isSubmit = false
     this._salesMethodService.getall().subscribe({
       next: (data) => {
@@ -202,12 +383,24 @@ export class CustomerComponent {
 
     if (this.validateForm.valid) {
       const formData = this.validateForm.getRawValue()
-      console.log(formData);
+      console.log(formData)
       if (this.edit) {
         this._service.updateCustomer(formData).subscribe({
           next: (data) => {
-// this.getAllCustomer()
-            this.search()
+            var contact = {
+              Customer_Code: formData.code,
+              Contact_List: this.listOfPhone.concat(this.listOfEmail),
+            }
+            this._customerContactService
+              .updateCustomerContact(contact)
+              .subscribe({
+                next: (data) => {
+                  this.search()
+                },
+                error: (response) => {
+                  console.log(response)
+                },
+              })
           },
           error: (response) => {
             console.log(response)
@@ -220,9 +413,21 @@ export class CustomerComponent {
           )
           return
         }
+
         this._service.createCustomer(formData).subscribe({
           next: (data) => {
-            this.search()
+            var temp = {
+              Customer_Code: data.code,
+              Contact_List: this.listOfPhone.concat(this.listOfEmail),
+            }
+            this._customerContactService.createCustomerContact(temp).subscribe({
+              next: (data) => {
+                this.search()
+              },
+              error: (response) => {
+                console.log(response)
+              },
+            })
           },
           error: (response) => {
             console.log(response)
@@ -239,7 +444,20 @@ export class CustomerComponent {
     }
   }
 
+  returnOnlyNumbers(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault()
+    }
+  }
   close() {
+    this.listOfPhone = []
+    this.listOfEmail = []
+    this.contactList.forEach((item) => {
+      if (!item.isActive) {
+        item.isActive = true
+      }
+    })
     this.visible = false
     this.resetForm()
   }
@@ -274,8 +492,6 @@ export class CustomerComponent {
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
-      phone: data.phone,
-      email: data.email,
       address: data.address,
       paymentTerm: data.paymentTerm,
       gap: data.gap,
@@ -290,6 +506,12 @@ export class CustomerComponent {
       marketCode: data.marketCode,
       isActive: data.isActive,
     })
+    this.listOfPhone = this.contactList.filter(
+      (item) => item.type === 'phone' && item.customer_Code === data.code,
+    )
+    this.listOfEmail = this.contactList.filter(
+      (item) => item.type === 'email' && item.customer_Code === data.code,
+    )
     setTimeout(() => {
       this.edit = true
       this.visible = true

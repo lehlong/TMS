@@ -1055,7 +1055,7 @@ namespace DMS.BUSINESS.Services.BU
                         Col3 = i.Col3,
                         Col4 = i.Col4,
                         Col5 = i.Col5,
-                        Col6 = i.Col19,
+                        Col6 = i.Col18,
                         Col7 = "VND",
                         Col8 = "1",
                         Col9 = "L",
