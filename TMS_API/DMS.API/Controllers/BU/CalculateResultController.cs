@@ -138,17 +138,17 @@ namespace DMS.API.Controllers.BU
             return Ok(transferObject);
         }
 
-        [HttpGet("ExportExcel")]
-        [Authorize]
-        public async Task<IActionResult> ExportExcel([FromQuery] string headerId)
+        [HttpPost("ExportExcel")]
+        //[Authorize]
+        public async Task<IActionResult> ExportExcel([FromBody] CalculateResultModel data, [FromQuery] string headerId)
         {
             var transferObject = new TransferObject();
             MemoryStream outFileStream = new MemoryStream();
             var path = Directory.GetCurrentDirectory() + "/Template/CoSoTinhMucGiamGia.xlsx";
-            _service.ExportExcel(ref outFileStream, path, headerId);
+            var k = await _service.ExportExcel(outFileStream, path, headerId, data);
             if (_service.Status)
             {
-                var result = await _service.SaveFileHistory(outFileStream, headerId);
+                var result = await _service.SaveFileHistory(k, headerId);
                 //return File(outFileStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", DateTime.Now.ToString() + "_CoSoTinhMucGiamGia" + ".xlsx");
                 transferObject.Data = result;
                 return Ok(transferObject);

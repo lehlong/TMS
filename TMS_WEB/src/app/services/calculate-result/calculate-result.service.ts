@@ -23,8 +23,8 @@ export class CalculateResultService {
   GetHistoryFile(code : any): Observable<any> {
     return this.commonService.get(`CalculateResult/GetHistoryFile?code=${code}`)
   }
-  ExportExcel(headerId: any): Observable<any> {
-    return this.commonService.get(`CalculateResult/ExportExcel?headerId=${headerId}`)
+  ExportExcel(data: any, headerId: any): Observable<any> {
+    return this.commonService.post(`CalculateResult/ExportExcel?headerId=${headerId}`, data)
   }
   ExportWord(lstCustomerChecked: any, headerId : any): Observable<any> {
     return this.commonService.post(`CalculateResult/ExportWord?headerId=${headerId}`, lstCustomerChecked)

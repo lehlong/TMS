@@ -419,7 +419,7 @@ export class CalculateResultComponent {
   }
 
   exportExcel() {
-    this._service.ExportExcel(this.headerId).subscribe({
+    this._service.ExportExcel(this.data, this.headerId).subscribe({
       next: (data) => {
         var a = document.createElement('a')
         a.href = environment.apiUrl + data
