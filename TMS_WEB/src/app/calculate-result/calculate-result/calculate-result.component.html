@@ -4,6 +4,7 @@
       <nz-page-header-extra>
         <nz-space [nzWrap]="true" class="gap-[5px]">
           <button
+            [appPermission]="IMPORT_BATCH.INPUT_DATA"
             class="!flex !items-center"
             nzType="default"
             nz-button
@@ -13,6 +14,7 @@
             <span nz-icon nzType="right-square"></span> Dữ liệu đầu vào
           </button>
           <button
+            [appPermission]="IMPORT_BATCH.RECALCULATE"
             class="!flex !items-center"
             nzType="default"
             nz-button
@@ -107,31 +109,37 @@
           </button>
 
           <app-input-clear
-          *ngIf="title == 'PT' || title == 'ĐB' || title == 'FOB' || title == 'PT09' || title == 'BB DO'"
-          placeholder="Tìm kiếm"
-          (enterEvent)="search()"
-          [(value)]="searchInput"
-        ></app-input-clear>
-        <button
-        *ngIf="title == 'PT' || title == 'ĐB' || title == 'FOB' || title == 'PT09' || title == 'BB DO'"
-          (click)="search()"
-          class="flex !items-center !border-l-0 gray-btn"
-          nzType="default"
-          nz-button
-          nzType="default"
-        >
-          <span nz-icon nzType="search"></span>
-        </button>
-        <button
-        *ngIf="title == 'PT' || title == 'ĐB' || title == 'FOB' || title == 'PT09' || title == 'BB DO'"
-          (click)="reset()"
-          class="flex !items-center !border-l-0 gray-btn"
-          nzType="default"
-          nz-button
-          nzType="default"
-        >
-          <span nz-icon nzType="redo"></span>
-        </button>
+            *ngIf="
+              title != 'DỮ LIỆU GỐC'
+            "
+            placeholder="Tìm kiếm"
+            (enterEvent)="search()"
+            [(value)]="searchInput"
+          ></app-input-clear>
+          <button
+            *ngIf="
+              title != 'DỮ LIỆU GỐC'
+            "
+            (click)="search()"
+            class="flex !items-center !border-l-0 gray-btn"
+            nzType="default"
+            nz-button
+            nzType="default"
+          >
+            <span nz-icon nzType="search"></span>
+          </button>
+          <button
+            *ngIf="
+              title != 'DỮ LIỆU GỐC'
+            "
+            (click)="reset()"
+            class="flex !items-center !border-l-0 gray-btn"
+            nzType="default"
+            nz-button
+            nzType="default"
+          >
+            <span nz-icon nzType="redo"></span>
+          </button>
           <button
             class="!flex !items-center btn-excel"
             nzType="primary"
@@ -986,7 +994,8 @@
                 <tr
                   *ngIf="
                     t.isBold == false &&
-                    (!searchTerm || t.colB.toLowerCase().includes(searchTerm.toLowerCase()))
+                    (!searchTerm ||
+                      t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))
                   "
                 >
                   <td>{{ t.colA }}</td>
@@ -1156,7 +1165,13 @@
                     <td></td>
                   }
                 </tr>
-                <tr *ngIf="t.isBold == false && (!searchTerm || t.colB.toLowerCase().includes(searchTerm.toLowerCase()))">
+                <tr
+                  *ngIf="
+                    t.isBold == false &&
+                    (!searchTerm ||
+                      t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))
+                  "
+                >
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colB }}</td>
                   <td>{{ t.col1 }}</td>
@@ -1311,7 +1326,13 @@
                     <td></td>
                   }
                 </tr>
-                <tr *ngIf="t.isBold == false && (!searchTerm || t.colB.toLowerCase().includes(searchTerm.toLowerCase()))">
+                <tr
+                  *ngIf="
+                    t.isBold == false &&
+                    (!searchTerm ||
+                      t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))
+                  "
+                >
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colB }}</td>
 
@@ -1437,7 +1458,12 @@
             </thead>
             <tbody>
               @for (t of pt09Table.data; track t) {
-                <tr *ngIf="(!searchTerm || t.colB.toLowerCase().includes(searchTerm.toLowerCase()))">
+                <tr
+                  *ngIf="
+                    !searchTerm ||
+                    t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase())
+                  "
+                >
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colB }}</td>
                   @for (i of t.lg; track i) {
@@ -1539,7 +1565,13 @@
                   <td></td>
                   <td colspan="22">{{ t.colB }}</td>
                 </tr>
-                <tr *ngIf="!t.isBold && (!searchTerm || t.colB.toLowerCase().includes(searchTerm.toLowerCase()))">
+                <tr
+                  *ngIf="
+                    !t.isBold &&
+                    (!searchTerm ||
+                      t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))
+                  "
+                >
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colB }}</td>
                   <td>{{ t.colC }}</td>
@@ -1634,7 +1666,7 @@
                   <td></td>
                   <td colspan="12">{{ t.colB }}</td>
                 </tr>
-                <tr *ngIf="!t.isBold">
+                <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colB }}</td>
                   <td>{{ t.colC }}</td>
@@ -1695,7 +1727,7 @@
             </thead>
             <tbody>
               @for (t of pl1Table.data; track t) {
-                <tr>
+                <tr *ngIf="(!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colB }}</td>
                   @for (i of t.gg; track i) {
@@ -1748,7 +1780,7 @@
             </thead>
             <tbody>
               @for (t of pl2Table.data; track t) {
-                <tr>
+                <tr *ngIf="(!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colB }}</td>
                   @for (i of t.gg; track i) {
@@ -1801,7 +1833,7 @@
             </thead>
             <tbody>
               @for (i of pl3Table.data; track i) {
-                <tr>
+                <tr *ngIf="(!searchTerm || i?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                   <td>{{ i.colA }}</td>
                   <td>{{ i.colB }}</td>
                   @for (g of i.gg; track g) {
@@ -1854,7 +1886,7 @@
             </thead>
             <tbody>
               @for (t of pl4Table.data; track t) {
-                <tr>
+                <tr *ngIf="(!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colB }}</td>
                   @for (i of t.gg; track i) {
@@ -1925,7 +1957,7 @@
                   <td></td>
                   <td colspan="19">{{ t.colB }}</td>
                 </tr>
-                <tr *ngIf="!t.isBold">
+                <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colB }}</td>
                   <td>{{ t.col1 }}</td>
@@ -2012,7 +2044,7 @@
                   <td></td>
                   <td colspan="20">{{ t.colB }}</td>
                 </tr>
-                <tr *ngIf="!t.isBold">
+                <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colB }}</td>
                   <td>{{ t.colC }}</td>
@@ -2101,7 +2133,7 @@
                   <td></td>
                   <td colspan="19">{{ t.colB }}</td>
                 </tr>
-                <tr *ngIf="!t.isBold">
+                <tr *ngIf="!t.isBold && (!searchTerm || t?.colC?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colC }}</td>
                   <td>{{ t.col1 }}</td>
@@ -2189,7 +2221,7 @@
                   <td></td>
                   <td colspan="19">{{ t.colB }}</td>
                 </tr>
-                <tr *ngIf="!t.isBold">
+                <tr *ngIf="!t.isBold && (!searchTerm || t?.colC?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colC }}</td>
                   <td>{{ t.col1 }}</td>
@@ -2258,7 +2290,7 @@
                   <td></td>
                   <td colspan="19">{{ t.colB }}</td>
                 </tr>
-                <tr *ngIf="!t.isBold">
+                <tr *ngIf="!t.isBold && (!searchTerm || t?.col3?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                   <td class="align-right">{{ t.colA }}</td>
                   <td class="align-right">{{ t.col1 }}</td>
                   <td class="align-right">{{ t.col2 }}</td>
@@ -2329,7 +2361,7 @@
                   <td></td>
                   <td colspan="18">{{ t.colB }}</td>
                 </tr>
-                <tr *ngIf="!t.isBold">
+                <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colB }}</td>
                   <td>{{ t.colC }}</td>
@@ -2409,7 +2441,7 @@
                   <td></td>
                   <td colspan="18">{{ t.colB }}</td>
                 </tr>
-                <tr *ngIf="!t.isBold">
+                <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                   <td>{{ t.colA }}</td>
                   <td>{{ t.colB }}</td>
                   <td>{{ t.colC }}</td>
