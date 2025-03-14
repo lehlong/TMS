@@ -36,9 +36,10 @@ export class CalculateResultComponent {
       },
     ])
   }
-
-  nguoiKyControl = new FormControl({name:"",position:""});
-  rightList:any = []
+  searchInput = ''
+  searchTerm: string = ''
+  nguoiKyControl = new FormControl({ name: '', position: '' })
+  rightList: any = []
   title: string = ''
   IMPORT_BATCH = IMPORT_BATCH
   isVisibleHistory: boolean = false
@@ -104,16 +105,20 @@ export class CalculateResultComponent {
   lstHistoryFile: any[] = []
   goodsResult: any[] = []
   lstCustomer: any[] = []
-  lstTrinhKy: any[] = [{
-     code: 'CongDienKKGiaBanLe', name: 'Công Điện Kiểm Kê Giá Bán Lẻ',status: true },
-    { code: 'MucGiamGiaNQTM', name: 'Mức Giảm Giá NQTM',status: false },
-    { code: 'QDGBanBuon', name: 'Quyết Định Giá bán Buôn',status: false },
-    { code: 'QDGBanLe', name: 'Quyết Định Giá Bán lẻ',status: true },
-    { code: 'QDGCtyPTS', name: 'Quyết Định Công Ty PTS',status: false },
-    { code: 'QDGNoiDung', name: 'Quyết Giá Nội Dung',status: false },
-    { code: 'ToTrinh', name: 'Tờ Trình',status: false },
-    { code: 'KeKhaiGia', name: 'Kê Khai Giá',status: true },
-    { code: 'KeKhaiGiaChiTiet', name: 'Kê Khai Giá Chi Tiết',status: true },
+  lstTrinhKy: any[] = [
+    {
+      code: 'CongDienKKGiaBanLe',
+      name: 'Công Điện Kiểm Kê Giá Bán Lẻ',
+      status: true,
+    },
+    { code: 'MucGiamGiaNQTM', name: 'Mức Giảm Giá NQTM', status: false },
+    { code: 'QDGBanBuon', name: 'Quyết Định Giá bán Buôn', status: false },
+    { code: 'QDGBanLe', name: 'Quyết Định Giá Bán lẻ', status: true },
+    { code: 'QDGCtyPTS', name: 'Quyết Định Công Ty PTS', status: false },
+    { code: 'QDGNoiDung', name: 'Quyết Giá Nội Dung', status: false },
+    { code: 'ToTrinh', name: 'Tờ Trình', status: false },
+    { code: 'KeKhaiGia', name: 'Kê Khai Giá', status: true },
+    { code: 'KeKhaiGiaChiTiet', name: 'Kê Khai Giá Chi Tiết', status: true },
   ]
   ngOnInit() {
     this.route.paramMap.subscribe({
@@ -130,49 +135,83 @@ export class CalculateResultComponent {
     })
     this.getAllGoods()
     this.getAllSigner()
-    this.getRight()    
+    this.getRight()
     if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DLG)) {
-      this.changeTitle('DỮ LIỆU GỐC');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT)) {
-      this.changeTitle('PT');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DB)) {
-      this.changeTitle('DB');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_FOB)) {
-      this.changeTitle('FOB');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT09)) {
-      this.changeTitle('PT09');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_DO)) {
-      this.changeTitle('BB DO');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_FO)) {
-      this.changeTitle('BB FO');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL1)) {
-      this.changeTitle('PL1');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL2)) {
-      this.changeTitle('PL2');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL3)) {
-      this.changeTitle('PL3');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL4)) {
-      this.changeTitle('PL4');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_PT)) {
-      this.changeTitle('VK11 PT');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_DB)) {
-      this.changeTitle('VK11 ĐB');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_FOB)) {
-      this.changeTitle('VK11-FOB');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_TNPP)) {
-      this.changeTitle('VK11-TNPP');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PTS)) {
-      this.changeTitle('PTS');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_BB)) {
-      this.changeTitle('VK11 BB');
-    } else if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_TONG_HOP)) {
-      this.changeTitle('TỔNG HỢP');
+      this.changeTitle('DỮ LIỆU GỐC')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT)
+    ) {
+      this.changeTitle('PT')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DB)
+    ) {
+      this.changeTitle('DB')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_FOB)
+    ) {
+      this.changeTitle('FOB')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT09)
+    ) {
+      this.changeTitle('PT09')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_DO)
+    ) {
+      this.changeTitle('BB DO')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_FO)
+    ) {
+      this.changeTitle('BB FO')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL1)
+    ) {
+      this.changeTitle('PL1')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL2)
+    ) {
+      this.changeTitle('PL2')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL3)
+    ) {
+      this.changeTitle('PL3')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL4)
+    ) {
+      this.changeTitle('PL4')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_PT)
+    ) {
+      this.changeTitle('VK11 PT')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_DB)
+    ) {
+      this.changeTitle('VK11 ĐB')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_FOB)
+    ) {
+      this.changeTitle('VK11-FOB')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_TNPP)
+    ) {
+      this.changeTitle('VK11-TNPP')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PTS)
+    ) {
+      this.changeTitle('PTS')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_BB)
+    ) {
+      this.changeTitle('VK11 BB')
+    } else if (
+      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_TONG_HOP)
+    ) {
+      this.changeTitle('TỔNG HỢP')
     } else {
-      this.changeTitle('');
+      this.changeTitle('')
     }
   }
 
-  getRight(){
+  getRight() {
     this.rightList = this.globalService.getRightData()
   }
 
@@ -255,12 +294,18 @@ export class CalculateResultComponent {
         })
     }
   }
-
+  search() {
+    this.searchTerm = this.searchInput;
+  }
+  reset() {
+    this.searchTerm =''
+    this.searchInput=''
+  }
   getAllSigner() {
     this._signerService.getall().subscribe({
       next: (data) => {
         this.signerResult = data
-        console.log(data);
+        console.log(data)
 
         // this.selectedValue = this.signerResult.find(item => item.code === this.model.header.signerCode);
       },
@@ -269,7 +314,6 @@ export class CalculateResultComponent {
       },
     })
   }
-
 
   confirmExportWordTrinhKy() {
     if (this.lstTrinhKyChecked.length == 0) {
@@ -292,7 +336,7 @@ export class CalculateResultComponent {
             console.log(err)
           },
         })
-        this.lstTrinhKyChecked = []
+      this.lstTrinhKyChecked = []
     }
   }
 
@@ -340,6 +384,7 @@ export class CalculateResultComponent {
   }
 
   changeTitle(value: string) {
+    this.reset()
     this.title = value
   }
 
