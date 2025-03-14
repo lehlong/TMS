@@ -52,7 +52,7 @@
             <a (click)="openEdit(data)">{{ data.code }}</a>
           </td>
           <td >{{ data.name }}</td>
-          <td class="align-right">{{ data.cuocVcBq | number}}</td>
+          <td class="align-center">{{ data.cuocVcBq | number}}</td>
 
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"

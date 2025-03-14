@@ -270,6 +270,7 @@ export class CalculateResultComponent {
     })
   }
 
+
   confirmExportWordTrinhKy() {
     if (this.lstTrinhKyChecked.length == 0) {
       this.message.create('warning', 'Vui lòng chọn trình ky xuất ra file')
@@ -424,14 +425,7 @@ export class CalculateResultComponent {
     this.visibleDrawer = false
   }
   getDataHeader() {
-    this._service.GetDataInput(this.headerId).subscribe({
-      next: (data) => {
-        this.model = data
-        console.log(this.model)
-
-        this.visibleDrawer = true
-      },
-    })
+    this.visibleDrawer = true
   }
   getAllGoods() {
     this._goodsService.getall().subscribe({
