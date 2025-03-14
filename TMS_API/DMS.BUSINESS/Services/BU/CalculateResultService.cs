@@ -1630,6 +1630,10 @@ namespace DMS.BUSINESS.Services.BU
                 Boldweight.FontName = "Times New Roman";
 
 
+                ICellStyle leftAlignStyle = templateWorkbook.CreateCellStyle();
+                leftAlignStyle.Alignment = HorizontalAlignment.Left; // Căn lề bên trái
+                leftAlignStyle.SetFont(fontBold);
+
                 ICellStyle cell2Style = templateWorkbook.CreateCellStyle();
                 cell2Style.CloneStyleFrom(styleCellNumber);
                 cell2Style.DataFormat = templateWorkbook.CreateDataFormat().GetFormat("#,##0.###;-#,##0.###;0");
@@ -1666,8 +1670,17 @@ namespace DMS.BUSINESS.Services.BU
                         IRow rowCur = ReportUtilities.CreateRow(ref sheetTH, startRowTH++, 21);
 
                         rowCur.Cells[0].SetCellValue(dataRow.ColA);
+
+
                         rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                        //dataRow.IsBold ?? rowCur.Cells[1].CellStyle = styleCellBold;
+                        //dataRow.IsBold ?? rowCur.Cells[1].CellStyle.SetFont(fontBold);
+                        rowCur.Cells[1].CellStyle = leftAlignStyle;
+                        //rowCur.Cells[1].CellStyle.SetFont(fontBold);
+
                         rowCur.Cells[2].SetCellValue(dataRow.ColC);
+                        rowCur.Cells[2].CellStyle = leftAlignStyle;
+
                         rowCur.Cells[3].SetCellValue(dataRow.ColD);
                         rowCur.Cells[6].SetCellValue(dataRow.Col1);
                         rowCur.Cells[7].SetCellValue(dataRow.Col2);
@@ -2357,6 +2370,7 @@ namespace DMS.BUSINESS.Services.BU
                         var dataRow = data.PT[i];
                         rowCur.Cells[0].SetCellValue(dataRow.ColA);
                         rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                        rowCur.Cells[1].CellStyle = leftAlignStyle;
 
                         rowCur.Cells[2].CellStyle = styleCellNumber;
                         rowCur.Cells[2].SetCellValue(dataRow.Col1 == 0 ? 0 : Convert.ToDouble(dataRow.Col1));
@@ -2447,7 +2461,11 @@ namespace DMS.BUSINESS.Services.BU
                         IRow rowCur = ReportUtilities.CreateRow(ref sheetDB, startRowDB++, 43);
                         rowCur.Cells[0].SetCellValue(dataRow.ColA);
                         rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                        rowCur.Cells[1].CellStyle = leftAlignStyle;
+                        
                         rowCur.Cells[2].SetCellValue(dataRow.Col1);
+                        rowCur.Cells[2].CellStyle = leftAlignStyle;
+
                         rowCur.Cells[3].CellStyle = styleCellNumber;
                         rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
 
@@ -2555,6 +2573,7 @@ namespace DMS.BUSINESS.Services.BU
 
                         rowCur.Cells[0].SetCellValue(dataRow.ColA);
                         rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                        rowCur.Cells[1].CellStyle = leftAlignStyle;
 
                         var iLG = 0;
                         for (var lg = iLG; lg < dataRow.LG.Count(); lg++)
@@ -2639,7 +2658,7 @@ namespace DMS.BUSINESS.Services.BU
                     rowCurFob.Cells[12].SetCellValue("KẾ  TOÁN TRƯỞNG");
                     rowCurFob.Cells[24].SetCellValue("DUYỆT");
 
-                    #endregion
+                    #endregion  
                 });
 
                 Task TaskPt09Bbdo = Task.Run(() =>
@@ -2660,8 +2679,9 @@ namespace DMS.BUSINESS.Services.BU
                             IRow rowCur = ReportUtilities.CreateRow(ref sheetPT09, startRowPT09++, 39);
                             rowCur.Cells[0].SetCellValue(dataRow.ColA);
                             rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                            rowCur.Cells[1].CellStyle = leftAlignStyle;
 
-                            var iLG = 0;
+                        var iLG = 0;
                             for (var lg = iLG; lg < dataRow.LG.Count(); lg++)
                             {
                                 rowCur.Cells[2 + lg].CellStyle = styleCellNumber;
@@ -2756,8 +2776,13 @@ namespace DMS.BUSINESS.Services.BU
                             IRow rowCur = ReportUtilities.CreateRow(ref sheetBBDO, startRowBBDO++, 23);
                             rowCur.Cells[0].SetCellValue(dataRow.ColA);
                             rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                            rowCur.Cells[1].CellStyle = leftAlignStyle;
+
                             rowCur.Cells[2].SetCellValue(dataRow.ColC);
+                            rowCur.Cells[2].CellStyle = leftAlignStyle;
+
                             rowCur.Cells[3].SetCellValue(dataRow.ColD);
+                            rowCur.Cells[3].CellStyle = leftAlignStyle;
 
                             rowCur.Cells[4].SetCellValue(dataRow.Col1);
                             rowCur.Cells[5].SetCellValue(dataRow.Col2);
@@ -2960,8 +2985,9 @@ namespace DMS.BUSINESS.Services.BU
                             IRow rowCur = ReportUtilities.CreateRow(ref sheetPL1, startRowPL1++, 7);
                             rowCur.Cells[0].SetCellValue(dataRow.ColA);
                             rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                            rowCur.Cells[1].CellStyle = leftAlignStyle;
 
-                            var iGG = 0;
+                        var iGG = 0;
                             for (var gg = 0; gg < dataRow.GG.Count(); gg++)
                             {
 
@@ -3038,8 +3064,9 @@ namespace DMS.BUSINESS.Services.BU
                             IRow rowCur = ReportUtilities.CreateRow(ref sheetPL2, startRowPL2++, 7);
                             rowCur.Cells[0].SetCellValue(dataRow.ColA);
                             rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                            rowCur.Cells[1].CellStyle = leftAlignStyle;
 
-                            var iGG = 0;
+                        var iGG = 0;
                             for (var gg = 0; gg < dataRow.GG.Count(); gg++)
                             {
                                 rowCur.Cells[2 + iGG].CellStyle = styleCellNumber;
@@ -3117,8 +3144,9 @@ namespace DMS.BUSINESS.Services.BU
                             IRow rowCur = ReportUtilities.CreateRow(ref sheetPL3, startRowPL3++, 7);
                             rowCur.Cells[0].SetCellValue(dataRow.ColA);
                             rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                            rowCur.Cells[1].CellStyle = leftAlignStyle;
 
-                            var iGG = 0;
+                        var iGG = 0;
                             for (var gg = 0; gg < dataRow.GG.Count(); gg++)
                             {
                                 rowCur.Cells[2 + iGG].CellStyle = styleCellNumber;
@@ -3197,8 +3225,9 @@ namespace DMS.BUSINESS.Services.BU
                             IRow rowCur = ReportUtilities.CreateRow(ref sheetPL4, startRowPL4++, 7);
                             rowCur.Cells[0].SetCellValue(dataRow.ColA);
                             rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                            rowCur.Cells[1].CellStyle = leftAlignStyle;
 
-                            var iGG = 0;
+                        var iGG = 0;
                             for (var gg = 0; gg < dataRow.GG.Count(); gg++)
                             {
                                 rowCur.Cells[2 + iGG].CellStyle = styleCellNumber;
@@ -3276,7 +3305,10 @@ namespace DMS.BUSINESS.Services.BU
                         IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11PT, startRowVK11PT++, 20);
                         rowCur.Cells[0].SetCellValue(dataRow.ColA);
                         rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                        rowCur.Cells[1].CellStyle = leftAlignStyle;
+
                         rowCur.Cells[2].SetCellValue(dataRow.Col1);
+                        rowCur.Cells[2].CellStyle = leftAlignStyle;
 
                         rowCur.Cells[3].CellStyle = styleCellNumber;
                         rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
@@ -3343,8 +3375,12 @@ namespace DMS.BUSINESS.Services.BU
                         var dataRow = data.VK11DB[i];
                         IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11DB, startRowVK11DB++, 21);
                         rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                        rowCur.Cells[1].CellStyle = leftAlignStyle;
                         rowCur.Cells[1].SetCellValue(dataRow.ColB);
-                        rowCur.Cells[2].SetCellValue(dataRow.ColC);
+
+                        rowCur.Cells[1].CellStyle = leftAlignStyle;
+                        rowCur.Cells[1].SetCellValue(dataRow.ColC);
+                        
                         rowCur.Cells[3].SetCellValue(dataRow.Col1);
 
                         rowCur.Cells[4].CellStyle = styleCellNumber;
@@ -3407,9 +3443,11 @@ namespace DMS.BUSINESS.Services.BU
                         rowCur.Cells[0].SetCellValue(dataRow.ColA);
                         //rowCur.Cells[1].SetCellValue(dataRow.ColB);
                         rowCur.Cells[1].SetCellValue(dataRow.ColC == null ? dataRow.ColB : dataRow.ColC);
+                        rowCur.Cells[1].CellStyle = leftAlignStyle;
                         //rowCur.Cells[1].SetCellValue(dataRow.ColC);
 
                         rowCur.Cells[2].SetCellValue(dataRow.Col1);
+                        rowCur.Cells[2].CellStyle = leftAlignStyle;
 
                         rowCur.Cells[3].CellStyle = styleCellNumber;
                         rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
@@ -3475,8 +3513,10 @@ namespace DMS.BUSINESS.Services.BU
 
                         //rowCur.Cells[1].SetCellValue(dataRow.ColB);
                         rowCur.Cells[1].SetCellValue(dataRow.ColC == null ? dataRow.ColB : dataRow.ColC);
+                        rowCur.Cells[1].CellStyle = leftAlignStyle;
 
                         rowCur.Cells[2].SetCellValue(dataRow.Col1);
+                        rowCur.Cells[2].CellStyle = leftAlignStyle;
 
                         rowCur.Cells[3].CellStyle = styleCellNumber;
                         rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
@@ -3579,31 +3619,39 @@ namespace DMS.BUSINESS.Services.BU
                     for (var i = 0; i < data.VK11BB.Count(); i++)
                     {
                         var dataRow = data.VK11BB[i];
-                        IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11BB, startRowVK11BB++, 18);
+                        IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11BB, startRowVK11BB++, 19);
                         rowCur.Cells[0].SetCellValue(dataRow.ColA);
 
                         rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                        rowCur.Cells[1].CellStyle = leftAlignStyle;
+
                         rowCur.Cells[2].SetCellValue(dataRow.ColC);
+                        rowCur.Cells[2].CellStyle = leftAlignStyle;
+                            
+                        rowCur.Cells[3].SetCellValue(dataRow.ColD);
+                        rowCur.Cells[3].CellStyle = leftAlignStyle;
 
-                        rowCur.Cells[3].SetCellValue(dataRow.Col1);
-                        rowCur.Cells[4].SetCellValue(dataRow.Col2);
-                        rowCur.Cells[5].SetCellValue(dataRow.Col3);
-                        rowCur.Cells[6].SetCellValue(dataRow.Col4);
-                        rowCur.Cells[7].SetCellValue(dataRow.Col5);
+                        rowCur.Cells[4].SetCellValue(dataRow.Col1);
 
-                        rowCur.Cells[8].CellStyle = styleCellNumber;
-                        rowCur.Cells[8].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+                        rowCur.Cells[5].SetCellValue(dataRow.Col2);
 
-                        rowCur.Cells[9].SetCellValue(dataRow.Col7);
-                        rowCur.Cells[10].SetCellValue(dataRow.Col8);
-                        rowCur.Cells[11].SetCellValue(dataRow.Col9);
-                        rowCur.Cells[12].SetCellValue(dataRow.Col10);
-                        rowCur.Cells[13].SetCellValue(dataRow.Col11);
+                        rowCur.Cells[6].SetCellValue(dataRow.Col3);
+                        rowCur.Cells[7].SetCellValue(dataRow.Col4);
+                        rowCur.Cells[8].SetCellValue(dataRow.Col5);
 
-                        rowCur.Cells[14].SetCellValue(dataRow.Col12);
-                        rowCur.Cells[15].SetCellValue(dataRow.Col13);
-                        rowCur.Cells[16].SetCellValue(dataRow.Col14);
-                        rowCur.Cells[17].SetCellValue(dataRow.Col15);
+                        rowCur.Cells[9].CellStyle = styleCellNumber;
+                        rowCur.Cells[9].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+
+                        rowCur.Cells[10].SetCellValue(dataRow.Col7);
+                        rowCur.Cells[11].SetCellValue(dataRow.Col8);
+                        rowCur.Cells[12].SetCellValue(dataRow.Col9);
+                        rowCur.Cells[13].SetCellValue(dataRow.Col10);
+                        rowCur.Cells[14].SetCellValue(dataRow.Col11);
+
+                        rowCur.Cells[15].SetCellValue(dataRow.Col12);
+                        rowCur.Cells[16].SetCellValue(dataRow.Col13);
+                        rowCur.Cells[17].SetCellValue(dataRow.Col14);
+                        rowCur.Cells[18].SetCellValue(dataRow.Col15);
 
                         //for (var j = 0; j < 18; j++)
                         //{
