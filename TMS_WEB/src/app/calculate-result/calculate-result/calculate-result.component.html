@@ -198,8 +198,8 @@
       <span nz-icon nzType="fullscreen-exit"></span>
     </button>
     <nz-tabset>
-      <nz-tab nzTitle="Dữ liệu gốc" (nzClick)="changeTitle('DỮ LIỆU GỐC')">
-        <div
+      <nz-tab  *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DLG)" nzTitle="Dữ liệu gốc" (nzClick)="changeTitle('DỮ LIỆU GỐC')">
+        <div  
           [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -840,7 +840,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="PT" (nzClick)="changeTitle('PT')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT)" nzTitle="PT" (nzClick)="changeTitle('PT')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -982,7 +982,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="ĐB" (nzClick)="changeTitle('ĐB')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DB)" nzTitle="ĐB" (nzClick)="changeTitle('ĐB')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -1150,7 +1150,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="FOB" (nzClick)="changeTitle('FOB')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_FOB)" nzTitle="FOB" (nzClick)="changeTitle('FOB')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -1299,7 +1299,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="PT09" (nzClick)="changeTitle('PT09')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT09)" nzTitle="PT09" (nzClick)="changeTitle('PT09')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -1418,7 +1418,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="BB DO" (nzClick)="changeTitle('BB DO')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_DO)" nzTitle="BB DO" (nzClick)="changeTitle('BB DO')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -1516,7 +1516,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="BB FO" (nzClick)="changeTitle('BB FO')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_FO)" nzTitle="BB FO" (nzClick)="changeTitle('BB FO')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -1597,7 +1597,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="PL1" (nzClick)="changeTitle('PL1')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL1)" nzTitle="PL1" (nzClick)="changeTitle('PL1')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -1646,7 +1646,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="PL2" (nzClick)="changeTitle('PL2')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL2)" nzTitle="PL2" (nzClick)="changeTitle('PL2')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -1695,7 +1695,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="PL3" (nzClick)="changeTitle('PL3')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL3)" nzTitle="PL3" (nzClick)="changeTitle('PL3')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -1744,7 +1744,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="PL4" (nzClick)="changeTitle('PL4')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL4)" nzTitle="PL4" (nzClick)="changeTitle('PL4')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -1793,7 +1793,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="VK11 PT" (nzClick)="changeTitle('VK11 PT')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_PT)" nzTitle="VK11 PT" (nzClick)="changeTitle('VK11 PT')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -1875,7 +1875,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="VK11 ĐB" (nzClick)="changeTitle('VK11 ĐB')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_DB)" nzTitle="VK11 ĐB" (nzClick)="changeTitle('VK11 ĐB')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -1959,7 +1959,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="VK11-FOB" (nzClick)="changeTitle('VK11-FOB')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_FOB)" nzTitle="VK11-FOB" (nzClick)="changeTitle('VK11-FOB')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -2041,7 +2041,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="VK11-TNPP" (nzClick)="changeTitle('VK11-TNPP')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_TNPP)" nzTitle="VK11-TNPP" (nzClick)="changeTitle('VK11-TNPP')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -2123,7 +2123,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="PTS" (nzClick)="changeTitle('PTS')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PTS)" nzTitle="PTS" (nzClick)="changeTitle('PTS')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -2180,7 +2180,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="VK11 BB" (nzClick)="changeTitle('VK11 BB')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_BB)" nzTitle="VK11 BB" (nzClick)="changeTitle('VK11 BB')">
         <div
           [ngStyle]="{
             overflow: 'auto',
@@ -2254,7 +2254,7 @@
         </div>
       </nz-tab>
 
-      <nz-tab nzTitle="Tổng hợp" (nzClick)="changeTitle('TỔNG HỢP')">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_TONG_HOP)" nzTitle="Tổng hợp" (nzClick)="changeTitle('TỔNG HỢP')">
         <div
           [ngStyle]="{
             overflow: 'auto',

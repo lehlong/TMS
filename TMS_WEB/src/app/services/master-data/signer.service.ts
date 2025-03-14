@@ -9,7 +9,7 @@ export class SignerService {
   constructor(private commonService: CommonService) {}
 
   searchSigners(params: any): Observable<any> {
-    return this.commonService.get('Signer/Search', params)
+    return this.commonService.get('Signer/Search?IsActive=true', params)
   }
 
   getall(): Observable<any> {
