@@ -6,7 +6,7 @@
           <button class="!flex btn-green !items-center badge-blue" nzType="primary" nz-button (click)="newTab()">
             <span nz-icon nzType="plus-circle"></span> Thêm mẫu
           </button>
-          <button class="!flex !items-center badge-blue" nzType="primary" nz-button (click)="save()">
+          <button class="!flex !items-center badge-blue" nzType="primary" nz-button (click)="submitForm()">
             <span nz-icon nzType="check"></span> Cập nhật thông tin
           </button>
         </nz-space>
@@ -14,7 +14,6 @@
     </nz-page-header>
   </div>
   <nz-tabset [(nzSelectedIndex)]="tabs.length" (nzAdd)="newTab()" (nzClose)="closeTab($event)">
-    <!-- @for (tab of data; track tab) { -->
     <nz-tab *ngFor="let tab of data" (nzSelect)="openEdit(tab)" (nzContextmenu)="openEdit(tab)" [nzTitle]="tab.name"
       class="ant-tabs-tab">
       <form style="width: fit-content;" nz-form nzLayout="vertical" [formGroup]="validateForm"
@@ -28,7 +27,9 @@
         </strong>
 
         <div style="margin: 5px  0; margin-top: 10px"> Tiêu đề email: </div>
-        <input type="text" nz-input [ngModel]="'[PARAM1]-[PARAM2]'" />
+        <input type="text" nz-input
+        formControlName="title"/>
+        <!-- [ngModel]="'[PARAM1]-[PARAM2]'" -->
 
         <div style="margin-top: 15px">
           Các tham số được sử dụng trong nội dung Email:
@@ -52,7 +53,10 @@
             <div class="editor-container editor-container_classic-editor" #editorContainerElement>
               <div class="editor-container__editor" style="height: calc(100vh - 410px) !important;">
                 <div #editorElement class="ck-editor__editable_inline">
-                  <ckeditor formControlName="htmlSource" [editor]="Editor" [config]="config" *ngIf="isLayoutReady" />
+                  <ckeditor formControlName="htmlSource"
+                  [editor]="Editor"
+                  [config]="config"
+                  *ngIf="isLayoutReady" />
                 </div>
               </div>
             </div>
@@ -71,7 +75,7 @@
       <div nz-col class="gutter-row" [nzSpan]="18">
         <div class="inner-box">
           <label>Tên:</label>
-          <app-input-clear nz-input [control]="$any(validateForm).controls['name']" />
+          <input nz-input [(ngModel)]="model.name" placeholder="new" label="name"/>
         </div>
         <!-- // class="input-v align-left" -->
       </div>

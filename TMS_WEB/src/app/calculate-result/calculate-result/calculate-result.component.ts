@@ -134,7 +134,6 @@ export class CalculateResultComponent {
       },
     })
     this.getAllGoods()
-    this.getAllSigner()
     this.getRight()
     if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DLG)) {
       this.changeTitle('DỮ LIỆU GỐC')
@@ -305,7 +304,7 @@ export class CalculateResultComponent {
     this._signerService.getall().subscribe({
       next: (data) => {
         this.signerResult = data
-        console.log(data)
+        // console.log(data)
 
         // this.selectedValue = this.signerResult.find(item => item.code === this.model.header.signerCode);
       },
@@ -375,7 +374,7 @@ export class CalculateResultComponent {
     this._service.GetResult(code).subscribe({
       next: (data) => {
         this.data = data
-        console.log(data)
+        // console.log(data)
       },
       error: (e) => {
         console.log(e)
@@ -422,7 +421,7 @@ export class CalculateResultComponent {
     this._service.GetHistoryAction(this.headerId).subscribe({
       next: (data) => {
         this.lstHistory = data
-        console.log(data)
+        // console.log(data)
         this.isVisibleHistory = true
       },
       error: (err) => {
@@ -470,6 +469,7 @@ export class CalculateResultComponent {
     this.visibleDrawer = false
   }
   getDataHeader() {
+    this.getAllSigner()
     this.visibleDrawer = true
   }
   getAllGoods() {
@@ -489,7 +489,7 @@ export class CalculateResultComponent {
   }
   updateDataInput() {
     if (this.model.header.name != '') {
-      console.log(this.model)
+      // console.log(this.model)
       this._service.UpdateDataInput(this.model).subscribe({
         next: (data) => {
           window.location.reload()

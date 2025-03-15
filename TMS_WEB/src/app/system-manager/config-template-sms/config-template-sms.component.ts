@@ -81,11 +81,16 @@ ADMIN_RIGHTS = ADMIN_RIGHTS
   isSubmit: boolean = false
   tabs: any = []
   isCancelModalVisible: boolean = false
-  name: any = 'new'
-  indexTab: any = 0
-  data: any = {
-    htmlSource : ''
+  model: any = {
+    code: '',
+    name: '',
+    htmlSource : '',
+    type: "SMS",
+    title: '',
+    isActive: true
   }
+  indexTab: any = 0
+  data: any = []
 
   ngOnInit(): void {
     this.getAll()
@@ -105,7 +110,7 @@ ADMIN_RIGHTS = ADMIN_RIGHTS
   }
 
   handleCancelOk(){
-    this.tabs.push(this.name);
+    this.tabs.push(this.model.name);
     // this.tabs[0] = this.name
     console.log(this.tabs);
     this.isCancelModalVisible = false
@@ -113,7 +118,6 @@ ADMIN_RIGHTS = ADMIN_RIGHTS
   }
   handleCancelModal(){
     this.isCancelModalVisible = false
-    this.name = ''
     this.edit = true
   }
   save(){
@@ -123,19 +127,16 @@ ADMIN_RIGHTS = ADMIN_RIGHTS
 
   trackByItemId(index: number, item: any){
     console.log(item.code);
-    //  ; // Trả về ID của item để theo dõi
   }
 
   submitForm(): void {
     this.isSubmit = true
     this.isCancelModalVisible = false
-    this.name = ''
+    if (this.edit) {
+        if (this.validateForm.valid) {
+        const formData = this.validateForm.getRawValue()
+        console.log(formData);
 
-    if (this.validateForm.valid) {
-      const formData = this.validateForm.getRawValue()
-      console.log(formData);
-
-      if (this.edit) {
         this._service.updateConfigTemplate(formData).subscribe({
           next: (data) => {
             this.getAll()
@@ -144,16 +145,18 @@ ADMIN_RIGHTS = ADMIN_RIGHTS
             console.log(response)
           },
         })
-      } else {
-        this._service.createConfigTemplate(formData).subscribe({
-          next: (data) => {
-            this.getAll()
-          },
-          error: (response) => {
-            console.log(response)
-          },
-        })
       }
+    }
+    else if (this.model.name) {
+      const formData = this.model
+      this._service.createConfigTemplate(formData).subscribe({
+        next: (data) => {
+          this.getAll()
+        },
+        error: (response) => {
+          console.log(response)
+        },
+      })
     } else {
       Object.values(this.validateForm.controls).forEach((control) => {
         if (control.invalid) {

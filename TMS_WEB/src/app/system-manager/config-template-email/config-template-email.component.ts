@@ -64,99 +64,38 @@ export class ConfixTemplateEmailComponent implements AfterViewInit, OnInit {
   ADMIN_RIGHTS = ADMIN_RIGHTS
   constructor(
     private fb: NonNullableFormBuilder,
-    private _service : ConfigTemplateService,
+    private _service: ConfigTemplateService,
     private globalService: GlobalService,
     private changeDetector: ChangeDetectorRef,
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Cấu hình Template SMS',
-        path: 'system-manager/confixtemplate-sms',
+        name: 'Cấu hình Template EMAIL',
+        path: 'system-manager/confixtemplate-email',
       },
     ])
   }
 
-  title: any = 'Cấu hình template SMS'
+  title: any = 'Cấu hình template EMAIL'
   edit: boolean = false
   isSubmit: boolean = false
   tabs: any = []
   isCancelModalVisible: boolean = false
-  name: any = 'new'
-  indexTab: any = 0
-  data: any = {
-    htmlSource : ''
+  model: any = {
+    code: '',
+    name: '',
+    htmlSource: '',
+    type: "EMAIL",
+    title: '',
+    isActive: true
   }
+  indexTab: any = 0
+  data: any = []
 
   ngOnInit(): void {
     this.getAll()
     this.ngAfterViewInit()
     console.log(this.config.initialData);
-  }
-
-  newTab(): void {
-    this.isCancelModalVisible = true
-    this.edit = false
-  }
-
-  closeTab({ index }: { index: number }): void  {
-    this.tabs.splice(index, 1);
-  }
-
-  handleCancelOk(){
-    this.tabs.push(this.name);
-    console.log(this.tabs);
-    this.isCancelModalVisible = false
-    this.edit = false
-  }
-  handleCancelModal(){
-    this.isCancelModalVisible = false
-    this.name = ''
-    this.edit = true
-  }
-  save(){
-    console.log(this.indexTab);
-  }
-
-  trackByItemId(index: number, item: any){
-    console.log(item.code);
-  }
-
-  submitForm(): void {
-    this.isSubmit = true
-    this.isCancelModalVisible = false
-    this.name = ''
-
-    if (this.validateForm.valid) {
-      const formData = this.validateForm.getRawValue()
-      console.log(formData);
-
-      if (this.edit) {
-        this._service.updateConfigTemplate(formData).subscribe({
-          next: (data) => {
-            this.getAll()
-          },
-          error: (response) => {
-            console.log(response)
-          },
-        })
-      } else {
-        this._service.createConfigTemplate(formData).subscribe({
-          next: (data) => {
-            this.getAll()
-          },
-          error: (response) => {
-            console.log(response)
-          },
-        })
-      }
-    } else {
-      Object.values(this.validateForm.controls).forEach((control) => {
-        if (control.invalid) {
-          control.markAsDirty()
-          control.updateValueAndValidity({ onlySelf: true })
-        }
-      })
-    }
   }
 
   getAll() {
@@ -172,14 +111,79 @@ export class ConfixTemplateEmailComponent implements AfterViewInit, OnInit {
       },
     })
   }
+  newTab(): void {
+    this.isCancelModalVisible = true
+    this.edit = false
+  }
+
+  closeTab({ index }: { index: number }): void {
+    this.tabs.splice(index, 1);
+  }
+
+  handleCancelOk() {
+    this.tabs.push(this.model.name);
+    console.log(this.tabs);
+    this.isCancelModalVisible = false
+    this.edit = false
+  }
+
+  handleCancelModal() {
+    this.isCancelModalVisible = false
+    // this.name = ''
+    this.edit = true
+  }
+
+  trackByItemId(index: number, item: any) {
+    console.log(item.code);
+  }
+
+  submitForm(): void {
+    this.isSubmit = true
+    this.isCancelModalVisible = false
+    if (this.edit) {
+      if (this.validateForm.valid) {
+        const formData = this.validateForm.getRawValue()
+        console.log(formData);
+
+        this._service.updateConfigTemplate(formData).subscribe({
+          next: (data) => {
+            this.getAll()
+          },
+          error: (response) => {
+            console.log(response)
+          },
+        })
+      }
+    }
+    else if (this.model.name) {
+      const formData = this.model
+      this._service.createConfigTemplate(formData).subscribe({
+        next: (data) => {
+          this.getAll()
+        },
+        error: (response) => {
+          console.log(response)
+        },
+      })
+    } else {
+      Object.values(this.validateForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty()
+          control.updateValueAndValidity({ onlySelf: true })
+        }
+      })
+    }
+  }
+
 
   openEdit(data: any): void {
+
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
       htmlSource: data.htmlSource,
       title: data.title,
-      type:  data.type,
+      type: data.type,
       isActive: data.isActive,
     })
     setTimeout(() => {
@@ -187,7 +191,7 @@ export class ConfixTemplateEmailComponent implements AfterViewInit, OnInit {
     }, 2000)
   }
 
-  addPram(event: Event, pram: string){
+  addPram(event: Event, pram: string) {
     event.preventDefault();
     var html = this.validateForm.get('htmlSource')?.value
     var htmlSource = html + ' ' + pram

@@ -45,30 +45,30 @@
 
           <tr (click)="openEdit(data)" *ngIf="data.isActive">
             <td>
-            {{
-            (paginationResult.currentPage - 1) * paginationResult.pageSize +
-            i +
-            1
-            }}
-          </td>
-          <td>{{ data.name }}</td>
+              {{
+              (paginationResult.currentPage - 1) * paginationResult.pageSize +
+              i +
+              1
+              }}
+            </td>
+            <td>{{ data.name }}</td>
 
-          <td>{{ data.fDate | date: 'dd/MM/yyyy HH:mm' }}</td>
-          <td>
-            {{
-            data.status == '01'
-            ? 'Khởi tạo'
-            : data.status == '02'
-            ? 'Chờ phê duyệt'
-            : data.status == '03'
-            ? 'Yêu cầu chỉnh sửa'
-            : data.status == '04'
-            ? 'Phê duyệt'
-            : 'Từ chối'
-          }}
-          </td>
-        </tr>
-      </ng-container>
+            <td>{{ data.fDate | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              {{
+              data.status == '01'
+              ? 'Khởi tạo'
+              : data.status == '02'
+              ? 'Chờ phê duyệt'
+              : data.status == '03'
+              ? 'Yêu cầu chỉnh sửa'
+              : data.status == '04'
+              ? 'Phê duyệt'
+              : 'Từ chối'
+              }}
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </nz-table>
   </div>
@@ -126,19 +126,11 @@
     <nz-divider nzText="Người ký " nzOrientation="left"></nz-divider>
     <nz-form-item>
       <nz-form-control nzErrorTip="Không được để trống">
-        <nz-select
-        nzShowSearch
-        nzAllowClear
-        [nzPlaceHolder]="'Chọn người ký'"
-        [formControl]="nguoiKyControl"
-        [(ngModel)]="selectedValue"
-        >
+        <nz-select nzShowSearch nzAllowClear [nzPlaceHolder]="'Chọn người ký'" [formControl]="nguoiKyControl"
+          [(ngModel)]="selectedValue">
 
 
-          <nz-option
-            *ngFor="let item of signerResult"
-            [nzLabel]="item.position + ' - ' + item.name"
-            [nzValue]="item">
+          <nz-option *ngFor="let item of signerResult" [nzLabel]="item.position + ' - ' + item.name" [nzValue]="item">
           </nz-option>
 
         </nz-select>

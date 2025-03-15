@@ -14,10 +14,10 @@ namespace DMS.CORE.Entities.AD
         [Column("NAME", TypeName = "NVARCHAR(255)")]
         public string Name { get; set; }
 
-        [Column("HTML_SOURCE", TypeName = "VARCHAR(2550)")]
+        [Column("HTML_SOURCE", TypeName = "NVARCHAR(2550)")]
         public string? HtmlSource { get; set; }
 
-        [Column("TITLE", TypeName = "VARCHAR(550)")]
+        [Column("TITLE", TypeName = "NVARCHAR(550)")]
         public string? Title { get; set; }
 
         [Column("TYPE", TypeName = "VARCHAR(255)")]

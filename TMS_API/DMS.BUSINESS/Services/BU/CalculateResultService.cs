@@ -1722,8 +1722,8 @@ namespace DMS.BUSINESS.Services.BU
 
 
                 #region Dữ liệu gốc
-                Task TaskDlg = Task.Run(() =>
-                {
+                //Task TaskDlg = Task.Run(() =>
+                //{
                         var startRowdlg_1 = 4;
                         ISheet sheetGLG = templateWorkbook.GetSheetAt(0);
                         #region Thị trường Thành phố Vinh, TX Cửa Lò
@@ -2349,12 +2349,12 @@ namespace DMS.BUSINESS.Services.BU
                         header_valid_time.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                         header_valid_time.SetCellValue($"{Time}");
                         #endregion
-                });
+                //});
 
                 #endregion
 
-                Task TaskPtDbFob = Task.Run(() =>
-                {
+                //Task TaskPtDbFob = Task.Run(() =>
+                //{
                     #region Export PT
 
                     var startRowPT = 7;
@@ -2659,10 +2659,10 @@ namespace DMS.BUSINESS.Services.BU
                     rowCurFob.Cells[24].SetCellValue("DUYỆT");
 
                     #endregion  
-                });
+                //});
 
-                Task TaskPt09Bbdo = Task.Run(() =>
-                {
+                //Task TaskPt09Bbdo = Task.Run(() =>
+                //{
                         #region Export PT09 (5s)
 
                         var startRowPT09 = 7;
@@ -3288,10 +3288,10 @@ namespace DMS.BUSINESS.Services.BU
                             cell3.SetCellValue($"{nguoiKy.Name}");
                         }
                         #endregion
-                });
+                //});
 
-                Task TaskVk11pt = Task.Run(() =>
-                {
+                //Task TaskVk11pt = Task.Run(() =>
+                //{
                     #region Export VK11-PT (11s)
 
                     var startRowVK11PT = 2;
@@ -3359,10 +3359,10 @@ namespace DMS.BUSINESS.Services.BU
                     }
 
                     #endregion
-                });
+                //});
 
-                Task TaskVk11BdFob = Task.Run(() =>
-                {
+                //Task TaskVk11BdFob = Task.Run(() =>
+                //{
 
                     #region Export VK11-DB (3.5s)
 
@@ -3496,10 +3496,10 @@ namespace DMS.BUSINESS.Services.BU
                     }
 
                     #endregion
-                });
+                //});
 
-                Task TaskVk11TnppBb = Task.Run(() =>
-                {
+                //Task TaskVk11TnppBb = Task.Run(() =>
+                //{
                     #region Export VK11-TNPP
 
                     var startRowVK11TNPP = 3;
@@ -3546,28 +3546,28 @@ namespace DMS.BUSINESS.Services.BU
                         rowCur.Cells[18].SetCellValue(dataRow.Col17);
                         rowCur.Cells[19].SetCellValue(dataRow.Col18);
 
-                        //for (var j = 0; j < 20; j++)
-                        //{
-                        //    if (dataRow.IsBold)
-                        //    {
-                        //        rowCur.Cells[j].CellStyle = styleCellBold;
-                        //        rowCur.Cells[j].CellStyle.SetFont(fontBold);
-                        //    }
-                        //    else
-                        //    {
-                        //        rowCur.Cells[j].CellStyle.SetFont(font);
-                        //    }
-                        //    rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
-                        //    rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
-                        //    rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
-                        //    rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
-                        //}
-                    }
+                    //for (var j = 0; j < 20; j++)
+                    //{
+                    //    if (dataRow.IsBold)
+                    //    {
+                    //        rowCur.Cells[j].CellStyle = styleCellBold;
+                    //        rowCur.Cells[j].CellStyle.SetFont(fontBold);
+                    //    }
+                    //    else
+                    //    {
+                    //        rowCur.Cells[j].CellStyle.SetFont(font);
+                    //    }
+                    //    rowCur.Cells[j].CellStyle.BorderBottom = BorderStyle.Thin;
+                    //    rowCur.Cells[j].CellStyle.BorderTop = BorderStyle.Thin;
+                    //    rowCur.Cells[j].CellStyle.BorderLeft = BorderStyle.Thin;
+                    //    rowCur.Cells[j].CellStyle.BorderRight = BorderStyle.Thin;
+                    //}
+                }
 
-                    #endregion
+                #endregion
 
-                    #region PTS
-                    var startRowPTS = 4;
+                #region PTS
+                var startRowPTS = 4;
                     ISheet sheetPTS = templateWorkbook.GetSheetAt(16);
                     styleCellBold.CloneStyleFrom(sheetPTS.GetRow(1).Cells[0].CellStyle);
 
@@ -3672,16 +3672,16 @@ namespace DMS.BUSINESS.Services.BU
                     }
 
                     #endregion
-                });
+                //});
 
                 #region Export TongHop (26s)
 
 
                 int itemsPerExport = (int)Math.Ceiling((double)data.Summary.Count / 1);
 
-                Task taskTongHop = Task.Run(() => {
+                //Task taskTongHop = Task.Run(() => {
                         exportTongHop(0, itemsPerExport);
-                });
+                //});
 
                 # region
 
@@ -3733,15 +3733,15 @@ namespace DMS.BUSINESS.Services.BU
 
                 #endregion
 
-                await Task.WhenAll(
-                      TaskDlg
-                    , TaskPtDbFob
-                    , TaskVk11pt 
-                    , TaskPt09Bbdo
-                    , TaskVk11BdFob
+                //await Task.WhenAll(
+                //      TaskDlg
+                //    , TaskPtDbFob
+                //    , TaskVk11pt 
+                //    , TaskPt09Bbdo
+                //    , TaskVk11BdFob
 
-                    , TaskVk11TnppBb
-                    , taskTongHop
+                //    , TaskVk11TnppBb
+                //    , taskTongHop
                     //, taskTongHop1
                     //, taskTongHop2
                     //, taskTongHop3
@@ -3751,7 +3751,7 @@ namespace DMS.BUSINESS.Services.BU
                     //, taskTongHop7
                     //, taskTongHop8
                     //, taskTongHop9
-                    );
+                    //);
 
 
 
