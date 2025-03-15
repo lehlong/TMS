@@ -3,214 +3,98 @@
     <nz-page-header nzBackIcon [nzTitle]="title" class="site-page-header">
       <nz-page-header-extra>
         <nz-space [nzWrap]="true" class="gap-[5px]">
-          <button
-            [appPermission]="IMPORT_BATCH.INPUT_DATA"
-            class="!flex !items-center"
-            nzType="default"
-            nz-button
-            (click)="getDataHeader()"
-            *ngIf="model.header.status != null"
-          >
+          <button [appPermission]="IMPORT_BATCH.INPUT_DATA" class="!flex !items-center" nzType="default" nz-button
+            (click)="getDataHeader()" *ngIf="model.header.status != null">
             <span nz-icon nzType="right-square"></span> Dữ liệu đầu vào
           </button>
-          <button
-            [appPermission]="IMPORT_BATCH.RECALCULATE"
-            class="!flex !items-center"
-            nzType="default"
-            nz-button
-            (click)="reCalculate()"
-          >
+          <button [appPermission]="IMPORT_BATCH.RECALCULATE" class="!flex !items-center" nzType="default" nz-button
+            (click)="reCalculate()">
             <span nz-icon nzType="calculator"></span> Tính toán lại
           </button>
 
-          <button
-            class="!flex !items-center"
-            nzType="default"
-            nz-button
-            (click)="changeStatus('01', '02')"
+          <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('01', '02')"
             [appPermission]="IMPORT_BATCH.BROWSE_IMPORT_BATCH"
-            *ngIf="model.header.status == '01' || model.header.status == '03'"
-          >
+            *ngIf="model.header.status == '01' || model.header.status == '03'">
             <span nz-icon nzType="send"></span> Trình duyệt
           </button>
 
-          <button
-            class="!flex !items-center"
-            nzType="default"
-            nz-button
-            (click)="changeStatus('05', '06')"
-            [appPermission]="IMPORT_BATCH.CANCEL_BROWSE"
-            *ngIf="model.header.status == '02'"
-          >
+          <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('05', '06')"
+            [appPermission]="IMPORT_BATCH.CANCEL_BROWSE" *ngIf="model.header.status == '02'">
             <span nz-icon nzType="close"></span> Hủy trình duyệt
           </button>
 
-          <button
-            class="!flex !items-center"
-            nzType="default"
-            nz-button
-            (click)="changeStatus('02', '03')"
-            [appPermission]="IMPORT_BATCH.REQUEST_IMPORT_BATCH_EDIT"
-            *ngIf="model.header.status == '02'"
-          >
+          <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('02', '03')"
+            [appPermission]="IMPORT_BATCH.REQUEST_IMPORT_BATCH_EDIT" *ngIf="model.header.status == '02'">
             <span nz-icon nzType="undo"></span> Yêu cầu chỉnh sửa
           </button>
 
-          <button
-            class="!flex !items-center"
-            nzType="default"
-            nz-button
-            (click)="changeStatus('03', '04')"
-            [appPermission]="IMPORT_BATCH.APPROVE_IMPORT_BATCH"
-            *ngIf="model.header.status == '02'"
-          >
+          <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('03', '04')"
+            [appPermission]="IMPORT_BATCH.APPROVE_IMPORT_BATCH" *ngIf="model.header.status == '02'">
             <span nz-icon nzType="check"></span> Phê duyệt
           </button>
 
-          <button
-            class="!flex !items-center"
-            nzType="default"
-            nz-button
-            (click)="changeStatus('06', '07')"
-            [appPermission]="IMPORT_BATCH.CANCEL_APPROVAL"
-            *ngIf="model.header.status == '04'"
-          >
+          <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('06', '07')"
+            [appPermission]="IMPORT_BATCH.CANCEL_APPROVAL" *ngIf="model.header.status == '04'">
             <span nz-icon nzType="close"></span> Hủy phê duyệt
           </button>
 
-          <button
-            class="!flex !items-center"
-            nzType="default"
-            nz-button
-            (click)="changeStatus('04', '05')"
-            [appPermission]="IMPORT_BATCH.REJECT_IMPORT_BATCH"
-            *ngIf="model.header.status == '02'"
-          >
+          <button class="!flex !items-center" nzType="default" nz-button (click)="changeStatus('04', '05')"
+            [appPermission]="IMPORT_BATCH.REJECT_IMPORT_BATCH" *ngIf="model.header.status == '02'">
             <span nz-icon nzType="close"></span> Từ chối
           </button>
 
-          <button
-            class="!flex !items-center"
-            nzType="default"
-            nz-button
-            (click)="showHistoryAction()"
-            [appPermission]="IMPORT_BATCH.HISTORY"
-          >
+          <button class="!flex !items-center" nzType="default" nz-button (click)="showHistoryAction()"
+            [appPermission]="IMPORT_BATCH.HISTORY">
             <span nz-icon nzType="history"></span> Lịch sử thực hiện
           </button>
-          <button
-            class="!flex !items-center"
-            nzType="default"
-            nz-button
-            (click)="showHistoryExport()"
-            [appPermission]="IMPORT_BATCH.HISTORY"
-          >
+          <button class="!flex !items-center" nzType="default" nz-button (click)="showHistoryExport()"
+            [appPermission]="IMPORT_BATCH.HISTORY">
             <span nz-icon nzType="history"></span> Lịch sử xuất file
           </button>
 
-          <app-input-clear
-            *ngIf="
+          <app-input-clear *ngIf="
               title != 'DỮ LIỆU GỐC'
-            "
-            placeholder="Tìm kiếm"
-            (enterEvent)="search()"
-            [(value)]="searchInput"
-          ></app-input-clear>
-          <button
-            *ngIf="
+            " placeholder="Tìm kiếm" (enterEvent)="search()" [(value)]="searchInput"></app-input-clear>
+          <button *ngIf="
               title != 'DỮ LIỆU GỐC'
-            "
-            (click)="search()"
-            class="flex !items-center !border-l-0 gray-btn"
-            nzType="default"
-            nz-button
-            nzType="default"
-          >
+            " (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+            nzType="default">
             <span nz-icon nzType="search"></span>
           </button>
-          <button
-            *ngIf="
+          <button *ngIf="
               title != 'DỮ LIỆU GỐC'
-            "
-            (click)="reset()"
-            class="flex !items-center !border-l-0 gray-btn"
-            nzType="default"
-            nz-button
-            nzType="default"
-          >
+            " (click)="reset()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+            nzType="default">
             <span nz-icon nzType="redo"></span>
           </button>
-          <button
-            class="!flex !items-center btn-excel"
-            nzType="primary"
-            nz-button
-            (click)="exportExcel()"
-            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL"
-            *ngIf="model.header.status == '04'"
-          >
+          <button class="!flex !items-center btn-excel" nzType="primary" nz-button (click)="exportExcel()"
+            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL" *ngIf="model.header.status == '04'">
             <span nz-icon nzType="file-excel"></span> Xuất Excel
           </button>
-          <button
-            class="!flex !items-center"
-            nzType="primary"
-            nz-button
-            (click)="exportWord()"
-            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL"
-            *ngIf="model.header.status == '04'"
-          >
+          <button class="!flex !items-center" nzType="primary" nz-button (click)="exportWord()"
+            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL" *ngIf="model.header.status == '04'">
             <span nz-icon nzType="file-word"></span> Xuất Word
           </button>
 
-          <button
-            class="!flex !items-center"
-            nzType="primary"
-            nz-button
-            (click)="exportWordTrinhKy()"
-            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL"
-          >
+          <button class="!flex !items-center" nzType="primary" nz-button (click)="exportWordTrinhKy()"
+            [appPermission]="IMPORT_BATCH.EXPORT_TO_EXCEL">
             <span nz-icon nzType="file-word"></span> Xuất Trình Ký
           </button>
 
-          <button
-            class="!flex !items-center btn-pdf"
-            nzType="primary"
-            nz-button
-            (click)="exportPDF()"
-            [appPermission]="IMPORT_BATCH.EXPORT_TO_PDF"
-            *ngIf="model.header.status == '04'"
-          >
+          <button class="!flex !items-center btn-pdf" nzType="primary" nz-button (click)="exportPDF()"
+            [appPermission]="IMPORT_BATCH.EXPORT_TO_PDF" *ngIf="model.header.status == '04'">
             <span nz-icon nzType="file-pdf"></span> Xuất PDF
           </button>
-          <button
-            [appPermission]="IMPORT_BATCH.SEND_SMS"
-            nz-popconfirm
-            class="!flex !items-center btn-sms"
-            nzType="primary"
-            nzPopconfirmTitle="Bạn có chắc chắn gửi SMS thông báo cho các khách hàng?"
-            (nzOnConfirm)="confirmSendSMS()"
-            [nzCancelText]="'Huỷ'"
-            [nzOkText]="'Gửi'"
-            (nzOnCancel)="cancelSendSMS()"
-            nzPopconfirmPlacement="bottom"
-            nz-button
-            *ngIf="model.header.status == '04'"
-          >
+          <button [appPermission]="IMPORT_BATCH.SEND_SMS" nz-popconfirm class="!flex !items-center btn-sms"
+            nzType="primary" nzPopconfirmTitle="Bạn có chắc chắn gửi SMS thông báo cho các khách hàng?"
+            (nzOnConfirm)="confirmSendSMS()" [nzCancelText]="'Huỷ'" [nzOkText]="'Gửi'" (nzOnCancel)="cancelSendSMS()"
+            nzPopconfirmPlacement="bottom" nz-button *ngIf="model.header.status == '04'">
             <span nz-icon nzType="message"></span> Gửi SMS
           </button>
-          <button
-            [appPermission]="IMPORT_BATCH.SEND_EMAIL"
-            nz-popconfirm
-            class="!flex !items-center btn-email"
-            nzType="primary"
-            nzPopconfirmTitle="Bạn có chắc chắn gửi Email thông báo cho các khách hàng?"
-            (nzOnConfirm)="confirmSendSMS()"
-            [nzCancelText]="'Huỷ'"
-            [nzOkText]="'Gửi'"
-            (nzOnCancel)="cancelSendSMS()"
-            nzPopconfirmPlacement="bottom"
-            nz-button
-            *ngIf="model.header.status == '04'"
-          >
+          <button [appPermission]="IMPORT_BATCH.SEND_EMAIL" nz-popconfirm class="!flex !items-center btn-email"
+            nzType="primary" nzPopconfirmTitle="Bạn có chắc chắn gửi Email thông báo cho các khách hàng?"
+            (nzOnConfirm)="confirmSendSMS()" [nzCancelText]="'Huỷ'" [nzOkText]="'Gửi'" (nzOnCancel)="cancelSendSMS()"
+            nzPopconfirmPlacement="bottom" nz-button *ngIf="model.header.status == '04'">
             <span nz-icon nzType="mail"></span> Gửi Email
           </button>
           <button nz-button nzType="default" (click)="fullScreen()">
@@ -222,41 +106,22 @@
   </div>
 
   <div [ngClass]="isZoom ? 'zoom' : ''">
-    <button
-      nz-button
-      [ngClass]="isZoom ? 'd-block close' : 'd-none'"
-      nzType="default"
-      (click)="closeFullScreen()"
-    >
+    <button nz-button [ngClass]="isZoom ? 'd-block close' : 'd-none'" nzType="default" (click)="closeFullScreen()">
       <span nz-icon nzType="fullscreen-exit"></span>
     </button>
     <nz-tabset>
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DLG)"
-        nzTitle="Dữ liệu gốc"
-        (nzClick)="changeTitle('DỮ LIỆU GỐC')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DLG)" nzTitle="Dữ liệu gốc"
+        (nzClick)="changeTitle('DỮ LIỆU GỐC')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
+          }">
           <div nz-row [nzGutter]="16">
             <div nz-col class="gutter-row" [nzSpan]="17">
               <div class="inner-box">
-                <nz-divider
-                  nzText="1. Thị trường thành phố Vinh, TX Cửa Lò"
-                  nzOrientation="left"
-                ></nz-divider>
-                <nz-table
-                  [nzShowPagination]="false"
-                  nzSize="small"
-                  [nzFrontPagination]="false"
-                  nzBordered
-                  #dlgTable_1
-                  [nzData]="data.dlg.dlg_1"
-                >
+                <nz-divider nzText="1. Thị trường thành phố Vinh, TX Cửa Lò" nzOrientation="left"></nz-divider>
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #dlgTable_1
+                  [nzData]="data.dlg.dlg_1">
                   <thead>
                     <tr>
                       <th class="align-center" rowspan="2">MẶT HÀNG</th>
@@ -289,16 +154,16 @@
                   </thead>
                   <tbody>
                     @for (d of dlgTable_1.data; track d) {
-                      <tr>
-                        <td>{{ d.col1 }}</td>
-                        <td class="align-right">{{ d.col2 | number }}</td>
-                        <td class="align-right">{{ d.col3 | number }}</td>
-                        <td class="align-right">{{ d.col4 | number }}</td>
-                        <td class="align-right">{{ d.col5 | number }}</td>
-                        <td class="align-right">{{ d.col6 | number }}</td>
-                        <td class="align-right">{{ d.col7 | number }}</td>
-                        <td></td>
-                      </tr>
+                    <tr>
+                      <td>{{ d.col1 }}</td>
+                      <td class="align-right">{{ d.col2 | number }}</td>
+                      <td class="align-right">{{ d.col3 | number }}</td>
+                      <td class="align-right">{{ d.col4 | number }}</td>
+                      <td class="align-right">{{ d.col5 | number }}</td>
+                      <td class="align-right">{{ d.col6 | number }}</td>
+                      <td class="align-right">{{ d.col7 | number }}</td>
+                      <td></td>
+                    </tr>
                     }
                   </tbody>
                 </nz-table>
@@ -306,18 +171,10 @@
             </div>
             <div nz-col class="gutter-row" [nzSpan]="7">
               <div class="inner-box">
-                <nz-divider
-                  nzText="2. Các huyện thị còn lại trên địa bàn Nghệ An + Hà Tĩnh"
-                  nzOrientation="left"
-                ></nz-divider>
-                <nz-table
-                  [nzShowPagination]="false"
-                  nzSize="small"
-                  [nzFrontPagination]="false"
-                  nzBordered
-                  #dlgTable_2
-                  [nzData]="data.dlg.dlg_2"
-                >
+                <nz-divider nzText="2. Các huyện thị còn lại trên địa bàn Nghệ An + Hà Tĩnh"
+                  nzOrientation="left"></nz-divider>
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #dlgTable_2
+                  [nzData]="data.dlg.dlg_2">
                   <thead>
                     <tr>
                       <th class="align-center">MẶT HÀNG</th>
@@ -328,10 +185,10 @@
                   </thead>
                   <tbody>
                     @for (d of dlgTable_2.data; track d) {
-                      <tr>
-                        <td>{{ d.col1 }}</td>
-                        <td class="align-right">{{ d.col2 | number }}</td>
-                      </tr>
+                    <tr>
+                      <td>{{ d.col1 }}</td>
+                      <td class="align-right">{{ d.col2 | number }}</td>
+                    </tr>
                     }
                   </tbody>
                 </nz-table>
@@ -339,18 +196,9 @@
             </div>
           </div>
 
-          <nz-divider
-            nzText="BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (PT bán lẻ - V2)"
-            nzOrientation="left"
-          ></nz-divider>
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #dlgTable_3
-            [nzData]="data.dlg.dlg_3"
-          >
+          <nz-divider nzText="BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (PT bán lẻ - V2)" nzOrientation="left"></nz-divider>
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #dlgTable_3
+            [nzData]="data.dlg.dlg_3">
             <thead>
               <tr>
                 <th rowSpan="2" class="align-center">STT</th>
@@ -396,36 +244,27 @@
             </thead>
             <tbody>
               @for (d of dlgTable_3.data; track d) {
-                <tr>
-                  <td>{{ d.colA }}</td>
-                  <td>{{ d.colB }}</td>
-                  <td class="align-right">{{ d.col1 | number }}</td>
-                  <td class="align-right">{{ d.col2 | number }}</td>
-                  <td class="align-right">{{ d.col3 | number }}</td>
-                  <td class="align-right">{{ d.col4 | number }}</td>
-                  <td class="align-right">{{ d.col5 | number }}</td>
-                  <td class="align-right">{{ d.col6 | number }}</td>
-                  <td class="align-right">{{ d.col7 | number }}</td>
-                  <td class="align-right">{{ d.col8 | number }}</td>
-                  <td class="align-right">{{ d.col9 | number }}</td>
-                  <td class="align-right">{{ d.col10 | number }}</td>
-                </tr>
+              <tr>
+                <td>{{ d.colA }}</td>
+                <td>{{ d.colB }}</td>
+                <td class="align-right">{{ d.col1 | number }}</td>
+                <td class="align-right">{{ d.col2 | number }}</td>
+                <td class="align-right">{{ d.col3 | number }}</td>
+                <td class="align-right">{{ d.col4 | number }}</td>
+                <td class="align-right">{{ d.col5 | number }}</td>
+                <td class="align-right">{{ d.col6 | number }}</td>
+                <td class="align-right">{{ d.col7 | number }}</td>
+                <td class="align-right">{{ d.col8 | number }}</td>
+                <td class="align-right">{{ d.col9 | number }}</td>
+                <td class="align-right">{{ d.col10 | number }}</td>
+              </tr>
               }
             </tbody>
           </nz-table>
 
-          <nz-divider
-            nzText="BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (ngoài bán lẻ)"
-            nzOrientation="left"
-          ></nz-divider>
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #dlgTable_4
-            [nzData]="data.dlg.dlg_4"
-          >
+          <nz-divider nzText="BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (ngoài bán lẻ)" nzOrientation="left"></nz-divider>
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #dlgTable_4
+            [nzData]="data.dlg.dlg_4">
             <thead>
               <tr>
                 <th rowSpan="2" class="align-center">STT</th>
@@ -515,47 +354,38 @@
             </thead>
             <tbody>
               @for (d of dlgTable_4.data; track d) {
-                <tr *ngIf="d.isBold" style="font-weight: bold">
-                  <td>{{ d.colA }}</td>
-                  <td>{{ d.colB }}</td>
-                  <td colspan="16"></td>
-                </tr>
-                <tr *ngIf="!d.isBold">
-                  <td>{{ d.colA }}</td>
-                  <td>{{ d.colB }}</td>
-                  <td class="align-right">{{ d.col1 | number }}</td>
-                  <td class="align-right">{{ d.col2 | number }}</td>
-                  <td class="align-right">{{ d.col3 | number }}</td>
-                  <td class="align-right">{{ d.col4 | number }}</td>
-                  <td class="align-right">{{ d.col5 | number }}</td>
-                  <td class="align-right">{{ d.col6 | number }}</td>
-                  <td class="align-right">{{ d.col7 | number }}</td>
-                  <td class="align-right">{{ d.col8 | number }}</td>
-                  <td class="align-right">{{ d.col9 | number }}</td>
-                  <td class="align-right">{{ d.col10 | number }}</td>
-                  <td class="align-right">{{ d.col11 | number }}</td>
-                  <td class="align-right">{{ d.col12 | number }}</td>
-                  <td class="align-right">{{ d.col13 | number }}</td>
-                  <td class="align-right">{{ d.col14 | number }}</td>
-                  <td class="align-right">{{ d.col15 | number }}</td>
-                  <td class="align-right">{{ d.col16 | number }}</td>
-                  <td></td>
-                </tr>
+              <tr *ngIf="d.isBold" style="font-weight: bold">
+                <td>{{ d.colA }}</td>
+                <td>{{ d.colB }}</td>
+                <td colspan="16"></td>
+              </tr>
+              <tr *ngIf="!d.isBold">
+                <td>{{ d.colA }}</td>
+                <td>{{ d.colB }}</td>
+                <td class="align-right">{{ d.col1 | number }}</td>
+                <td class="align-right">{{ d.col2 | number }}</td>
+                <td class="align-right">{{ d.col3 | number }}</td>
+                <td class="align-right">{{ d.col4 | number }}</td>
+                <td class="align-right">{{ d.col5 | number }}</td>
+                <td class="align-right">{{ d.col6 | number }}</td>
+                <td class="align-right">{{ d.col7 | number }}</td>
+                <td class="align-right">{{ d.col8 | number }}</td>
+                <td class="align-right">{{ d.col9 | number }}</td>
+                <td class="align-right">{{ d.col10 | number }}</td>
+                <td class="align-right">{{ d.col11 | number }}</td>
+                <td class="align-right">{{ d.col12 | number }}</td>
+                <td class="align-right">{{ d.col13 | number }}</td>
+                <td class="align-right">{{ d.col14 | number }}</td>
+                <td class="align-right">{{ d.col15 | number }}</td>
+                <td class="align-right">{{ d.col16 | number }}</td>
+                <td></td>
+              </tr>
               }
             </tbody>
           </nz-table>
-          <nz-divider
-            nzText="BIỂU TÍNH GIÁ XUẤT NỘI DỤNG"
-            nzOrientation="left"
-          ></nz-divider>
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #dlgTable_5
-            [nzData]="data.dlg.dlg_5"
-          >
+          <nz-divider nzText="BIỂU TÍNH GIÁ XUẤT NỘI DỤNG" nzOrientation="left"></nz-divider>
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #dlgTable_5
+            [nzData]="data.dlg.dlg_5">
             <thead>
               <tr>
                 <th rowSpan="2" class="align-center">STT</th>
@@ -588,31 +418,23 @@
             </thead>
             <tbody>
               @for (d of dlgTable_5.data; track d) {
-                <tr>
-                  <td>{{ d.colA }}</td>
-                  <td>{{ d.colB }}</td>
-                  <td class="align-right">{{ d.col1 | number }}</td>
-                  <td class="align-right">{{ d.col2 | number }}</td>
-                  <td class="align-right">{{ d.col3 | number }}</td>
-                  <td class="align-right">{{ d.col4 | number }}</td>
-                  <td class="align-right">{{ d.col5 | number }}</td>
-                </tr>
+              <tr>
+                <td>{{ d.colA }}</td>
+                <td>{{ d.colB }}</td>
+                <td class="align-right">{{ d.col1 | number }}</td>
+                <td class="align-right">{{ d.col2 | number }}</td>
+                <td class="align-right">{{ d.col3 | number }}</td>
+                <td class="align-right">{{ d.col4 | number }}</td>
+                <td class="align-right">{{ d.col5 | number }}</td>
+              </tr>
               }
             </tbody>
           </nz-table>
 
-          <nz-divider
-            nzText="BIỂU TÍNH GIÁ BÁN CHO CÔNG TY CP VẬN TẢI VÀ DỊCH VỤ PETROLIMEX NGHỆ TĨNH"
-            nzOrientation="left"
-          ></nz-divider>
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #dlgTable_6
-            [nzData]="data.dlg.dlg_6"
-          >
+          <nz-divider nzText="BIỂU TÍNH GIÁ BÁN CHO CÔNG TY CP VẬN TẢI VÀ DỊCH VỤ PETROLIMEX NGHỆ TĨNH"
+            nzOrientation="left"></nz-divider>
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #dlgTable_6
+            [nzData]="data.dlg.dlg_6">
             <thead>
               <tr>
                 <th rowSpan="2" class="align-center">STT</th>
@@ -651,40 +473,28 @@
             </thead>
             <tbody>
               @for (d of dlgTable_6.data; track d) {
-                <tr>
-                  <td>{{ d.colA }}</td>
-                  <td>{{ d.colB }}</td>
-                  <td class="align-right">{{ d.col1 | number }}</td>
-                  <td class="align-right">{{ d.col2 | number }}</td>
-                  <td class="align-right">{{ d.col3 | number }}</td>
-                  <td class="align-right">{{ d.col4 | number }}</td>
-                  <td class="align-right">{{ d.col5 | number }}</td>
-                  <td class="align-right">{{ d.col6 | number }}</td>
-                  <td class="align-right">{{ d.col7 | number }}</td>
-                </tr>
+              <tr>
+                <td>{{ d.colA }}</td>
+                <td>{{ d.colB }}</td>
+                <td class="align-right">{{ d.col1 | number }}</td>
+                <td class="align-right">{{ d.col2 | number }}</td>
+                <td class="align-right">{{ d.col3 | number }}</td>
+                <td class="align-right">{{ d.col4 | number }}</td>
+                <td class="align-right">{{ d.col5 | number }}</td>
+                <td class="align-right">{{ d.col6 | number }}</td>
+                <td class="align-right">{{ d.col7 | number }}</td>
+              </tr>
               }
             </tbody>
           </nz-table>
-          <nz-divider
-            nzText="SO SÁNH VỚI KỲ - {{ data.nameOld }}"
-            nzOrientation="left"
-          ></nz-divider>
+          <nz-divider nzText="SO SÁNH VỚI KỲ - {{ data.nameOld }}" nzOrientation="left"></nz-divider>
 
-          <nz-divider
-            nzText="THAY ĐỔI GIÁ BÁN LẺ"
-            nzOrientation="left"
-          ></nz-divider>
+          <nz-divider nzText="THAY ĐỔI GIÁ BÁN LẺ" nzOrientation="left"></nz-divider>
           <div nz-row [nzGutter]="16">
             <div nz-col class="gutter-row" [nzSpan]="16">
               <div class="inner-box">
-                <nz-table
-                  [nzShowPagination]="false"
-                  nzSize="small"
-                  [nzFrontPagination]="false"
-                  nzBordered
-                  #dlg_tdgbl
-                  [nzData]="data.dlg.dlg_TDGBL"
-                >
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #dlg_tdgbl
+                  [nzData]="data.dlg.dlg_TDGBL">
                   <thead>
                     <tr>
                       <th class="align-center" rowspan="2">Mặt hàng</th>
@@ -708,19 +518,19 @@
                   </thead>
                   <tbody>
                     @for (d of dlg_tdgbl.data; track d) {
-                      <tr>
-                        <td>{{ d.colA }}</td>
-                        <td class="align-right">{{ d.col1 | number }}</td>
-                        <td class="align-right">{{ d.col2 | number }}</td>
-                        <td class="align-right">
-                          {{ d.tangGiam1_2 | number }}
-                        </td>
-                        <td class="align-right">{{ d.col3 | number }}</td>
-                        <td class="align-right">{{ d.col4 | number }}</td>
-                        <td class="align-right">
-                          {{ d.tangGiam3_4 | number }}
-                        </td>
-                      </tr>
+                    <tr>
+                      <td>{{ d.colA }}</td>
+                      <td class="align-right">{{ d.col1 | number }}</td>
+                      <td class="align-right">{{ d.col2 | number }}</td>
+                      <td class="align-right">
+                        {{ d.tangGiam1_2 | number }}
+                      </td>
+                      <td class="align-right">{{ d.col3 | number }}</td>
+                      <td class="align-right">{{ d.col4 | number }}</td>
+                      <td class="align-right">
+                        {{ d.tangGiam3_4 | number }}
+                      </td>
+                    </tr>
                     }
                   </tbody>
                 </nz-table>
@@ -728,14 +538,8 @@
             </div>
             <div nz-col class="gutter-row" [nzSpan]="8">
               <div class="inner-box">
-                <nz-table
-                  [nzShowPagination]="false"
-                  nzSize="small"
-                  [nzFrontPagination]="false"
-                  nzBordered
-                  #dlg_TdGgptbl
-                  [nzData]="data.dlg.dlg_TdGgptbl"
-                >
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #dlg_TdGgptbl
+                  [nzData]="data.dlg.dlg_TdGgptbl">
                   <thead>
                     <tr>
                       <th class="align-center" rowspan="2">Mặt hàng</th>
@@ -752,14 +556,14 @@
                   </thead>
                   <tbody>
                     @for (d of dlg_TdGgptbl.data; track d) {
-                      <tr>
-                        <td>{{ d.colA }}</td>
-                        <td class="align-right">{{ d.col1 | number }}</td>
-                        <td class="align-right">{{ d.col2 | number }}</td>
-                        <td class="align-right">
-                          {{ d.tangGiam1_2 | number }}
-                        </td>
-                      </tr>
+                    <tr>
+                      <td>{{ d.colA }}</td>
+                      <td class="align-right">{{ d.col1 | number }}</td>
+                      <td class="align-right">{{ d.col2 | number }}</td>
+                      <td class="align-right">
+                        {{ d.tangGiam1_2 | number }}
+                      </td>
+                    </tr>
                     }
                   </tbody>
                 </nz-table>
@@ -771,14 +575,8 @@
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
                 <nz-divider nzText="LÃI GỘP" nzOrientation="left"></nz-divider>
-                <nz-table
-                  [nzShowPagination]="false"
-                  nzSize="small"
-                  [nzFrontPagination]="false"
-                  nzBordered
-                  #dlgTable_7
-                  [nzData]="data.dlg.dlg_7"
-                >
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #dlgTable_7
+                  [nzData]="data.dlg.dlg_7">
                   <thead>
                     <tr>
                       <th class="align-center" rowspan="2">Mặt hàng</th>
@@ -797,35 +595,35 @@
                       <th class="bold-text">Vùng thị trường trung tâm</th>
                     </tr>
                     @for (d of dlgTable_7.data; track d) {
-                      <tr *ngIf="d.type == 'TT'">
-                        <td>{{ d.colA }}</td>
-                        <td class="align-right">
-                          {{ d.col1 | number: '1.0-0' }}
-                        </td>
-                        <td class="align-right">
-                          {{ d.col2 | number: '1.0-0' }}
-                        </td>
-                        <td class="align-right">
-                          {{ d.tangGiam1_2 | number: '1.0-0' }}
-                        </td>
-                      </tr>
+                    <tr *ngIf="d.type == 'TT'">
+                      <td>{{ d.colA }}</td>
+                      <td class="align-right">
+                        {{ d.col1 | number: '1.0-0' }}
+                      </td>
+                      <td class="align-right">
+                        {{ d.col2 | number: '1.0-0' }}
+                      </td>
+                      <td class="align-right">
+                        {{ d.tangGiam1_2 | number: '1.0-0' }}
+                      </td>
+                    </tr>
                     }
                     <tr>
                       <th class="bold-text">Các vùng thị trường còn lại</th>
                     </tr>
                     @for (d of dlgTable_7.data; track d) {
-                      <tr *ngIf="d.type === 'OTHER'">
-                        <td>{{ d.colA }}</td>
-                        <td class="align-right">
-                          {{ d.col1 | number: '1.0-0' }}
-                        </td>
-                        <td class="align-right">
-                          {{ d.col2 | number: '1.0-0' }}
-                        </td>
-                        <td class="align-right">
-                          {{ d.tangGiam1_2 | number: '1.0-0' }}
-                        </td>
-                      </tr>
+                    <tr *ngIf="d.type === 'OTHER'">
+                      <td>{{ d.colA }}</td>
+                      <td class="align-right">
+                        {{ d.col1 | number: '1.0-0' }}
+                      </td>
+                      <td class="align-right">
+                        {{ d.col2 | number: '1.0-0' }}
+                      </td>
+                      <td class="align-right">
+                        {{ d.tangGiam1_2 | number: '1.0-0' }}
+                      </td>
+                    </tr>
                     }
                   </tbody>
                 </nz-table>
@@ -833,18 +631,9 @@
             </div>
             <div nz-col class="gutter-row" [nzSpan]="12">
               <div class="inner-box">
-                <nz-divider
-                  nzText="ĐỀ XUẤT MỨC GIẢM GIÁ"
-                  nzOrientation="left"
-                ></nz-divider>
-                <nz-table
-                  [nzShowPagination]="false"
-                  nzSize="small"
-                  [nzFrontPagination]="false"
-                  nzBordered
-                  #dlgTable_8
-                  [nzData]="data.dlg.dlg_8"
-                >
+                <nz-divider nzText="ĐỀ XUẤT MỨC GIẢM GIÁ" nzOrientation="left"></nz-divider>
+                <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #dlgTable_8
+                  [nzData]="data.dlg.dlg_8">
                   <thead>
                     <tr>
                       <th class="align-center" rowspan="2">Mặt hàng</th>
@@ -860,14 +649,14 @@
                   </thead>
                   <tbody>
                     @for (d of dlgTable_8.data; track d) {
-                      <tr *ngIf="d.type == 'TT'">
-                        <td>{{ d.colA }}</td>
-                        <td class="align-right">{{ d.col1 | number }}</td>
-                        <td class="align-right">{{ d.col2 | number }}</td>
-                        <td class="align-right">
-                          {{ d.tangGiam1_2 | number }}
-                        </td>
-                      </tr>
+                    <tr *ngIf="d.type == 'TT'">
+                      <td>{{ d.colA }}</td>
+                      <td class="align-right">{{ d.col1 | number }}</td>
+                      <td class="align-right">{{ d.col2 | number }}</td>
+                      <td class="align-right">
+                        {{ d.tangGiam1_2 | number }}
+                      </td>
+                    </tr>
                     }
                   </tbody>
                 </nz-table>
@@ -877,25 +666,14 @@
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT)"
-        nzTitle="PT"
-        (nzClick)="changeTitle('PT')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT)" nzTitle="PT"
+        (nzClick)="changeTitle('PT')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #ptTable
-            [nzData]="data.pt"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #ptTable
+            [nzData]="data.pt">
             <thead>
               <tr>
                 <th rowspan="4">STT</th>
@@ -912,18 +690,12 @@
                 </th>
                 <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
 
-                <th
-                  colspan="2"
-                  *ngFor="let item of data.lstGoods; let i = index"
-                >
+                <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">
                   {{ item.name }}
                 </th>
               </tr>
               <tr>
-                <th
-                  rowspan="2"
-                  *ngFor="let item of data.lstGoods; let i = index"
-                >
+                <th rowspan="2" *ngFor="let item of data.lstGoods; let i = index">
                   {{ item.name }}
                 </th>
                 <th rowspan="2">Tổng chi phí</th>
@@ -939,115 +711,96 @@
                 <th rowspan="2">Xăng có VAT</th>
                 <th rowspan="2">Dầu có VAT</th>
 
-                <th
-                  colspan="2"
-                  *ngFor="let item of data.lstGoods; let i = index"
-                >
+                <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">
                   {{ item.name }}
                 </th>
 
-                <th
-                  rowspan="2"
-                  *ngFor="let item of data.lstGoods; let i = index"
-                >
+                <th rowspan="2" *ngFor="let item of data.lstGoods; let i = index">
                   {{ item.name }}
                 </th>
 
                 @for (i of data.lstGoods; track i) {
-                  <th rowspan="2">Chưa VAT, BVMT</th>
-                  <th rowspan="2">Có VAT, BVMT</th>
+                <th rowspan="2">Chưa VAT, BVMT</th>
+                <th rowspan="2">Có VAT, BVMT</th>
                 }
               </tr>
               <tr>
                 @for (i of data.lstGoods; track i) {
-                  <th rowspan="2">Có VAT</th>
-                  <th rowspan="2">Chưa VAT</th>
+                <th rowspan="2">Có VAT</th>
+                <th rowspan="2">Chưa VAT</th>
                 }
               </tr>
             </thead>
             <tbody>
               @for (t of ptTable.data; track t) {
-                <tr *ngIf="t.isBold == true" style="font-weight: bold">
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  <td class="align-right">{{ t.col1 }}</td>
-                  @for (g of data.lstGoods; track g) {
-                    <td></td>
-                  }
-                  <td class="align-right">{{ t.col3 }}</td>
-                  <td class="align-right">{{ t.col4 }}</td>
-                  <td class="align-right">{{ t.col5 }}</td>
-                  <td></td>
-                  <td></td>
-                  @for (g of data.lstGoods; track g) {
-                    <td class="align-right"></td>
-                    <td class="align-right"></td>
-                  }
-                  @for (g of data.lstGoods; track g) {
-                    <td></td>
-                  }
-                  @for (g of data.lstGoods; track g) {
-                    <td class="align-right"></td>
-                    <td class="align-right"></td>
-                  }
-                </tr>
-                <tr
-                  *ngIf="
+              <tr *ngIf="t.isBold == true" style="font-weight: bold">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                <td class="align-right">{{ t.col1 }}</td>
+                @for (g of data.lstGoods; track g) {
+                <td></td>
+                }
+                <td class="align-right">{{ t.col3 }}</td>
+                <td class="align-right">{{ t.col4 }}</td>
+                <td class="align-right">{{ t.col5 }}</td>
+                <td></td>
+                <td></td>
+                @for (g of data.lstGoods; track g) {
+                <td class="align-right"></td>
+                <td class="align-right"></td>
+                }
+                @for (g of data.lstGoods; track g) {
+                <td></td>
+                }
+                @for (g of data.lstGoods; track g) {
+                <td class="align-right"></td>
+                <td class="align-right"></td>
+                }
+              </tr>
+              <tr *ngIf="
                     t.isBold == false &&
                     (!searchTerm ||
                       t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))
-                  "
-                >
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  <td class="align-right">{{ t.col1 | number }}</td>
-                  @for (l of t.lg; track l) {
-                    <td class="align-right">{{ l | number }}</td>
-                  }
-                  <td class="align-right">{{ t.col3 | number }}</td>
-                  <td class="align-right">{{ t.col4 | number }}</td>
-                  <td class="align-right">{{ t.col5 | number }}</td>
-                  <td class="align-right"></td>
-                  <td class="align-right"></td>
-                  @for (l of t.gg; track l) {
-                    <td class="align-right">{{ l.vat | number }}</td>
-                    <td class="align-right">{{ l.nonVAT | number }}</td>
-                  }
-                  @for (l of t.ln; track l) {
-                    <td class="align-right">{{ l | number: '1.0-0' }}</td>
-                  }
-                  @for (l of t.bvmt; track l) {
-                    <td class="align-right">
-                      {{ l.nonVAT | number: '1.0-0' }}
-                    </td>
-                    <td class="align-right">{{ l.vat | number: '1.0-0' }}</td>
-                  }
-                </tr>
+                  ">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                <td class="align-right">{{ t.col1 | number }}</td>
+                @for (l of t.lg; track l) {
+                <td class="align-right">{{ l | number }}</td>
+                }
+                <td class="align-right">{{ t.col3 | number }}</td>
+                <td class="align-right">{{ t.col4 | number }}</td>
+                <td class="align-right">{{ t.col5 | number }}</td>
+                <td class="align-right"></td>
+                <td class="align-right"></td>
+                @for (l of t.gg; track l) {
+                <td class="align-right">{{ l.vat | number }}</td>
+                <td class="align-right">{{ l.nonVAT | number }}</td>
+                }
+                @for (l of t.ln; track l) {
+                <td class="align-right">{{ l | number: '1.0-0' }}</td>
+                }
+                @for (l of t.bvmt; track l) {
+                <td class="align-right">
+                  {{ l.nonVAT | number: '1.0-0' }}
+                </td>
+                <td class="align-right">{{ l.vat | number: '1.0-0' }}</td>
+                }
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DB)"
-        nzTitle="ĐB"
-        (nzClick)="changeTitle('ĐB')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DB)" nzTitle="ĐB"
+        (nzClick)="changeTitle('ĐB')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #dbTable
-            [nzData]="data.db"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #dbTable
+            [nzData]="data.db">
             <thead>
               <tr>
                 <th rowspan="3">STT</th>
@@ -1073,10 +826,7 @@
                   linh hoạt <br />
                   có VAT (-/+)
                 </th>
-                <th
-                  colspan="{{ data.lstGoods.length * 2 }}"
-                  class="align-center"
-                >
+                <th colspan="{{ data.lstGoods.length * 2 }}" class="align-center">
                   Đề xuất mức giảm giá tại kho khách hàng
                 </th>
                 <th rowspan="3" class="align-center">
@@ -1086,16 +836,13 @@
                 </th>
                 <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
 
-                <th
-                  colspan="2"
-                  *ngFor="let item of data.lstGoods; let i = index"
-                >
+                <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">
                   {{ item.name }}
                 </th>
               </tr>
               <tr>
                 @for (i of data.lstGoods; track i) {
-                  <th rowspan="2" class="align-center">{{ i.name }}</th>
+                <th rowspan="2" class="align-center">{{ i.name }}</th>
                 }
                 <th rowspan="2" class="align-center">
                   Tổng <br />
@@ -1115,117 +862,104 @@
                   NH (đ/l)
                 </th>
                 @for (i of data.lstGoods; track i) {
-                  <th colspan="2" class="align-center">{{ i.name }}</th>
+                <th colspan="2" class="align-center">{{ i.name }}</th>
                 }
                 @for (i of data.lstGoods; track i) {
-                  <th rowspan="2" class="align-center">{{ i.name }}</th>
+                <th rowspan="2" class="align-center">{{ i.name }}</th>
                 }
                 @for (i of data.lstGoods; track i) {
-                  <th rowspan="2">CHƯA VAT, BVMT</th>
-                  <th rowspan="2">CÓ VAT, BVMT</th>
+                <th rowspan="2">CHƯA VAT, BVMT</th>
+                <th rowspan="2">CÓ VAT, BVMT</th>
                 }
               </tr>
               <tr>
                 <th class="align-center">Xăng</th>
                 <th class="align-center">Dầu</th>
                 @for (i of data.lstGoods; track i) {
-                  <th>Có thuế</th>
-                  <th>Chưa thuế</th>
+                <th>Có thuế</th>
+                <th>Chưa thuế</th>
                 }
               </tr>
             </thead>
             <tbody>
               @for (t of dbTable.data; track t) {
-                <tr *ngIf="t.isBold == true" style="font-weight: bold">
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  <td></td>
-                  <td></td>
-                  @for (i of data.lstGoods; track i) {
-                    <td></td>
-                  }
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  @for (i of data.lstGoods; track i) {
-                    <td></td>
-                    <td></td>
-                  }
-                  <td></td>
-                  @for (i of data.lstGoods; track i) {
-                    <td></td>
-                  }
-                  @for (i of data.lstGoods; track i) {
-                    <td></td>
-                    <td></td>
-                  }
-                </tr>
-                <tr
-                  *ngIf="
+              <tr *ngIf="t.isBold == true" style="font-weight: bold">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                <td></td>
+                <td></td>
+                @for (i of data.lstGoods; track i) {
+                <td></td>
+                }
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                @for (i of data.lstGoods; track i) {
+                <td></td>
+                <td></td>
+                }
+                <td></td>
+                @for (i of data.lstGoods; track i) {
+                <td></td>
+                }
+                @for (i of data.lstGoods; track i) {
+                <td></td>
+                <td></td>
+                }
+              </tr>
+              <tr *ngIf="
                     t.isBold == false &&
                     (!searchTerm ||
                       t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))
-                  "
-                >
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  <td>{{ t.col1 }}</td>
-                  <td>{{ t.col2 }}</td>
-                  @for (i of t.lg; track i) {
-                    <td class="align-right">{{ i | number }}</td>
-                  }
-                  <td>{{ t.col3 }}</td>
-                  <td>{{ t.col4 }}</td>
-                  <td>{{ t.col5 }}</td>
-                  <td>{{ t.col6 }}</td>
-                  <td></td>
-                  <td></td>
-                  <td>{{ t.col9 }}</td>
-                  <td>{{ t.col10 }}</td>
+                  ">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                <td>{{ t.col1 }}</td>
+                <td>{{ t.col2 }}</td>
+                @for (i of t.lg; track i) {
+                <td class="align-right">{{ i | number }}</td>
+                }
+                <td>{{ t.col3 }}</td>
+                <td>{{ t.col4 }}</td>
+                <td>{{ t.col5 }}</td>
+                <td>{{ t.col6 }}</td>
+                <td></td>
+                <td></td>
+                <td>{{ t.col9 }}</td>
+                <td>{{ t.col10 }}</td>
 
-                  @for (i of t.gg; track i) {
-                    <td class="align-right">{{ i.vat | number }}</td>
-                    <td class="align-right">{{ i.nonVAT | number }}</td>
-                  }
-                  <td></td>
-                  @for (i of t.ln; track i) {
-                    <td class="align-right">{{ i | number }}</td>
-                  }
-                  @for (i of t.bvmt; track i) {
-                    <td class="align-right">{{ i.nonVAT | number }}</td>
-                    <td class="align-right">{{ i.vat | number }}</td>
-                  }
-                </tr>
+                @for (i of t.gg; track i) {
+                <td class="align-right">{{ i.vat | number }}</td>
+                <td class="align-right">{{ i.nonVAT | number }}</td>
+                }
+                <td></td>
+                @for (i of t.ln; track i) {
+                <td class="align-right">{{ i | number }}</td>
+                }
+                @for (i of t.bvmt; track i) {
+                <td class="align-right">{{ i.nonVAT | number }}</td>
+                <td class="align-right">{{ i.vat | number }}</td>
+                }
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_FOB)"
-        nzTitle="FOB"
-        (nzClick)="changeTitle('FOB')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_FOB)" nzTitle="FOB"
+        (nzClick)="changeTitle('FOB')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #fobTable
-            [nzData]="data.fob"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #fobTable
+            [nzData]="data.fob">
             <thead>
               <tr>
                 <th rowspan="3">STT</th>
@@ -1242,10 +976,7 @@
                   linh hoạt <br />
                   có VAT (-/+)
                 </th>
-                <th
-                  colspan="{{ data.lstGoods.length * 2 }}"
-                  class="align-center"
-                >
+                <th colspan="{{ data.lstGoods.length * 2 }}" class="align-center">
                   Đề xuất mức giảm giá
                 </th>
                 <th rowspan="3" class="align-center">
@@ -1254,16 +985,13 @@
                   chưa VAT
                 </th>
                 <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
-                <th
-                  colspan="2"
-                  *ngFor="let item of data.lstGoods; let i = index"
-                >
+                <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">
                   {{ item.name }}
                 </th>
               </tr>
               <tr>
                 @for (i of data.lstGoods; track i) {
-                  <th rowspan="2" class="align-center">{{ i.name }}</th>
+                <th rowspan="2" class="align-center">{{ i.name }}</th>
                 }
                 <th rowspan="2" class="align-center">
                   Tổng <br />
@@ -1283,108 +1011,95 @@
                   NH (đ/l)
                 </th>
                 @for (i of data.lstGoods; track i) {
-                  <th colspan="2" class="align-center">{{ i.name }}</th>
+                <th colspan="2" class="align-center">{{ i.name }}</th>
                 }
                 @for (i of data.lstGoods; track i) {
-                  <th rowspan="2" class="align-center">{{ i.name }}</th>
+                <th rowspan="2" class="align-center">{{ i.name }}</th>
                 }
                 @for (i of data.lstGoods; track i) {
-                  <th rowspan="2">CHƯA VAT, BVMT</th>
-                  <th rowspan="2">CÓ VAT, BVMT</th>
+                <th rowspan="2">CHƯA VAT, BVMT</th>
+                <th rowspan="2">CÓ VAT, BVMT</th>
                 }
               </tr>
               <tr>
                 <th class="align-center">Xăng</th>
                 <th class="align-center">Dầu</th>
                 @for (i of data.lstGoods; track i) {
-                  <th>Có thuế</th>
-                  <th>Chưa thuế</th>
+                <th>Có thuế</th>
+                <th>Chưa thuế</th>
                 }
               </tr>
             </thead>
             <tbody>
               @for (t of fobTable.data; track t) {
-                <tr *ngIf="t.isBold == true" style="font-weight: bold">
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  @for (i of data.lstGoods; track i) {
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  }
-                  @for (i of data.lstGoods; track i) {
-                    <td></td>
-                    <td></td>
-                  }
-                </tr>
-                <tr
-                  *ngIf="
+              <tr *ngIf="t.isBold == true" style="font-weight: bold">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                @for (i of data.lstGoods; track i) {
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                }
+                @for (i of data.lstGoods; track i) {
+                <td></td>
+                <td></td>
+                }
+              </tr>
+              <tr *ngIf="
                     t.isBold == false &&
                     (!searchTerm ||
                       t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))
-                  "
-                >
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
+                  ">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
 
-                  @for (i of t.lg; track i) {
-                    <td class="align-right">{{ i | number }}</td>
-                  }
-                  <td>{{ t.col1 }}</td>
-                  <td>{{ t.col2 }}</td>
-                  <td>{{ t.col3 }}</td>
-                  <td>{{ t.col4 }}</td>
-                  <td>{{ t.col5 }}</td>
-                  <td>{{ t.col6 }}</td>
-                  <td>{{ t.col7 }}</td>
-                  @for (i of t.gg; track i) {
-                    <td class="align-right">{{ i.vat | number }}</td>
-                    <td class="align-right">{{ i.nonVAT | number }}</td>
-                  }
-                  <td class="align-right">{{ t.col8 | number }}</td>
+                @for (i of t.lg; track i) {
+                <td class="align-right">{{ i | number }}</td>
+                }
+                <td>{{ t.col1 }}</td>
+                <td>{{ t.col2 }}</td>
+                <td>{{ t.col3 }}</td>
+                <td>{{ t.col4 }}</td>
+                <td>{{ t.col5 }}</td>
+                <td>{{ t.col6 }}</td>
+                <td>{{ t.col7 }}</td>
+                @for (i of t.gg; track i) {
+                <td class="align-right">{{ i.vat | number }}</td>
+                <td class="align-right">{{ i.nonVAT | number }}</td>
+                }
+                <td class="align-right">{{ t.col8 | number }}</td>
 
-                  @for (i of t.ln; track i) {
-                    <td class="align-right">{{ i | number }}</td>
-                  }
-                  @for (i of t.bvmt; track i) {
-                    <td class="align-right">{{ i.nonVAT | number }}</td>
-                    <td class="align-right">{{ i.vat | number }}</td>
-                  }
-                </tr>
+                @for (i of t.ln; track i) {
+                <td class="align-right">{{ i | number }}</td>
+                }
+                @for (i of t.bvmt; track i) {
+                <td class="align-right">{{ i.nonVAT | number }}</td>
+                <td class="align-right">{{ i.vat | number }}</td>
+                }
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT09)"
-        nzTitle="PT09"
-        (nzClick)="changeTitle('PT09')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT09)" nzTitle="PT09"
+        (nzClick)="changeTitle('PT09')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #pt09Table
-            [nzData]="data.pT09"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pt09Table
+            [nzData]="data.pT09">
             <thead>
               <tr>
                 <th rowspan="3">STT</th>
@@ -1396,10 +1111,7 @@
                   linh hoạt <br />
                   có VAT (-/+)
                 </th>
-                <th
-                  colspan="{{ data.lstGoods.length * 2 }}"
-                  class="align-center"
-                >
+                <th colspan="{{ data.lstGoods.length * 2 }}" class="align-center">
                   Đề xuất mức giảm giá tại kho Công ty
                 </th>
                 <th rowspan="3" class="align-center">
@@ -1408,16 +1120,13 @@
                   chưa VAT
                 </th>
                 <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
-                <th
-                  colspan="2"
-                  *ngFor="let item of data.lstGoods; let i = index"
-                >
+                <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">
                   {{ item.name }}
                 </th>
               </tr>
               <tr>
                 @for (i of data.lstGoods; track i) {
-                  <th rowspan="2" class="align-center">{{ i.name }}</th>
+                <th rowspan="2" class="align-center">{{ i.name }}</th>
                 }
                 <th rowspan="2" class="align-center">
                   Tổng <br />
@@ -1437,82 +1146,69 @@
                   NH (đ/l)
                 </th>
                 @for (i of data.lstGoods; track i) {
-                  <th colspan="2" class="align-center">{{ i.name }}</th>
+                <th colspan="2" class="align-center">{{ i.name }}</th>
                 }
                 @for (i of data.lstGoods; track i) {
-                  <th rowspan="2" class="align-center">{{ i.name }}</th>
+                <th rowspan="2" class="align-center">{{ i.name }}</th>
                 }
                 @for (i of data.lstGoods; track i) {
-                  <th rowspan="2">CHƯA VAT, BVMT</th>
-                  <th rowspan="2">CÓ VAT, BVMT</th>
+                <th rowspan="2">CHƯA VAT, BVMT</th>
+                <th rowspan="2">CÓ VAT, BVMT</th>
                 }
               </tr>
               <tr>
                 <th class="align-center">Xăng</th>
                 <th class="align-center">Dầu</th>
                 @for (i of data.lstGoods; track i) {
-                  <th>Có thuế</th>
-                  <th>Chưa thuế</th>
+                <th>Có thuế</th>
+                <th>Chưa thuế</th>
                 }
               </tr>
             </thead>
             <tbody>
               @for (t of pt09Table.data; track t) {
-                <tr
-                  *ngIf="
+              <tr *ngIf="
                     !searchTerm ||
                     t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase())
-                  "
-                >
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  @for (i of t.lg; track i) {
-                    <td class="align-right">{{ i | number }}</td>
-                  }
-                  <td class="align-right">{{ t.col3 }}</td>
-                  <td class="align-right">{{ t.col4 }}</td>
-                  <td class="align-right">{{ t.col5 }}</td>
-                  <td class="align-right">{{ t.col6 }}</td>
-                  <td class="align-right">{{ t.col7 }}</td>
-                  <td class="align-right">{{ t.col8 }}</td>
-                  @for (i of t.gg; track i) {
-                    <td class="align-right">{{ i.vat | number }}</td>
-                    <td class="align-right">{{ i.nonVAT | number }}</td>
-                  }
-                  <td class="align-right">{{ t.col18 }}</td>
-                  @for (i of t.ln; track i) {
-                    <td class="align-right">{{ i | number }}</td>
-                  }
-                  @for (i of t.bvmt; track i) {
-                    <td class="align-right">{{ i.nonVAT | number }}</td>
-                    <td class="align-right">{{ i.vat | number }}</td>
-                  }
-                </tr>
+                  ">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                @for (i of t.lg; track i) {
+                <td class="align-right">{{ i | number }}</td>
+                }
+                <td class="align-right">{{ t.col3 }}</td>
+                <td class="align-right">{{ t.col4 }}</td>
+                <td class="align-right">{{ t.col5 }}</td>
+                <td class="align-right">{{ t.col6 }}</td>
+                <td class="align-right">{{ t.col7 }}</td>
+                <td class="align-right">{{ t.col8 }}</td>
+                @for (i of t.gg; track i) {
+                <td class="align-right">{{ i.vat | number }}</td>
+                <td class="align-right">{{ i.nonVAT | number }}</td>
+                }
+                <td class="align-right">{{ t.col18 }}</td>
+                @for (i of t.ln; track i) {
+                <td class="align-right">{{ i | number }}</td>
+                }
+                @for (i of t.bvmt; track i) {
+                <td class="align-right">{{ i.nonVAT | number }}</td>
+                <td class="align-right">{{ i.vat | number }}</td>
+                }
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_DO)"
-        nzTitle="BB DO"
-        (nzClick)="changeTitle('BB DO')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_DO)" nzTitle="BB DO"
+        (nzClick)="changeTitle('BB DO')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #bbdoTable
-            [nzData]="data.bbdo"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #bbdoTable
+            [nzData]="data.bbdo">
             <thead>
               <tr>
                 <th rowspan="2" class="align-center">STT</th>
@@ -1561,66 +1257,53 @@
             </thead>
             <tbody>
               @for (t of bbdoTable.data; track t) {
-                <tr *ngIf="t.isBold" style="font-weight: bold">
-                  <td></td>
-                  <td colspan="22">{{ t.colB }}</td>
-                </tr>
-                <tr
-                  *ngIf="
+              <tr *ngIf="t.isBold" style="font-weight: bold">
+                <td></td>
+                <td colspan="22">{{ t.colB }}</td>
+              </tr>
+              <tr *ngIf="
                     !t.isBold &&
                     (!searchTerm ||
                       t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))
-                  "
-                >
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  <td>{{ t.colC }}</td>
-                  <td>{{ t.colD }}</td>
-                  <td>{{ t.col1 }}</td>
-                  <td>{{ t.col2 }}</td>
-                  <td>{{ t.col3 }}</td>
-                  <td>{{ t.col4 }}</td>
-                  <td>{{ t.col5 }}</td>
-                  <td class="align-right">{{ t.col6 | number }}</td>
-                  <td class="align-right">{{ t.col7 | number }}</td>
-                  <td class="align-right">{{ t.col8 | number }}</td>
-                  <td class="align-right">{{ t.col9 | number }}</td>
-                  <td class="align-right">{{ t.col10 | number }}</td>
-                  <td class="align-right">{{ t.col11 | number }}</td>
-                  <td class="align-right">{{ t.col12 | number }}</td>
-                  <td class="align-right">{{ t.col13 | number }}</td>
-                  <td class="align-right">{{ t.col14 | number }}</td>
-                  <td class="align-right">{{ t.col15 | number }}</td>
-                  <td class="align-right">{{ t.col16 | number }}</td>
-                  <td class="align-right">{{ t.col17 | number }}</td>
-                  <td class="align-right">{{ t.col18 | number }}</td>
-                  <td class="align-right">{{ t.col19 | number }}</td>
-                </tr>
+                  ">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                <td>{{ t.colC }}</td>
+                <td>{{ t.colD }}</td>
+                <td>{{ t.col1 }}</td>
+                <td>{{ t.col2 }}</td>
+                <td>{{ t.col3 }}</td>
+                <td>{{ t.col4 }}</td>
+                <td>{{ t.col5 }}</td>
+                <td class="align-right">{{ t.col6 | number }}</td>
+                <td class="align-right">{{ t.col7 | number }}</td>
+                <td class="align-right">{{ t.col8 | number }}</td>
+                <td class="align-right">{{ t.col9 | number }}</td>
+                <td class="align-right">{{ t.col10 | number }}</td>
+                <td class="align-right">{{ t.col11 | number }}</td>
+                <td class="align-right">{{ t.col12 | number }}</td>
+                <td class="align-right">{{ t.col13 | number }}</td>
+                <td class="align-right">{{ t.col14 | number }}</td>
+                <td class="align-right">{{ t.col15 | number }}</td>
+                <td class="align-right">{{ t.col16 | number }}</td>
+                <td class="align-right">{{ t.col17 | number }}</td>
+                <td class="align-right">{{ t.col18 | number }}</td>
+                <td class="align-right">{{ t.col19 | number }}</td>
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_FO)"
-        nzTitle="BB FO"
-        (nzClick)="changeTitle('BB FO')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_FO)" nzTitle="BB FO"
+        (nzClick)="changeTitle('BB FO')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #bbfoTable
-            [nzData]="data.bbfo"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #bbfoTable
+            [nzData]="data.bbfo">
             <thead>
               <tr>
                 <th rowspan="2" class="align-center">STT</th>
@@ -1662,50 +1345,39 @@
             </thead>
             <tbody>
               @for (t of bbfoTable.data; track t) {
-                <tr *ngIf="t.isBold" style="font-weight: bold">
-                  <td></td>
-                  <td colspan="12">{{ t.colB }}</td>
-                </tr>
-                <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  <td>{{ t.colC }}</td>
-                  <td class="align-right">{{ t.col1 | number }}</td>
-                  <td class="align-right">{{ t.col2 | number }}</td>
-                  <td class="align-right">{{ t.col3 | number }}</td>
-                  <td class="align-right">{{ t.col4 | number }}</td>
-                  <td class="align-right">{{ t.col5 | number }}</td>
-                  <td class="align-right">{{ t.col6 | number }}</td>
-                  <td class="align-right">{{ t.col7 | number }}</td>
-                  <td class="align-right">{{ t.col8 | number }}</td>
-                  <td class="align-right">{{ t.col9 | number }}</td>
-                  <td class="align-right">{{ t.col10 | number }}</td>
-                </tr>
+              <tr *ngIf="t.isBold" style="font-weight: bold">
+                <td></td>
+                <td colspan="12">{{ t.colB }}</td>
+              </tr>
+              <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                <td>{{ t.colC }}</td>
+                <td class="align-right">{{ t.col1 | number }}</td>
+                <td class="align-right">{{ t.col2 | number }}</td>
+                <td class="align-right">{{ t.col3 | number }}</td>
+                <td class="align-right">{{ t.col4 | number }}</td>
+                <td class="align-right">{{ t.col5 | number }}</td>
+                <td class="align-right">{{ t.col6 | number }}</td>
+                <td class="align-right">{{ t.col7 | number }}</td>
+                <td class="align-right">{{ t.col8 | number }}</td>
+                <td class="align-right">{{ t.col9 | number }}</td>
+                <td class="align-right">{{ t.col10 | number }}</td>
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL1)"
-        nzTitle="PL1"
-        (nzClick)="changeTitle('PL1')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL1)" nzTitle="PL1"
+        (nzClick)="changeTitle('PL1')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #pl1Table
-            [nzData]="data.pL1"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl1Table
+            [nzData]="data.pL1">
             <thead>
               <tr>
                 <th rowspan="3" class="align-center">STT</th>
@@ -1716,49 +1388,38 @@
               </tr>
               <tr>
                 @for (i of data.lstGoods; track i) {
-                  <th class="align-center">{{ i.name }}</th>
+                <th class="align-center">{{ i.name }}</th>
                 }
               </tr>
               <tr>
                 @for (i of data.lstGoods; track i) {
-                  <th class="align-center">đ/lít tt</th>
+                <th class="align-center">đ/lít tt</th>
                 }
               </tr>
             </thead>
             <tbody>
               @for (t of pl1Table.data; track t) {
-                <tr *ngIf="(!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  @for (i of t.gg; track i) {
-                    <td class="align-right">{{ i | number }}</td>
-                  }
-                </tr>
+              <tr *ngIf="(!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                @for (i of t.gg; track i) {
+                <td class="align-right">{{ i | number }}</td>
+                }
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL2)"
-        nzTitle="PL2"
-        (nzClick)="changeTitle('PL2')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL2)" nzTitle="PL2"
+        (nzClick)="changeTitle('PL2')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #pl2Table
-            [nzData]="data.pL2"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl2Table
+            [nzData]="data.pL2">
             <thead>
               <tr>
                 <th rowspan="3" class="align-center">STT</th>
@@ -1769,49 +1430,38 @@
               </tr>
               <tr>
                 @for (i of data.lstGoods; track i) {
-                  <th class="align-center">{{ i.name }}</th>
+                <th class="align-center">{{ i.name }}</th>
                 }
               </tr>
               <tr>
                 @for (i of data.lstGoods; track i) {
-                  <th class="align-center">đ/lít tt</th>
+                <th class="align-center">đ/lít tt</th>
                 }
               </tr>
             </thead>
             <tbody>
               @for (t of pl2Table.data; track t) {
-                <tr *ngIf="(!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  @for (i of t.gg; track i) {
-                    <td class="align-right">{{ i | number }}</td>
-                  }
-                </tr>
+              <tr *ngIf="(!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                @for (i of t.gg; track i) {
+                <td class="align-right">{{ i | number }}</td>
+                }
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL3)"
-        nzTitle="PL3"
-        (nzClick)="changeTitle('PL3')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL3)" nzTitle="PL3"
+        (nzClick)="changeTitle('PL3')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #pl3Table
-            [nzData]="data.pL3"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl3Table
+            [nzData]="data.pL3">
             <thead>
               <tr>
                 <th rowspan="3" class="align-center">STT</th>
@@ -1822,49 +1472,38 @@
               </tr>
               <tr>
                 @for (i of data.lstGoods; track i) {
-                  <th class="align-center">{{ i.name }}</th>
+                <th class="align-center">{{ i.name }}</th>
                 }
               </tr>
               <tr>
                 @for (i of data.lstGoods; track i) {
-                  <th class="align-center">đ/lít tt</th>
+                <th class="align-center">đ/lít tt</th>
                 }
               </tr>
             </thead>
             <tbody>
               @for (i of pl3Table.data; track i) {
-                <tr *ngIf="(!searchTerm || i?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
-                  <td>{{ i.colA }}</td>
-                  <td>{{ i.colB }}</td>
-                  @for (g of i.gg; track g) {
-                    <td class="align-right">{{ g | number }}</td>
-                  }
-                </tr>
+              <tr *ngIf="(!searchTerm || i?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <td>{{ i.colA }}</td>
+                <td>{{ i.colB }}</td>
+                @for (g of i.gg; track g) {
+                <td class="align-right">{{ g | number }}</td>
+                }
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL4)"
-        nzTitle="PL4"
-        (nzClick)="changeTitle('PL4')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL4)" nzTitle="PL4"
+        (nzClick)="changeTitle('PL4')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #pl4Table
-            [nzData]="data.pL4"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #pl4Table
+            [nzData]="data.pL4">
             <thead>
               <tr>
                 <th rowspan="3" class="align-center">STT</th>
@@ -1875,49 +1514,38 @@
               </tr>
               <tr>
                 @for (i of data.lstGoods; track i) {
-                  <th class="align-center">{{ i.name }}</th>
+                <th class="align-center">{{ i.name }}</th>
                 }
               </tr>
               <tr>
                 @for (i of data.lstGoods; track i) {
-                  <th class="align-center">đ/lít tt</th>
+                <th class="align-center">đ/lít tt</th>
                 }
               </tr>
             </thead>
             <tbody>
               @for (t of pl4Table.data; track t) {
-                <tr *ngIf="(!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  @for (i of t.gg; track i) {
-                    <td class="align-right">{{ i | number }}</td>
-                  }
-                </tr>
+              <tr *ngIf="(!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                @for (i of t.gg; track i) {
+                <td class="align-right">{{ i | number }}</td>
+                }
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_PT)"
-        nzTitle="VK11 PT"
-        (nzClick)="changeTitle('VK11 PT')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_PT)" nzTitle="VK11 PT"
+        (nzClick)="changeTitle('VK11 PT')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #vk11ptTable
-            [nzData]="data.vK11PT"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #vk11ptTable
+            [nzData]="data.vK11PT">
             <thead>
               <tr>
                 <th class="align-center">STT</th>
@@ -1953,57 +1581,46 @@
             </thead>
             <tbody>
               @for (t of vk11ptTable.data; track t) {
-                <tr *ngIf="t.isBold" style="font-weight: bold">
-                  <td></td>
-                  <td colspan="19">{{ t.colB }}</td>
-                </tr>
-                <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  <td>{{ t.col1 }}</td>
-                  <td>{{ t.col2 }}</td>
-                  <td>{{ t.col3 }}</td>
-                  <td class="align-right">{{ t.col4 | number }}</td>
-                  <td>{{ t.col5 }}</td>
-                  <td>{{ t.col6 }}</td>
-                  <td>{{ t.col7 }}</td>
-                  <td>{{ t.col8 }}</td>
-                  <td class="align-right">{{ t.col9 | number }}</td>
-                  <td>{{ t.col10 }}</td>
-                  <td>{{ t.col11 }}</td>
-                  <td>{{ t.col12 }}</td>
-                  <td>{{ t.col13 }}</td>
-                  <td>{{ t.col14 }}</td>
-                  <td>{{ t.col15 }}</td>
-                  <td>{{ t.col16 }}</td>
-                  <td>{{ t.col17 }}</td>
-                  <td>{{ t.col18 }}</td>
-                </tr>
+              <tr *ngIf="t.isBold" style="font-weight: bold">
+                <td></td>
+                <td colspan="19">{{ t.colB }}</td>
+              </tr>
+              <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                <td>{{ t.col1 }}</td>
+                <td>{{ t.col2 }}</td>
+                <td>{{ t.col3 }}</td>
+                <td class="align-right">{{ t.col4 | number }}</td>
+                <td>{{ t.col5 }}</td>
+                <td>{{ t.col6 }}</td>
+                <td>{{ t.col7 }}</td>
+                <td>{{ t.col8 }}</td>
+                <td class="align-right">{{ t.col9 | number }}</td>
+                <td>{{ t.col10 }}</td>
+                <td>{{ t.col11 }}</td>
+                <td>{{ t.col12 }}</td>
+                <td>{{ t.col13 }}</td>
+                <td>{{ t.col14 }}</td>
+                <td>{{ t.col15 }}</td>
+                <td>{{ t.col16 }}</td>
+                <td>{{ t.col17 }}</td>
+                <td>{{ t.col18 }}</td>
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_DB)"
-        nzTitle="VK11 ĐB"
-        (nzClick)="changeTitle('VK11 ĐB')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_DB)" nzTitle="VK11 ĐB"
+        (nzClick)="changeTitle('VK11 ĐB')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #vk11dbTable
-            [nzData]="data.vK11DB"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #vk11dbTable
+            [nzData]="data.vK11DB">
             <thead>
               <tr>
                 <th class="align-center">STT</th>
@@ -2040,60 +1657,48 @@
             </thead>
             <tbody>
               @for (t of vk11dbTable.data; track t) {
-                <tr *ngIf="t.isBold" style="font-weight: bold">
-                  <td></td>
-                  <td colspan="20">{{ t.colB }}</td>
-                </tr>
-                <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  <td>{{ t.colC }}</td>
-                  <td>{{ t.col1 }}</td>
-                  <td>{{ t.col2 }}</td>
-                  <td>{{ t.col3 }}</td>
-                  <td class="align-right">{{ t.col4 | number }}</td>
-                  <td>{{ t.col5 }}</td>
-                  <td>{{ t.col6 }}</td>
-                  <td>{{ t.col7 }}</td>
-                  <td>{{ t.col8 }}</td>
-                  <td class="align-right">{{ t.col9 | number }}</td>
-                  <td>{{ t.col10 }}</td>
-                  <td>{{ t.col11 }}</td>
-                  <td>{{ t.col12 }}</td>
-                  <td>{{ t.col13 }}</td>
-                  <td>{{ t.col14 }}</td>
-                  <td>{{ t.col15 }}</td>
-                  <td>{{ t.col16 }}</td>
-                  <td>{{ t.col17 }}</td>
-                  <td>{{ t.col18 }}</td>
-                </tr>
+              <tr *ngIf="t.isBold" style="font-weight: bold">
+                <td></td>
+                <td colspan="20">{{ t.colB }}</td>
+              </tr>
+              <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                <td>{{ t.colC }}</td>
+                <td>{{ t.col1 }}</td>
+                <td>{{ t.col2 }}</td>
+                <td>{{ t.col3 }}</td>
+                <td class="align-right">{{ t.col4 | number }}</td>
+                <td>{{ t.col5 }}</td>
+                <td>{{ t.col6 }}</td>
+                <td>{{ t.col7 }}</td>
+                <td>{{ t.col8 }}</td>
+                <td class="align-right">{{ t.col9 | number }}</td>
+                <td>{{ t.col10 }}</td>
+                <td>{{ t.col11 }}</td>
+                <td>{{ t.col12 }}</td>
+                <td>{{ t.col13 }}</td>
+                <td>{{ t.col14 }}</td>
+                <td>{{ t.col15 }}</td>
+                <td>{{ t.col16 }}</td>
+                <td>{{ t.col17 }}</td>
+                <td>{{ t.col18 }}</td>
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="
+      <nz-tab *ngIf="
           rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_FOB)
-        "
-        nzTitle="VK11-FOB"
-        (nzClick)="changeTitle('VK11-FOB')"
-      >
-        <div
-          [ngStyle]="{
+        " nzTitle="VK11-FOB" (nzClick)="changeTitle('VK11-FOB')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #vk11fobTable
-            [nzData]="data.vK11FOB"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #vk11fobTable
+            [nzData]="data.vK11FOB">
             <thead>
               <tr>
                 <th class="align-center">STT</th>
@@ -2129,59 +1734,47 @@
             </thead>
             <tbody>
               @for (t of vk11fobTable.data; track t) {
-                <tr *ngIf="t.isBold" style="font-weight: bold">
-                  <td></td>
-                  <td colspan="19">{{ t.colB }}</td>
-                </tr>
-                <tr *ngIf="!t.isBold && (!searchTerm || t?.colC?.toLowerCase().includes(searchTerm?.toLowerCase()))">
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colC }}</td>
-                  <td>{{ t.col1 }}</td>
-                  <td>{{ t.col2 }}</td>
-                  <td>{{ t.col3 }}</td>
-                  <td class="align-right">{{ t.col4 | number }}</td>
-                  <td>{{ t.col5 }}</td>
-                  <td>{{ t.col6 }}</td>
-                  <td>{{ t.col7 }}</td>
-                  <td>{{ t.col8 }}</td>
-                  <td class="align-right">{{ t.col9 | number }}</td>
-                  <td>{{ t.col10 }}</td>
-                  <td>{{ t.col11 }}</td>
-                  <td>{{ t.col12 }}</td>
-                  <td>{{ t.col13 }}</td>
-                  <td>{{ t.col14 }}</td>
-                  <td>{{ t.col15 }}</td>
-                  <td>{{ t.col16 }}</td>
-                  <td>{{ t.col17 }}</td>
-                  <td>{{ t.col18 }}</td>
-                </tr>
+              <tr *ngIf="t.isBold" style="font-weight: bold">
+                <td></td>
+                <td colspan="19">{{ t.colB }}</td>
+              </tr>
+              <tr *ngIf="!t.isBold && (!searchTerm || t?.colC?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colC }}</td>
+                <td>{{ t.col1 }}</td>
+                <td>{{ t.col2 }}</td>
+                <td>{{ t.col3 }}</td>
+                <td class="align-right">{{ t.col4 | number }}</td>
+                <td>{{ t.col5 }}</td>
+                <td>{{ t.col6 }}</td>
+                <td>{{ t.col7 }}</td>
+                <td>{{ t.col8 }}</td>
+                <td class="align-right">{{ t.col9 | number }}</td>
+                <td>{{ t.col10 }}</td>
+                <td>{{ t.col11 }}</td>
+                <td>{{ t.col12 }}</td>
+                <td>{{ t.col13 }}</td>
+                <td>{{ t.col14 }}</td>
+                <td>{{ t.col15 }}</td>
+                <td>{{ t.col16 }}</td>
+                <td>{{ t.col17 }}</td>
+                <td>{{ t.col18 }}</td>
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="
+      <nz-tab *ngIf="
           rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_TNPP)
-        "
-        nzTitle="VK11-TNPP"
-        (nzClick)="changeTitle('VK11-TNPP')"
-      >
-        <div
-          [ngStyle]="{
+        " nzTitle="VK11-TNPP" (nzClick)="changeTitle('VK11-TNPP')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #vk11tnppTable
-            [nzData]="data.vK11TNPP"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #vk11tnppTable
+            [nzData]="data.vK11TNPP">
             <thead>
               <tr>
                 <th class="align-center">STT</th>
@@ -2217,57 +1810,46 @@
             </thead>
             <tbody>
               @for (t of vk11tnppTable.data; track t) {
-                <tr *ngIf="t.isBold" style="font-weight: bold">
-                  <td></td>
-                  <td colspan="19">{{ t.colB }}</td>
-                </tr>
-                <tr *ngIf="!t.isBold && (!searchTerm || t?.colC?.toLowerCase().includes(searchTerm?.toLowerCase()))">
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colC }}</td>
-                  <td>{{ t.col1 }}</td>
-                  <td>{{ t.col2 }}</td>
-                  <td>{{ t.col3 }}</td>
-                  <td class="align-right">{{ t.col4 | number }}</td>
-                  <td>{{ t.col5 }}</td>
-                  <td>{{ t.col6 }}</td>
-                  <td>{{ t.col7 }}</td>
-                  <td>{{ t.col8 }}</td>
-                  <td class="align-right">{{ t.col9 | number }}</td>
-                  <td>{{ t.col10 }}</td>
-                  <td>{{ t.col11 }}</td>
-                  <td>{{ t.col12 }}</td>
-                  <td>{{ t.col13 }}</td>
-                  <td>{{ t.col14 }}</td>
-                  <td>{{ t.col15 }}</td>
-                  <td>{{ t.col16 }}</td>
-                  <td>{{ t.col17 }}</td>
-                  <td>{{ t.col18 }}</td>
-                </tr>
+              <tr *ngIf="t.isBold" style="font-weight: bold">
+                <td></td>
+                <td colspan="19">{{ t.colB }}</td>
+              </tr>
+              <tr *ngIf="!t.isBold && (!searchTerm || t?.colC?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colC }}</td>
+                <td>{{ t.col1 }}</td>
+                <td>{{ t.col2 }}</td>
+                <td>{{ t.col3 }}</td>
+                <td class="align-right">{{ t.col4 | number }}</td>
+                <td>{{ t.col5 }}</td>
+                <td>{{ t.col6 }}</td>
+                <td>{{ t.col7 }}</td>
+                <td>{{ t.col8 }}</td>
+                <td class="align-right">{{ t.col9 | number }}</td>
+                <td>{{ t.col10 }}</td>
+                <td>{{ t.col11 }}</td>
+                <td>{{ t.col12 }}</td>
+                <td>{{ t.col13 }}</td>
+                <td>{{ t.col14 }}</td>
+                <td>{{ t.col15 }}</td>
+                <td>{{ t.col16 }}</td>
+                <td>{{ t.col17 }}</td>
+                <td>{{ t.col18 }}</td>
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PTS)"
-        nzTitle="PTS"
-        (nzClick)="changeTitle('PTS')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PTS)" nzTitle="PTS"
+        (nzClick)="changeTitle('PTS')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #ptsTable
-            [nzData]="data.pts"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #ptsTable
+            [nzData]="data.pts">
             <thead>
               <tr>
                 <th class="align-center">STT</th>
@@ -2286,49 +1868,38 @@
             </thead>
             <tbody>
               @for (t of ptsTable.data; track t) {
-                <tr *ngIf="t.isBold" style="font-weight: bold">
-                  <td></td>
-                  <td colspan="19">{{ t.colB }}</td>
-                </tr>
-                <tr *ngIf="!t.isBold && (!searchTerm || t?.col3?.toLowerCase().includes(searchTerm?.toLowerCase()))">
-                  <td class="align-right">{{ t.colA }}</td>
-                  <td class="align-right">{{ t.col1 }}</td>
-                  <td class="align-right">{{ t.col2 }}</td>
-                  <td class="align-right">{{ t.col3 }}</td>
-                  <td class="align-right">{{ t.col4 }}</td>
-                  <td class="align-right">{{ t.col5 }}</td>
-                  <td class="align-right">{{ t.col6 }}</td>
-                  <td class="align-right"></td>
-                  <td class="align-right">{{ t.col7 }}</td>
-                  <td class="align-right">{{ t.col8 }}</td>
-                  <td class="align-right">{{ t.col9 }}</td>
-                  <td class="align-right">{{ t.col10 }}</td>
-                </tr>
+              <tr *ngIf="t.isBold" style="font-weight: bold">
+                <td></td>
+                <td colspan="19">{{ t.colB }}</td>
+              </tr>
+              <tr *ngIf="!t.isBold && (!searchTerm || t?.col3?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <td class="align-right">{{ t.colA }}</td>
+                <td class="align-right">{{ t.col1 }}</td>
+                <td class="align-right">{{ t.col2 }}</td>
+                <td class="align-right">{{ t.col3 }}</td>
+                <td class="align-right">{{ t.col4 }}</td>
+                <td class="align-right">{{ t.col5 }}</td>
+                <td class="align-right">{{ t.col6 }}</td>
+                <td class="align-right"></td>
+                <td class="align-right">{{ t.col7 }}</td>
+                <td class="align-right">{{ t.col8 }}</td>
+                <td class="align-right">{{ t.col9 }}</td>
+                <td class="align-right">{{ t.col10 }}</td>
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_BB)"
-        nzTitle="VK11 BB"
-        (nzClick)="changeTitle('VK11 BB')"
-      >
-        <div
-          [ngStyle]="{
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_BB)" nzTitle="VK11 BB"
+        (nzClick)="changeTitle('VK11 BB')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #vk11bbTable
-            [nzData]="data.vK11BB"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #vk11bbTable
+            [nzData]="data.vK11BB">
             <thead>
               <tr>
                 <th class="align-center">STT</th>
@@ -2357,58 +1928,46 @@
             </thead>
             <tbody>
               @for (t of vk11bbTable.data; track t) {
-                <tr *ngIf="t.isBold" style="font-weight: bold">
-                  <td></td>
-                  <td colspan="18">{{ t.colB }}</td>
-                </tr>
-                <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  <td>{{ t.colC }}</td>
-                  <td>{{ t.colD }}</td>
-                  <td>{{ t.col1 }}</td>
-                  <td>{{ t.col2 }}</td>
-                  <td>{{ t.col3 }}</td>
-                  <td>{{ t.col4 }}</td>
-                  <td>{{ t.col5 }}</td>
-                  <td class="align-right">{{ t.col6 | number }}</td>
-                  <td>{{ t.col7 }}</td>
-                  <td>{{ t.col8 }}</td>
-                  <td>{{ t.col9 }}</td>
-                  <td>{{ t.col10 }}</td>
-                  <td>{{ t.col11 }}</td>
-                  <td>{{ t.col12 }}</td>
-                  <td>{{ t.col13 }}</td>
-                  <td>{{ t.col14 }}</td>
-                  <td>{{ t.col15 }}</td>
-                </tr>
+              <tr *ngIf="t.isBold" style="font-weight: bold">
+                <td></td>
+                <td colspan="18">{{ t.colB }}</td>
+              </tr>
+              <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                <td>{{ t.colC }}</td>
+                <td>{{ t.colD }}</td>
+                <td>{{ t.col1 }}</td>
+                <td>{{ t.col2 }}</td>
+                <td>{{ t.col3 }}</td>
+                <td>{{ t.col4 }}</td>
+                <td>{{ t.col5 }}</td>
+                <td class="align-right">{{ t.col6 | number }}</td>
+                <td>{{ t.col7 }}</td>
+                <td>{{ t.col8 }}</td>
+                <td>{{ t.col9 }}</td>
+                <td>{{ t.col10 }}</td>
+                <td>{{ t.col11 }}</td>
+                <td>{{ t.col12 }}</td>
+                <td>{{ t.col13 }}</td>
+                <td>{{ t.col14 }}</td>
+                <td>{{ t.col15 }}</td>
+              </tr>
               }
             </tbody>
           </nz-table>
         </div>
       </nz-tab>
 
-      <nz-tab
-        *ngIf="
+      <nz-tab *ngIf="
           rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_TONG_HOP)
-        "
-        nzTitle="Tổng hợp"
-        (nzClick)="changeTitle('TỔNG HỢP')"
-      >
-        <div
-          [ngStyle]="{
+        " nzTitle="Tổng hợp" (nzClick)="changeTitle('TỔNG HỢP')">
+        <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
-          }"
-        >
-          <nz-table
-            [nzShowPagination]="false"
-            nzSize="small"
-            [nzFrontPagination]="false"
-            nzBordered
-            #summaryTable
-            [nzData]="data.summary"
-          >
+          }">
+          <nz-table [nzShowPagination]="false" nzSize="small" [nzFrontPagination]="false" nzBordered #summaryTable
+            [nzData]="data.summary">
             <thead>
               <tr>
                 <th class="align-center">STT</th>
@@ -2437,31 +1996,31 @@
             </thead>
             <tbody>
               @for (t of summaryTable.data; track t) {
-                <tr *ngIf="t.isBold" style="font-weight: bold">
-                  <td></td>
-                  <td colspan="18">{{ t.colB }}</td>
-                </tr>
-                <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
-                  <td>{{ t.colA }}</td>
-                  <td>{{ t.colB }}</td>
-                  <td>{{ t.colC }}</td>
-                  <td>{{ t.colD }}</td>
-                  <td>{{ t.col1 }}</td>
-                  <td>{{ t.col2 }}</td>
-                  <td>{{ t.col3 }}</td>
-                  <td>{{ t.col4 }}</td>
-                  <td>{{ t.col5 }}</td>
-                  <td class="align-right">{{ t.col6 | number }}</td>
-                  <td>{{ t.col7 }}</td>
-                  <td>{{ t.col8 }}</td>
-                  <td>{{ t.col9 }}</td>
-                  <td>{{ t.col10 }}</td>
-                  <td>{{ t.col11 }}</td>
-                  <td>{{ t.col12 }}</td>
-                  <td>{{ t.col13 }}</td>
-                  <td>{{ t.col14 }}</td>
-                  <td>{{ t.col15 }}</td>
-                </tr>
+              <tr *ngIf="t.isBold" style="font-weight: bold">
+                <td></td>
+                <td colspan="18">{{ t.colB }}</td>
+              </tr>
+              <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <td>{{ t.colA }}</td>
+                <td>{{ t.colB }}</td>
+                <td>{{ t.colC }}</td>
+                <td>{{ t.colD }}</td>
+                <td>{{ t.col1 }}</td>
+                <td>{{ t.col2 }}</td>
+                <td>{{ t.col3 }}</td>
+                <td>{{ t.col4 }}</td>
+                <td>{{ t.col5 }}</td>
+                <td class="align-right">{{ t.col6 | number }}</td>
+                <td>{{ t.col7 }}</td>
+                <td>{{ t.col8 }}</td>
+                <td>{{ t.col9 }}</td>
+                <td>{{ t.col10 }}</td>
+                <td>{{ t.col11 }}</td>
+                <td>{{ t.col12 }}</td>
+                <td>{{ t.col13 }}</td>
+                <td>{{ t.col14 }}</td>
+                <td>{{ t.col15 }}</td>
+              </tr>
               }
             </tbody>
           </nz-table>
@@ -2472,33 +2031,23 @@
 </div>
 
 <!-- Customer -->
-<nz-modal
-  [(nzVisible)]="isVisibleCustomer"
-  nzTitle="CHỌN KHÁCH HÀNG"
-  (nzOnCancel)="handleCancel()"
-  (nzOnOk)="confirmExportWord()"
-  nzCancelText="Đóng"
->
+<nz-modal [(nzVisible)]="isVisibleCustomer" nzTitle="CHỌN KHÁCH HÀNG" (nzOnCancel)="handleCancel()"
+  (nzOnOk)="confirmExportWord()" nzCancelText="Đóng">
   <ng-container *nzModalContent>
     <nz-table #customerTable [nzData]="lstCustomer" nzSize="small">
       <thead>
         <tr>
-          <th
-            [(nzChecked)]="checked"
-            (nzCheckedChange)="onAllChecked($event)"
-          ></th>
+          <th [(nzChecked)]="checked" (nzCheckedChange)="onAllChecked($event)"></th>
           <th>Tên khách hàng</th>
         </tr>
       </thead>
       <tbody>
         @for (data of customerTable.data; track data) {
-          <tr>
-            <td
-              [nzChecked]="lstCustomerChecked.includes(data.code)"
-              (nzCheckedChange)="onItemChecked(data.code, $event)"
-            ></td>
-            <td>{{ data.name }}</td>
-          </tr>
+        <tr>
+          <td [nzChecked]="lstCustomerChecked.includes(data.code)" (nzCheckedChange)="onItemChecked(data.code, $event)">
+          </td>
+          <td>{{ data.name }}</td>
+        </tr>
         }
       </tbody>
     </nz-table>
@@ -2506,33 +2055,23 @@
 </nz-modal>
 
 <!-- danh sach trình ký -->
-<nz-modal
-  [(nzVisible)]="isVisibleLstTrinhKy"
-  nzTitle="CHỌN TRÌNH KÝ"
-  (nzOnCancel)="exportWordTrinhKy()"
-  (nzOnOk)="confirmExportWordTrinhKy()"
-  nzCancelText="Đóng"
->
+<nz-modal [(nzVisible)]="isVisibleLstTrinhKy" nzTitle="CHỌN TRÌNH KÝ" (nzOnCancel)="exportWordTrinhKy()"
+  (nzOnOk)="confirmExportWordTrinhKy()" nzCancelText="Đóng">
   <ng-container *nzModalContent>
     <nz-table #customerTable [nzData]="lstTrinhKy" nzSize="small">
       <thead>
         <tr>
-          <th
-            [(nzChecked)]="checked"
-            (nzCheckedChange)="onAllCheckedLstTrinhKy($event)"
-          ></th>
+          <th [(nzChecked)]="checked" (nzCheckedChange)="onAllCheckedLstTrinhKy($event)"></th>
           <th>Báo cáo</th>
         </tr>
       </thead>
       <tbody>
         @for (data of lstTrinhKy; track data) {
-          <tr *ngIf="model.header.status != '04' ? data.status == true : true">
-            <td
-              [nzChecked]="lstTrinhKyChecked.includes(data.code)"
-              (nzCheckedChange)="onItemTrinhKyChecked(data.code, $event)"
-            ></td>
-            <td>{{ data.name }}</td>
-          </tr>
+        <tr *ngIf="model.header.status != '04' ? data.status == true : true">
+          <td [nzChecked]="lstTrinhKyChecked.includes(data.code)"
+            (nzCheckedChange)="onItemTrinhKyChecked(data.code, $event)"></td>
+          <td>{{ data.name }}</td>
+        </tr>
         }
       </tbody>
     </nz-table>
@@ -2540,33 +2079,23 @@
 </nz-modal>
 
 <!-- Customer PDF -->
-<nz-modal
-  [(nzVisible)]="isVisibleCustomerPDF"
-  nzTitle="CHỌN KHÁCH HÀNG"
-  (nzOnCancel)="handleCancel()"
-  (nzOnOk)="confirmExportPDF()"
-  nzCancelText="Đóng"
->
+<nz-modal [(nzVisible)]="isVisibleCustomerPDF" nzTitle="CHỌN KHÁCH HÀNG" (nzOnCancel)="handleCancel()"
+  (nzOnOk)="confirmExportPDF()" nzCancelText="Đóng">
   <ng-container *nzModalContent>
     <nz-table #customerTable [nzData]="lstCustomer" nzSize="small">
       <thead>
         <tr>
-          <th
-            [(nzChecked)]="checked"
-            (nzCheckedChange)="onAllChecked($event)"
-          ></th>
+          <th [(nzChecked)]="checked" (nzCheckedChange)="onAllChecked($event)"></th>
           <th>Tên khách hàng</th>
         </tr>
       </thead>
       <tbody>
         @for (data of customerTable.data; track data) {
-          <tr>
-            <td
-              [nzChecked]="lstCustomerChecked.includes(data.code)"
-              (nzCheckedChange)="onItemChecked(data.code, $event)"
-            ></td>
-            <td>{{ data.name }}</td>
-          </tr>
+        <tr>
+          <td [nzChecked]="lstCustomerChecked.includes(data.code)" (nzCheckedChange)="onItemChecked(data.code, $event)">
+          </td>
+          <td>{{ data.name }}</td>
+        </tr>
         }
       </tbody>
     </nz-table>
@@ -2574,13 +2103,8 @@
 </nz-modal>
 
 <!-- History -->
-<nz-modal
-  nzWidth="60%"
-  [(nzVisible)]="isVisibleHistory"
-  nzTitle="LỊCH SỬ THỰC HIỆN"
-  (nzOnCancel)="handleCancel()"
-  nzCancelText="Đóng"
->
+<nz-modal nzWidth="60%" [(nzVisible)]="isVisibleHistory" nzTitle="LỊCH SỬ THỰC HIỆN" (nzOnCancel)="handleCancel()"
+  nzCancelText="Đóng">
   <ng-container *nzModalContent>
     <nz-table #historyTable [nzData]="lstHistory" nzSize="small">
       <thead>
@@ -2593,14 +2117,14 @@
       </thead>
       <tbody>
         @for (data of historyTable.data; track data) {
-          <tr>
-            <td>{{ data.action }}</td>
-            <td class="align-center">{{ data.createBy }}</td>
-            <td class="align-center">
-              {{ data.createDate | date: 'dd/MM/yyyy hh:mm:ss' }}
-            </td>
-            <td>{{ data.contents }}</td>
-          </tr>
+        <tr>
+          <td>{{ data.action }}</td>
+          <td class="align-center">{{ data.createBy }}</td>
+          <td class="align-center">
+            {{ data.createDate | date: 'dd/MM/yyyy hh:mm:ss' }}
+          </td>
+          <td>{{ data.contents }}</td>
+        </tr>
         }
       </tbody>
     </nz-table>
@@ -2608,13 +2132,8 @@
 </nz-modal>
 
 <!-- History Export File-->
-<nz-modal
-  nzWidth="60%"
-  [(nzVisible)]="isVisibleExport"
-  nzTitle="LỊCH SỬ XUẤT FILE"
-  (nzOnCancel)="handleCancel()"
-  nzCancelText="Đóng"
->
+<nz-modal nzWidth="60%" [(nzVisible)]="isVisibleExport" nzTitle="LỊCH SỬ XUẤT FILE" (nzOnCancel)="handleCancel()"
+  nzCancelText="Đóng">
   <ng-container *nzModalContent>
     <nz-table #historyTableFile [nzData]="lstHistoryFile" nzSize="small">
       <thead>
@@ -2628,39 +2147,30 @@
       </thead>
       <tbody>
         @for (data of historyTableFile.data; track data) {
-          <tr>
-            <td *ngIf="data.type == 'xlsx'">
-              <img src="/assets/img/excel.png" style="width: 24px" />
-            </td>
-            <td *ngIf="data.type == 'docx'">
-              <img src="/assets/img/word.png" style="width: 24px" />
-            </td>
-            <td *ngIf="data.type == 'pdf'">
-              <img src="/assets/img/pdf.png" style="width: 24px" />
-            </td>
-            <td>{{ data.name }}</td>
-            <td class="align-center">{{ data.createBy }}</td>
-            <td class="align-center">
-              {{ data.createDate | date: 'dd/MM/yyyy hh:mm:ss' }}
-            </td>
-            <td class="align-center">
-              <button
-                nz-button
-                nzType="default"
-                (click)="openNewTab(data.pathView)"
-              >
-                <span nz-icon nzType="eye"></span>Xem trực tiếp
-              </button>
-              <button
-                nz-button
-                nzType="default"
-                (click)="openNewTab(data.pathDownload)"
-                style="margin-left: 12px"
-              >
-                <span nz-icon nzType="download"></span>Tải xuống
-              </button>
-            </td>
-          </tr>
+        <tr>
+          <td *ngIf="data.type == 'xlsx'">
+            <img src="/assets/img/excel.png" style="width: 24px" />
+          </td>
+          <td *ngIf="data.type == 'docx'">
+            <img src="/assets/img/word.png" style="width: 24px" />
+          </td>
+          <td *ngIf="data.type == 'pdf'">
+            <img src="/assets/img/pdf.png" style="width: 24px" />
+          </td>
+          <td>{{ data.name }}</td>
+          <td class="align-center">{{ data.createBy }}</td>
+          <td class="align-center">
+            {{ data.createDate | date: 'dd/MM/yyyy hh:mm:ss' }}
+          </td>
+          <td class="align-center">
+            <button nz-button nzType="default" (click)="openNewTab(data.pathView)">
+              <span nz-icon nzType="eye"></span>Xem trực tiếp
+            </button>
+            <button nz-button nzType="default" (click)="openNewTab(data.pathDownload)" style="margin-left: 12px">
+              <span nz-icon nzType="download"></span>Tải xuống
+            </button>
+          </td>
+        </tr>
         }
       </tbody>
     </nz-table>
@@ -2668,25 +2178,15 @@
 </nz-modal>
 
 <!-- Dữ liệu gốc -->
-<nz-drawer
-  [nzWidth]="'60%'"
-  [nzVisible]="visibleDrawer"
-  nzPlacement="right"
-  [nzTitle]="'DỮ LIỆU ĐẦU VÀO (DỮ LIỆU GỐC)'"
-  [nzExtra]="extra"
-  (nzOnClose)="closeDrawer()"
->
+<nz-drawer [nzWidth]="'60%'" [nzVisible]="visibleDrawer" nzPlacement="right" [nzTitle]="'DỮ LIỆU ĐẦU VÀO (DỮ LIỆU GỐC)'"
+  [nzExtra]="extra" (nzOnClose)="closeDrawer()">
   <ng-container *nzDrawerContent>
     <nz-divider nzText="THÔNG TIN" nzOrientation="left"></nz-divider>
     <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
       <div nz-col class="gutter-row" [nzSpan]="11">
         <div class="inner-box">
           <label>Tên đợt nhập</label>
-          <input
-            nz-input
-            [(ngModel)]="model.header.name"
-            (keyup)="checkName(model.header.name)"
-          />
+          <input nz-input [(ngModel)]="model.header.name" (keyup)="checkName(model.header.name)" />
 
           <div *ngIf="isName" style="color: red">Tên đợt nhập là bắt buộc!</div>
         </div>
@@ -2695,22 +2195,13 @@
         <div class="inner-box">
           <label>Ngày hiệu lực</label>
           <br />
-          <nz-date-picker
-            nzShowTime
-            nzFormat="dd-MM-yyyy HH:mm:ss"
-            [(ngModel)]="model.header.fDate"
-          ></nz-date-picker>
+          <nz-date-picker nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss" [(ngModel)]="model.header.fDate"></nz-date-picker>
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="7">
         <div class="inner-box">
           <label>Quyết định số</label>
-          <input
-            nz-input
-            [(ngModel)]="model.header.quyetDinhSo"
-            #nameInput="ngModel"
-            required
-          />
+          <input nz-input [(ngModel)]="model.header.quyetDinhSo" #nameInput="ngModel" required />
         </div>
       </div>
     </div>
@@ -2718,17 +2209,9 @@
     <nz-divider nzText="Người ký " nzOrientation="left"></nz-divider>
     <nz-form-item>
       <nz-form-control nzErrorTip="Không được để trống">
-        <nz-select
-          nzShowSearch
-          nzAllowClear
-          [nzPlaceHolder]="'Chọn người ký'"
-          [(ngModel)]="model.header.signerCode"
-        >
-          <nz-option
-            *ngFor="let item of signerResult"
-            [nzLabel]="item.position + ' - ' + item.name"
-            [nzValue]="item.code"
-          >
+        <nz-select nzShowSearch nzAllowClear [nzPlaceHolder]="'Chọn người ký'" [(ngModel)]="model.header.signerCode">
+          <nz-option *ngFor="let item of signerResult" [nzLabel]="item.position + ' - ' + item.name"
+            [nzValue]="item.code">
           </nz-option>
         </nz-select>
       </nz-form-control>
@@ -2761,77 +2244,33 @@
       </thead>
       <tbody>
         @for (data of hs2Table.data; track data) {
-          <tr>
-            <td style="width: 20%">
-              <nz-select
-                nzShowSearch
-                nzAllowClear
-                placeholder="Chọn mặt hàng"
-                [(ngModel)]="data.goodsCode"
-                [nzDisabled]="true"
-                style="width: 100%"
-              >
-                <nz-option
-                  cdkScrollable
-                  *ngFor="let item of goodsResult"
-                  [nzLabel]="item.name"
-                  [nzValue]="item.code"
-                >
-                </nz-option>
-              </nz-select>
-            </td>
-            <td>
-              <input
-                class="input-v"
-                nz-input
-                [(ngModel)]="data.gblcsV1"
-                type="number"
-                (keyup)="onKeyUpCalculate(data)"
-              />
-            </td>
-            <td>
-              <input
-                class="input-v"
-                nz-input
-                [(ngModel)]="data.gblV2"
-                type="number"
-                (keyup)="onKeyUpCalculate(data)"
-              />
-            </td>
-            <td>
-              <input
-                class="input-v"
-                nz-input
-                [(ngModel)]="data.v2_V1"
-                type="number"
-              />
-            </td>
-            <td>
-              <input
-                class="input-v"
-                nz-input
-                [(ngModel)]="data.mtsV1"
-                type="number"
-                (keyup)="onKeyUpCalculate(data)"
-              />
-            </td>
-            <td>
-              <input
-                class="input-v"
-                nz-input
-                [(ngModel)]="data.gny"
-                type="number"
-              />
-            </td>
-            <td>
-              <input
-                class="input-v"
-                nz-input
-                [(ngModel)]="data.clgblv"
-                type="number"
-              />
-            </td>
-          </tr>
+        <tr>
+          <td style="width: 20%">
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn mặt hàng" [(ngModel)]="data.goodsCode"
+              [nzDisabled]="true" style="width: 100%">
+              <nz-option cdkScrollable *ngFor="let item of goodsResult" [nzLabel]="item.name" [nzValue]="item.code">
+              </nz-option>
+            </nz-select>
+          </td>
+          <td>
+            <input class="input-v" nz-input [(ngModel)]="data.gblcsV1" type="number" (keyup)="onKeyUpCalculate(data)" />
+          </td>
+          <td>
+            <input class="input-v" nz-input [(ngModel)]="data.gblV2" type="number" (keyup)="onKeyUpCalculate(data)" />
+          </td>
+          <td>
+            <input class="input-v" nz-input [(ngModel)]="data.v2_V1" type="number" />
+          </td>
+          <td>
+            <input class="input-v" nz-input [(ngModel)]="data.mtsV1" type="number" (keyup)="onKeyUpCalculate(data)" />
+          </td>
+          <td>
+            <input class="input-v" nz-input [(ngModel)]="data.gny" type="number" />
+          </td>
+          <td>
+            <input class="input-v" nz-input [(ngModel)]="data.clgblv" type="number" />
+          </td>
+        </tr>
         }
       </tbody>
     </nz-table>
@@ -2864,74 +2303,33 @@
       </thead>
       <tbody>
         @for (data of hs1Table.data; track data) {
-          <tr>
-            <td style="width: 20%">
-              <nz-select
-                nzShowSearch
-                nzAllowClear
-                placeholder="Chọn mặt hàng"
-                [(ngModel)]="data.goodsCode"
-                [nzDisabled]="true"
-                style="width: 100%"
-              >
-                <nz-option
-                  cdkScrollable
-                  *ngFor="let item of goodsResult"
-                  [nzLabel]="item.name"
-                  [nzValue]="item.code"
-                >
-                </nz-option>
-              </nz-select>
-            </td>
-            <td>
-              <input
-                class="input-v"
-                nz-input
-                [(ngModel)]="data.heSoVcf"
-                type="number"
-              />
-            </td>
-            <td>
-              <input
-                class="input-v"
-                nz-input
-                [(ngModel)]="data.thueBvmt"
-                type="number"
-              />
-            </td>
-            <td>
-              <input
-                class="input-v"
-                nz-input
-                [(ngModel)]="data.l15ChuaVatBvmt"
-                type="number"
-              />
-            </td>
-            <td>
-              <input
-                class="input-v"
-                nz-input
-                [(ngModel)]="data.l15ChuaVatBvmtNbl"
-                type="number"
-              />
-            </td>
-            <td>
-              <input
-                class="input-v"
-                nz-input
-                [(ngModel)]="data.giamGiaFob"
-                type="number"
-              />
-            </td>
-            <td>
-              <input
-                class="input-v"
-                nz-input
-                [(ngModel)]="data.laiGopDieuTiet"
-                type="number"
-              />
-            </td>
-          </tr>
+        <tr>
+          <td style="width: 20%">
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn mặt hàng" [(ngModel)]="data.goodsCode"
+              [nzDisabled]="true" style="width: 100%">
+              <nz-option cdkScrollable *ngFor="let item of goodsResult" [nzLabel]="item.name" [nzValue]="item.code">
+              </nz-option>
+            </nz-select>
+          </td>
+          <td>
+            <input class="input-v" nz-input [(ngModel)]="data.heSoVcf" type="number" />
+          </td>
+          <td>
+            <input class="input-v" nz-input [(ngModel)]="data.thueBvmt" type="number" />
+          </td>
+          <td>
+            <input class="input-v" nz-input [(ngModel)]="data.l15ChuaVatBvmt" type="number" />
+          </td>
+          <td>
+            <input class="input-v" nz-input [(ngModel)]="data.l15ChuaVatBvmtNbl" type="number" />
+          </td>
+          <td>
+            <input class="input-v" nz-input [(ngModel)]="data.giamGiaFob" type="number" />
+          </td>
+          <td>
+            <input class="input-v" nz-input [(ngModel)]="data.laiGopDieuTiet" type="number" />
+          </td>
+        </tr>
         }
       </tbody>
     </nz-table>
@@ -2939,32 +2337,18 @@
 </nz-drawer>
 
 <ng-template #extra>
-  <button
-    nz-button
-    nzType="primary"
-    (click)="updateDataInput()"
-    [appPermission]="IMPORT_BATCH.UPDATE_IMPORT_BATCH"
-    [disabled]="model.header.status != 01 && model.header.status != 03"
-  >
+  <button nz-button nzType="primary" (click)="updateDataInput()" [appPermission]="IMPORT_BATCH.UPDATE_IMPORT_BATCH"
+    [disabled]="model.header.status != 01 && model.header.status != 03">
     Cập nhật
   </button>
 </ng-template>
 
 <!-- Thay đổi trạng thái -->
-<nz-modal
-  [(nzVisible)]="isVisibleStatus"
-  [nzTitle]="statusModel.title"
-  (nzOnCancel)="handleCancel()"
-  (nzOnOk)="handleOkStatus()"
-  nzCancelText="Huỷ"
->
+<nz-modal [(nzVisible)]="isVisibleStatus" [nzTitle]="statusModel.title" (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOkStatus()" nzCancelText="Huỷ">
   <ng-container *nzModalContent>
     <p>{{ statusModel.des }}</p>
-    <textarea
-      nz-input
-      placeholder="Nội dung, ý kiến..."
-      [nzAutosize]="{ minRows: 2, maxRows: 6 }"
-      [(ngModel)]="statusModel.value"
-    ></textarea>
+    <textarea nz-input placeholder="Nội dung, ý kiến..." [nzAutosize]="{ minRows: 2, maxRows: 6 }"
+      [(ngModel)]="statusModel.value"></textarea>
   </ng-container>
 </nz-modal>

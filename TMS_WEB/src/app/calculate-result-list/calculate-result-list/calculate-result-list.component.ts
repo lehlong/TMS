@@ -128,6 +128,8 @@ export class CalculateResultListComponent {
       }
       this._service.createData(this.model).subscribe({
         next: (data) => {
+
+          this.router.navigate([`/calculate-result/detail/${this.model.header.code}`])
           console.log(data)
         },
       })
