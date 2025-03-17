@@ -247,7 +247,7 @@
               <tr>
                 <td>{{ d.colA }}</td>
                 <td>{{ d.colB }}</td>
-                <td class="align-right">{{ d.col1 | number }}</td>
+                <td class="align-right">{{ d.col1 }}</td>
                 <td class="align-right">{{ d.col2 | number }}</td>
                 <td class="align-right">{{ d.col3 | number }}</td>
                 <td class="align-right">{{ d.col4 | number }}</td>
@@ -362,7 +362,7 @@
               <tr *ngIf="!d.isBold">
                 <td>{{ d.colA }}</td>
                 <td>{{ d.colB }}</td>
-                <td class="align-right">{{ d.col1 | number }}</td>
+                <td class="align-right">{{ d.col1 }}</td>
                 <td class="align-right">{{ d.col2 | number }}</td>
                 <td class="align-right">{{ d.col3 | number }}</td>
                 <td class="align-right">{{ d.col4 | number }}</td>
@@ -421,7 +421,7 @@
               <tr>
                 <td>{{ d.colA }}</td>
                 <td>{{ d.colB }}</td>
-                <td class="align-right">{{ d.col1 | number }}</td>
+                <td class="align-right">{{ d.col1 }}</td>
                 <td class="align-right">{{ d.col2 | number }}</td>
                 <td class="align-right">{{ d.col3 | number }}</td>
                 <td class="align-right">{{ d.col4 | number }}</td>
@@ -476,7 +476,7 @@
               <tr>
                 <td>{{ d.colA }}</td>
                 <td>{{ d.colB }}</td>
-                <td class="align-right">{{ d.col1 | number }}</td>
+                <td class="align-right">{{ d.col1 }}</td>
                 <td class="align-right">{{ d.col2 | number }}</td>
                 <td class="align-right">{{ d.col3 | number }}</td>
                 <td class="align-right">{{ d.col4 | number }}</td>
@@ -678,6 +678,7 @@
               <tr>
                 <th rowspan="4">STT</th>
                 <th rowspan="4" class="align-center">Thị trường</th>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 <th rowspan="4" class="align-center">
                   Cự ly <br />
                   BQ (Km)
@@ -689,12 +690,13 @@
                   Đề xuất mức giảm giá tại kho khách hàng
                 </th>
                 <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
-
+              </ng-container>
                 <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">
                   {{ item.name }}
                 </th>
               </tr>
               <tr>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 <th rowspan="2" *ngFor="let item of data.lstGoods; let i = index">
                   {{ item.name }}
                 </th>
@@ -718,17 +720,19 @@
                 <th rowspan="2" *ngFor="let item of data.lstGoods; let i = index">
                   {{ item.name }}
                 </th>
-
+              </ng-container>
                 @for (i of data.lstGoods; track i) {
                 <th rowspan="2">Chưa VAT, BVMT</th>
                 <th rowspan="2">Có VAT, BVMT</th>
                 }
               </tr>
               <tr>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 @for (i of data.lstGoods; track i) {
-                <th rowspan="2">Có VAT</th>
-                <th rowspan="2">Chưa VAT</th>
+                <th class="align-center" rowspan="2">Có VAT</th>
+                <th class="align-center" rowspan="2">Chưa VAT</th>
                 }
+              </ng-container>
               </tr>
             </thead>
             <tbody>
@@ -736,6 +740,7 @@
               <tr *ngIf="t.isBold == true" style="font-weight: bold">
                 <td>{{ t.colA }}</td>
                 <td>{{ t.colB }}</td>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 <td class="align-right">{{ t.col1 }}</td>
                 @for (g of data.lstGoods; track g) {
                 <td></td>
@@ -752,6 +757,7 @@
                 @for (g of data.lstGoods; track g) {
                 <td></td>
                 }
+              </ng-container>
                 @for (g of data.lstGoods; track g) {
                 <td class="align-right"></td>
                 <td class="align-right"></td>
@@ -764,6 +770,7 @@
                   ">
                 <td>{{ t.colA }}</td>
                 <td>{{ t.colB }}</td>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 <td class="align-right">{{ t.col1 | number }}</td>
                 @for (l of t.lg; track l) {
                 <td class="align-right">{{ l | number }}</td>
@@ -780,6 +787,7 @@
                 @for (l of t.ln; track l) {
                 <td class="align-right">{{ l | number: '1.0-0' }}</td>
                 }
+              </ng-container>
                 @for (l of t.bvmt; track l) {
                 <td class="align-right">
                   {{ l.nonVAT | number: '1.0-0' }}
@@ -806,6 +814,7 @@
                 <th rowspan="3">STT</th>
                 <th rowspan="3" class="align-center">KHÁCH HÀNG</th>
                 <th rowspan="3" class="align-center">THỊ TRƯỜNG</th>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 <th rowspan="3" class="align-center">
                   Cự ly <br />
                   BQ (Km)
@@ -835,12 +844,13 @@
                   chưa VAT
                 </th>
                 <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
-
-                <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">
+              </ng-container>
+                <th  colspan="2" *ngFor="let item of data.lstGoods; let i = index">
                   {{ item.name }}
                 </th>
               </tr>
               <tr>
+              <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 @for (i of data.lstGoods; track i) {
                 <th rowspan="2" class="align-center">{{ i.name }}</th>
                 }
@@ -867,17 +877,18 @@
                 @for (i of data.lstGoods; track i) {
                 <th rowspan="2" class="align-center">{{ i.name }}</th>
                 }
+              </ng-container>
                 @for (i of data.lstGoods; track i) {
-                <th rowspan="2">CHƯA VAT, BVMT</th>
-                <th rowspan="2">CÓ VAT, BVMT</th>
+                <th class="align-center" rowspan="2">CHƯA VAT, BVMT</th>
+                <th class="align-center" rowspan="2">CÓ VAT, BVMT</th>
                 }
               </tr>
-              <tr>
+              <tr *ngIF="accountGroups!= 'G_NV_K'">
                 <th class="align-center">Xăng</th>
                 <th class="align-center">Dầu</th>
                 @for (i of data.lstGoods; track i) {
-                <th>Có thuế</th>
-                <th>Chưa thuế</th>
+                <th >Có thuế</th>
+                <th >Chưa thuế</th>
                 }
               </tr>
             </thead>
@@ -888,6 +899,7 @@
                 <td>{{ t.colB }}</td>
                 <td></td>
                 <td></td>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 @for (i of data.lstGoods; track i) {
                 <td></td>
                 }
@@ -907,6 +919,7 @@
                 @for (i of data.lstGoods; track i) {
                 <td></td>
                 }
+              </ng-container>
                 @for (i of data.lstGoods; track i) {
                 <td></td>
                 <td></td>
@@ -920,6 +933,7 @@
                 <td>{{ t.colA }}</td>
                 <td>{{ t.colB }}</td>
                 <td>{{ t.col1 }}</td>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 <td>{{ t.col2 }}</td>
                 @for (i of t.lg; track i) {
                 <td class="align-right">{{ i | number }}</td>
@@ -941,6 +955,7 @@
                 @for (i of t.ln; track i) {
                 <td class="align-right">{{ i | number }}</td>
                 }
+              </ng-container>
                 @for (i of t.bvmt; track i) {
                 <td class="align-right">{{ i.nonVAT | number }}</td>
                 <td class="align-right">{{ i.vat | number }}</td>
@@ -964,6 +979,7 @@
               <tr>
                 <th rowspan="3">STT</th>
                 <th rowspan="3" class="align-center">THỊ TRƯỜNG</th>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 <th colspan="{{ data.lstGoods.length }}">Lãi gộp</th>
                 <th colspan="4">Chi phí phát sinh chưa có VAT</th>
                 <th rowspan="3" class="align-center">
@@ -985,11 +1001,13 @@
                   chưa VAT
                 </th>
                 <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
+              </ng-container>
                 <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">
                   {{ item.name }}
                 </th>
               </tr>
               <tr>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 @for (i of data.lstGoods; track i) {
                 <th rowspan="2" class="align-center">{{ i.name }}</th>
                 }
@@ -1016,18 +1034,21 @@
                 @for (i of data.lstGoods; track i) {
                 <th rowspan="2" class="align-center">{{ i.name }}</th>
                 }
+              </ng-container>
                 @for (i of data.lstGoods; track i) {
-                <th rowspan="2">CHƯA VAT, BVMT</th>
-                <th rowspan="2">CÓ VAT, BVMT</th>
+                <th class="align-center" rowspan="2">CHƯA VAT, BVMT</th>
+                <th class="align-center" rowspan="2">CÓ VAT, BVMT</th>
                 }
               </tr>
               <tr>
+              <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 <th class="align-center">Xăng</th>
                 <th class="align-center">Dầu</th>
                 @for (i of data.lstGoods; track i) {
                 <th>Có thuế</th>
                 <th>Chưa thuế</th>
                 }
+              </ng-container>
               </tr>
             </thead>
             <tbody>
@@ -1035,6 +1056,7 @@
               <tr *ngIf="t.isBold == true" style="font-weight: bold">
                 <td>{{ t.colA }}</td>
                 <td>{{ t.colB }}</td>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1049,6 +1071,7 @@
                 <td></td>
                 <td></td>
                 }
+              </ng-container>
                 @for (i of data.lstGoods; track i) {
                 <td></td>
                 <td></td>
@@ -1061,7 +1084,7 @@
                   ">
                 <td>{{ t.colA }}</td>
                 <td>{{ t.colB }}</td>
-
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 @for (i of t.lg; track i) {
                 <td class="align-right">{{ i | number }}</td>
                 }
@@ -1081,6 +1104,7 @@
                 @for (i of t.ln; track i) {
                 <td class="align-right">{{ i | number }}</td>
                 }
+              </ng-container>
                 @for (i of t.bvmt; track i) {
                 <td class="align-right">{{ i.nonVAT | number }}</td>
                 <td class="align-right">{{ i.vat | number }}</td>
@@ -1104,6 +1128,7 @@
               <tr>
                 <th rowspan="3">STT</th>
                 <th rowspan="3" class="align-center">THỊ TRƯỜNG</th>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 <th colspan="{{ data.lstGoods.length }}">Lãi gộp được hưởng</th>
                 <th colspan="4">Chi phí phát sinh chưa có VAT</th>
                 <th rowspan="2" colspan="2" class="align-center">
@@ -1120,11 +1145,13 @@
                   chưa VAT
                 </th>
                 <th colspan="{{ data.lstGoods.length }}">Lợi nhuận chưa VAT</th>
+              </ng-container>
                 <th colspan="2" *ngFor="let item of data.lstGoods; let i = index">
                   {{ item.name }}
                 </th>
               </tr>
               <tr>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 @for (i of data.lstGoods; track i) {
                 <th rowspan="2" class="align-center">{{ i.name }}</th>
                 }
@@ -1151,11 +1178,13 @@
                 @for (i of data.lstGoods; track i) {
                 <th rowspan="2" class="align-center">{{ i.name }}</th>
                 }
+              </ng-container>
                 @for (i of data.lstGoods; track i) {
-                <th rowspan="2">CHƯA VAT, BVMT</th>
-                <th rowspan="2">CÓ VAT, BVMT</th>
+                <th class="align-center" rowspan="2">CHƯA VAT, BVMT</th>
+                <th class="align-center" rowspan="2">CÓ VAT, BVMT</th>
                 }
               </tr>
+              <ng-container *ngIf="accountGroups != 'G_NV_K'">
               <tr>
                 <th class="align-center">Xăng</th>
                 <th class="align-center">Dầu</th>
@@ -1164,6 +1193,7 @@
                 <th>Chưa thuế</th>
                 }
               </tr>
+            </ng-container>
             </thead>
             <tbody>
               @for (t of pt09Table.data; track t) {
@@ -1173,6 +1203,7 @@
                   ">
                 <td>{{ t.colA }}</td>
                 <td>{{ t.colB }}</td>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 @for (i of t.lg; track i) {
                 <td class="align-right">{{ i | number }}</td>
                 }
@@ -1190,6 +1221,7 @@
                 @for (i of t.ln; track i) {
                 <td class="align-right">{{ i | number }}</td>
                 }
+                </ng-container>
                 @for (i of t.bvmt; track i) {
                 <td class="align-right">{{ i.nonVAT | number }}</td>
                 <td class="align-right">{{ i.vat | number }}</td>
@@ -1215,6 +1247,7 @@
                 <th rowspan="2" class="align-center">Tên khách hàng</th>
                 <th rowspan="2" class="align-center">Địa điểm giao hàng</th>
                 <th rowspan="2" class="align-center">Mặt hàng</th>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 <th rowspan="2" class="align-center">PT</th>
                 <th rowspan="2" class="align-center">Mã khách</th>
                 <th rowspan="2" class="align-center">Mã hàng hóa</th>
@@ -1233,12 +1266,13 @@
                   Mức giảm giá tại kho bên mua
                 </th>
                 <th colspan="2" class="align-center">LỢI NHUẬN (Đ/Ltt)</th>
-
+              </ng-container>
                 <th colspan="2" class="align-center">
                   GIÁ BÁN CHO KHÁCH HÀNG (Đ/L)
                 </th>
               </tr>
               <tr>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 <th class="align-center">Đã có thuế</th>
                 <th class="align-center">Chưa thuế</th>
                 <th class="align-center">Tổng chi phí</th>
@@ -1251,6 +1285,7 @@
                 <th class="align-center">Chưa thuế</th>
                 <th class="align-center">Đã có thuế</th>
                 <th class="align-center">Chưa thuế</th>
+                </ng-container>
                 <th class="align-center">CHƯA VAT, BVMT</th>
                 <th class="align-center">CÓ VAT, BVMT</th>
               </tr>
@@ -1270,6 +1305,7 @@
                 <td>{{ t.colB }}</td>
                 <td>{{ t.colC }}</td>
                 <td>{{ t.colD }}</td>
+                <ng-container *ngIf="accountGroups != 'G_NV_K'">
                 <td>{{ t.col1 }}</td>
                 <td>{{ t.col2 }}</td>
                 <td>{{ t.col3 }}</td>
@@ -1287,6 +1323,7 @@
                 <td class="align-right">{{ t.col15 | number }}</td>
                 <td class="align-right">{{ t.col16 | number }}</td>
                 <td class="align-right">{{ t.col17 | number }}</td>
+                </ng-container>
                 <td class="align-right">{{ t.col18 | number }}</td>
                 <td class="align-right">{{ t.col19 | number }}</td>
               </tr>
@@ -2312,7 +2349,7 @@
             </nz-select>
           </td>
           <td>
-            <input class="input-v" nz-input [(ngModel)]="data.heSoVcf" type="number" />
+            <input [disabled]="true" class="input-v" nz-input [(ngModel)]="data.heSoVcf" type="number" />
           </td>
           <td>
             <input class="input-v" nz-input [(ngModel)]="data.thueBvmt" type="number" />

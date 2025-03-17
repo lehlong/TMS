@@ -22,6 +22,9 @@ namespace DMS.CORE.Entities.MD
         [Column("THUE_BVMT", TypeName = "DECIMAL(18,0)")]
         public decimal ThueBvmt { get; set; }
 
+        [Column("VFC", TypeName = "DECIMAL(10,4)")]
+        public decimal Vfc { get; set; }
+
         [Column("TYPE", TypeName = "NVARCHAR(50)")]
         public string? Type { get; set; }
 

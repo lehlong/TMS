@@ -50,7 +50,7 @@ export class CalculateResultComponent {
   isVisibleLstTrinhKy: boolean = false
   isVisibleCustomerPDF: boolean = false
   isName: boolean = false
-
+  accountGroups: any = {}
   data: any = {
     nameOld: '',
     lstGoods: [],
@@ -211,7 +211,11 @@ export class CalculateResultComponent {
   }
 
   getRight() {
-    this.rightList = this.globalService.getRightData()
+    const rights = localStorage.getItem('userRights');
+    this.rightList = rights ? JSON.parse(rights) : [];
+
+    const accountGroups = localStorage.getItem('UserInfo');
+    this.accountGroups = accountGroups ? JSON.parse(accountGroups).accountGroups[0].name : [];
   }
 
   checked = false

@@ -51,6 +51,9 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('thueBvmt', $event)" nzAlign="center">
             Thuế BVMT
           </th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('thueBvmt', $event)" nzAlign="center">
+            Hệ số VFC BQ mùa miền
+          </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('createDate', $event)" nzAlign="center">
             Ngày tạo
           </th>
@@ -81,6 +84,7 @@
             </span>
           </td>
           <td nzAlign="right">{{ data.thueBvmt }}</td>
+          <td nzAlign="right">{{ data.vfc }}</td>
           <td nzAlign="center">{{ data.createDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
@@ -124,6 +128,9 @@
 
       <app-input-clear placeholder="Nhập thuế bảo vệ môi trường" [required]="true" label="Thuế bảo vệ môi trường"
         [control]="$any(validateForm).controls['thueBvmt']"></app-input-clear>
+
+      <app-input-clear placeholder="Nhập thuế hệ số VFC" [required]="true" label="Hệ số VFC"
+        [control]="$any(validateForm).controls['vfc']"></app-input-clear>
 
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>

@@ -22,6 +22,7 @@ export class GoodsComponent {
     name: ['', [Validators.required]],
     type: [''],
     thueBvmt: ['', [Validators.required]],
+    vfc: ['', [Validators.required]],
     createDate: [new Date(), [Validators.required]],
     isActive: [true, [Validators.required]],
   })
@@ -182,6 +183,7 @@ export class GoodsComponent {
       name: data.name,
       type: data.type,
       thueBvmt: data.thueBvmt,
+      vfc: data.vfc,
       createDate: data.createDate,
       isActive: data.isActive,
     })

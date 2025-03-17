@@ -149,6 +149,7 @@ namespace DMS.BUSINESS.Services.BU
                         HeaderCode = obj.Header.Code,
                         GoodsCode = g.Code,
                         ThueBvmt = g.ThueBvmt,
+                        HeSoVcf = g.Vfc,
                         IsActive = true,
                         FromDate = DateTime.Now,
                         ToDate = DateTime.Now,
