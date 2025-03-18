@@ -53,6 +53,7 @@ export class CustomerComponent {
     customerTypeCode: [''],
     localCode: [''],
     marketCode: [''],
+    fob:[0],
     isActive: [true, [Validators.required]],
   })
   listOfPhone: {
@@ -504,6 +505,7 @@ export class CustomerComponent {
       customerTypeCode: data.customerTypeCode,
       localCode: data.localCode,
       marketCode: data.marketCode,
+      fob: data.fob,
       isActive: data.isActive,
     })
     this.listOfPhone = this.contactList.filter(

@@ -16,6 +16,10 @@ export class CustomerService {
     return this.commonService.get('Customer/GetAll');
   }
 
+  getSpecialCustomer(): Observable<any> {
+    return this.commonService.get('Customer/GetSpecialCustomer');
+  }
+
   createCustomer(params: any): Observable<any> {
     return this.commonService.post('Customer/Insert', params);
   }

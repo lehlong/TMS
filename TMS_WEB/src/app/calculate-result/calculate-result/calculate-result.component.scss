@@ -63,3 +63,7 @@
 .d-block{
   display: block;
 }
+
+::ng-deep .ant-select-item-option-disabled {
+  color: black;
+}

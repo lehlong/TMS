@@ -15,6 +15,8 @@ namespace DMS.BUSINESS.Services.MD
     public interface ICustomerService : IGenericService<TblMdCustomer, CustomerDto>
     {
         Task<IList<CustomerDto>> GetAll(BaseMdFilter filter);
+
+        Task<IList<CustomerDto>> GetSpecialCustomer(BaseMdFilter filter); 
         Task<PagedResponseDto> Search(BaseFilter filter);
         Task<byte[]> Export(BaseMdFilter filter);
     }
@@ -49,6 +51,26 @@ namespace DMS.BUSINESS.Services.MD
             try
             {
                 var query = _dbContext.TblMdCustomer.AsQueryable();
+                if (filter.IsActive.HasValue)
+                {
+                    query = query.Where(x => x.IsActive == filter.IsActive);
+                }
+                return await base.GetAllMd(query, filter);
+            }
+            catch (Exception ex)
+            {
+                Status = false;
+                Exception = ex;
+                return null;
+            }
+        }
+
+        public async Task<IList<CustomerDto>> GetSpecialCustomer(BaseMdFilter filter)
+        {
+            try
+            {
+                var query = _dbContext.TblMdCustomer.AsQueryable();
+                query = query.Where(x => x.Fob > 0);
                 if (filter.IsActive.HasValue)
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);

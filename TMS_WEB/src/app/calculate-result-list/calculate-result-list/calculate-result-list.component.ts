@@ -17,6 +17,8 @@ import { GoodsService } from '../../services/master-data/goods.service'
 import { Router } from '@angular/router'
 import { SignerService } from '../../services/master-data/signer.service'
 import { NzSelectModule } from 'ng-zorro-antd/select'
+import { CustomerComponent } from '../../master-data/customer/customer.component'
+import { CustomerService } from '../../services/master-data/customer.service'
 @Component({
   selector: 'app-local',
   standalone: true,
@@ -43,9 +45,11 @@ export class CalculateResultListComponent {
   loading: boolean = false
   isName: boolean = false
   IMPORT_BATCH = IMPORT_BATCH
+  listspecialCustomer: any[] = []
 
   constructor(
     private _service: CalculateResultListService,
+    private _customerService: CustomerService,
     private fb: NonNullableFormBuilder,
     private globalService: GlobalService,
     private message: NzMessageService,
@@ -67,6 +71,7 @@ export class CalculateResultListComponent {
     header: {},
     hS1: [],
     hS2: [],
+    fob: []
   }
   goodsResult: any[] = []
   signerResult: any[] = []
@@ -126,6 +131,7 @@ export class CalculateResultListComponent {
       var m = {
         model: this.model,
       }
+      
       this._service.createData(this.model).subscribe({
         next: (data) => {
 
@@ -149,6 +155,14 @@ export class CalculateResultListComponent {
   openCreate() {
     this.edit = false
     this.visible = true
+    this._customerService.getSpecialCustomer().subscribe({
+      next: (data) => {
+        this.listspecialCustomer = data
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
     this._service.getObjectCreate().subscribe({
       next: (data) => {
         this.model = data

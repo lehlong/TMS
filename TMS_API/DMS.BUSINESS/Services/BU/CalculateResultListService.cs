@@ -37,6 +37,7 @@ namespace DMS.BUSINESS.Services.BU
                 _dbContext.TblBuCalculateResultList.Add(model.Header);
                 _dbContext.TblInHeSoMatHang.AddRange(model.HS1);
                 _dbContext.TblInVinhCuaLo.AddRange(model.HS2);
+                _dbContext.TbLInCustomerFob.AddRange(model.FOB);
                 var h = new TblBuHistoryAction()
                 {
                     Code = Guid.NewGuid().ToString(),
@@ -168,7 +169,20 @@ namespace DMS.BUSINESS.Services.BU
                         UpdateDate = DateTime.Now
                     });
                 }
-
+                var lstCustomerSpecial = await _dbContext.TblMdCustomer.Where(x => x.IsActive == true && x.Fob > 0).ToListAsync();
+                foreach (var c in lstCustomerSpecial)
+                {
+                    obj.FOB.Add(new TbLInCustomerFob
+                    {
+                        Code = Guid.NewGuid().ToString(),
+                        HeaderCode = obj.Header.Code,
+                        CustomerName = c.Name,
+                        CustomerCode = c.Code,
+                        Fob = c.Fob,
+                        IsActive = true,
+                        CreateDate = DateTime.Now,
+                    });
+                }
                 return obj;
             }
             catch
@@ -184,6 +198,8 @@ namespace DMS.BUSINESS.Services.BU
         public TblBuCalculateResultList Header { get; set; } = new TblBuCalculateResultList();
         public List<TblInHeSoMatHang> HS1 { get; set; } = new List<TblInHeSoMatHang>();
         public List<TblInVinhCuaLo> HS2 { get; set; } = new List<TblInVinhCuaLo>();
+
+        public List<TbLInCustomerFob> FOB { get; set; } = new List<TbLInCustomerFob>();
         public Status Status { get; set; } = new Status();
     }
     public class Status

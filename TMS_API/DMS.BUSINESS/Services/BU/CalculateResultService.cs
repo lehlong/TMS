@@ -63,6 +63,7 @@ namespace DMS.BUSINESS.Services.BU
                 var lstMarket = await _dbContext.TblMdMarket.OrderBy(x => x.Code).ToListAsync();
                 var lstCustomer = await _dbContext.TblMdCustomer.ToListAsync();
                 var lstCR = await _dbContext.TblBuCalculateResultList.OrderBy(x => x.FDate).ToListAsync();
+               
                 //data.HEADER_CR = lstCR.FirstOrDefault(x => x.Code == code);
 
                 DateTime fDate = lstCR.FirstOrDefault(x => x.Code == code).FDate;
@@ -81,6 +82,7 @@ namespace DMS.BUSINESS.Services.BU
                 var dataHSMH = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == code).ToListAsync();
                 var mappingBBDO = await _dbContext.TblMdMapPointCustomerGoods.ToListAsync();
                 var dataPoint = await _dbContext.TblMdDeliveryPoint.ToListAsync();
+                var lstSpecialCustomer = await _dbContext.TbLInCustomerFob.Where(x => x.HeaderCode == code).ToListAsync();
                 if (dataVCL.Count() == 0 || dataHSMH.Count() == 0)
                 {
                     return data;
@@ -978,9 +980,13 @@ namespace DMS.BUSINESS.Services.BU
                     }
                     _m = _m.OrderBy(x => x.CustomerName).ThenBy(x => x.PointName).ToList();
                     var _o = 1;
+                    var specialCustomerDict = lstSpecialCustomer.ToDictionary(x => x.CustomerCode, x => x.Fob);
                     foreach (var e in _m)
                     {
-
+                        bool isSpecial = specialCustomerDict.ContainsKey(e.CustomerCode);
+                        decimal col12Value = isSpecial
+                            ? specialCustomerDict[e.CustomerCode] ?? 0
+                            : Math.Round(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col14) ?? 0);
                         var i = new BBDO
                         {
                             ColA = _o.ToString(),
@@ -996,7 +1002,8 @@ namespace DMS.BUSINESS.Services.BU
                             Col9 = data.PT.FirstOrDefault(x => x.IsBold == false)?.Col4,
                             Col10 = dataPoint.FirstOrDefault(x => x.Code == e.PointCode)?.CuocVcBq,
                             Col11 = lstCustomer.FirstOrDefault(x => x.Code == e.CustomerCode)?.BankLoanInterest,
-                            Col12 = Math.Round(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col14) ?? 0),
+
+                            Col12 = col12Value,
                         };
                         i.Col8 = Math.Round((i.Col9 ?? 0) + (i.Col10 ?? 0) + (i.Col11 ?? 0));
                         i.Col7 = i.Col6 == 0 ? 0 : Math.Round(i.Col6 / 1.1M ?? 0);
@@ -1313,6 +1320,32 @@ namespace DMS.BUSINESS.Services.BU
             try
             {
                 var data = new InsertModel();
+
+                data.FOB = await _dbContext.TbLInCustomerFob.Where(x => x.HeaderCode == code).ToListAsync();
+                if (data.FOB.Count == 0)
+                {
+                    var lstCustomer = await _dbContext.TblMdCustomer.Where(x => x.IsActive == true && x.Fob > 0).ToListAsync();
+                    if (lstCustomer.Count > 0)
+                    {
+                        var obj = new InsertModel();
+                        foreach (var c in lstCustomer)
+                        {
+                            obj.FOB.Add(new TbLInCustomerFob
+                            {
+                                Code = Guid.NewGuid().ToString(),
+                                HeaderCode = code,
+                                CustomerName = c.Name,
+                                CustomerCode = c.Code,
+                                Fob = c.Fob,
+                                IsActive = true,
+                                CreateDate = DateTime.Now,
+                            });
+                        }
+                        _dbContext.TbLInCustomerFob.AddRange(obj.FOB);
+                        _dbContext.SaveChangesAsync();
+                        data.FOB = obj.FOB;
+                    }
+                }
 
                 data.Header = await _dbContext.TblBuCalculateResultList.FindAsync(code);
                 data.HS1 = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == code).ToListAsync();

@@ -68,6 +68,8 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Mã thị trường")]
         public string? MarketCode { get; set; }
 
+        [Description("Đề xuất mức giảm giá tại kho bên bán (FOB)")]
+        public decimal? Fob { get; set; }
 
         [Description("Trạng thái")]
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }

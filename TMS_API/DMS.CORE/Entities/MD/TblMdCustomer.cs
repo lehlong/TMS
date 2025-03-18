@@ -64,6 +64,8 @@ namespace DMS.CORE.Entities.MD
         [Column("MGGLH_DAU", TypeName = "DECIMAL(18,0)")]
         public decimal? MgglhDau { set; get; }
 
+        [Column("FOB", TypeName = "DECIMAL(18,0)")]
+        public decimal? Fob { set; get; }
 
     }
 }
