@@ -593,7 +593,7 @@ export class CalculateResultComponent {
   }
 
   cancelSendSMS() {}
-  cancelSendMail() {}
+  cancelSendEmail() {}
 
   confirmSendSMS() {
     console.log("err")
