@@ -121,11 +121,17 @@ export class CalculateResultComponent {
     { code: 'KeKhaiGiaChiTiet', name: 'Kê Khai Giá Chi Tiết', status: true },
   ]
   ngOnInit() {
+    this.getRight()
     this.route.paramMap.subscribe({
       next: (params) => {
         const code = params.get('code')
         this.headerId = code
-        this.GetData(code, 0)
+        if(this.accountGroups != 'G_NV_K'){
+          this.GetData(code, 0)
+        }
+        else{
+          this.changeTitle('PT',1)
+        }
         this._service.GetDataInput(this.headerId).subscribe({
           next: (data) => {
             this.model = data
@@ -134,7 +140,6 @@ export class CalculateResultComponent {
       },
     })
     this.getAllGoods()
-    this.getRight()
     // if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DLG)) {
     //   this.changeTitle('DỮ LIỆU GỐC')
     // } else if (

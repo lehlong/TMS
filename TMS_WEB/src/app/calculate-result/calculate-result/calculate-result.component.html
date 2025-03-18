@@ -802,7 +802,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DB)" nzTitle="ĐB"
-        (nzClick)="changeTitle('ĐB')">
+        (nzClick)="changeTitle('ĐB', 2)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -883,7 +883,8 @@
                 <th class="align-center" rowspan="2">CÓ VAT, BVMT</th>
                 }
               </tr>
-              <tr *ngIF="accountGroups!= 'G_NV_K'">
+              <ng-container *ngIf="accountGroups != 'G_NV_K'">
+              <tr>
                 <th class="align-center">Xăng</th>
                 <th class="align-center">Dầu</th>
                 @for (i of data.lstGoods; track i) {
@@ -891,6 +892,7 @@
                 <th >Chưa thuế</th>
                 }
               </tr>
+            </ng-container>
             </thead>
             <tbody>
               @for (t of dbTable.data; track t) {
@@ -968,7 +970,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_FOB)" nzTitle="FOB"
-        (nzClick)="changeTitle('FOB')">
+        (nzClick)="changeTitle('FOB',3)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1117,7 +1119,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT09)" nzTitle="PT09"
-        (nzClick)="changeTitle('PT09')">
+        (nzClick)="changeTitle('PT09',4)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1234,7 +1236,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_DO)" nzTitle="BB DO"
-        (nzClick)="changeTitle('BB DO')">
+        (nzClick)="changeTitle('BB DO',5)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1334,7 +1336,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_FO)" nzTitle="BB FO"
-        (nzClick)="changeTitle('BB FO')">
+        (nzClick)="changeTitle('BB FO',6)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1408,7 +1410,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL1)" nzTitle="PL1"
-        (nzClick)="changeTitle('PL1')">
+        (nzClick)="changeTitle('PL1',7)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1450,7 +1452,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL2)" nzTitle="PL2"
-        (nzClick)="changeTitle('PL2')">
+        (nzClick)="changeTitle('PL2',8)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1492,7 +1494,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL3)" nzTitle="PL3"
-        (nzClick)="changeTitle('PL3')">
+        (nzClick)="changeTitle('PL3',9)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1534,7 +1536,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL4)" nzTitle="PL4"
-        (nzClick)="changeTitle('PL4')">
+        (nzClick)="changeTitle('PL4',10)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1576,7 +1578,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_PT)" nzTitle="VK11 PT"
-        (nzClick)="changeTitle('VK11 PT')">
+        (nzClick)="changeTitle('VK11 PT',11)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1651,7 +1653,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_DB)" nzTitle="VK11 ĐB"
-        (nzClick)="changeTitle('VK11 ĐB')">
+        (nzClick)="changeTitle('VK11 ĐB',12)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1729,7 +1731,7 @@
 
       <nz-tab *ngIf="
           rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_FOB)
-        " nzTitle="VK11-FOB" (nzClick)="changeTitle('VK11-FOB')">
+        " nzTitle="VK11-FOB" (nzClick)="changeTitle('VK11-FOB',13)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1805,7 +1807,7 @@
 
       <nz-tab *ngIf="
           rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_TNPP)
-        " nzTitle="VK11-TNPP" (nzClick)="changeTitle('VK11-TNPP')">
+        " nzTitle="VK11-TNPP" (nzClick)="changeTitle('VK11-TNPP',14)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1880,7 +1882,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PTS)" nzTitle="PTS"
-        (nzClick)="changeTitle('PTS')">
+        (nzClick)="changeTitle('PTS',15)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1930,7 +1932,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_BB)" nzTitle="VK11 BB"
-        (nzClick)="changeTitle('VK11 BB')">
+        (nzClick)="changeTitle('VK11 BB',16)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1998,7 +2000,7 @@
 
       <nz-tab *ngIf="
           rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_TONG_HOP)
-        " nzTitle="Tổng hợp" (nzClick)="changeTitle('TỔNG HỢP')">
+        " nzTitle="Tổng hợp" (nzClick)="changeTitle('TỔNG HỢP',17)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',

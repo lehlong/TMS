@@ -1292,36 +1292,42 @@ namespace DMS.BUSINESS.Services.BU
                     tabResult.PT09 = rData.PT09;
                     break;
                 case 5:
-                    tabResult.PL2 = rData.PL2;
-                    break;
-                case 6:
-                    tabResult.PL3 = rData.PL3;
-                    break;
-                case 7:
-                    tabResult.VK11PT = rData.VK11PT;
-                    break;
-                case 8:
-                    tabResult.VK11DB = rData.VK11DB;
-                    break;
-                case 9:
-                    tabResult.VK11FOB = rData.VK11FOB;
-                    break;
-                case 10:
-                    tabResult.VK11TNPP = rData.VK11TNPP;
-                    break;
-                case 11:
-                    tabResult.PTS = rData.PTS;
-                    break;
-                case 12:
                     tabResult.BBDO = rData.BBDO;
                     break;
-                case 13:
+                case 6:
                     tabResult.BBFO = rData.BBFO;
                     break;
+                case 7:
+                    tabResult.PL1 = rData.PL1;
+                    break;
+                case 8:
+                    tabResult.PL2 = rData.PL2;
+                    break;
+                case 9:
+                    tabResult.PL3 = rData.PL3;
+                    break;
+                case 10:
+                    tabResult.PL4 = rData.PL4;
+                    break;
+                case 11:
+                    tabResult.VK11PT = rData.VK11PT;
+                    break;
+                case 12:
+                    tabResult.VK11DB = rData.VK11DB;
+                    break;
+                case 13:
+                    tabResult.VK11FOB = rData.VK11FOB;
+                    break;
                 case 14:
-                    tabResult.VK11BB = rData.VK11BB;
+                    tabResult.VK11TNPP = rData.VK11TNPP;
                     break;
                 case 15:
+                    tabResult.PTS = rData.PTS;
+                    break;
+                case 16:
+                    tabResult.VK11BB = rData.VK11BB;
+                    break;
+                case 17:
                     tabResult.Summary = rData.Summary;
                     break;
             }
