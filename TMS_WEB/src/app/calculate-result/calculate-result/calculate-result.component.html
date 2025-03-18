@@ -111,7 +111,7 @@
     </button>
     <nz-tabset>
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DLG)" nzTitle="Dữ liệu gốc"
-        (nzClick)="changeTitle('DỮ LIỆU GỐC')">
+        (nzClick)="changeTitle('DỮ LIỆU GỐC', 0)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -667,7 +667,7 @@
       </nz-tab>
 
       <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT)" nzTitle="PT"
-        (nzClick)="changeTitle('PT')">
+        (nzClick)="changeTitle('PT', 1)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',

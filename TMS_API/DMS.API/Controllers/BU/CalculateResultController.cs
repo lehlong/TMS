@@ -23,10 +23,10 @@ namespace DMS.API.Controllers.BU
 
         [HttpGet("GetCalculateResult")]
         [Authorize]
-        public async Task<IActionResult> GetCalculateResult([FromQuery] string code)
+        public async Task<IActionResult> GetCalculateResult([FromQuery] string code, [FromQuery] int tab)
         {
             var transferObject = new TransferObject();
-            var result = await _service.GetResult(code);
+            var result = await _service.GetResult(code, tab);
             if (_service.Status)
             {
                 transferObject.Data = result;

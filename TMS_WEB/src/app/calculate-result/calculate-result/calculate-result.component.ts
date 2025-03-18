@@ -125,7 +125,7 @@ export class CalculateResultComponent {
       next: (params) => {
         const code = params.get('code')
         this.headerId = code
-        this.GetData(code)
+        this.GetData(code, 0)
         this._service.GetDataInput(this.headerId).subscribe({
           next: (data) => {
             this.model = data
@@ -135,79 +135,79 @@ export class CalculateResultComponent {
     })
     this.getAllGoods()
     this.getRight()
-    if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DLG)) {
-      this.changeTitle('DỮ LIỆU GỐC')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT)
-    ) {
-      this.changeTitle('PT')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DB)
-    ) {
-      this.changeTitle('DB')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_FOB)
-    ) {
-      this.changeTitle('FOB')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT09)
-    ) {
-      this.changeTitle('PT09')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_DO)
-    ) {
-      this.changeTitle('BB DO')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_FO)
-    ) {
-      this.changeTitle('BB FO')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL1)
-    ) {
-      this.changeTitle('PL1')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL2)
-    ) {
-      this.changeTitle('PL2')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL3)
-    ) {
-      this.changeTitle('PL3')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL4)
-    ) {
-      this.changeTitle('PL4')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_PT)
-    ) {
-      this.changeTitle('VK11 PT')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_DB)
-    ) {
-      this.changeTitle('VK11 ĐB')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_FOB)
-    ) {
-      this.changeTitle('VK11-FOB')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_TNPP)
-    ) {
-      this.changeTitle('VK11-TNPP')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PTS)
-    ) {
-      this.changeTitle('PTS')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_BB)
-    ) {
-      this.changeTitle('VK11 BB')
-    } else if (
-      this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_TONG_HOP)
-    ) {
-      this.changeTitle('TỔNG HỢP')
-    } else {
-      this.changeTitle('')
-    }
+    // if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DLG)) {
+    //   this.changeTitle('DỮ LIỆU GỐC')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT)
+    // ) {
+    //   this.changeTitle('PT')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DB)
+    // ) {
+    //   this.changeTitle('DB')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_FOB)
+    // ) {
+    //   this.changeTitle('FOB')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT09)
+    // ) {
+    //   this.changeTitle('PT09')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_DO)
+    // ) {
+    //   this.changeTitle('BB DO')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_FO)
+    // ) {
+    //   this.changeTitle('BB FO')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL1)
+    // ) {
+    //   this.changeTitle('PL1')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL2)
+    // ) {
+    //   this.changeTitle('PL2')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL3)
+    // ) {
+    //   this.changeTitle('PL3')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL4)
+    // ) {
+    //   this.changeTitle('PL4')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_PT)
+    // ) {
+    //   this.changeTitle('VK11 PT')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_DB)
+    // ) {
+    //   this.changeTitle('VK11 ĐB')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_FOB)
+    // ) {
+    //   this.changeTitle('VK11-FOB')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_TNPP)
+    // ) {
+    //   this.changeTitle('VK11-TNPP')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PTS)
+    // ) {
+    //   this.changeTitle('PTS')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_BB)
+    // ) {
+    //   this.changeTitle('VK11 BB')
+    // } else if (
+    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_TONG_HOP)
+    // ) {
+    //   this.changeTitle('TỔNG HỢP')
+    // } else {
+    //   this.changeTitle('')
+    // }
   }
 
   getRight() {
@@ -374,8 +374,11 @@ export class CalculateResultComponent {
     this.globalService.setBreadcrumb([])
   }
 
-  GetData(code: any) {
-    this._service.GetResult(code).subscribe({
+  GetData(code: any, tab: any) {
+    if (code == null || code == null) {
+      code = this.headerId;
+    }
+    this._service.GetResult(code, tab).subscribe({
       next: (data) => {
         this.data = data
         // console.log(data)
@@ -386,9 +389,10 @@ export class CalculateResultComponent {
     })
   }
 
-  changeTitle(value: string) {
+  changeTitle(value: string, tab: any) {
     this.reset()
     this.title = value
+    this.GetData(this.headerId, tab);
   }
 
   changeStatus(value: string, status: string) {
@@ -467,7 +471,7 @@ export class CalculateResultComponent {
     this.lstCustomerChecked = []
   }
   reCalculate() {
-    this.GetData(this.headerId)
+    this.GetData(this.headerId, 0)
   }
   closeDrawer() {
     this.visibleDrawer = false

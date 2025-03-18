@@ -37,7 +37,7 @@ namespace DMS.BUSINESS.Services.BU
 {
     public interface ICalculateResultService : IGenericService<TblMdGoods, GoodsDto>
     {
-        Task<CalculateResultModel> GetResult(string code);
+        Task<CalculateResultModel> GetResult(string code, int tab);
         Task<InsertModel> GetDataInput(string code);
         Task<List<TblBuHistoryAction>> GetHistoryAction(string code);
         Task<List<TblBuHistoryDownload>> GetHistoryFile(string code);
@@ -52,7 +52,7 @@ namespace DMS.BUSINESS.Services.BU
     }
     public class CalculateResultService(AppDbContext dbContext, IMapper mapper) : GenericService<TblMdGoods, GoodsDto>(dbContext, mapper), ICalculateResultService
     {
-        public async Task<CalculateResultModel> GetResult(string code)
+        public async Task<CalculateResultModel> GetResult(string code, int tab)
         {
             try
             {
@@ -1259,7 +1259,8 @@ namespace DMS.BUSINESS.Services.BU
                 }
                 #endregion
 
-                return await RoundNumberData(data);
+                var rData = await RoundNumberData(data);
+                return tab == -1 ? rData : await ReturnTabData(rData, tab);
             }
             catch (Exception ex)
             {
@@ -1267,6 +1268,64 @@ namespace DMS.BUSINESS.Services.BU
                 this.Exception = ex;
                 return new CalculateResultModel();
             }
+        }
+
+        public async Task<CalculateResultModel> ReturnTabData(CalculateResultModel rData, int tab)
+        {
+            var tabResult = new CalculateResultModel();
+            tabResult.lstGoods = rData.lstGoods;
+            switch (tab)
+            {
+                case 0:
+                    tabResult.DLG = rData.DLG;
+                    break;
+                case 1:
+                    tabResult.PT = rData.PT;
+                    break;
+                case 2:
+                    tabResult.DB = rData.DB;
+                    break;
+                case 3:
+                    tabResult.FOB = rData.FOB;
+                    break;
+                case 4:
+                    tabResult.PT09 = rData.PT09;
+                    break;
+                case 5:
+                    tabResult.PL2 = rData.PL2;
+                    break;
+                case 6:
+                    tabResult.PL3 = rData.PL3;
+                    break;
+                case 7:
+                    tabResult.VK11PT = rData.VK11PT;
+                    break;
+                case 8:
+                    tabResult.VK11DB = rData.VK11DB;
+                    break;
+                case 9:
+                    tabResult.VK11FOB = rData.VK11FOB;
+                    break;
+                case 10:
+                    tabResult.VK11TNPP = rData.VK11TNPP;
+                    break;
+                case 11:
+                    tabResult.PTS = rData.PTS;
+                    break;
+                case 12:
+                    tabResult.BBDO = rData.BBDO;
+                    break;
+                case 13:
+                    tabResult.BBFO = rData.BBFO;
+                    break;
+                case 14:
+                    tabResult.VK11BB = rData.VK11BB;
+                    break;
+                case 15:
+                    tabResult.Summary = rData.Summary;
+                    break;
+            }
+            return tabResult;
         }
         public async Task<CalculateResultModel> RoundNumberData(CalculateResultModel data)
         {
@@ -1445,7 +1504,7 @@ namespace DMS.BUSINESS.Services.BU
             try
             {
 
-                var data = await GetResult(headerId);
+                var data = await GetResult(headerId, -1);
                 var header = await _dbContext.TblBuCalculateResultList.FindAsync(headerId);
                 var model = await GetDataInput(headerId);
                 var goods = await _dbContext.TblMdGoods.ToListAsync();
@@ -3903,7 +3962,7 @@ namespace DMS.BUSINESS.Services.BU
             #endregion
 
             #region Fill dữ liệu
-            var data = await GetResult(headerId);
+            var data = await GetResult(headerId, -1);
 
             var header = await _dbContext.TblBuCalculateResultList.FindAsync(headerId);
             var model = await GetDataInput(headerId);
@@ -4740,8 +4799,8 @@ namespace DMS.BUSINESS.Services.BU
             }
             #endregion
 
-            #region Fill dữ liệu
-            var data = await GetResult(headerId);
+            #region Fill dữ liệu 
+            var data = await GetResult(headerId, -1);
             var header = await _dbContext.TblBuCalculateResultList.FindAsync(headerId);
             foreach (var code in lstCustomerChecked)
             {
