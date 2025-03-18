@@ -14,25 +14,19 @@ namespace DMS.CORE.Entities.MD
     {
         [Key]
         [Column("CODE", TypeName = "VARCHAR(50)")]
-        public string Code { set; get; }
+        public string? Code { set; get; }
 
         [Column("GOODS_CODE", TypeName = "VARCHAR(50)")]
-        public string GoodsCode { set; get; }
+        public string? GoodsCode { set; get; }
 
-        [Column("CUSTOMER_CODE", TypeName = "VARCHAR(50)")]
-        public string CustomerCode { set; get; }
+        [Column("GGTDL_CODE", TypeName = "VARCHAR(50)")]
+        public string? GgtdlCode { set; get; }
 
-        [Column("FROM_DATE", TypeName = "DATETIME")]
-        public DateTime? FromDate { set; get; }
+        [Column("OLD_PRICE", TypeName = "DECIMAL(18.0)")]
+        public decimal? OldPrice { set; get; }
 
-        [Column("TO_DATE", TypeName = "DATETIME")]
-        public DateTime ToDate { set; get; }
-
-        [Column("OLD_PRICE", TypeName = "FLOAT")]
-        public float OldPrice { set; get; }
-
-        [Column("NEW_PRICE", TypeName = "FLOAT")]
-        public float NewPrice { set; get; }
+        [Column("NEW_PRICE", TypeName = "DECIMAL(18.0)")]
+        public decimal? NewPrice { set; get; }
 
     }
 }

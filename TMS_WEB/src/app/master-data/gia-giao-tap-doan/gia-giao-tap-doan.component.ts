@@ -34,10 +34,13 @@ export class GiaGiaoTapDoanComponent {
   visible: boolean = false
   edit: boolean = false
   filter = new GiaGiaoTapDoanFilter()
-  paginationResult = new PaginationResult()
+  // paginationResult = new PaginationResult()
   customerResult: any[] = []
   goodsResult: any[] = []
+  data: any = []
+  date: Date = new Date()
   loading: boolean = false
+  isDateValid: boolean = false
   GOODS_RIGHTS = GOODS_RIGHTS
   MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
 
@@ -79,6 +82,50 @@ export class GiaGiaoTapDoanComponent {
     this.search()
   }
 
+  model: any = {
+    ggtdlHeader: {},
+    ggtd: []
+  }
+  formatDateTime(date: string | null): string {
+    if (date) {
+      const d = new Date(date);
+      // d.setHours(d.getHours() + 5); // Cộng thêm 5 tiếng
+      if (d > this.date) {
+        this.date = d
+        // console.log(this.date);
+
+      }
+      return d.toLocaleString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric'
+      });
+    }
+    return 'Không có ngày giờ';
+  }
+  panels = [
+    {
+      active: true,
+      name: 'This is panel header 1',
+      childPanel: [
+        {
+          active: false,
+          name: 'This is panel header 1-1'
+        }
+      ]
+    },
+    {
+      active: false,
+      name: 'This is panel header 2'
+    },
+    {
+      active: false,
+      name: 'This is panel header 3'
+    }
+  ];
+
   getAllCustomer() {
     this._customerService.getall().subscribe({
       next: (data) => {
@@ -103,9 +150,10 @@ export class GiaGiaoTapDoanComponent {
 
   search() {
     this.isSubmit = false
-    this._service.searchGiaGiaoTapDoan(this.filter).subscribe({
+    this._service.getAll().subscribe({
       next: (data) => {
-        this.paginationResult = data
+        this.data = data
+        console.log(this.data);
       },
       error: (response) => {
         console.log(response)
@@ -128,61 +176,78 @@ export class GiaGiaoTapDoanComponent {
       })
   }
 
-  isCodeExist(code: string): boolean {
-    return this.paginationResult.data?.some((local: any) => local.code === code)
-  }
+  // isCodeExist(code: string): boolean {
+  // return this.paginationResult.data?.some((local: any) => local.code === code)
+  // }
 
   checkDate() {
-    if (this.validateForm.get('toDate')?.value > this.validateForm.get('fromDate')?.value) {
+    const date = new Date(this.model.ggtdlHeader.fDate);
 
-      return;
-    } else {
+    if (this.date > date) {
       this.message.error("Ngày kết thúc phải lớn hơn ngày tạo")
+      this.isDateValid = true;
+      return;
+    }else{
+      this.message.error("hợp lệ")
+
+      this.isDateValid = false;
     }
+
   }
 
 
   submitForm(): void {
     this.isSubmit = true
-    if (this.validateForm.get('toDate')?.value > this.validateForm.get('fromDate')?.value) {
 
-      if (this.validateForm.valid) {
-        const formData = this.validateForm.getRawValue()
-        if (this.edit) {
-          this._service.updateGiaGiaoTapDoan(formData).subscribe({
-            next: (data) => {
+    if (this.model) {
+
+      const formData = this.model
+      if (this.edit) {
+        this._service.updateGiaGiaoTapDoan(formData).subscribe({
+          next: (data) => {
+            if (data.oldHeaderGgtd == 'false') {
+              this.message.error(
+                `Ngày tạo không được nhỏ hơn ngày đã tạo`,
+              )
+            } else {
               this.search()
-            },
-            error: (response) => {
-              console.log(response)
-            },
-          })
-        } else {
-          if (this.isCodeExist(formData.code)) {
+            }
+          },
+          error: (response) => {
             this.message.error(
-              `Mã khu vục ${formData.code} đã tồn tại, vui lòng nhập lại`,
+              `Ngày tạo không được nhỏ hơn ngày tạo`,
             )
-            return
-          }
-          this._service.createGiaGiaoTapDoan(formData).subscribe({
-            next: (data) => {
+            console.log(response)
+          },
+        })
+      } else {
+        if (this.date > this.model.ggtdlHeader.fDate) {
+          this.message.error("Ngày kết thúc phải lớn hơn ngày đã tạo")
+          return;
+        }
+        this._service.createGiaGiaoTapDoan(formData).subscribe({
+          next: (data) => {
+              if (data.oldHeaderGgtd == 'false') {
+                this.message.error(
+                  `Ngày tạo không được nhỏ hơn ngày đã tạo`,
+                )
+              } else {
+                this.search()
+              }
               this.search()
             },
-            error: (response) => {
-              console.log(response)
-            },
-          })
-        }
-      } else {
-        Object.values(this.validateForm.controls).forEach((control) => {
-          if (control.invalid) {
-            control.markAsDirty()
-            control.updateValueAndValidity({ onlySelf: true })
-          }
+          error: (response) => {
+            console.log(response)
+          },
         })
       }
     } else {
-      this.message.error("Ngày kết thúc phải lớn hơn ngày tạo")
+      Object.values(this.validateForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty()
+          control.updateValueAndValidity({ onlySelf: true })
+        }
+      })
     }
   }
 
@@ -197,8 +262,19 @@ export class GiaGiaoTapDoanComponent {
   }
 
   openCreate() {
-    this.edit = false
-    this.visible = true
+    this._service.getDataInput().subscribe({
+      next: (data) => {
+        console.log(this.model);
+        this.model = data
+        console.log(this.model);
+        this.edit = false
+        this.visible = true
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
+
   }
 
   resetForm() {
@@ -226,17 +302,7 @@ export class GiaGiaoTapDoanComponent {
 
   openEdit(data: any) {
     console.log(data);
-
-    this.validateForm.patchValue({
-      code: data.code,
-      goodsCode: data.goodsCode,
-      customerCode: data.customerCode,
-      formDate: data.fromDate,
-      toDate: data.toDate,
-      oldPrice: data.oldPrice,
-      newPrice: data.newPrice,
-      isActive: data.isActive,
-    })
+    this.model = data
     setTimeout(() => {
       this.edit = true
       this.visible = true

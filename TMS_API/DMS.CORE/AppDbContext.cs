@@ -128,6 +128,7 @@ namespace DMS.CORE
 
         #region Master Data
 
+        public DbSet<TblMdGiaGiaoTapDoanList> TblMdGiaGiaoTapDoanList { get; set; }
         public DbSet<TblMdTypeOfGoods> TblMdTypeOfGoods { get; set; }
         public DbSet<TblMdGoods> TblMdGoods { get; set; }
         public DbSet<TblMdWarehouse> TblMdWarehouse { get; set; }

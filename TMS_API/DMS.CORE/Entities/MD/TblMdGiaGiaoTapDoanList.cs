@@ -9,30 +9,18 @@ using System.Threading.Tasks;
 
 namespace DMS.CORE.Entities.MD
 {
-    [Table("T_MD_LAI_GOP_DIEU_TIET")]
+    [Table("T_MD_GIA_GIAO_TAP_DOAN_LIST")]
     public class TblMdGiaGiaoTapDoanList : SoftDeleteEntity
     {
         [Key]
         [Column("CODE", TypeName = "VARCHAR(1000)")]
         public string Code { set; get; }
 
-        [Column("NAME", TypeName = "VARCHAR(50)")]
-        public string NAME { set; get; }
+        [Column("Name", TypeName = "NVARCHAR(1000)")]
+        public string? Name { set; get; }
 
-        [Column("F_DATE", TypeName = "VARCHAR(50)")]
-        public string FDate { set; get; }
-
-        [Column("HEADER_CODE", TypeName = "DATETIME")]
-        public string HeaderCode { set; get; } = "";
-
-        [Column("FROM_DATE", TypeName = "DATETIME")]
-        public DateTime? FromDate { set; get; }
-
-        [Column("TO_DATE", TypeName = "DATETIME")]
-        public DateTime ToDate { set; get; }
-
-        [Column("PRICE", TypeName = "DECIMAL(18,0)")]
-        public decimal? Price { set; get; }
+        [Column("F_DATE", TypeName = "DATETIME")]
+        public DateTime? FDate { set; get; }
 
     }
 }

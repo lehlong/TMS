@@ -12,8 +12,13 @@ export class GiaGiaoTapDoanService {
     return this.commonService.get('GiaGiaoTapDoan/Search', params)
   }
 
-  getall(): Observable<any> {
+  getAll(): Observable<any> {
     return this.commonService.get('GiaGiaoTapDoan/GetAll')
+  }
+
+  getDataInput(): Observable<any> {
+    // return this.commonService.get('GiaGiaoTapDoan/BuildDataInput')
+    return this.commonService.get('GiaGiaoTapDoan/BuildDataInput')
   }
 
   createGiaGiaoTapDoan(params: any): Observable<any> {

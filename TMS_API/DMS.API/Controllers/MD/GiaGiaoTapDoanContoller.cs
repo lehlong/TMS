@@ -30,11 +30,12 @@ namespace DMS.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll([FromQuery] BaseMdFilter filter)
+        public async Task<IActionResult> GetAll()
         {
             var transferObject = new TransferObject();
-            var result = await _service.GetAll(filter);
+            var result = await _service.GetAll();
             if (_service.Status)
             {
                 transferObject.Data = result;
@@ -47,11 +48,13 @@ namespace DMS.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+
         [HttpPost("Insert")]
-        public async Task<IActionResult> Insert([FromBody] GiaGiaoTapDoanDto GiaGiaoTapDoan)
+        public async Task<IActionResult> Insert([FromBody] GgtdModel model)
         {
             var transferObject = new TransferObject();
-            var result = await _service.Add(GiaGiaoTapDoan);
+            var result = await _service.InsertData(model);
+
             if (_service.Status)
             {
                 transferObject.Data = result;
@@ -67,11 +70,31 @@ namespace DMS.API.Controllers.MD
             }
             return Ok(transferObject);
         }
-        [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] GiaGiaoTapDoanDto GiaGiaoTapDoan)
+
+        [HttpGet("BuildDataInput")]
+        public async Task<IActionResult> BuildDataInput()
         {
             var transferObject = new TransferObject();
-            await _service.Update(GiaGiaoTapDoan);
+
+            var result = await _service.BuildDataCreate();
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] GgtdModel model)
+        {
+            var transferObject = new TransferObject();
+            await _service.UpdateData(model);
             if (_service.Status)
             {
                 transferObject.Status = true;
