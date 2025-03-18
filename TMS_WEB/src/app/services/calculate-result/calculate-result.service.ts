@@ -38,4 +38,16 @@ export class CalculateResultService {
   GetCustomer(): Observable<any> {
     return this.commonService.get(`CalculateResult/GetCustomer`)
   }
+  SendMail(model: any): Observable<any> {
+    return this.commonService.get(`CalculateResult/SendMail?headerId=${model}`)
+  }
+  SendSMS(model: any): Observable<any> {
+    return this.commonService.get(`CalculateResult/SendSMS?headerId=${model}`)
+  }
+  Getmail(model: any): Observable<any> {
+    return this.commonService.get(`CalculateResult/Getmail?headerId=${model}`)
+  }
+  GetSms(model: any): Observable<any> {
+    return this.commonService.get(`CalculateResult/GetSms?headerId=${model}`)
+  }
 }

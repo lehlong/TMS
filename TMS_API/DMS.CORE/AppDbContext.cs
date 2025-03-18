@@ -198,6 +198,8 @@ namespace DMS.CORE
         public DbSet<TblCmModuleAttachment> TblBuModuleAttachment { get; set; }
         public DbSet<TblCmComment> TblCmComment { get; set; }
         public DbSet<TblCmModuleComment> TblCmModuleComment { get; set; }
+        public DbSet<TblNotifyEmail> TblCmNotifiEmail{ get; set; }
+        public DbSet<TblNotifySms> TblCmNotifySms { get; set; }
 
         #endregion
 

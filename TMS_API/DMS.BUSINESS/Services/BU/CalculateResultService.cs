@@ -30,6 +30,15 @@ using System.Data;
 using System.Globalization;
 using NPOI.SS.Util;
 using System.Net.Http.Headers;
+using Microsoft.Data.SqlClient;
+using System.Net.Mail;
+using System.Net;
+
+using System.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Office.CustomUI;
+using NPOI.HSSF.Record.Chart;
 //using DocumentFormat.OpenXml.Spreadsheet;
 //using OfficeOpenXml.Drawing;
 
@@ -43,6 +52,11 @@ namespace DMS.BUSINESS.Services.BU
         Task<List<TblBuHistoryDownload>> GetHistoryFile(string code);
         Task<List<TblMdCustomer>> GetCustomer();
         Task UpdateDataInput(InsertModel model);
+        Task SendEmail(string headerId);
+        Task SendSMS(string headerId);
+        Task<List<TblNotifyEmail>> GetMail(string headerId);
+        Task<List<TblNotifySms>> GetSms(string headerId);
+
         Task<MemoryStream> ExportExcel(MemoryStream outFileStream, string path, string headerId, CalculateResultModel data);
         Task<string> SaveFileHistory(MemoryStream outFileStream, string headerId);
         Task<string> GenarateWordTrinhKy(string headerId, string nameTeam);
@@ -1379,6 +1393,104 @@ namespace DMS.BUSINESS.Services.BU
             }
         }
 
+
+        public async Task SendEmail(string headerId)
+
+        {
+            var customer = _dbContext.TblMdCustomerContact.Where(x => x.Type == "email" && x.IsActive == true);
+            var Template = _dbContext.TblAdConfigTemplate.Where(x => x.Name == "Mẫu email gửi đi").FirstOrDefault();
+            try
+            {
+                DateTime Date = DateTime.Now;
+                var Ngay = $"Từ {Date.Hour}h ngày {Date:dd/MM/yyyy}";
+
+              
+                foreach (var item in customer)
+                {
+                    var info = new TblNotifyEmail()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Email = item.Value,
+                        Subject = Template.Title,
+                        Contents = Template.HtmlSource.Replace("[fromDate]",Ngay),
+                        IsSend = "N",
+                        NumberRetry = 0,
+                        HeaderId=headerId
+                    };
+                    _dbContext.TblCmNotifiEmail.Add(info);
+                }
+              _dbContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                this.Status = false;
+                this.Exception = ex;
+               
+            }
+        }
+        public async Task SendSMS(string headerId)
+
+        {
+            var customer = _dbContext.TblMdCustomerContact.Where(x => x.Type == "email" && x.IsActive == true);
+            var Template = _dbContext.TblAdConfigTemplate.Where(x => x.Name == "SMS thông báo thu phí").FirstOrDefault();
+            try
+            {
+                DateTime Date = DateTime.Now;
+                var Ngay = $"Từ {Date.Hour}h ngày {Date:dd/MM/yyyy}";
+
+
+                foreach (var item in customer)
+                {
+                    var info = new TblNotifySms()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        PhoneNumber = item.Value,
+                        Subject = Template.Title,
+                        Contents = Template.HtmlSource.Replace("[fromDate]", Ngay),
+                        IsSend = "N",
+                        NumberRetry = 0,
+                        HeaderId = headerId
+                    };
+                    _dbContext.TblCmNotifySms.Add(info);
+                }
+                _dbContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                this.Status = false;
+                this.Exception = ex;
+
+            }
+        }
+        public async Task<List<TblNotifySms>> GetSms(string headerID)
+        {
+            try {
+                var data = await _dbContext.TblCmNotifySms.Where(x => x.HeaderId == headerID).ToListAsync();
+                return data;
+            }
+            catch(Exception ex)
+            {
+                this.Status = false;
+                this.Exception = ex;
+                return new List<TblNotifySms>();
+            }
+        }
+        public async Task<List<TblNotifyEmail>> GetMail(string headerID)
+        {
+            try
+            {
+                var data = await _dbContext.TblCmNotifiEmail.Where(x => x.HeaderId == headerID).ToListAsync();
+                return data;
+            }
+            catch (Exception ex)
+            {
+                this.Status = false;
+                this.Exception = ex;
+                return new List<TblNotifyEmail>();
+            }
+        }
         public async Task<InsertModel> GetDataInput(string code)
         {
 
@@ -1420,6 +1532,7 @@ namespace DMS.BUSINESS.Services.BU
             }
             catch (Exception ex)
             {
+
                 return new InsertModel();
             }
         }

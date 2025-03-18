@@ -45,6 +45,8 @@ export class CalculateResultComponent {
   isVisibleHistory: boolean = false
   visibleDrawer: boolean = false
   isVisibleStatus: boolean = false
+  isVisibleEmail: boolean = false
+  isVisibleSms: boolean = false
   isVisibleExport: boolean = false
   isVisibleCustomer: boolean = false
   isVisibleLstTrinhKy: boolean = false
@@ -103,6 +105,8 @@ export class CalculateResultComponent {
 
   lstHistory: any[] = []
   lstHistoryFile: any[] = []
+  lstSMS: any[] = []
+  lstEmail: any[] = []
   goodsResult: any[] = []
   lstCustomer: any[] = []
   lstTrinhKy: any[] = [
@@ -442,6 +446,32 @@ export class CalculateResultComponent {
       },
     })
   }
+  showEmailAction() {
+    this._service.Getmail(this.headerId).subscribe({
+      next: (data) => {
+        this.lstEmail = data
+        console.log(data)
+        this.isVisibleEmail = true
+      },
+      error: (err) => {
+        console.log(err)
+      },
+    })
+  }
+  showSMSAction() {
+  
+    this._service.GetSms(this.headerId).subscribe({
+      next: (data) => {
+        this.lstSMS = data
+        console.log(data)
+        this.isVisibleSms = true
+        
+      },
+      error: (err) => {
+        console.log(err)
+      },
+    })
+  }
   showHistoryExport() {
     this._service.GetHistoryFile(this.headerId).subscribe({
       next: (data) => {
@@ -474,6 +504,8 @@ export class CalculateResultComponent {
     this.isVisibleCustomer = false
     this.isVisibleCustomerPDF = false
     this.lstCustomerChecked = []
+    this.isVisibleEmail = false
+    this.isVisibleSms = false
   }
   reCalculate() {
     this.GetData(this.headerId, 0)
@@ -562,7 +594,31 @@ export class CalculateResultComponent {
 
   cancelSendSMS() {}
 
-  confirmSendSMS() {}
+  confirmSendSMS() {
+    console.log("err")
+    this._service.SendSMS(this.headerId).subscribe({
+    
+      next: (data) => {
+        this.message.create('success', 'Gửi mail thành công')
+      },
+      error: (err) => {
+        console.log(err)
+      },
+    })
+  }
+
+  confirmSendsMail() {
+    console.log("err")
+    this._service.SendMail(this.headerId).subscribe({
+    
+      next: (data) => {
+        this.message.create('success', 'Gửi mail thành công')
+      },
+      error: (err) => {
+        console.log(err)
+      },
+    })
+  }
 
   openNewTab(url: string) {
     window.open(url, '_blank')

@@ -51,6 +51,14 @@
             [appPermission]="IMPORT_BATCH.HISTORY">
             <span nz-icon nzType="history"></span> Lịch sử xuất file
           </button>
+          <button class="!flex !items-center" nzType="default" nz-button (click)="showEmailAction()"
+            [appPermission]="IMPORT_BATCH.HISTORY">
+            <span nz-icon nzType="history"></span> Lịch sử Gửi Mail
+          </button>
+          <button class="!flex !items-center" nzType="default" nz-button (click)="showSMSAction()"
+            [appPermission]="IMPORT_BATCH.HISTORY">
+            <span nz-icon nzType="history"></span>  Lịch sử Gửi SMS
+          </button>
 
           <app-input-clear *ngIf="
               title != 'DỮ LIỆU GỐC'
@@ -93,7 +101,7 @@
           </button>
           <button [appPermission]="IMPORT_BATCH.SEND_EMAIL" nz-popconfirm class="!flex !items-center btn-email"
             nzType="primary" nzPopconfirmTitle="Bạn có chắc chắn gửi Email thông báo cho các khách hàng?"
-            (nzOnConfirm)="confirmSendSMS()" [nzCancelText]="'Huỷ'" [nzOkText]="'Gửi'" (nzOnCancel)="cancelSendSMS()"
+            (nzOnConfirm)="confirmSendsMail()" [nzCancelText]="'Huỷ'" [nzOkText]="'Gửi'" (nzOnCancel)="cancelSendEmail()"
             nzPopconfirmPlacement="bottom" nz-button *ngIf="model.header.status == '04'">
             <span nz-icon nzType="mail"></span> Gửi Email
           </button>
@@ -2141,28 +2149,49 @@
   </ng-container>
 </nz-modal>
 
-<!-- History -->
-<nz-modal nzWidth="60%" [(nzVisible)]="isVisibleHistory" nzTitle="LỊCH SỬ THỰC HIỆN" (nzOnCancel)="handleCancel()"
+<!-- SMS -->
+<nz-modal nzWidth="60%" [(nzVisible)]="isVisibleSms" nzTitle="LỊCH SỬ GỬI SMS" (nzOnCancel)="handleCancel()"
   nzCancelText="Đóng">
   <ng-container *nzModalContent>
-    <nz-table #historyTable [nzData]="lstHistory" nzSize="small">
+    <nz-table #historyTable [nzData]="lstSMS" nzSize="small">
       <thead>
         <tr>
-          <th>Hành động</th>
-          <th>Người cập nhật</th>
-          <th>Thời gian cập nhật</th>
+          <th>Tiêu đề </th>
           <th>Nội dung</th>
+          <th>Trạng Thái</th>
         </tr>
       </thead>
       <tbody>
         @for (data of historyTable.data; track data) {
         <tr>
-          <td>{{ data.action }}</td>
-          <td class="align-center">{{ data.createBy }}</td>
-          <td class="align-center">
-            {{ data.createDate | date: 'dd/MM/yyyy hh:mm:ss' }}
-          </td>
-          <td>{{ data.contents }}</td>
+          <td>{{ data.subject }}</td>
+          <td >{{ data.contents }}</td>
+            <td>{{ data.isSend == "Y" ? "Đã gửi" : "Chưa gửi" }}</td>
+        </tr>
+        }
+      </tbody>
+    </nz-table>
+  </ng-container>
+</nz-modal>
+<!-- MAIL -->
+<nz-modal nzWidth="60%" [(nzVisible)]="isVisibleEmail" nzTitle="LỊCH SỬ GỬI MAIL" (nzOnCancel)="handleCancel()"
+  nzCancelText="Đóng">
+  <ng-container *nzModalContent>
+    <nz-table #historyTable [nzData]="lstEmail" nzSize="small">
+      <thead>
+        <tr>
+          <th>Tiêu đề </th>
+          <th>Nội dung</th>
+          <th>Trạng Thái</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        @for (data of historyTable.data; track data) {
+        <tr>
+          <td>{{ data.subject }}</td>
+          <td >{{ data.contents }}</td>
+            <td>{{ data.isSend == "Y" ? "Đã gửi" : "Chưa gửi" }}</td>
         </tr>
         }
       </tbody>
