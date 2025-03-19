@@ -55,10 +55,15 @@
             [appPermission]="IMPORT_BATCH.HISTORY">
             <span nz-icon nzType="history"></span> Lịch sử Gửi Mail
           </button>
-          <button class="!flex !items-center" nzType="default" nz-button (click)="showSMSAction()"
-            [appPermission]="IMPORT_BATCH.HISTORY">
-            <span nz-icon nzType="history"></span>  Lịch sử Gửi SMS
-          </button>
+
+            <button class="!flex !items-center" nzType="default" nz-button (click)="showSMSAction()"
+                    [appPermission]="IMPORT_BATCH.HISTORY">
+              <span nz-icon nzType="history"></span> Lịch sử Gửi SMS 
+            </button>
+            
+     
+    
+          
 
           <app-input-clear *ngIf="
               title != 'DỮ LIỆU GỐC'
@@ -2165,7 +2170,8 @@
         @for (data of historyTable.data; track data) {
         <tr>
           <td>{{ data.subject }}</td>
-          <td >{{ data.contents }}</td>
+          <!-- <td >{{ data.contents }}</td> -->
+          <td [innerText]="removeHtmlTags(data.contents)"></td>
             <td>{{ data.isSend == "Y" ? "Đã gửi" : "Chưa gửi" }}</td>
         </tr>
         }
@@ -2190,7 +2196,8 @@
         @for (data of historyTable.data; track data) {
         <tr>
           <td>{{ data.subject }}</td>
-          <td >{{ data.contents }}</td>
+          <!-- <td >{{ data.contents }}</td> -->
+          <td [innerText]="removeHtmlTags(data.contents)"></td>
             <td>{{ data.isSend == "Y" ? "Đã gửi" : "Chưa gửi" }}</td>
         </tr>
         }

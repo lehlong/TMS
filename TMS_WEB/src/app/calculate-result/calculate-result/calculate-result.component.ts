@@ -20,6 +20,7 @@ import { FormControl } from '@angular/forms'
   templateUrl: './calculate-result.component.html',
   styleUrl: './calculate-result.component.scss',
 })
+
 export class CalculateResultComponent {
   constructor(
     private _service: CalculateResultService,
@@ -457,6 +458,10 @@ export class CalculateResultComponent {
         console.log(err)
       },
     })
+  }
+  removeHtmlTags(html: string): string {
+    if (!html) return ''; 
+    return html.replace(/<\/?[^>]+(>|$)/g, ""); 
   }
   showSMSAction() {
   
