@@ -326,7 +326,7 @@ export class ConfixTemplateEmailComponent implements AfterViewInit, OnInit {
           },
         ],
       },
-      initialData: '<p>Hello</p>',
+      initialData:this.data.htmlSource,
       link: {
         addTargetToExternalLinks: true,
         defaultProtocol: 'https://',
