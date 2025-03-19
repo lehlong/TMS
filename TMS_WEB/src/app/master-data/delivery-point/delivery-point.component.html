@@ -15,8 +15,7 @@
               <span nz-icon nzType="redo"></span>
             </button>
           </nz-space>
-          <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
-            >
+          <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button>
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
         </nz-space>
@@ -29,9 +28,6 @@
       <thead>
         <tr>
           <th nzWidth="30px">STT</th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" nzWidth="150px">
-            Mã
-          </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)" nzAlign="center">
             Điểm giao hàng
           </th>
@@ -49,9 +45,8 @@
             {{(paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1}}
           </td>
           <td>
-            <a (click)="openEdit(data)">{{ data.code }}</a>
+            <a (click)="openEdit(data)">{{ data.name }}</a>
           </td>
-          <td >{{ data.name }}</td>
           <td class="align-center">{{ data.cuocVcBq | number}}</td>
 
           <td nzAlign="center">
@@ -81,7 +76,7 @@
       <app-input-clear placeholder="Nhập điểm giao hàng" [required]="true" label="Điểm giao hàng"
         [control]="$any(validateForm).controls['name']"></app-input-clear>
 
-        <app-input-clear placeholder="Nhập cước vận chuyển bình quân" [required]="true" label="Cước vận chuyển bình quân"
+      <app-input-clear placeholder="Nhập cước vận chuyển bình quân" [required]="true" label="Cước vận chuyển bình quân"
         [control]="$any(validateForm).controls['cuocVcBq']"></app-input-clear>
 
       <nz-form-item>
@@ -99,14 +94,14 @@
 <ng-template #extra>
   <nz-space>
     <ng-container *ngIf="edit">
-      <button [nzLoading]="loading"  *nzSpaceItem nz-button nzType="primary"
-        class="!flex !items-center" (click)="submitForm()">
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>
     <ng-container *ngIf="!edit">
-      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary"
-        class="!flex !items-center" (click)="submitForm()">
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>

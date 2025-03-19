@@ -51,6 +51,7 @@ namespace DMS.API.Controllers.MD
         public async Task<IActionResult> Insert([FromBody] MarketDto Market)
         {
             var transferObject = new TransferObject();
+            Market.Code = Guid.NewGuid().ToString();
             var result = await _service.Add(Market);
             if (_service.Status)
             {

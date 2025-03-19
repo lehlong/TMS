@@ -16,7 +16,7 @@ namespace DMS.BUSINESS.Services.MD
 {
     public interface IGiaGiaoTapDoanService : IGenericService<TblMdGiaGiaoTapDoan, GiaGiaoTapDoanDto>
     {
-        Task<List<GgtdModel>> GetAll();
+        Task<GgtdModel> GetAll();
         Task<byte[]> Export(BaseMdFilter filter);
         Task<GgtdModel> BuildDataCreate();
         Task<GgtdModel> InsertData(GgtdModel model);
@@ -48,14 +48,14 @@ namespace DMS.BUSINESS.Services.MD
                 return null;
             }
         }
-        public async Task<List<GgtdModel>> GetAll()
+        public async Task<GgtdModel> GetAll()
         {
             try
             {
-                var lstGgtdL = _dbContext.TblMdGiaGiaoTapDoanList.OrderByDescending(x => x.FDate).ToList();
+                var lstGgtdL = _dbContext.TblMdGiaGiaoTapDoanList.Where(x => x.IsActive == null).OrderByDescending(x => x.FDate).ToList();
                 var lstGgtd = await _dbContext.TblMdGiaGiaoTapDoan.ToListAsync();
 
-                var data = new List<GgtdModel>();
+                var data = new GgtdModel();
 
                 foreach (var item in lstGgtdL)
                 {
@@ -65,7 +65,7 @@ namespace DMS.BUSINESS.Services.MD
                     ggtdlModel.Ggtd = lstGgtd.Where(x => x?.GgtdlCode == item.Code).ToList();
                     
                     
-                    data.Add(ggtdlModel);
+                    data = ggtdlModel;
                 }
 
                 return data;
@@ -103,8 +103,6 @@ namespace DMS.BUSINESS.Services.MD
 
 
                 ggtdModel.oldHeaderGgtd = OldGgtdList == null ? "" : OldGgtdList.Code;
-
-
 
                 ggtdModel.GgtdlHeader.Code = Guid.NewGuid().ToString();
                 ggtdModel.GgtdlHeader.FDate = DateTime.Now;

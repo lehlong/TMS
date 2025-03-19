@@ -18,7 +18,7 @@ import { WarehouseService } from '../../services/master-data/warehouse.service'
 })
 export class MarketComponent {
   validateForm: FormGroup = this.fb.group({
-    code: ['', [Validators.required]],
+    code: [''],
     name: ['', [Validators.required]],
     gap: ['', [Validators.required]],
     coefficient: [1.1, [Validators.required]],
