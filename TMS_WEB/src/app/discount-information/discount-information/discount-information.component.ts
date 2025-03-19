@@ -55,7 +55,9 @@ export class DiscountInformationComponent {
   model: any = {
     goodss: [{
       code: '',
-      hs: []
+      hs: [],
+      discountCompany:[],
+      discount:[]
     }],
     header: {
       name: '',

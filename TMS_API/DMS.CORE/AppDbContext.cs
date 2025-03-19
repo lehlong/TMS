@@ -190,6 +190,7 @@ namespace DMS.CORE
         public DbSet<TblInHeSoMatHang> TblInHeSoMatHang { get; set; }
         public DbSet<TblInDiscountCompetitor> TblInDiscountCompetitor { get; set; }
         public DbSet<TbLInCustomerFob> TbLInCustomerFob { get; set; }
+        public DbSet<TblInDiscountCompany> TblInDiscountCompany { get; set; }
 
         #endregion
 

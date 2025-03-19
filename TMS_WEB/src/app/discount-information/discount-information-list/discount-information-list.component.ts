@@ -45,6 +45,7 @@ export class DiscountInformationListComponent {
       {
         code: '',
         hs: [],
+        discountCompany:[]
       },
     ],
     header: {
@@ -79,18 +80,17 @@ export class DiscountInformationListComponent {
     })
   }
 
-  ngOnInit() {
+  ngOnInit() {    
     this.search()
     this.getAllGoods()
     this.getAllCompetitor()
-    this.searchLstCaculate()
   }
 
   search() {
     this.isSubmit = false
     this._service.searchDiscountInformationList(this.filter).subscribe({
       next: (data) => {
-        this.paginationResult = data
+        this.paginationResult = data    
       },
       error: (response) => {
         console.log(response)
@@ -99,21 +99,24 @@ export class DiscountInformationListComponent {
   }
 
   searchLstCaculate() {
-    this.isSubmit = false
+    this.isSubmit = false;
     this._caculateResultServicer.getall().subscribe({
       next: (data) => {
-        this.lstCaculate = data
+        const temp = data;
+        this.lstCaculate = temp.filter((t: any) =>
+          !this.paginationResult.data.some((item:any) => item.code == t.code)
+        );
       },
       error: (response) => {
-        console.log(response)
+        console.log(response);
       },
-    })
+    });
   }
+  
   getAll() {
     this._service.getAll().subscribe({
       next: (data) => {
         this.list = data
-        console.log(this.list)
       },
       error: (resp) => {
         console.log(resp)
@@ -127,17 +130,19 @@ export class DiscountInformationListComponent {
         `Vui lòng nhập tên đợt nhập`,
       )
       // return
-    }
+    }    
     if (this.model.header.name != '') {
       this._service.createData(this.model).subscribe({
         next: (data) => {
-          console.log(data)
+          this.router.navigate([`/discount-information/detail/${this.model.header.code}`])
+          
         },
       })
     }
   }
 
   openCreate() {
+    this.searchLstCaculate()
     this.edit = false
     this.visible = true
     // this._service.getObjectCreate(this.code).subscribe({

@@ -45,16 +45,18 @@ namespace DMS.BUSINESS.Services.BU
                 var lstMarket = await _dbContext.TblMdMarket.OrderBy(x => x.Code).ToListAsync();
                 var lstDiscountCompetitor = await _dbContext.TblInDiscountCompetitor.Where(x => x.HeaderCode == Code).ToListAsync();
                 var lstMarketCompetitor = await _dbContext.TblMdMarketCompetitor.OrderBy(x => x.Code).ToListAsync();
+                var vinhCuaLo =  await _dbContext.TblInVinhCuaLo.Where(x=> x.HeaderCode == Code).ToListAsync();
 
                 var lstDIL = await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == Code).ToListAsync();
                 data.lstDIL = lstDIL;
                 var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive == true).OrderBy(x => x.CreateDate).ToListAsync();
+                var discountCompany = await _dbContext.TblInDiscountCompany.Where(x => x.HeaderCode == Code).ToListAsync();
                 data.lstGoods = lstGoods;
                 var lstCompetitor = await _dbContext.TblMdCompetitor.OrderBy(x => x.Code).ToListAsync();
                 data.lstCompetitor = lstCompetitor;
 
                 var orderMarket = 1;
-                var plxna = 1300;
+                //var plxna = 1300;
                 var z11 = 1961;
 
                 var row1 = new discout
@@ -73,16 +75,17 @@ namespace DMS.BUSINESS.Services.BU
                 {
                     var ck = new CK
                     {
-                        plxna = plxna,
+                        plxna = discountCompany.FirstOrDefault(d => d.GoodsCode == g.Code).Discount ?? 0,
                     };
 
                     foreach (var c in lstCompetitor)
                     {
+                        var item = vinhCuaLo.FirstOrDefault(v => v.GoodsCode == g.Code);
                         var dt = new DT();
 
-                        var ck1 = lstDiscountCompetitor.Where(x => x.CompetitorCode == c.Code && x.GoodsCode == g.Code).Sum(x => x.Discount ?? 0 );
-                        dt.ckCl.Add(ck1);
-                        dt.ckCl.Add(ck1 - plxna);
+                        var ck1 = (c.Code == "APP" ? (0.02m * item.GblcsV1) + lstDiscountCompetitor.Where(x => x.CompetitorCode == c.Code && x.GoodsCode == g.Code).Sum(x => x.Discount ?? 0 ) : lstDiscountCompetitor.Where(x => x.CompetitorCode == c.Code && x.GoodsCode == g.Code).Sum(x => x.Discount ?? 0));
+                        dt.ckCl.Add(Math.Round((decimal)ck1, 0));
+                        dt.ckCl.Add(Math.Round(ck1 - discountCompany.FirstOrDefault(d => d.GoodsCode == g.Code).Discount ?? 0, 0));
 
                         ck.DT.Add(dt);
                     }
@@ -120,7 +123,7 @@ namespace DMS.BUSINESS.Services.BU
                     foreach (var c in lstCompetitor)
                     {
                         var gap = lstMarketCompetitor.Where(x => x.CompetitorCode == c.Code && x.MarketCode == m.Code).Sum(x => x.Gap == 0 ? m.Gap + 120 : x.Gap);
-                        var cuocVc = lstMarketCompetitor.Where(x => x.CompetitorCode == c.Code && x.MarketCode == m.Code).Sum(x => x.Gap == 0 ? m.CuocVCBQ + 200 : x.Gap * (decimal)z11 / 1000 ?? 0);
+                        var cuocVc = c.Code == "APP" ? lstMarketCompetitor.Where(x => x.CompetitorCode == c.Code && x.MarketCode == m.Code).Sum(x => x.Gap * (decimal)z11 / 1000 ?? 0) : m.CuocVCBQ + 200;
                         d.gaps.Add(Math.Round(gap ?? 0)); 
                         d.cuocVCs.Add(cuocVc != null ? Math.Round((decimal)cuocVc, 0) : 0);
                     }
@@ -128,17 +131,20 @@ namespace DMS.BUSINESS.Services.BU
                     {
                         var ck = new CK
                         {
-                            plxna = plxna - m.CuocVCBQ,
+                            plxna = discountCompany.FirstOrDefault(d => d.GoodsCode == g.Code).Discount - m.CuocVCBQ,
                         };
                         foreach (var c in lstCompetitor)
                         {
+                            var item = vinhCuaLo.FirstOrDefault(v => v.GoodsCode == g.Code);
                             var dt = new DT();
-                            
+                            var discountCompetitor = lstDiscountCompetitor.Where(x => x.CompetitorCode == c.Code && x.GoodsCode == g.Code).Sum(x => x.Discount) ?? 0m;
                             var gap = lstMarketCompetitor.Where(x => x.CompetitorCode == c.Code && x.MarketCode == m.Code).Sum(x => x.Gap == 0 ? m.Gap + 120 : x.Gap);
-                            var cuocVc = gap * z11 / 1000;
-                            var ck1 = lstDiscountCompetitor.Where(x => x.CompetitorCode == c.Code && x.GoodsCode == g.Code).Sum(x => x.Discount - cuocVc) ;
+                            var cuocVc = c.Code == "APP" ? gap * z11 / 1000 : m.CuocVCBQ + 200;
+                            var ck1 = c.Code == "APP"
+                            ? 0.02m * item.GblcsV1 + Math.Round(discountCompetitor , 0) - (cuocVc != null ? Math.Round((decimal)cuocVc, 0) : 0)
+                            : discountCompetitor - (cuocVc != null ? Math.Round((decimal)cuocVc, 0) : 0);
                             dt.ckCl.Add(Math.Round((decimal)ck1, 0));
-                            dt.ckCl.Add(Math.Round((decimal)(ck1 - (plxna - m.CuocVCBQ)), 0));
+                            dt.ckCl.Add(Math.Round((decimal)(ck1 - (discountCompany.FirstOrDefault(d => d.GoodsCode == g.Code).Discount - m.CuocVCBQ)), 0));
 
                             ck.DT.Add(dt);
                         }
@@ -168,7 +174,7 @@ namespace DMS.BUSINESS.Services.BU
                 foreach (var g in model.goodss)
                 {
                     _dbContext.TblInDiscountCompetitor.UpdateRange(g.HS);
-                   
+                    _dbContext.TblInDiscountCompany.UpdateRange(g.DiscountCompany);
                 }
 
                 await _dbContext.SaveChangesAsync();

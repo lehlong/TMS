@@ -97,11 +97,11 @@
       </div>
       <nz-divider nzText="HỆ SỐ MẶT HÀNG" nzOrientation="left"></nz-divider>
 
-      <nz-table #hsTable [nzData]="model.goodss" nzSize="small">
+      <nz-table #hsTable [nzData]="model.goodss" [nzFrontPagination]="false" nzSize="small">
         <thead>
           <tr>
             <th rowspan="2" [nzAlign]="'center'"></th>
-
+            <th rowspan="2" [nzAlign]="'center'">Mức giảm giá công ty</th>
             @for (c of competitorResult; track c) {
             <th rowspan="2" [nzAlign]="'center'">{{ c.name }}</th>
             }
@@ -117,6 +117,11 @@
                 </nz-option>
               </nz-select>
             </td>
+            @for (d of data.discountCompany; track d) {
+              <td>
+                <input class="input-v" nz-input [(ngModel)]="d.discount" placeholder="0" type="number" />
+              </td>
+              }
             @for (d of data.hs; track d) {
             <td>
               <input class="input-v" nz-input [(ngModel)]="d.discount" placeholder="0" type="number" />

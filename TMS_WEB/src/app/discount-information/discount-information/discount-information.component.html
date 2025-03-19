@@ -151,6 +151,7 @@
         <thead>
           <tr>
             <th rowspan="2" [nzAlign]="'center'"></th>
+            <th rowspan="2" [nzAlign]="'center'">Mức giảm giá công ty</th>
             @for (c of data.lstCompetitor; track c) {
             <th rowspan="2" [nzAlign]="'center'">{{ c.name }}</th>
             }
@@ -166,6 +167,11 @@
                 </nz-option>
               </nz-select>
             </td>
+            @for (q of d.discountCompany; track q) {
+              <td>
+                <input class="input-v" nz-input [(ngModel)]="q.discount" placeholder="0" type="number" />
+              </td>
+              }
             @for (hs of d.hs; track hs) {
             <td>
               <input class="input-v" nz-input [(ngModel)]="hs.discount" placeholder="0" type="number" />

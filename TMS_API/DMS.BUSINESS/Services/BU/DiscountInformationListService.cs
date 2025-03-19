@@ -52,7 +52,9 @@ namespace DMS.BUSINESS.Services.BU
                 foreach (var g in model.goodss)
                 {
                     _dbContext.TblInDiscountCompetitor.AddRange(g.HS);
-                };
+                    _dbContext.TblInDiscountCompany.AddRange(g.DiscountCompany);
+                }
+                ;
                 await _dbContext.SaveChangesAsync();
             }
             catch(Exception ex)
@@ -66,7 +68,7 @@ namespace DMS.BUSINESS.Services.BU
         {
 
             var dateTimeNow = DateTime.Now;
-            var fdate = await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.FDate).FirstOrDefaultAsync();
+            //var fdate = await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.FDate).FirstOrDefaultAsync();
             try
             {
 
@@ -75,10 +77,14 @@ namespace DMS.BUSINESS.Services.BU
                 obj.Header.Code = code;
                 obj.Header.Name = await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.Name).FirstOrDefaultAsync() ?? "";
                 //obj.Header.FDate = DateTime.Now;
-                obj.Header.FDate = await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.FDate).FirstOrDefaultAsync() != null ? await _dbContext.TblBuDiscountInformationList.Where(x => x.Code == code).Select(x => x.FDate).FirstOrDefaultAsync() : dateTimeNow;
+                obj.Header.FDate = await _dbContext.TblBuCalculateResultList
+                .Where(x => x.Code == code)
+                .Select(x => (DateTime?)x.FDate)
+                .FirstOrDefaultAsync() ?? dateTimeNow;
+
                 obj.Header.IsActive = true;
 
-                var lstGoods = await _dbContext.TblMdGoods.OrderBy(x => x.Code).ToListAsync();
+                var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive == true).OrderBy(x => x.Code).ToListAsync();
                 var lstCompetitor = await _dbContext.TblMdCompetitor.OrderBy(x => x.Code).ToListAsync();
                 var lstDiscountInformation = await _dbContext.TblInDiscountCompetitor.Where(x => x.HeaderCode == code).ToArrayAsync();
 
@@ -96,8 +102,15 @@ namespace DMS.BUSINESS.Services.BU
                             Discount = lstDiscountInformation.Where(x => x.GoodsCode == g.Code && x.CompetitorCode == c.Code).Sum(x => x.Discount ?? 0.00M),
                             CompetitorCode = c.Code,
                             IsActive = true,
-                        });
+                        });               
                     }
+                    goods.DiscountCompany.Add(new TblInDiscountCompany
+                    {
+                        Code = await _dbContext.TblInDiscountCompany.Where(x => x.HeaderCode == code && x.GoodsCode == g.Code).Select(x => x.Code).FirstOrDefaultAsync() ?? Guid.NewGuid().ToString(),
+                        HeaderCode = obj.Header.Code,
+                        GoodsCode = g.Code,
+                        Discount = await _dbContext.TblInDiscountCompany.Where(x => x.HeaderCode == code && x.GoodsCode == g.Code).Select(x => x.Discount).FirstOrDefaultAsync() ?? 0
+                    });
                     obj.goodss.Add(goods);
                 }
                 return obj;
@@ -149,5 +162,7 @@ namespace DMS.BUSINESS.Services.BU
     {
         public string? Code { get; set; }
         public List<TblInDiscountCompetitor> HS { get; set; } = new List<TblInDiscountCompetitor>();
+
+        public List<TblInDiscountCompany> DiscountCompany { get; set; } = new List<TblInDiscountCompany>();
     }
 }
