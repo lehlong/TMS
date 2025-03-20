@@ -15,7 +15,10 @@ export class RetailPriceService {
   getall(): Observable<any> {
     return this.commonService.get('RetailPrice/GetAll')
   }
-
+  getDataInput(): Observable<any> {
+    // return this.commonService.get('GiaGiaoTapDoan/BuildDataInput')
+    return this.commonService.get('RetailPrice/BuildDataInput')
+  }
   createRetailPrice(params: any): Observable<any> {
     return this.commonService.post('RetailPrice/Insert', params)
   }

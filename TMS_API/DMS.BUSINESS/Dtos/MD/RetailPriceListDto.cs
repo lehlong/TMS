@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
-using Common;
 using DMS.CORE.Entities.MD;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 
 namespace DMS.BUSINESS.Dtos.MD
 {
-    public class RetailPriceDto : BaseMdDto, IDto, IMapFrom
+    class RetailPriceListDto : BaseMdDto, IDto, IMapFrom
     {
         [Description("STT")]
         public int OrdinalNumber { get; set; }
@@ -21,26 +21,17 @@ namespace DMS.BUSINESS.Dtos.MD
         public string Code { get; set; }
 
         [Description("Tên")]
-        public string GoodsCode { get; set; }
+        public string? Name { get; set; }
 
-        [Description("Mã khách hàng")]
-        public string GbllCode { get; set; }
-
-        [Description("Giá cũ")]
-        public float OldPrice { get; set; }
-
-        [Description("Giá mới")]
-        public float NewPrice { get; set; }
-
-        [Description("Ngày tạo")]
-        public DateTime? CreateDate { get; set; }
+        [Description("Ngày bắt tạo")]
+        public DateTime? FDate { get; set; }
 
         [Description("Trạng thái")]
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<TblMdRetailPrice, RetailPriceDto>().ReverseMap();
+            profile.CreateMap<TblMdRetailPriceList, RetailPriceListDto>().ReverseMap();
         }
     }
 }

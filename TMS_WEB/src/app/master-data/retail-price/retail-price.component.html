@@ -15,8 +15,7 @@
               <span nz-icon nzType="redo"></span>
             </button>
           </nz-space>
-          <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button
-            >
+          <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button>
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
           <!-- <button
@@ -38,15 +37,12 @@
       [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data">
       <thead>
         <tr>
-          <th nzWidth="30px">STT</th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" >
+          <!-- <th nzWidth="30px">STT</th> -->
+          <!-- <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" >
             Mã
-          </th>
+          </th> -->
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('goodsCode', $event)">
             Mặt hàng
-          </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('localCode', $event)">
-            Vùng
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('oldPrice', $event)">
             Giá cũ
@@ -54,45 +50,42 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('newPrice', $event)">
             Giá mới
           </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('fromDate', $event)" nzAlign="center">
-            Từ ngày
-          </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('toDate', $event)" nzAlign="center">
-            Đến ngày
-          </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('isActive', $event)" nzAlign="center">
+          <!-- <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('isActive', $event)" nzAlign="center">
             Trạng thái
-          </th>
+          </th> -->
         </tr>
       </thead>
+      
       <tbody>
-        <tr *ngFor="let data of headerTable.data; let i = index" (dblclick)="openEdit(data)">
+        <ng-container *ngFor="let gbl of data.gbl; let i = index">
+        <tr (dblclick)="openEdit(data)">
+
           <td>
             {{ (paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1 }}
           </td>
+
           <td>
-            <a (click)="openEdit(data)">{{ data.code }}</a>
-          </td>
-          <td>
-            <span *ngFor="let item of goodsResult" >
-              <span *ngIf="item.code == data.goodsCode">{{ item.code + ' - ' + item.name }}</span>
+            <span *ngFor="let item of goodsResult">
+              <a *ngIf="item.code == gbl.goodsCode" (click)="openEdit(data)">{{ item.name }}</a>
             </span>
           </td>
-          <td>
-            <span *ngFor="let item of localResult" >
-              <span *ngIf="item.code == data.localCode">{{ item.name }}</span>
+
+          <!-- <td>
+            <span *ngFor="let item of goodsResult">
+              <span *ngIf="item.code == data.goodsCode">{{ item.name }}</span>
             </span>
-          </td>
-          <td class="align-right">{{ data.oldPrice }}</td>
-          <td class="align-right">{{ data.newPrice }}</td>
-          <td>{{ data.fromDate | date: 'dd/MM/yyyy HH:mm'}}</td>
-          <td>{{ data.toDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+          </td> -->
+
+          <td class="align-right">{{ gbl.oldPrice }}</td>
+          <td class="align-right">{{ gbl.newPrice }}</td>
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
               nzTheme="outline"></span>
           </td>
         </tr>
+      </ng-container>
       </tbody>
+
     </nz-table>
   </div>
   <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
@@ -102,15 +95,11 @@
   </div>
 </div>
 
-<!--Create Update-->
+<!-- Create Update
 <nz-drawer nzWidth="40%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-      <app-input-clear placeholder="Nhập mã " [required]="true" label="Mã "
-        [control]="$any(validateForm).controls['code']" [required]="true"
-        [disabled]="edit ? true : false"></app-input-clear>
-
       <nz-form-item>
         <nz-form-label [nzRequired]="true">Mặt hàng</nz-form-label>
         <nz-form-control nzErrorTip="Không được để trống">
@@ -179,6 +168,87 @@
     <ng-container *ngIf="!edit">
       <button [nzLoading]="loading" *nzSpaceItem  nz-button nzType="primary"
         class="!flex !items-center" (click)="submitForm()">
+        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+      </button>
+    </ng-container>
+    <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger
+      (click)="close()">
+      <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
+    </button>
+  </nz-space>
+</ng-template> -->
+<nz-drawer nzWidth="40%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+  [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
+  <ng-container *nzDrawerContent>
+    <div>
+      <nz-divider nzText="Ngày" nzOrientation="left"></nz-divider>
+      <nz-form-item style="padding-right: 16px;">
+        <!-- <nz-form-label [nzRequired]="true">Từ ngày</nz-form-label> -->
+        <nz-form-control nzErrorTip="Không đươc để trống" >
+          <nz-date-picker nzShowTime nzFormat="HH:mm dd-MM-yyyy " (ngModelChange) = checkDate()
+            [(ngModel)]="model.gbllHeader.fDate" [disabled]="model.gbllHeader.isActive != null"></nz-date-picker>
+        <div style="color: red" *ngIf="isDateValid">Ngày tạo phải lớn hơn ngày đã tạo</div>
+          </nz-form-control>
+      </nz-form-item>
+    </div>
+    <nz-divider nzText="Giá bán lẻ" nzOrientation="left"></nz-divider>
+
+    <nz-table #TableInput [nzData]="model.gbl" nzSize="small">
+      <thead>
+        <tr>
+          <th [nzAlign]="'center'">Mặt hàng</th>
+          <th [nzAlign]="'center'">Giá cũ</th>
+          <th [nzAlign]="'center'">Giá mới</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        @for (data of TableInput.data; track data) {
+        <tr>
+          <td style="width: 20%">
+            <nz-select nzShowSearch nzAllowClear placeholder="Mặt hàng" [(ngModel)]="data.goodsCode" [nzDisabled]="true"
+              style="width: 100%">
+              <nz-option cdkScrollable *ngFor="let item of goodsResult" [nzLabel]="item.name" [nzValue]="item.code">
+              </nz-option>
+            </nz-select>
+          </td>
+          <td>
+            <input [disabled]="true" class="input-v" nz-input [(ngModel)]="data.oldPrice" type="number" />
+          </td>
+          <td>
+            <input [disabled]="model.gbllHeader.isActive != null" class="input-v" nz-input [(ngModel)]="data.newPrice" type="number" />
+          </td>
+          
+        </tr>
+        }
+      </tbody>
+    </nz-table>
+
+    <!-- </div> -->
+
+    <!-- <nz-form-item>
+        <nz-form-label>Trạng thái</nz-form-label>
+        <nz-form-control>
+          <nz-radio-group formControlName="isActive">
+            <label nz-radio [nzValue]="true">Kích hoạt</label>
+            <label nz-radio [nzValue]="false">Khoá</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item> -->
+    <!-- </form> -->
+  </ng-container>
+</nz-drawer>
+<ng-template #extra>
+  <nz-space>
+    <ng-container *ngIf="edit">
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitForm()">
+        <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
+      </button>
+    </ng-container>
+    <ng-container *ngIf="!edit">
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitForm()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>

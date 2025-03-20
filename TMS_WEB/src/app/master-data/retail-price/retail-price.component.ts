@@ -35,10 +35,17 @@ export class RetailPriceComponent {
   filter = new RetailPriceFilter()
   paginationResult = new PaginationResult()
   localResult: any[] = []
+  data: any = []
+  isDateValid: boolean = false
+  date: Date = new Date()
   goodsResult: any[] = []
   loading: boolean = false
   GOODS_RIGHTS = GOODS_RIGHTS
   MASTER_DATA_MANAGEMENT = MASTER_DATA_MANAGEMENT
+  model: any = {
+    gbllHeader: {},
+    gbl: []
+  }
 
   constructor(
     private _service: RetailPriceService,
@@ -99,7 +106,25 @@ export class RetailPriceComponent {
       }
     })
   }
+  formatDateTime(date: string | null): string {
+    if (date) {
+      const d = new Date(date);
+      // d.setHours(d.getHours() + 5); // Cộng thêm 5 tiếng
+      if (d > this.date) {
+        this.date = d
+        // console.log(this.date);
 
+      }
+      return d.toLocaleString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric'
+      });
+    }
+    return 'Không có ngày giờ';
+  }
   search() {
     this.isSubmit = false
     this._service.searchRetailPrice(this.filter).subscribe({
@@ -143,45 +168,55 @@ export class RetailPriceComponent {
   submitForm(): void {
     this.isSubmit = true
 
-    if (this.validateForm.get('toDate')?.value > this.validateForm.get('fromDate')?.value) {
+    if (this.model) {
 
-      if (this.validateForm.valid) {
-        const formData = this.validateForm.getRawValue()
-        if (this.edit) {
-          this._service.updateRetailPrice(formData).subscribe({
-            next: (data) => {
+      const formData = this.model
+      if (this.edit) {
+        this._service.updateRetailPrice(formData).subscribe({
+          next: (data) => {
+            if (data.oldHeaderGgtd == 'false') {
+              this.message.error(
+                `Ngày tạo không được nhỏ hơn ngày đã tạo`,
+              )
+            } else {
               this.search()
-            },
-            error: (response) => {
-              console.log(response)
-            },
-          })
-        } else {
-          if (this.isCodeExist(formData.code)) {
+            }
+          },
+          error: (response) => {
             this.message.error(
-              `Mã khu vục ${formData.code} đã tồn tại, vui lòng nhập lại`,
+              `Ngày tạo không được nhỏ hơn ngày tạo`,
             )
-            return
-          }
-          this._service.createRetailPrice(formData).subscribe({
-            next: (data) => {
+            console.log(response)
+          },
+        })
+      } else {
+        if (this.date > this.model.ggtdlHeader.fDate) {
+          this.message.error("Ngày kết thúc phải lớn hơn ngày đã tạo")
+          return;
+        }
+        this._service.createRetailPrice(formData).subscribe({
+          next: (data) => {
+              if (data.oldHeaderGgtd == 'false') {
+                this.message.error(
+                  `Ngày tạo không được nhỏ hơn ngày đã tạo`,
+                )
+              } else {
+                this.search()
+              }
               this.search()
             },
-            error: (response) => {
-              console.log(response)
-            },
-          })
-        }
-      } else {
-        Object.values(this.validateForm.controls).forEach((control) => {
-          if (control.invalid) {
-            control.markAsDirty()
-            control.updateValueAndValidity({ onlySelf: true })
-          }
+          error: (response) => {
+            console.log(response)
+          },
         })
       }
     } else {
-      this.message.error("Ngày kết thúc phải lớn hơn ngày tạo")
+      Object.values(this.validateForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty()
+          control.updateValueAndValidity({ onlySelf: true })
+        }
+      })
     }
   }
 
@@ -196,10 +231,20 @@ export class RetailPriceComponent {
   }
 
   openCreate() {
-    this.edit = false
-    this.visible = true
-  }
+    this._service.getDataInput().subscribe({
+      next: (data) => {
+        console.log(this.model);
+        this.model = data
+        console.log(this.model);
+        this.edit = false
+        this.visible = true
+      },
+      error: (response) => {
+        console.log(response)
+      },
+    })
 
+  }
   resetForm() {
     this.validateForm.reset()
     this.isSubmit = false

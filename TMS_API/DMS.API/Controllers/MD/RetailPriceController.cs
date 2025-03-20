@@ -47,6 +47,24 @@ namespace DMS.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+        [HttpGet("BuildDataInput")]
+        public async Task<IActionResult> BuildDataInput()
+        {
+            var transferObject = new TransferObject();
+
+            var result = await _service.BuildDataCreate();
+            if (_service.Status)
+            {
+                transferObject.Data = result;
+            }
+            else
+            {
+                transferObject.Status = false;
+                transferObject.MessageObject.MessageType = MessageType.Error;
+                transferObject.GetMessage("0001", _service);
+            }
+            return Ok(transferObject);
+        }
         [HttpPost("Insert")]
         public async Task<IActionResult> Insert([FromBody] RetailPriceDto RetailPrice)
         {

@@ -18,15 +18,8 @@ namespace DMS.CORE.Entities.MD
 
         [Column("GOODS_CODE", TypeName = "VARCHAR(50)")]    
         public string GoodsCode { set; get; }
-
-        [Column("LOCAL_CODE", TypeName = "VARCHAR(50)")]
-        public string LocalCode { set; get; }
-
-        [Column("TO_DATE", TypeName = "DATETIME")]
-        public DateTime ToDate { set; get; }
-
-        [Column("FROM_DATE", TypeName = "DATETIME")]
-        public DateTime? FromDate { set; get; }
+        [Column("GBL_CODE", TypeName = "VARCHAR(50)")]
+        public string? GbllCode { set; get; }
 
         [Column("OLD_PRICE", TypeName = "FLOAT")]
         public float OldPrice { set; get; }
