@@ -132,7 +132,7 @@ export class CalculateResultComponent {
         const code = params.get('code')
         this.headerId = code
         if(this.accountGroups != 'G_NV_K'){
-          this.GetData(code, 0)
+          this.changeTitle('DỮ LIỆU GỐC',0)
         }
         else{
           this.changeTitle('PT',1)

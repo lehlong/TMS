@@ -63,7 +63,13 @@
 .d-block{
   display: block;
 }
-
 ::ng-deep .ant-select-item-option-disabled {
   color: black;
+}
+
+ .container-list {
+  overflow-y: scroll;
+}
+::ng-deep .ant-page-header-heading-left{
+  width: 12%;
 }
