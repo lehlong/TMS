@@ -100,7 +100,7 @@ export class DiscountInformationListComponent {
 
   searchLstCaculate() {
     this.isSubmit = false;
-    this._caculateResultServicer.getall().subscribe({
+    this._caculateResultServicer.getStatus("04").subscribe({
       next: (data) => {
         const temp = data;
         this.lstCaculate = temp.filter((t: any) =>

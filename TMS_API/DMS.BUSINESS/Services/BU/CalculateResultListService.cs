@@ -86,6 +86,11 @@ namespace DMS.BUSINESS.Services.BU
                 {
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
+                if (filter.KeyWord != null)
+                {
+                    query = query.Where(x => x.Status == filter.KeyWord);
+
+                }
                 return await base.GetAllMd(query, filter);
             }
             catch (Exception ex)

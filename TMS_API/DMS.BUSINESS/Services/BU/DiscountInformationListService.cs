@@ -2,6 +2,7 @@
 using Common;
 using DMS.BUSINESS.Common;
 using DMS.BUSINESS.Dtos.BU;
+using DMS.BUSINESS.Models;
 using DMS.CORE;
 using DMS.CORE.Entities.BU;
 using DMS.CORE.Entities.IN;
@@ -104,12 +105,32 @@ namespace DMS.BUSINESS.Services.BU
                             IsActive = true,
                         });               
                     }
+
+                    var discount = await _dbContext.TblInDiscountCompany
+                        .Where(x => x.HeaderCode == code && x.GoodsCode == g.Code)
+                        .Select(x => x.Discount)
+                        .FirstOrDefaultAsync();
+
+                    if (discount == null)
+                    {
+                        var codeDiscountInformationList = await _dbContext.TblBuDiscountInformationList.OrderByDescending(x => x.FDate).Select(x => x.Code).FirstOrDefaultAsync();
+
+                        discount = await _dbContext.TblInDiscountCompany
+                         .Where(x => x.GoodsCode == g.Code && x.HeaderCode == codeDiscountInformationList)
+                         .Select(x => x.Discount)
+                         .FirstOrDefaultAsync();
+                        Console.WriteLine($"Tìm thấy Discount: {discount}");
+                        Console.WriteLine($"Tìm thấy Code: {codeDiscountInformationList}");
+                    }
+
+                    
+
                     goods.DiscountCompany.Add(new TblInDiscountCompany
                     {
                         Code = await _dbContext.TblInDiscountCompany.Where(x => x.HeaderCode == code && x.GoodsCode == g.Code).Select(x => x.Code).FirstOrDefaultAsync() ?? Guid.NewGuid().ToString(),
                         HeaderCode = obj.Header.Code,
+                        Discount = discount ?? 0,
                         GoodsCode = g.Code,
-                        Discount = await _dbContext.TblInDiscountCompany.Where(x => x.HeaderCode == code && x.GoodsCode == g.Code).Select(x => x.Discount).FirstOrDefaultAsync() ?? 0
                     });
                     obj.goodss.Add(goods);
                 }

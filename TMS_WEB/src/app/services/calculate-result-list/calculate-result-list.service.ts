@@ -16,6 +16,10 @@ export class CalculateResultListService {
     return this.commonService.get('CalculateResultList/GetAll');
   }
 
+  getStatus(status:string): Observable<any> {
+    return this.commonService.get(`CalculateResultList/GetAll?keyword=${status}`);
+  }
+
   getObjectCreate(): Observable<any> {
     return this.commonService.get('CalculateResultList/GetObjectCreate');
   }
