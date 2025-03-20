@@ -97,7 +97,7 @@
         <div class="inner-box">
           <label>Ngày hiệu lực</label>
           <br>
-          <nz-date-picker nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss" [(ngModel)]="model.header.fDate"></nz-date-picker>
+          <nz-date-picker nzShowTime nzFormat="HH:mm dd-MM-yyyy" [(ngModel)]="model.header.fDate"></nz-date-picker>
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="7">
@@ -115,26 +115,24 @@
       <nz-form-control nzErrorTip="Không được để trống">
         <nz-select nzShowSearch nzAllowClear [nzPlaceHolder]="'Chọn người ký'" [formControl]="nguoiKyControl"
           [(ngModel)]="selectedValue">
-  
-  
+
+
           <nz-option *ngFor="let item of signerResult" [nzLabel]="item.position + ' - ' + item.name" [nzValue]="item">
           </nz-option>
-  
+
         </nz-select>
       </nz-form-control>
     </nz-form-item>
   </div>
-  
+
   <div nz-col [nzSpan]="11">
     <label>Danh sách khách hàng đặc biệt</label>
     <nz-form-item>
       <nz-form-control>
         <nz-select nzShowSearch nzAllowClear>
-  
-  
           <nz-option [nzDisabled]="true" *ngFor="let item of listspecialCustomer" [nzLabel]="item.name + ' - ' + item.fob" [nzValue]="item.code">
           </nz-option>
-  
+
         </nz-select>
       </nz-form-control>
     </nz-form-item>

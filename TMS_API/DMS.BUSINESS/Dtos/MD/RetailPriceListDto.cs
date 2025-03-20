@@ -26,6 +26,9 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Ngày bắt tạo")]
         public DateTime? FDate { get; set; }
 
+        [Description("Ngày hết hạn")]
+        public DateTime? TDate { get; set; }
+
         [Description("Trạng thái")]
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
 

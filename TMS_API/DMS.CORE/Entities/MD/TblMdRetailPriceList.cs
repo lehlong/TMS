@@ -17,10 +17,13 @@ namespace DMS.CORE.Entities.MD
         [Column("CODE", TypeName = "VARCHAR(1000)")]
         public string Code { set; get; }
 
-        [Column("Name", TypeName = "NVARCHAR(1000)")]
+        [Column("NAME", TypeName = "NVARCHAR(1000)")]
         public string? Name { set; get; }
 
         [Column("F_DATE", TypeName = "DATETIME")]
         public DateTime? FDate { set; get; }
+
+        [Column("T_DATE", TypeName = "DATETIME")]
+        public DateTime ToDate { set; get; }
     }
 }

@@ -67,39 +67,42 @@ namespace DMS.BUSINESS.Services.MD
                 return null;
             }
         }
+
         public async Task<GblModel> BuildDataCreate()
         {
             try
             {
-                var OldGblList = await _dbContext.TblMdRetailPriceList
-                                                .OrderByDescending(x => x.FDate)
-                                                .FirstOrDefaultAsync();
+                var OldGblList = await _dbContext.TblMdRetailPriceList.OrderByDescending(x => x.FDate).FirstOrDefaultAsync();
+                
                 List<TblMdRetailPrice> LstOldGbl;
+                
                 if (OldGblList == null || OldGblList.Code == null)
                 {
                     LstOldGbl = new List<TblMdRetailPrice>();
                 }
                 else
                 {
-                    LstOldGbl = await _dbContext.TblMdRetailPrice
-                        .Where(x => x.GbllCode == OldGblList.Code)
-                        .ToListAsync();
+                    LstOldGbl = await _dbContext.TblMdRetailPrice.Where(x => x.GbllCode == OldGblList.Code).ToListAsync();
                 }
-                //var LstOldGgtd = await _dbContext.TblMdGiaGiaoTapDoan.Where(x => x.GgtdlCode == OldGblList.Code).ToListAsync();
                 var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive == true).OrderBy(x => x.Code).ToListAsync();
 
                 var gblModel = new GblModel();
 
-
                 gblModel.oldHeaderGbl = OldGblList == null ? "" : OldGblList.Code;
 
                 gblModel.GbllHeader.Code = Guid.NewGuid().ToString();
+
                 gblModel.GbllHeader.FDate = DateTime.Now;
+                
                 gblModel.GbllHeader.Name = "";
+                
+                gblModel.GbllHeader.ToDate = DateTime.Now;
+                
                 foreach (var g in lstGoods)
                 {
                     var gbl = new TblMdRetailPrice();
                     gbl.Code = Guid.NewGuid().ToString();
+                    gbl.GbllCode = gblModel.GbllHeader.Code;
                     gbl.GoodsCode = g.Code;
                     gbl.NewPrice = 0;
                     gbl.OldPrice = LstOldGbl.Where(x => x.GbllCode == OldGblList.Code && x.GoodsCode == g.Code).Select(x => x.NewPrice).SingleOrDefault();

@@ -112,7 +112,7 @@ export class RetailPriceComponent {
       // d.setHours(d.getHours() + 5); // Cộng thêm 5 tiếng
       if (d > this.date) {
         this.date = d
-        // console.log(this.date);
+        console.log(this.date);
 
       }
       return d.toLocaleString('vi-VN', {
@@ -157,10 +157,15 @@ export class RetailPriceComponent {
   }
 
   checkDate() {
-    if (this.validateForm.get('toDate')?.value > this.validateForm.get('fromDate')?.value) {
+    const date = new Date(this.model.gbllHeader.fDate)
+    const tDate = new Date(this.model.gbllHeader.toDate)
+    console.log(date , tDate);
 
+    if (date < tDate) {
+      this.isDateValid = false
       return;
     } else {
+      this.isDateValid = true
       this.message.error("Ngày kết thúc phải lớn hơn ngày tạo")
     }
   }
@@ -190,7 +195,7 @@ export class RetailPriceComponent {
           },
         })
       } else {
-        if (this.date > this.model.ggtdlHeader.fDate) {
+        if (this.date > this.model.oldHeaderGgtd.fDate) {
           this.message.error("Ngày kết thúc phải lớn hơn ngày đã tạo")
           return;
         }
@@ -231,8 +236,10 @@ export class RetailPriceComponent {
   }
 
   openCreate() {
+    console.log(this.data);
     this._service.getDataInput().subscribe({
       next: (data) => {
+        this.date = data.gbllHeader.fDate
         console.log(this.model);
         this.model = data
         console.log(this.model);
@@ -243,8 +250,8 @@ export class RetailPriceComponent {
         console.log(response)
       },
     })
-
   }
+
   resetForm() {
     this.validateForm.reset()
     this.isSubmit = false
@@ -261,24 +268,10 @@ export class RetailPriceComponent {
     })
   }
 
-  // openEdit(data: any){
-  //   console.log(data);
-
-  //   this.edit = true
-  //   this.visible = true
-  // }
-
   openEdit(data: any) {
-    this.validateForm.patchValue({
-      code: data.code,
-      goodsCode: data.goodsCode,
-      localCode: data.localCode,
-      fromDate: data.fromDate,
-      toDate: data.toDate,
-      oldPrice: data.oldPrice,
-      newPrice: data.newPrice,
-      isActive: data.isActive,
-    })
+    console.log(this.date);
+
+    this.model = data
     setTimeout(() => {
       this.edit = true
       this.visible = true

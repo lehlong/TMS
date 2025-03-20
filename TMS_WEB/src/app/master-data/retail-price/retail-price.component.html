@@ -37,10 +37,6 @@
       [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data">
       <thead>
         <tr>
-          <!-- <th nzWidth="30px">STT</th> -->
-          <!-- <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('code', $event)" >
-            Mã
-          </th> -->
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('goodsCode', $event)">
             Mặt hàng
           </th>
@@ -50,40 +46,30 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('newPrice', $event)">
             Giá mới
           </th>
-          <!-- <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('isActive', $event)" nzAlign="center">
-            Trạng thái
-          </th> -->
         </tr>
       </thead>
-      
+
       <tbody>
         <ng-container *ngFor="let gbl of data.gbl; let i = index">
-        <tr (dblclick)="openEdit(data)">
+          <tr (dblclick)="openEdit(data)">
 
-          <td>
-            {{ (paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1 }}
-          </td>
+            <td>
+              {{ (paginationResult.currentPage - 1) * paginationResult.pageSize + i + 1 }}
+            </td>
 
-          <td>
-            <span *ngFor="let item of goodsResult">
-              <a *ngIf="item.code == gbl.goodsCode" (click)="openEdit(data)">{{ item.name }}</a>
-            </span>
-          </td>
+            <td>
+              <span *ngFor="let item of goodsResult">
+                <a *ngIf="item.code == gbl.goodsCode" (click)="openEdit(data)">{{ item.name }}</a>
+              </span>
 
-          <!-- <td>
-            <span *ngFor="let item of goodsResult">
-              <span *ngIf="item.code == data.goodsCode">{{ item.name }}</span>
-            </span>
-          </td> -->
-
-          <td class="align-right">{{ gbl.oldPrice }}</td>
-          <td class="align-right">{{ gbl.newPrice }}</td>
-          <td nzAlign="center">
-            <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
-              nzTheme="outline"></span>
-          </td>
-        </tr>
-      </ng-container>
+            <td class="align-right">{{ gbl.oldPrice }}</td>
+            <td class="align-right">{{ gbl.newPrice }}</td>
+            <td nzAlign="center">
+              <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
+                nzTheme="outline"></span>
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
 
     </nz-table>
@@ -96,6 +82,7 @@
 </div>
 
 <!-- Create Update
+
 <nz-drawer nzWidth="40%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
@@ -181,15 +168,32 @@
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <div>
-      <nz-divider nzText="Ngày" nzOrientation="left"></nz-divider>
-      <nz-form-item style="padding-right: 16px;">
-        <!-- <nz-form-label [nzRequired]="true">Từ ngày</nz-form-label> -->
-        <nz-form-control nzErrorTip="Không đươc để trống" >
-          <nz-date-picker nzShowTime nzFormat="HH:mm dd-MM-yyyy " (ngModelChange) = checkDate()
-            [(ngModel)]="model.gbllHeader.fDate" [disabled]="model.gbllHeader.isActive != null"></nz-date-picker>
-        <div style="color: red" *ngIf="isDateValid">Ngày tạo phải lớn hơn ngày đã tạo</div>
-          </nz-form-control>
-      </nz-form-item>
+
+      <div nz-row [nzGutter]="16">
+        <div nz-col class="gutter-row" [nzSpan]="12">
+          <nz-divider nzText="Từ Ngày" nzOrientation="left"></nz-divider>
+          <nz-form-item style="padding-right: 16px;">
+            <!-- <nz-form-label [nzRequired]="true">Từ ngày</nz-form-label> -->
+            <nz-form-control nzErrorTip="Không đươc để trống">
+              <nz-date-picker nzShowTime nzFormat="HH:mm dd-MM-yyyy "
+                [(ngModel)]="model.gbllHeader.fDate" [disabled]="true"></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div nz-col class="gutter-row" [nzSpan]="12">
+          <nz-divider nzText="Đến Ngày" nzOrientation="left"></nz-divider>
+          <nz-form-item style="padding-right: 16px;">
+            <!-- <nz-form-label [nzRequired]="true">Từ ngày</nz-form-label> -->
+            <nz-form-control nzErrorTip="Không đươc để trống">
+              <nz-date-picker nzShowTime nzFormat="HH:mm dd-MM-yyyy " (ngModelChange)=checkDate()
+                [(ngModel)]="model.gbllHeader.toDate" [disabled]="model.gbllHeader.isActive != null"></nz-date-picker>
+              <div style="color: red" *ngIf="isDateValid">Ngày kết thúc phải lớn hơn ngày tạo</div>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
     </div>
     <nz-divider nzText="Giá bán lẻ" nzOrientation="left"></nz-divider>
 
@@ -199,6 +203,7 @@
           <th [nzAlign]="'center'">Mặt hàng</th>
           <th [nzAlign]="'center'">Giá cũ</th>
           <th [nzAlign]="'center'">Giá mới</th>
+          <th [nzAlign]="'center'">Mức tăng so vơi vùng 1</th>
 
         </tr>
       </thead>
@@ -216,9 +221,13 @@
             <input [disabled]="true" class="input-v" nz-input [(ngModel)]="data.oldPrice" type="number" />
           </td>
           <td>
-            <input [disabled]="model.gbllHeader.isActive != null" class="input-v" nz-input [(ngModel)]="data.newPrice" type="number" />
+            <input [disabled]="model.gbllHeader.isActive != null" class="input-v" nz-input [(ngModel)]="data.newPrice"
+              type="number" />
           </td>
-          
+          <td>
+            <input [disabled]="model.gbllHeader.isActive != null" class="input-v" nz-input [(ngModel)]="data.mucTangV1"
+              type="number" />
+          </td>
         </tr>
         }
       </tbody>

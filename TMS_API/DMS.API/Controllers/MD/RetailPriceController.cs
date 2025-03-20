@@ -5,6 +5,7 @@ using DMS.BUSINESS.Dtos.MD;
 using DMS.BUSINESS.Services.MD;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static DMS.BUSINESS.Services.MD.RetailPriceService;
 
 namespace DMS.API.Controllers.MD
 {
@@ -47,6 +48,7 @@ namespace DMS.API.Controllers.MD
             }
             return Ok(transferObject);
         }
+
         [HttpGet("BuildDataInput")]
         public async Task<IActionResult> BuildDataInput()
         {
@@ -66,10 +68,10 @@ namespace DMS.API.Controllers.MD
             return Ok(transferObject);
         }
         [HttpPost("Insert")]
-        public async Task<IActionResult> Insert([FromBody] RetailPriceDto RetailPrice)
+        public async Task<IActionResult> Insert([FromBody] GblModel RetailPrice)
         {
             var transferObject = new TransferObject();
-            var result = await _service.Add(RetailPrice);
+            var result = await _service.UpdateData(RetailPrice);
             if (_service.Status)
             {
                 transferObject.Data = result;
@@ -86,10 +88,10 @@ namespace DMS.API.Controllers.MD
             return Ok(transferObject);
         }
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] RetailPriceDto RetailPrice)
+        public async Task<IActionResult> Update([FromBody] GblModel RetailPrice)
         {
             var transferObject = new TransferObject();
-            await _service.Update(RetailPrice);
+            await _service.UpdateData(RetailPrice);
             if (_service.Status)
             {
                 transferObject.Status = true;

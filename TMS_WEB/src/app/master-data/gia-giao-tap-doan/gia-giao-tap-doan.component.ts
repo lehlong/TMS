@@ -188,8 +188,6 @@ export class GiaGiaoTapDoanComponent {
       this.isDateValid = true;
       return;
     }else{
-      this.message.error("hợp lệ")
-
       this.isDateValid = false;
     }
 

@@ -4087,9 +4087,9 @@ namespace DMS.BUSINESS.Services.BU
             var model = await GetDataInput(headerId);
             var goods = await _dbContext.TblMdGoods.ToListAsync();
             var NguoiKyTen = await _dbContext.TblMdSigner.FirstOrDefaultAsync(x => x.Code == header.SignerCode);
-            var f_date = $"{header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
-            var date = $"{header.FDate.Day}/{header.FDate.Month}/{header.FDate.Year}";
-            var f_date_hour = $"kể từ {header.FDate.Hour} giờ {header.FDate.Minute} ngày {header.FDate.Day} tháng {header.FDate.Month} năm {header.FDate.Year}";
+            var f_date = $"{header.FDate.Day:D2} tháng {header.FDate.Month:D2} năm {header.FDate.Year}";
+            var date = header.FDate.ToString("dd/MM/yyyy");
+            var f_date_hour = $"kể từ {header.FDate.Hour:D2} giờ {header.FDate.Minute:D2} ngày {header.FDate.Day:D2} tháng {header.FDate.Month:D2} năm {header.FDate.Year}";
 
             var OldCalculate = await _dbContext.TblBuCalculateResultList
                                     .Where(x => x.FDate < header.FDate)
@@ -4168,7 +4168,7 @@ namespace DMS.BUSINESS.Services.BU
                 return cell;
             }
 
-            #region fill dữ liệu file công điện kiểm kê giá bán lẻ
+            #region fill dữ liệu file
             if (nameTemp == "CongDienKKGiaBanLe")
             {
                 var sortedHS2 = model.HS2.OrderBy(x => int.Parse(x.GoodsCode)).ToList();
@@ -4602,7 +4602,6 @@ namespace DMS.BUSINESS.Services.BU
                     {
                         switch (t)
                         {
-
                             case "##DATE@@":
                                 wordDocumentService.ReplaceStringInWordDocumennt(doc, t, date);
                                 break;

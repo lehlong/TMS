@@ -18,14 +18,18 @@ namespace DMS.CORE.Entities.MD
 
         [Column("GOODS_CODE", TypeName = "VARCHAR(50)")]    
         public string GoodsCode { set; get; }
-        [Column("GBL_CODE", TypeName = "VARCHAR(50)")]
+
+        [Column("GBLL_CODE", TypeName = "VARCHAR(50)")]
         public string? GbllCode { set; get; }
 
-        [Column("OLD_PRICE", TypeName = "FLOAT")]
-        public float OldPrice { set; get; }
+        [Column("OLD_PRICE", TypeName = "DECIMAL(18,0)")]
+        public decimal OldPrice { set; get; }
 
-        [Column("NEW_PRICE", TypeName = "FLOAT")]
-        public float NewPrice { set; get; }
+        [Column("NEW_PRICE", TypeName = "DECIMAL(18,0)")]
+        public decimal NewPrice { set; get; }
+
+        [Column("MUC_TANG_V1", TypeName = "DECIMAIL(18,0)")]
+        public decimal MucTangV1 { set; get; }
 
     }
 }

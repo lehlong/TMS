@@ -21,19 +21,20 @@ namespace DMS.BUSINESS.Dtos.MD
         public string Code { get; set; }
 
         [Description("Tên")]
-        public string GoodsCode { get; set; }
+        public string? GoodsCode { get; set; }
 
-        [Description("Mã khách hàng")]
-        public string GbllCode { get; set; }
+        [Description("Header code")]
+        public string? GbllCode { get; set; }
 
         [Description("Giá cũ")]
-        public float OldPrice { get; set; }
+        public decimal OldPrice { get; set; }
 
         [Description("Giá mới")]
-        public float NewPrice { get; set; }
+        public decimal NewPrice { get; set; }
 
-        [Description("Ngày tạo")]
-        public DateTime? CreateDate { get; set; }
+        [Description("Mức tăng so với vùng 1")]
+        public decimal MucTangV1 { get; set; }
+
 
         [Description("Trạng thái")]
         public string State { get => this.IsActive == true ? "Đang hoạt động" : "Khóa"; }
