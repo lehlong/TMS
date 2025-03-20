@@ -126,17 +126,22 @@ export class MarketCompetitorComponent {
       })
   }
 
-  isCodeExist(code: string): boolean {
-    return this.paginationResult.data?.some((market: any) => market.code === code)
+  isCodeExist(code: string, competitorCode:string): boolean {
+    return this.paginationResult.data?.some((market: any) => market.marketCode === code && market.competitorCode ===  competitorCode)
   }
-
+  // && market.competitorCode ===
   submitForm(): void {
     this.isSubmit = true
     if (this.validateForm.valid) {
       const formData = this.validateForm.getRawValue()
-      console.log(formData);
-
       if (this.edit) {
+
+        if(this.paginationResult.data?.find((market: any) => market.code === formData.code && market.competitorCode !=  formData.competitorCode)){
+          this.message.error(
+            `Mã thị trường ${formData.marketCode} đã được tạo cho đối thủ ${formData.competitorCode} trước đó`,
+          )
+          return
+        }        
         this._service.updatemarket(formData).subscribe({
           next: (data) => {
             this.search()
@@ -146,9 +151,9 @@ export class MarketCompetitorComponent {
           },
         })
       } else {
-        if (this.isCodeExist(formData.code)) {
+        if (this.isCodeExist(formData.marketCode,formData.competitorCode)) {
           this.message.error(
-            `Mã khu vục ${formData.code} đã tồn tại, vui lòng nhập lại`,
+            `Mã thị trường ${formData.marketCode} đã được tạo cho đối thủ ${formData.competitorCode} trước đó`,
           )
           return
         }
