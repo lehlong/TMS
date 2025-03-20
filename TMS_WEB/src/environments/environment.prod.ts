@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  baseApiUrl: 'http://localhost:5203/api',
-  apiUrl: 'http://localhost:5203/',
+  baseApiUrl: 'https://localhost:4008/api',
+  apiUrl: 'https://localhost:4008/',
 
   // baseApiUrl: 'http://sso.d2s.com.vn:80/api',
   // apiUrl: 'http://sso.d2s.com.vn:80/',

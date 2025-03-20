@@ -300,6 +300,7 @@ namespace DMS.BUSINESS.Models
         public decimal? Col18 { get; set; }
         public List<decimal?> LN { get; set; } = new List<decimal?>();
         public List<PT_BVMT> BVMT { get; set; } = new List<PT_BVMT>();
+        public bool IsBold { get; set; } = false;
     }
     public class PT09_GG
     {
@@ -368,6 +369,7 @@ namespace DMS.BUSINESS.Models
         public string? ColA { get; set; }
         public string? ColB { get; set; }
         public List<decimal?> GG { get; set; } = new List<decimal?>();
+        public bool  IsBold { get; set; } = false;
     }
     public class PL2
     {
@@ -375,6 +377,7 @@ namespace DMS.BUSINESS.Models
         public string? ColA { get; set; }
         public string? ColB { get; set; }
         public List<decimal?> GG { get; set; } = new List<decimal?>();
+        public bool IsBold { get; set; } = false;
     }
 
     public class PL3
@@ -383,6 +386,7 @@ namespace DMS.BUSINESS.Models
         public string? ColA { get; set; }
         public string? ColB { get; set; }
         public List<decimal?> GG { get; set; } = new List<decimal?>();
+        public bool IsBold { get; set; } = false;
     }
     public class PL4
     {
@@ -390,6 +394,7 @@ namespace DMS.BUSINESS.Models
         public string? ColA { get; set; }
         public string? ColB { get; set; }
         public List<decimal?> GG { get; set; } = new List<decimal?>();
+        public bool IsBold { get; set; } = false;
     }
     public class VK11PT
     {
@@ -508,6 +513,7 @@ namespace DMS.BUSINESS.Models
         public string? Col9 { get; set; }
         public string? Col10 { get; set; }
         public string? Col11 { get; set; }
+        public bool IsBold { get; set; } = false;
     }
     public class VK11BB
     {

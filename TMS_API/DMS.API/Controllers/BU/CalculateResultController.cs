@@ -22,7 +22,7 @@ namespace DMS.API.Controllers.BU
         }
 
         [HttpGet("GetCalculateResult")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetCalculateResult([FromQuery] string code, [FromQuery] int tab)
         {
             var transferObject = new TransferObject();
@@ -41,7 +41,7 @@ namespace DMS.API.Controllers.BU
         }
 
         [HttpGet("GetDataInput")]
-        [Authorize]
+       // [Authorize]
         public async Task<IActionResult> GetDataInput([FromQuery] string code)
         {
             var transferObject = new TransferObject();
@@ -138,18 +138,37 @@ namespace DMS.API.Controllers.BU
             return Ok(transferObject);
         }
 
-        [HttpPost("ExportExcel")]
-        //[Authorize]
-        public async Task<IActionResult> ExportExcel([FromBody] CalculateResultModel data, [FromQuery] string headerId)
+        //[HttpPost("ExportExcel")]
+        ////[Authorize]
+        //public async Task<IActionResult> ExportExcel([FromBody] CalculateResultModel data, [FromQuery] string headerId)
+        //{
+        //    var transferObject = new TransferObject();
+        //    MemoryStream outFileStream = new MemoryStream();
+        //    var path = Directory.GetCurrentDirectory() + "/Template/CoSoTinhMucGiamGia.xlsx";
+        //    var k = await _service.ExportExcel(outFileStream, path, headerId, data);
+        //    if (_service.Status)
+        //    {
+        //        var result = await _service.SaveFileHistory(k, headerId);
+        //        //return File(outFileStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", DateTime.Now.ToString() + "_CoSoTinhMucGiamGia" + ".xlsx");
+        //        transferObject.Data = result;
+        //        return Ok(transferObject);
+        //    }
+        //    else
+        //    {
+        //        transferObject.Status = false;
+        //        transferObject.MessageObject.MessageType = MessageType.Error;
+        //        transferObject.GetMessage("2000", _service);
+        //        return Ok(transferObject);
+        //    }
+        //}
+
+        [HttpGet("ExportExcel")]
+        public async Task<IActionResult> ExportExcel([FromQuery] string headerId)
         {
             var transferObject = new TransferObject();
-            MemoryStream outFileStream = new MemoryStream();
-            var path = Directory.GetCurrentDirectory() + "/Template/CoSoTinhMucGiamGia.xlsx";
-            var k = await _service.ExportExcel(outFileStream, path, headerId, data);
+            var result = await _service.ExportExcelPlus(headerId);
             if (_service.Status)
             {
-                var result = await _service.SaveFileHistory(k, headerId);
-                //return File(outFileStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", DateTime.Now.ToString() + "_CoSoTinhMucGiamGia" + ".xlsx");
                 transferObject.Data = result;
                 return Ok(transferObject);
             }

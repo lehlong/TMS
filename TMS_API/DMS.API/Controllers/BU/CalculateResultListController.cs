@@ -18,7 +18,7 @@ namespace DMS.API.Controllers.BU
         public readonly ICalculateResultListService _service = service;
 
         [HttpGet("Search")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Search([FromQuery] BaseFilter filter)
         {
             var transferObject = new TransferObject();
