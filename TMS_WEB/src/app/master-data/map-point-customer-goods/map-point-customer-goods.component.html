@@ -1,6 +1,6 @@
 <div class="container-list" [appPermission]="MASTER_DATA_MANAGEMENT.RECIPIENT_MANAGEMENT">
   <div class="site-page-header-ghost-wrapper">
-    <nz-page-header nzBackIcon nzTitle="Người nhận hàng" nzSubtitle="Danh sách người nhận hàng" class="site-page-header">
+    <nz-page-header nzBackIcon nzTitle="Điểm giao hàng, Người nhận hàng" nzSubtitle="Điểm giao hàng và người nhận hàng" class="site-page-header">
       <nz-page-header-extra>
         <nz-space [nzWrap]="true" class="gap-[5px]">
           <nz-space>
@@ -132,7 +132,7 @@
 </div>
 
 <!--Create Update-->
-<nz-drawer [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+<nz-drawer nzWidth="60%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
@@ -152,7 +152,7 @@
         <nz-form-control nzErrorTip="Không được để trống">
           <nz-select nzShowSearch nzAllowClear placeholder="Chọn Khách hàng nhận" formControlName="customerCode">
             <nz-option cdkScrollable *ngFor="let item of lstCustomer" [nzLabel]="item.name"
-              [nzValue]="item.code">
+              [nzValue]="item.code" (ngModelChange)="setCustomerType(item)">
             </nz-option>
           </nz-select>
         </nz-form-control>
@@ -172,14 +172,23 @@
       <app-input-clear placeholder="Nhập cước vận chuyển bình quân" [required]="true" label="Cước vận chuyển bình quân"
       [control]="$any(validateForm).controls['cuocVcBq']"></app-input-clear>
 
+      <!-- <app-input-clear placeholder="Kiểu khách hàng" [required]="true" label="Kiểu khách hàng"
+      [control]="$any(validateForm).controls['customerTypeCode']"></app-input-clear> -->
+
       <nz-form-item>
         <nz-form-label [nzRequired]="true">Kiểu</nz-form-label>
         <nz-form-control nzErrorTip="Không được để trống">
-          <nz-select nzShowSearch nzAllowClear placeholder="Chọn Kiểu" formControlName="type">
-            <nz-option cdkScrollable *ngFor="let item of lstCustomerType" [nzLabel]="item.name"
-              [nzValue]="item.code">
+          <!-- <nz-select nzShowSearch nzAllowClear placeholder="Chọn Kiểu" formControlName="type">
+            <nz-option cdkScrollable *ngFor="let item of lstCustomerType"  [nzLabel]="item.name"
+              [nzValue]="item.code" *ngIf="item.code == ">
             </nz-option>
-          </nz-select>
+            [(ngModel)]="customerType"
+          </nz-select> -->
+          <nz-select nzShowSearch nzAllowClear placeholder="Chọn mặt hàng" [nzDisabled]="false" formControlName="type"
+              style="width: 100%">
+              <nz-option cdkScrollable *ngFor="let item of lstCustomerType" [nzLabel]="item.name" [nzValue]="item.code">
+              </nz-option>
+            </nz-select>
         </nz-form-control>
       </nz-form-item>
 

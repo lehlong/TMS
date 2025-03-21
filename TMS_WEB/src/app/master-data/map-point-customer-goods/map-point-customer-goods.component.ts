@@ -40,6 +40,7 @@ export class MapPointCustomerGoodsComponent {
   lstCustomer: any[] = []
   lstGoods: any[] = []
   lstCustomerType: any[] = []
+  customerType: any = ""
 
   constructor(
     private _service: MapPointCustomerGoodsService,
@@ -53,8 +54,8 @@ export class MapPointCustomerGoodsComponent {
   ) {
     this.globalService.setBreadcrumb([
       {
-        name: 'Danh sách người nhận hàng',
-        path: 'master-data/local',
+        name: 'Điểm giao hàng và người nhận hàng',
+        path: 'master-data/map-point-customer-goods',
       },
     ])
     this.globalService.getLoading().subscribe((value) => {
@@ -71,6 +72,7 @@ export class MapPointCustomerGoodsComponent {
     this.getAllCustomer()
     this.getAllDeliveryPoint()
     this.getAllGoods()
+    this.getAllCustomerType()
   }
 
   onSortChange(name: string, value: any) {
@@ -155,6 +157,14 @@ export class MapPointCustomerGoodsComponent {
         anchor.href = url
         anchor.click()
       })
+  }
+  setCustomerType(data: any){
+    this.customerType = data.customerTypeCode
+    console.log(this.customerType);
+
+    this.validateForm.setValue({
+      type: this.customerType
+    })
   }
   isCodeExist(code: string): boolean {
     return this.paginationResult.data?.some((local: any) => local.code === code)

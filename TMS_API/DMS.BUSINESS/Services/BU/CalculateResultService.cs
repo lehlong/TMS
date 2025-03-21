@@ -95,12 +95,12 @@ namespace DMS.BUSINESS.Services.BU
                                                     //.Select(x => x.Code) // Chọn trường Code
                                                     .FirstOrDefaultAsync();
 
-                data.NameOld = OldCalculate.Name ?? "";
+                data.DLG.NameOld = OldCalculate.Name ?? "";
                 var dataVCLOld = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == OldCalculate.Code).ToListAsync();
                 var dataHSMHOld = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == OldCalculate.Code).ToListAsync();
                 var dataVCL = await _dbContext.TblInVinhCuaLo.Where(x => x.HeaderCode == code).ToListAsync();
                 var dataHSMH = await _dbContext.TblInHeSoMatHang.Where(x => x.HeaderCode == code).ToListAsync();
-                var mappingBBDO = await _dbContext.TblMdMapPointCustomerGoods.ToListAsync();
+                var mappingBBDO = await _dbContext.TblMdMapPointCustomerGoods.Where(x => x.IsActive == true).ToListAsync();
                 var dataPoint = await _dbContext.TblMdDeliveryPoint.ToListAsync();
                 var lstSpecialCustomer = await _dbContext.TbLInCustomerFob.Where(x => x.HeaderCode == code).ToListAsync();
                 if (dataVCL.Count() == 0 || dataHSMH.Count() == 0)
@@ -187,9 +187,6 @@ namespace DMS.BUSINESS.Services.BU
 
                     _oDlg++;
                 }
-
-
-
 
                 data.DLG.Dlg_4.Add(new DLG_4
                 {
@@ -413,7 +410,6 @@ namespace DMS.BUSINESS.Services.BU
                     }
                 }
 
-
                 // Đề xuất mức giảm giá
                 foreach (var g in lstGoods)
                 {
@@ -434,7 +430,6 @@ namespace DMS.BUSINESS.Services.BU
                                 Col2 = n.Col14,
                                 TangGiam1_2 = n.Col14 - dlg_4_Old.Where(x => x.Code == g.Code).Where(x => x.Type == "TT").Sum(x => x.Col14),
                             };
-
                             data.DLG.Dlg_8.Add(i);
                         }
 
@@ -465,10 +460,6 @@ namespace DMS.BUSINESS.Services.BU
 
                     }
                 }
-                //}
-
-
-
 
                 #endregion
 
@@ -996,6 +987,7 @@ namespace DMS.BUSINESS.Services.BU
                             PointCode = i.DeliveryPointCode,
                             CustomerName = lstCustomer.FirstOrDefault(x => x.Code == i.CustomerCode)?.Name,
                             PointName = dataPoint.FirstOrDefault(x => x.Code == i.DeliveryPointCode)?.Name,
+                            CuocVcBq = i.CuocVcBq
                         });
                     }
                     _m = _m.OrderBy(x => x.CustomerName).ThenBy(x => x.PointName).ToList();
@@ -1020,7 +1012,7 @@ namespace DMS.BUSINESS.Services.BU
                             Col5 = lstCustomer.FirstOrDefault(x => x.Code == e.CustomerCode)?.PaymentTerm,
                             Col6 = Math.Round(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col12) ?? 0),
                             Col9 = data.PT.FirstOrDefault(x => x.IsBold == false)?.Col4,
-                            Col10 = dataPoint.FirstOrDefault(x => x.Code == e.PointCode)?.CuocVcBq,
+                            Col10 = e.CuocVcBq,
                             Col11 = lstCustomer.FirstOrDefault(x => x.Code == e.CustomerCode)?.BankLoanInterest,
 
                             Col12 = col12Value,
@@ -1353,6 +1345,7 @@ namespace DMS.BUSINESS.Services.BU
             }
             return tabResult;
         }
+
         public async Task<CalculateResultModel> RoundNumberData(CalculateResultModel data)
         {
             try
@@ -1399,7 +1392,6 @@ namespace DMS.BUSINESS.Services.BU
             }
         }
 
-
         public async Task SendEmail(string headerId)
 
         {
@@ -1435,6 +1427,7 @@ namespace DMS.BUSINESS.Services.BU
                
             }
         }
+
         public async Task SendSMS(string headerId)
 
         {
@@ -1470,6 +1463,7 @@ namespace DMS.BUSINESS.Services.BU
 
             }
         }
+
         public async Task<List<TblNotifySms>> GetSms(string headerID)
         {
             try {
@@ -1483,6 +1477,7 @@ namespace DMS.BUSINESS.Services.BU
                 return new List<TblNotifySms>();
             }
         }
+
         public async Task<List<TblNotifyEmail>> GetMail(string headerID)
         {
             try
@@ -1497,6 +1492,7 @@ namespace DMS.BUSINESS.Services.BU
                 return new List<TblNotifyEmail>();
             }
         }
+
         public async Task<InsertModel> GetDataInput(string code)
         {
 
@@ -1643,6 +1639,588 @@ namespace DMS.BUSINESS.Services.BU
                     NumberBold = ExcelNPOIExtention.SetCellStyleNumberBold(workbook)
                 };
 
+                var header = _dbContext.TblBuCalculateResultList.Where(x => x.Code == headerId).ToList().FirstOrDefault();
+
+                var nguoiKy = _dbContext.TblMdSigner.Where(x => x.Code == header.SignerCode).ToList().FirstOrDefault();
+
+                var Date = header.FDate.ToString("dd/MM/yyyy");
+                var Date_2 = header.FDate.ToString("'ngày' dd 'tháng' MM 'năm' yyyy", CultureInfo.InvariantCulture);
+                var Date_3 = header.FDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+                var Hour = header.FDate.ToString("HH'h'mm", CultureInfo.InvariantCulture);
+                var Time = header.FDate.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
+                string valueHeader = $"Thực hiện: từ {Hour} ngày {Date}";
+                var CVA5 = $"  (Kèm theo Công văn số:                        /PLXNA ngày {header.FDate.Day:D2}/{header.FDate.Month:D2}/{header.FDate.Year} của Công ty Xăng dầu Nghệ An)";
+                var QuyetDinhSo = header.QuyetDinhSo;
+
+                #region Dữ liệu gốc
+                var startRowdlg_1 = 2;
+                ISheet sheetGLG = workbook.GetSheetAt(0);
+                #region Thị trường Thành phố Vinh, TX Cửa Lò
+
+                IRow rowHeader_dlg_1 = sheetGLG.GetRow(1);
+                ICell header_dlg_1 = rowHeader_dlg_1.GetCell(1) ?? rowHeader_dlg_1.CreateCell(1);
+                header_dlg_1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_dlg_1.SetCellValue($"1. Thị trường Thành phố Vinh, TX Cửa Lò (áp dụng từ {Hour} ngày {Date})");
+
+                for (var i = 0; i < data.DLG.Dlg_1.Count(); i++)
+                {
+                        var dataDlg1 = data.DLG.Dlg_1[i];
+                    int rowIndex = startRowdlg_1 + i;
+
+                    //var textStyle = dataDlg1.IsBold ? styles.TextBold : styles.Text;
+                    //var numberStyle = dataDlg1.IsBold ? styles.NumberBold : styles.Number;
+                    IRow row = sheetGLG.GetRow(rowIndex);
+
+                    if (row != null)
+                    {
+                        ICell cell3 = row.GetCell(1) ?? row.CreateCell(1);
+                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell3.SetCellValue(dataDlg1.Col1);
+
+                        ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
+                        //cell4.CellStyle = numberStyle; ;
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg1.Col2.HasValue ? Convert.ToDouble(dataDlg1.Col2.Value) : 0);
+
+                        ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
+                        //cell5.CellStyle = numberStyle; ;
+                        cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell5.SetCellValue(dataDlg1.Col3.HasValue ? Convert.ToDouble(dataDlg1.Col3.Value) : 0);
+
+                        ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
+                        //cell6.CellStyle = numberStyle; ;
+                        cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell6.SetCellValue(dataDlg1.Col4.HasValue ? Convert.ToDouble(dataDlg1.Col4.Value) : 0);
+
+                        ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
+                        //cell7.CellStyle = numberStyle; ;
+                        cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell7.SetCellValue(dataDlg1.Col5.HasValue ? Convert.ToDouble(dataDlg1.Col5.Value) : 0);
+
+                        ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
+                        //cell8.CellStyle = numberStyle; ;
+                        cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell8.SetCellValue(dataDlg1.Col6.HasValue ? Convert.ToDouble(dataDlg1.Col6.Value) : 0);
+
+                        ICell cell9 = row.GetCell(9) ?? row.CreateCell(9);
+                        //cell9.CellStyle = numberStyle; ;
+                        cell9.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell9.SetCellValue(dataDlg1.Col7.HasValue ? Convert.ToDouble(dataDlg1.Col7.Value) : 0);
+                    }
+                }
+                #endregion
+
+                #region Các huyện thị còn lại trên địa bàn Nghệ An + địa bàn tỉnh Hà Tĩnh
+
+                IRow rowHeader_dlg_2 = sheetGLG.GetRow(9);
+                ICell header_dlg_2 = rowHeader_dlg_2.GetCell(1) ?? rowHeader_dlg_2.CreateCell(1);
+                header_dlg_2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_dlg_2.SetCellValue($"2. Các huyện thị còn lại trên địa bàn Nghệ An + địa bàn tỉnh Hà Tĩnh");
+
+                var startRowdlg_2 = 11;
+                for (var i = 0; i < data.DLG.Dlg_2.Count(); i++)
+                {
+                    var dataDlg2 = data.DLG.Dlg_2[i];
+                    int rowIndex = startRowdlg_2 + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
+
+                    if (row != null)
+                    {
+                        ICell cell3 = row.GetCell(1) ?? row.CreateCell(1);
+                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell3.SetCellValue(dataDlg2.Col1);
+
+                        ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg2.Col2.HasValue ? Convert.ToDouble(dataDlg2.Col2.Value) : 0);
+                    }
+                }
+
+                #endregion
+
+                #region BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (PT bán lẻ - V2)
+
+                IRow rowHeader_dlg_3 = sheetGLG.GetRow(36);
+                ICell header_dlg_3 = rowHeader_dlg_3.GetCell(0) ?? rowHeader_dlg_3.CreateCell(0);
+                header_dlg_3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_dlg_3.SetCellValue($"Tính từ {Hour} ngày {Date} theo CĐ số {QuyetDinhSo} ngày {Date}; QĐ giá bán lẻ số 682/PLX-TGĐ ngày {Date} và theo VCF Hè Thu");
+
+                IRow rowFooter_dlg_3 = sheetGLG.GetRow(46);
+                ICell footer_dlg_3 = rowFooter_dlg_3.GetCell(9) ?? rowFooter_dlg_3.CreateCell(9);
+                footer_dlg_3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                footer_dlg_3.SetCellValue($"Vinh, {Date_2}");
+
+                if (header.SignerCode == "TongGiamDoc")
+                {
+                    IRow rowFooter_Ky_dlg_3 = sheetGLG.GetRow(47);
+                    ICell footer_Ky_dlg_3 = rowFooter_Ky_dlg_3.GetCell(9) ?? rowFooter_Ky_dlg_3.CreateCell(9);
+                    footer_Ky_dlg_3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_3.SetCellValue($"{nguoiKy.Position}");
+                }
+                else
+                {
+
+                    IRow rowFooter_Ky_dlg_3 = sheetGLG.GetRow(47);
+                    ICell footer_Ky_dlg_3 = rowFooter_Ky_dlg_3.GetCell(9) ?? rowFooter_Ky_dlg_3.CreateCell(9);
+                    footer_Ky_dlg_3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_3.SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+
+                    IRow rowFooter_Ky_dlg_4 = sheetGLG.GetRow(48);
+                    ICell footer_Ky_dlg_4 = rowFooter_Ky_dlg_4.GetCell(9) ?? rowFooter_Ky_dlg_4.CreateCell(9);
+                    footer_Ky_dlg_4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_4.SetCellValue($"{nguoiKy.Position}");
+
+                }
+
+                var startRowdlg_3 = 41;
+                for (var i = 0; i < data.DLG.Dlg_3.Count(); i++)
+                {
+                    var dataDlg3 = data.DLG.Dlg_3[i];
+                    int rowIndex = startRowdlg_3 + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
+
+                    if (row != null)
+                    {
+                        ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
+                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell0.SetCellValue(dataDlg3.ColA);
+
+                        ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
+                        cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell1.SetCellValue(dataDlg3.ColB);
+
+                        ICell cell2 = row.GetCell(2) ?? row.CreateCell(2);
+                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell2.SetCellValue(dataDlg3.Col1.HasValue ? Convert.ToDouble(dataDlg3.Col1) : 0);
+
+                        ICell cell3 = row.GetCell(3) ?? row.CreateCell(3);
+                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell3.SetCellValue(dataDlg3.Col2.HasValue ? Convert.ToDouble(dataDlg3.Col2.Value) : 0);
+
+                        ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg3.Col3.HasValue ? Convert.ToDouble(dataDlg3.Col3.Value) : 0);
+
+                        ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
+                        cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell5.SetCellValue(dataDlg3.Col4.HasValue ? Convert.ToDouble(dataDlg3.Col4.Value) : 0);
+
+                        ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
+                        cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell6.SetCellValue(dataDlg3.Col5.HasValue ? Convert.ToDouble(dataDlg3.Col5.Value) : 0);
+
+                        ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
+                        cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell7.SetCellValue(dataDlg3.Col6.HasValue ? Convert.ToDouble(dataDlg3.Col6.Value) : 0);
+
+                        ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
+                        cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell8.SetCellValue(dataDlg3.Col7.HasValue ? Convert.ToDouble(dataDlg3.Col7.Value) : 0);
+
+                        ICell cell10 = row.GetCell(10) ?? row.CreateCell(10);
+                        cell10.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell10.SetCellValue(dataDlg3.Col8.HasValue ? Convert.ToDouble(dataDlg3.Col8.Value) : 0);
+
+                        ICell cell11 = row.GetCell(12) ?? row.CreateCell(12);
+                        cell11.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell11.SetCellValue(dataDlg3.Col9.HasValue ? Convert.ToDouble(dataDlg3.Col9.Value) : 0);
+
+                        ICell cell12 = row.GetCell(14) ?? row.CreateCell(14);
+                        cell12.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell12.SetCellValue(dataDlg3.Col10.HasValue ? Convert.ToDouble(dataDlg3.Col10.Value) : 0);
+                    }
+                }
+
+                #endregion
+
+                #region BIỂU TỔNG HỢP CÁC CHỈ TIÊU DẦU SÁNG (ngoài bán lẻ)
+
+                IRow rowHeader_dlg_4 = sheetGLG.GetRow(74);
+                ICell header_dlg_4 = rowHeader_dlg_4.GetCell(0) ?? rowHeader_dlg_4.CreateCell(0);
+                header_dlg_4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_dlg_4.SetCellValue($"Tính từ {Hour} ngày {Date} theo CĐ số {QuyetDinhSo} ngày {Date}; QĐ giá bán lẻ số 682/PLX-TGĐ ngày {Date} và theo VCF Hè Thu");
+
+                IRow rowFooter_dlg_4 = sheetGLG.GetRow(91);
+                ICell footer_dlg_4 = rowFooter_dlg_4.GetCell(9) ?? rowFooter_dlg_4.CreateCell(9);
+                footer_dlg_4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                footer_dlg_4.SetCellValue($"Vinh, {Date_2}");
+
+                if (header.SignerCode == "TongGiamDoc")
+                {
+                    IRow rowFooter_Ky_dlg_4 = sheetGLG.GetRow(92);
+                    ICell footer_Ky_dlg_4 = rowFooter_Ky_dlg_4.GetCell(9) ?? rowFooter_Ky_dlg_4.CreateCell(9);
+                    footer_Ky_dlg_4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_4.SetCellValue($"{nguoiKy.Position}");
+                }
+                else
+                {
+
+                    IRow rowFooter_Ky_dlg_4 = sheetGLG.GetRow(92);
+                    ICell footer_Ky_dlg_4 = rowFooter_Ky_dlg_4.GetCell(9) ?? rowFooter_Ky_dlg_4.CreateCell(9);
+                    footer_Ky_dlg_4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_4.SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+
+                    IRow rowFooter_Ky_dlg_5 = sheetGLG.GetRow(93);
+                    ICell footer_Ky_dlg_5 = rowFooter_Ky_dlg_5.GetCell(9) ?? rowFooter_Ky_dlg_5.CreateCell(9);
+                    footer_Ky_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_5.SetCellValue($"{nguoiKy.Position}");
+
+                }
+                var startRowdlg_4 = 80;
+
+                for (var i = 0; i < data.DLG.Dlg_4.Count(); i++)
+                {
+                    var dataDlg4 = data.DLG.Dlg_4[i];
+
+                    if (dataDlg4.Type != null)
+                    {
+                        int rowIndex = startRowdlg_4 + i;
+                        IRow row = sheetGLG.GetRow(rowIndex);
+                        if (row != null)
+                        {
+                            ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
+                            cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell0.SetCellValue(dataDlg4.ColA);
+
+                            ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
+                            cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell1.SetCellValue(dataDlg4.ColB);
+
+                            ICell cell2 = row.GetCell(2) ?? row.CreateCell(2);
+                            cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell2.SetCellValue(dataDlg4.Col1.HasValue ? Convert.ToDouble(dataDlg4.Col1) : 0);
+
+                            ICell cell3 = row.GetCell(3) ?? row.CreateCell(3);
+                            cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell3.SetCellValue(dataDlg4.Col2.HasValue ? Convert.ToDouble(dataDlg4.Col2.Value) : 0);
+
+                            ICell cell4 = row.GetCell(4) ?? row.CreateCell(4);
+                            cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell4.SetCellValue(dataDlg4.Col3.HasValue ? Convert.ToDouble(dataDlg4.Col3.Value) : 0);
+
+                            ICell cell5 = row.GetCell(5) ?? row.CreateCell(5);
+                            cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell5.SetCellValue(dataDlg4.Col4.HasValue ? Convert.ToDouble(dataDlg4.Col4.Value) : 0);
+
+                            ICell cell6 = row.GetCell(6) ?? row.CreateCell(6);
+                            cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell6.SetCellValue(dataDlg4.Col5.HasValue ? Convert.ToDouble(dataDlg4.Col5.Value) : 0);
+
+                            ICell cell7 = row.GetCell(7) ?? row.CreateCell(7);
+                            cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell7.SetCellValue(dataDlg4.Col6.HasValue ? Convert.ToDouble(dataDlg4.Col6.Value) : 0);
+
+                            ICell cell8 = row.GetCell(8) ?? row.CreateCell(8);
+                            cell8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell8.SetCellValue(dataDlg4.Col7.HasValue ? Convert.ToDouble(dataDlg4.Col7.Value) : 0);
+
+                            ICell cell9 = row.GetCell(9) ?? row.CreateCell(9);
+                            cell9.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell9.SetCellValue(dataDlg4.Col8.HasValue ? Convert.ToDouble(dataDlg4.Col8.Value) : 0);
+
+                            ICell cell10 = row.GetCell(10) ?? row.CreateCell(10);
+                            cell10.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell10.SetCellValue(dataDlg4.Col9.HasValue ? Convert.ToDouble(dataDlg4.Col9.Value) : 0);
+
+                            ICell cell11 = row.GetCell(11) ?? row.CreateCell(11);
+                            cell11.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell11.SetCellValue(dataDlg4.Col10.HasValue ? Convert.ToDouble(dataDlg4.Col10.Value) : 0);
+
+                            ICell cell12 = row.GetCell(12) ?? row.CreateCell(12);
+                            cell12.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell12.SetCellValue(dataDlg4.Col11.HasValue ? Convert.ToDouble(dataDlg4.Col11.Value) : 0);
+
+                            ICell cell13 = row.GetCell(13) ?? row.CreateCell(13);
+                            cell13.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell13.SetCellValue(dataDlg4.Col12.HasValue ? Convert.ToDouble(dataDlg4.Col12.Value) : 0);
+
+                            ICell cell14 = row.GetCell(14) ?? row.CreateCell(14);
+                            cell14.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell14.SetCellValue(dataDlg4.Col13.HasValue ? Convert.ToDouble(dataDlg4.Col13.Value) : 0);
+
+                            ICell cell15 = row.GetCell(15) ?? row.CreateCell(15);
+                            cell15.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell15.SetCellValue(dataDlg4.Col14.HasValue ? Convert.ToDouble(dataDlg4.Col14.Value) : 0);
+
+                            ICell cell16 = row.GetCell(16) ?? row.CreateCell(16);
+                            cell16.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell16.SetCellValue(dataDlg4.Col15.HasValue ? Convert.ToDouble(dataDlg4.Col15.Value) : 0);
+
+                            ICell cell17 = row.GetCell(17) ?? row.CreateCell(17);
+                            cell17.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell17.SetCellValue(dataDlg4.Col16.HasValue ? Convert.ToDouble(dataDlg4.Col16.Value) : 0);
+                        }
+                    }
+                }
+
+                #endregion
+
+                #region BIỂU TÍNH GIÁ XUẤT NỘI DỤNG
+                IRow rowHeader_dlg_5 = sheetGLG.GetRow(110);
+                ICell header_dlg_5 = rowHeader_dlg_5.GetCell(0) ?? rowHeader_dlg_5.CreateCell(0);
+                header_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_dlg_5.SetCellValue($"Tính từ {Hour} ngày {Date} theo CĐ số {QuyetDinhSo} ngày {Date}; QĐ giá bán lẻ số {QuyetDinhSo} ngày {Date} và theo VCF Hè Thu");
+
+                IRow rowFooter_dlg_5 = sheetGLG.GetRow(122);
+                ICell footer_dlg_5 = rowFooter_dlg_5.GetCell(9) ?? rowFooter_dlg_5.CreateCell(9);
+                footer_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                footer_dlg_5.SetCellValue($"Vinh,  {Date_2}");
+
+                if (header.SignerCode == "TongGiamDoc")
+                {
+                    IRow rowFooter_Ky_dlg_5 = sheetGLG.GetRow(123);
+                    ICell footer_Ky_dlg_5 = rowFooter_Ky_dlg_5.GetCell(9) ?? rowFooter_Ky_dlg_5.CreateCell(9);
+                    footer_Ky_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_5.SetCellValue($"{nguoiKy.Position}");
+                }
+                else
+                {
+
+                    IRow rowFooter_Ky_dlg_5 = sheetGLG.GetRow(123);
+                    ICell footer_Ky_dlg_5 = rowFooter_Ky_dlg_5.GetCell(9) ?? rowFooter_Ky_dlg_5.CreateCell(9);
+                    footer_Ky_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_Ky_dlg_5.SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+
+                    IRow rowFooter_ngKy_dlg_5 = sheetGLG.GetRow(124);
+                    ICell footer_ngKy_dlg_5 = rowFooter_ngKy_dlg_5.GetCell(9) ?? rowFooter_ngKy_dlg_5.CreateCell(9);
+                    footer_ngKy_dlg_5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    footer_ngKy_dlg_5.SetCellValue($"{nguoiKy.Position}");
+
+                }
+
+                var startRowdlg_5 = 115;
+                for (var i = 0; i < data.DLG.Dlg_5.Count(); i++)
+                {
+                    var dataDlg5 = data.DLG.Dlg_5[i];
+                    int rowIndex = startRowdlg_5 + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
+
+                    if (row != null)
+                    {
+                        ICell cell0 = row.GetCell(0) ?? row.CreateCell(0);
+                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell0.SetCellValue(dataDlg5.ColA);
+
+                        ICell cell1 = row.GetCell(1) ?? row.CreateCell(1);
+                        cell1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell1.SetCellValue(dataDlg5.ColB);
+
+                        ICell cell2 = row.GetCell(3) ?? row.CreateCell(3);
+                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell2.SetCellValue(dataDlg5.Col1.HasValue ? Convert.ToDouble(dataDlg5.Col1) : 0);
+
+                        ICell cell3 = row.GetCell(5) ?? row.CreateCell(5);
+                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell3.SetCellValue(dataDlg5.Col2.HasValue ? Convert.ToDouble(dataDlg5.Col2.Value) : 0);
+
+                        ICell cell4 = row.GetCell(8) ?? row.CreateCell(8);
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg5.Col3.HasValue ? Convert.ToDouble(dataDlg5.Col3.Value) : 0);
+
+                        ICell cell5 = row.GetCell(10) ?? row.CreateCell(10);
+                        cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell5.SetCellValue(dataDlg5.Col4.HasValue ? Convert.ToDouble(dataDlg5.Col4.Value) : 0);
+
+                        ICell cell6 = row.GetCell(12) ?? row.CreateCell(12);
+                        cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell6.SetCellValue(dataDlg5.Col5.HasValue ? Convert.ToDouble(dataDlg5.Col5.Value) : 0);
+                    }
+                }
+
+                #endregion
+
+                #region Thay đổi giá bán lẻ
+                IRow rowHeader_tt = sheetGLG.GetRow(38);
+                ICell header_tt = rowHeader_tt.GetCell(21) ?? rowHeader_tt.CreateCell(21);
+                header_tt.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_tt.SetCellValue($"Thay đổi giá bán lẻ {Hour} ngày {Date} (Tp Vinh, TX Cửa Lò)");
+
+                ICell header_Vcl = rowHeader_tt.GetCell(24) ?? rowHeader_tt.CreateCell(24);
+                header_Vcl.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_Vcl.SetCellValue($"Thay đổi giá bán lẻ {Hour} ngày {Date} (Vùng còn lại)");
+
+                var startRowdlg_TDGBL = 41;
+                for (var i = 0; i < data.DLG.Dlg_TDGBL.Count(); i++)
+                {
+                    var dataDlg_TDGBL = data.DLG.Dlg_TDGBL[i];
+                    int rowIndex = startRowdlg_TDGBL + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
+
+                    if (row != null)
+                    {
+
+                        ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell0.SetCellValue(dataDlg_TDGBL.ColA);
+
+                        ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell2.SetCellValue(dataDlg_TDGBL.Col1.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col1) : 0);
+
+                        ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell3.SetCellValue(dataDlg_TDGBL.Col2.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col2.Value) : 0);
+
+                        ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg_TDGBL.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_TDGBL.TangGiam1_2.Value) : 0);
+
+                        ICell cell5 = row.GetCell(24) ?? row.CreateCell(24);
+                        cell5.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell5.SetCellValue(dataDlg_TDGBL.Col3.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col3.Value) : 0);
+
+                        ICell cell6 = row.GetCell(25) ?? row.CreateCell(25);
+                        cell6.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell6.SetCellValue(dataDlg_TDGBL.Col4.HasValue ? Convert.ToDouble(dataDlg_TDGBL.Col4.Value) : 0);
+
+                        ICell cell7 = row.GetCell(26) ?? row.CreateCell(26);
+                        cell7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell7.SetCellValue(dataDlg_TDGBL.TangGiam3_4.HasValue ? Convert.ToDouble(dataDlg_TDGBL.TangGiam3_4.Value) : 0);
+                    }
+                }
+
+                #endregion
+
+                #region Thay đổi giá giao phương thức bán lẻ
+
+                var startRowdlg_TdGgptbl = 49;
+                for (var i = 0; i < data.DLG.Dlg_TdGgptbl.Count(); i++)
+                {
+                    var dataDlg_TdGgptbl = data.DLG.Dlg_TdGgptbl[i];
+                    int rowIndex = startRowdlg_TdGgptbl + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
+
+                    if (row != null)
+                    {
+
+                        ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell0.SetCellValue(dataDlg_TdGgptbl.ColA);
+
+                        ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell2.SetCellValue(dataDlg_TdGgptbl.Col1.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.Col1) : 0);
+
+                        ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell3.SetCellValue(dataDlg_TdGgptbl.Col2.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.Col2.Value) : 0);
+
+                        ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg_TdGgptbl.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_TdGgptbl.TangGiam1_2.Value) : 0);
+                    }
+                }
+
+                #endregion
+
+                #region So sánh lãi gộp giữa
+
+                int rowIndexTT = 12;
+                int rowIndexOther = 17;
+                IRow rowHeader_dlg_7 = sheetGLG.GetRow(8);
+                ICell header_dlg_7 = rowHeader_dlg_7.GetCell(20) ?? rowHeader_dlg_7.CreateCell(20);
+                header_dlg_7.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_dlg_7.SetCellValue($"1.Lãi gộp từ {Hour} ngày {Date} và tính theo VCF Hè Thu từ tháng 5 - 10 hàng năm");
+                foreach (var dataDlg_Dlg7 in data.DLG.Dlg_7)
+                {
+                    if (dataDlg_Dlg7.Type == "TT")
+                    {
+                        IRow row = sheetGLG.GetRow(rowIndexTT);
+                        if (row != null)
+                        {
+                            ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                            cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell0.SetCellValue(dataDlg_Dlg7.ColA);
+
+                            ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                            cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell2.SetCellValue(dataDlg_Dlg7.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col1) : 0);
+
+                            ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                            cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell3.SetCellValue(dataDlg_Dlg7.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col2.Value) : 0);
+
+                            ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                            cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell4.SetCellValue(dataDlg_Dlg7.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.TangGiam1_2.Value) : 0);
+                        }
+                        rowIndexTT++; // Tăng dòng sau mỗi lần lặp
+                    }
+                    else if (dataDlg_Dlg7.Type == "OTHER")
+                    {
+                        IRow row = sheetGLG.GetRow(rowIndexOther);
+                        if (row != null)
+                        {
+                            ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                            cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell0.SetCellValue(dataDlg_Dlg7.ColA);
+
+                            ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                            cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell2.SetCellValue(dataDlg_Dlg7.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col1) : 0);
+
+                            ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                            cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell3.SetCellValue(dataDlg_Dlg7.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.Col2.Value) : 0);
+
+                            ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                            cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            cell4.SetCellValue(dataDlg_Dlg7.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg7.TangGiam1_2.Value) : 0);
+                        }
+                        rowIndexOther++; // Tăng dòng sau mỗi lần lặp
+                    }
+                }
+
+                #region So sánh chiết khấu giữa
+                IRow rowHeader_dlg_8 = sheetGLG.GetRow(23);
+                ICell header_dlg_8 = rowHeader_dlg_8.GetCell(20) ?? rowHeader_dlg_8.CreateCell(20);
+                header_dlg_8.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_dlg_8.SetCellValue($"2. Đề xuất mức giảm giá từ {Hour} ngày {Date}");
+                var startRowdlg_Dlg8 = 26;
+                for (var i = 0; i < data.DLG.Dlg_8.Count(); i++)
+                {
+                    var dataDlg_Dlg8 = data.DLG.Dlg_8[i];
+                    int rowIndex = startRowdlg_Dlg8 + i;
+                    IRow row = sheetGLG.GetRow(rowIndex);
+
+                    if (row != null)
+                    {
+                        ICell cell0 = row.GetCell(20) ?? row.CreateCell(20);
+                        cell0.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell0.SetCellValue(dataDlg_Dlg8.ColA);
+
+                        ICell cell2 = row.GetCell(21) ?? row.CreateCell(21);
+                        cell2.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell2.SetCellValue(dataDlg_Dlg8.Col1.HasValue ? Convert.ToDouble(dataDlg_Dlg8.Col1) : 0);
+
+                        ICell cell3 = row.GetCell(22) ?? row.CreateCell(22);
+                        cell3.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell3.SetCellValue(dataDlg_Dlg8.Col2.HasValue ? Convert.ToDouble(dataDlg_Dlg8.Col2.Value) : 0);
+
+                        ICell cell4 = row.GetCell(23) ?? row.CreateCell(23);
+                        cell4.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell4.SetCellValue(dataDlg_Dlg8.TangGiam1_2.HasValue ? Convert.ToDouble(dataDlg_Dlg8.TangGiam1_2.Value) : 0);
+                    }
+
+                }
+
+                #endregion
+
+                #region Valid
+                IRow rowHeader_valid = sheetGLG.GetRow(4);
+                ICell header_valid = rowHeader_valid.GetCell(20) ?? rowHeader_valid.CreateCell(20);
+                header_valid.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_valid.SetCellValue($"{Date_3}");
+
+                ICell header_valid_time = rowHeader_valid.GetCell(21) ?? rowHeader_valid.CreateCell(21);
+                header_valid_time.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                header_valid_time.SetCellValue($"{Time}");
+                #endregion
+
+                #endregion
+
+                #endregion
+
                 #region PT
                 var sheetPT = workbook.GetSheetAt(1);
                 int startRowPT = 7;
@@ -1654,8 +2232,10 @@ namespace DMS.BUSINESS.Services.BU
                     var rowCur = ReportUtilities.CreateRow(ref sheetPT, startRowPT++, 38);
 
                     rowCur.Cells[0].SetCellValue(item.ColA);
+                    
                     rowCur.Cells[1].SetCellValue(item.ColB);
                     rowCur.Cells[1].CellStyle = textStyle;
+
                     rowCur.Cells[2].CellStyle = numberStyle;
                     rowCur.Cells[2].SetCellValue(Convert.ToDouble(item.Col1));
 
@@ -1737,9 +2317,10 @@ namespace DMS.BUSINESS.Services.BU
                 {
                     var textStyle = dataRow.IsBold ? styles.TextBold : styles.Text;
                     var numberStyle = dataRow.IsBold ? styles.NumberBold : styles.Number;
-                    var rowCur = ReportUtilities.CreateRow(ref sheetFOB, startRowFOB++, 40);
+                    var rowCur = ReportUtilities.CreateRow(ref sheetFOB, startRowFOB++, 41);
 
                     rowCur.Cells[0].SetCellValue(dataRow.ColA);
+
                     rowCur.Cells[1].SetCellValue(dataRow.ColB);
                     rowCur.Cells[1].CellStyle = textStyle;
 
@@ -1751,6 +2332,25 @@ namespace DMS.BUSINESS.Services.BU
 
                     SetCellValues(rowCur, numberStyle, dataRow, Enumerable.Range(7, 7).ToArray(),
                         new[] { dataRow.Col1, dataRow.Col2, dataRow.Col3, dataRow.Col4, dataRow.Col5, dataRow.Col6, dataRow.Col7 });
+
+                    for (int ggIndex = 0, col = 14; ggIndex < dataRow.GG.Count; ggIndex++, col += 2)
+                    {
+                        SetCellValues(rowCur, numberStyle, dataRow.GG[ggIndex], new[] { col, col + 1 }, new[] { dataRow.GG[ggIndex].VAT, dataRow.GG[ggIndex].NonVAT });
+                    }
+
+                    rowCur.Cells[22].SetCellValue(dataRow.Col8 == 0 ? 0 : Convert.ToDouble(dataRow.Col8));
+                    rowCur.Cells[22].CellStyle = textStyle;
+
+                    for (int ln = 0, col = 23; ln < dataRow.LN.Count; ln++, col++)
+                    {
+                        rowCur.Cells[col].CellStyle = numberStyle;
+                        rowCur.Cells[col].SetCellValue(Convert.ToDouble(dataRow.LN[ln]));
+                    }
+
+                    for (int bvIndex = 0, col = 29; bvIndex < dataRow.BVMT.Count; bvIndex++, col += 2)
+                    {
+                        SetCellValues(rowCur, numberStyle, dataRow.BVMT[bvIndex], new[] { col, col + 1 }, new[] { dataRow.BVMT[bvIndex].NonVAT, dataRow.BVMT[bvIndex].VAT });
+                    }
                 }
                 #endregion
 
@@ -1841,7 +2441,9 @@ namespace DMS.BUSINESS.Services.BU
                     var numberStyle = dataRow.IsBold ? styles.NumberBold : styles.Number;
 
                     IRow rowCur = ReportUtilities.CreateRow(ref sheetBBDO, startRowBBDO++, 23);
+                    rowCur.Cells[0].CellStyle = numberStyle; ;
                     rowCur.Cells[0].SetCellValue(dataRow.ColA);
+
                     rowCur.Cells[1].SetCellValue(dataRow.ColB);
                     rowCur.Cells[1].CellStyle = textStyle;
 
@@ -1851,10 +2453,19 @@ namespace DMS.BUSINESS.Services.BU
                     rowCur.Cells[3].SetCellValue(dataRow.ColD);
                     rowCur.Cells[3].CellStyle = textStyle;
 
+                    rowCur.Cells[4].CellStyle = numberStyle; ;
                     rowCur.Cells[4].SetCellValue(dataRow.Col1);
+
+                    rowCur.Cells[5].CellStyle = numberStyle; ;
                     rowCur.Cells[5].SetCellValue(dataRow.Col2);
+                    
+                    rowCur.Cells[6].CellStyle = numberStyle; ;
                     rowCur.Cells[6].SetCellValue(dataRow.Col3);
+                    
+                    rowCur.Cells[7].CellStyle = textStyle;
                     rowCur.Cells[7].SetCellValue(dataRow.Col4);
+
+                    rowCur.Cells[8].CellStyle = textStyle;
                     rowCur.Cells[8].SetCellValue(dataRow.Col5);
 
 
@@ -2074,26 +2685,45 @@ namespace DMS.BUSINESS.Services.BU
                     rowCur.Cells[4].CellStyle = numberStyle; ;
                     rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
 
+                    rowCur.Cells[5].CellStyle = numberStyle; ;
                     rowCur.Cells[5].SetCellValue(dataRow.Col4);
+
+                    rowCur.Cells[6].CellStyle = numberStyle; ;
                     rowCur.Cells[6].SetCellValue(dataRow.Col5);
+
+                    rowCur.Cells[7].CellStyle = numberStyle; ;
                     rowCur.Cells[7].SetCellValue(dataRow.Col6);
+
+                    rowCur.Cells[8].CellStyle = textStyle; ;
                     rowCur.Cells[8].SetCellValue(dataRow.Col7);
+
+                    rowCur.Cells[9].CellStyle = numberStyle; ;
                     rowCur.Cells[9].SetCellValue(dataRow.Col8);
 
                     rowCur.Cells[10].CellStyle = numberStyle; ;
                     rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
-
+                    
+                    rowCur.Cells[11].CellStyle = textStyle; ;
                     rowCur.Cells[11].SetCellValue(dataRow.Col10);
 
                     rowCur.Cells[12].CellStyle = numberStyle; ;
                     rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
 
-
+                    rowCur.Cells[13].CellStyle = textStyle; ;
                     rowCur.Cells[13].SetCellValue(dataRow.Col12);
+
+                    rowCur.Cells[14].CellStyle = textStyle; ;
                     rowCur.Cells[14].SetCellValue(dataRow.Col13);
+                    
+                    rowCur.Cells[15].CellStyle = numberStyle; ;
                     rowCur.Cells[15].SetCellValue(dataRow.Col14);
+                    
+                    rowCur.Cells[16].CellStyle = numberStyle; ;
                     rowCur.Cells[16].SetCellValue(dataRow.Col15);
+                    
+                    rowCur.Cells[17].CellStyle = numberStyle; ;
                     rowCur.Cells[17].SetCellValue(dataRow.Col16);
+
                     rowCur.Cells[18].SetCellValue(dataRow.Col17);
                     rowCur.Cells[19].SetCellValue(dataRow.Col18);
                 }
@@ -2112,12 +2742,14 @@ namespace DMS.BUSINESS.Services.BU
                     var numberStyle = dataRow.IsBold ? styles.NumberBold : styles.Number;
                     IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11DB, startRowVK11DB++, 21);
                     rowCur.Cells[0].SetCellValue(dataRow.ColA);
+
                     rowCur.Cells[1].CellStyle = textStyle;
                     rowCur.Cells[1].SetCellValue(dataRow.ColB);
 
-                    rowCur.Cells[1].CellStyle = textStyle;
-                    rowCur.Cells[1].SetCellValue(dataRow.ColC);
+                    rowCur.Cells[2].CellStyle = textStyle;
+                    rowCur.Cells[2].SetCellValue(dataRow.ColC);
 
+                    rowCur.Cells[3].CellStyle = textStyle;
                     rowCur.Cells[3].SetCellValue(dataRow.Col1);
 
                     rowCur.Cells[4].CellStyle = numberStyle; ;
@@ -2126,25 +2758,43 @@ namespace DMS.BUSINESS.Services.BU
                     rowCur.Cells[5].CellStyle = numberStyle; ;
                     rowCur.Cells[5].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
 
+                    rowCur.Cells[6].CellStyle = numberStyle; ;
                     rowCur.Cells[6].SetCellValue(dataRow.Col4);
+
+                    rowCur.Cells[7].CellStyle = numberStyle; ;
                     rowCur.Cells[7].SetCellValue(dataRow.Col5);
+                    
+                    rowCur.Cells[8].CellStyle = numberStyle; ;
                     rowCur.Cells[8].SetCellValue(dataRow.Col6);
+                    
+                    rowCur.Cells[9].CellStyle = textStyle; ;
                     rowCur.Cells[9].SetCellValue(dataRow.Col7);
                     rowCur.Cells[10].SetCellValue(dataRow.Col8);
 
                     rowCur.Cells[11].CellStyle = numberStyle; ;
                     rowCur.Cells[11].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
 
+                    rowCur.Cells[12].CellStyle = textStyle; ;
                     rowCur.Cells[12].SetCellValue(dataRow.Col10);
 
                     rowCur.Cells[13].CellStyle = numberStyle; ;
                     rowCur.Cells[13].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
 
+                    rowCur.Cells[14].CellStyle = textStyle; ;
                     rowCur.Cells[14].SetCellValue(dataRow.Col12);
+
+                    rowCur.Cells[15].CellStyle = textStyle; ;
                     rowCur.Cells[15].SetCellValue(dataRow.Col13);
+
+                    rowCur.Cells[16].CellStyle = numberStyle; ;
                     rowCur.Cells[16].SetCellValue(dataRow.Col14);
+                    
+                    rowCur.Cells[17].CellStyle = numberStyle; ;
                     rowCur.Cells[17].SetCellValue(dataRow.Col15);
+                    
+                    rowCur.Cells[18].CellStyle = numberStyle; ;
                     rowCur.Cells[18].SetCellValue(dataRow.Col16);
+                    
                     rowCur.Cells[19].SetCellValue(dataRow.Col17);
                     rowCur.Cells[20].SetCellValue(dataRow.Col18);
                 }
@@ -2163,6 +2813,7 @@ namespace DMS.BUSINESS.Services.BU
                     var numberStyle = dataRow.IsBold ? styles.NumberBold : styles.Number;
                     IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11FOB, startRowVK11FOB++, 21);
                     rowCur.Cells[0].SetCellValue(dataRow.ColA);
+
                     rowCur.Cells[1].SetCellValue(dataRow.ColC == null ? dataRow.ColB : dataRow.ColC);
                     rowCur.Cells[1].CellStyle = textStyle;
 
@@ -2175,25 +2826,44 @@ namespace DMS.BUSINESS.Services.BU
                     rowCur.Cells[4].CellStyle = numberStyle; ;
                     rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
 
+                    rowCur.Cells[5].CellStyle = numberStyle; ;
                     rowCur.Cells[5].SetCellValue(dataRow.Col4);
+
+                    rowCur.Cells[6].CellStyle = numberStyle; ;
                     rowCur.Cells[6].SetCellValue(dataRow.Col5);
+                    
+                    rowCur.Cells[7].CellStyle = numberStyle; ;
                     rowCur.Cells[7].SetCellValue(dataRow.Col6);
+                    
+                    rowCur.Cells[8].CellStyle = textStyle;
                     rowCur.Cells[8].SetCellValue(dataRow.Col7);
+
+                    rowCur.Cells[9].CellStyle = textStyle;
                     rowCur.Cells[9].SetCellValue(dataRow.Col8);
 
                     rowCur.Cells[10].CellStyle = numberStyle; ;
                     rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
 
+                    rowCur.Cells[11].CellStyle = textStyle;
                     rowCur.Cells[11].SetCellValue(dataRow.Col10);
 
-                    rowCur.Cells[12].CellStyle = numberStyle; ;
+                    rowCur.Cells[12].CellStyle = numberStyle;
                     rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
 
-                    rowCur.Cells[13].SetCellValue(dataRow.Col12);
+                    rowCur.Cells[13].CellStyle = textStyle;
+                    
+                    rowCur.Cells[14].CellStyle = textStyle;
                     rowCur.Cells[14].SetCellValue(dataRow.Col13);
+                    
+                    rowCur.Cells[15].CellStyle = numberStyle; ;
                     rowCur.Cells[15].SetCellValue(dataRow.Col14);
+
+                    rowCur.Cells[16].CellStyle = numberStyle; ;
                     rowCur.Cells[16].SetCellValue(dataRow.Col15);
+                    
+                    rowCur.Cells[17].CellStyle = numberStyle; ;
                     rowCur.Cells[17].SetCellValue(dataRow.Col16);
+                    
                     rowCur.Cells[18].SetCellValue(dataRow.Col17);
                     rowCur.Cells[19].SetCellValue(dataRow.Col18);
                 }
@@ -2226,25 +2896,45 @@ namespace DMS.BUSINESS.Services.BU
                     rowCur.Cells[4].CellStyle = numberStyle; ;
                     rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
 
+                    rowCur.Cells[5].CellStyle = numberStyle; ;
                     rowCur.Cells[5].SetCellValue(dataRow.Col4);
+
+                    rowCur.Cells[6].CellStyle = numberStyle; ;
                     rowCur.Cells[6].SetCellValue(dataRow.Col5);
+
+                    rowCur.Cells[7].CellStyle = numberStyle; ;
                     rowCur.Cells[7].SetCellValue(dataRow.Col6);
+
+                    rowCur.Cells[8].CellStyle = textStyle;
                     rowCur.Cells[8].SetCellValue(dataRow.Col7);
+                    
+                    rowCur.Cells[9].CellStyle = numberStyle;
                     rowCur.Cells[9].SetCellValue(dataRow.Col8);
 
-                    rowCur.Cells[10].CellStyle = numberStyle; ;
+                    rowCur.Cells[10].CellStyle = numberStyle;
                     rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
 
+                    rowCur.Cells[11].CellStyle = textStyle;
                     rowCur.Cells[11].SetCellValue(dataRow.Col10);
 
-                    rowCur.Cells[12].CellStyle = numberStyle; ;
+                    rowCur.Cells[12].CellStyle = numberStyle;
                     rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
 
+                    rowCur.Cells[13].CellStyle = textStyle;
                     rowCur.Cells[13].SetCellValue(dataRow.Col12);
+                    
+                    rowCur.Cells[14].CellStyle = textStyle;
                     rowCur.Cells[14].SetCellValue(dataRow.Col13);
+                    
+                    rowCur.Cells[15].CellStyle = numberStyle;
                     rowCur.Cells[15].SetCellValue(dataRow.Col14);
+
+                    rowCur.Cells[16].CellStyle = numberStyle;
                     rowCur.Cells[16].SetCellValue(dataRow.Col15);
+
+                    rowCur.Cells[17].CellStyle = numberStyle;
                     rowCur.Cells[17].SetCellValue(dataRow.Col16);
+
                     rowCur.Cells[18].SetCellValue(dataRow.Col17);
                     rowCur.Cells[19].SetCellValue(dataRow.Col18);
 
@@ -2263,29 +2953,55 @@ namespace DMS.BUSINESS.Services.BU
                     var textStyle = dataRow.IsBold ? styles.TextBold : styles.Text;
                     var numberStyle = dataRow.IsBold ? styles.NumberBold : styles.Number;
                     IRow rowCur = ReportUtilities.CreateRow(ref sheetPTS, startRowPTS++, 20);
+                    rowCur.Cells[0].CellStyle = numberStyle; ;
                     rowCur.Cells[0].SetCellValue(dataRow.ColA);
+
+                    rowCur.Cells[1].CellStyle = numberStyle; ;
                     rowCur.Cells[1].SetCellValue(dataRow.Col1);
 
+                    rowCur.Cells[2].CellStyle = numberStyle; ;
                     rowCur.Cells[2].SetCellValue(dataRow.Col2);
 
-
+                    rowCur.Cells[3].CellStyle = numberStyle; ;
                     rowCur.Cells[3].SetCellValue(dataRow.Col3);
+                    
+                    rowCur.Cells[4].CellStyle = textStyle; ;
                     rowCur.Cells[4].SetCellValue(dataRow.Col4);
+
+                    rowCur.Cells[5].CellStyle = textStyle; ;
                     rowCur.Cells[5].SetCellValue(dataRow.Col5);
+
+                    rowCur.Cells[6].CellStyle = textStyle; ;
                     rowCur.Cells[6].SetCellValue("");
+
+                    rowCur.Cells[7].CellStyle = textStyle; ;
                     rowCur.Cells[7].SetCellValue("");
+
+                    rowCur.Cells[8].CellStyle = textStyle; ;
                     rowCur.Cells[8].SetCellValue("");
 
                     rowCur.Cells[9].CellStyle = numberStyle; ;
                     rowCur.Cells[9].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+
+                    rowCur.Cells[10].CellStyle = textStyle; ;
                     rowCur.Cells[10].SetCellValue("");
 
                     rowCur.Cells[11].CellStyle = numberStyle; ;
                     rowCur.Cells[11].SetCellValue(dataRow.Col7 == 0 ? 0 : Convert.ToDouble(dataRow.Col7));
+
+                    rowCur.Cells[12].CellStyle = textStyle; ;
                     rowCur.Cells[12].SetCellValue(dataRow.Col8);
+
+                    rowCur.Cells[13].CellStyle = textStyle; ;
                     rowCur.Cells[13].SetCellValue("");
+
+                    rowCur.Cells[14].CellStyle = textStyle; ;
                     rowCur.Cells[14].SetCellValue("");
+
+                    rowCur.Cells[15].CellStyle = numberStyle; ;
                     rowCur.Cells[15].SetCellValue(dataRow.Col9);
+
+                    rowCur.Cells[16].CellStyle = numberStyle; ;
                     rowCur.Cells[16].SetCellValue(dataRow.Col10);
                 }
                 #endregion
@@ -2312,30 +3028,108 @@ namespace DMS.BUSINESS.Services.BU
                     rowCur.Cells[3].SetCellValue(dataRow.ColD);
                     rowCur.Cells[3].CellStyle = textStyle;
 
+                    rowCur.Cells[4].CellStyle = numberStyle;
                     rowCur.Cells[4].SetCellValue(dataRow.Col1);
 
+                    rowCur.Cells[5].CellStyle = numberStyle;
                     rowCur.Cells[5].SetCellValue(dataRow.Col2);
 
+                    rowCur.Cells[6].CellStyle = numberStyle;
                     rowCur.Cells[6].SetCellValue(dataRow.Col3);
+
+                    rowCur.Cells[7].CellStyle = textStyle;
                     rowCur.Cells[7].SetCellValue(dataRow.Col4);
+                    
+                    rowCur.Cells[8].CellStyle = textStyle;
                     rowCur.Cells[8].SetCellValue(dataRow.Col5);
 
                     rowCur.Cells[9].CellStyle = numberStyle; ;
                     rowCur.Cells[9].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
 
+                    rowCur.Cells[10].CellStyle = textStyle;
                     rowCur.Cells[10].SetCellValue(dataRow.Col7);
+
+                    rowCur.Cells[11].CellStyle = numberStyle; ;
                     rowCur.Cells[11].SetCellValue(dataRow.Col8);
+                    
+                    rowCur.Cells[12].CellStyle = textStyle;
                     rowCur.Cells[12].SetCellValue(dataRow.Col9);
+                    
+                    rowCur.Cells[13].CellStyle = textStyle;
                     rowCur.Cells[13].SetCellValue(dataRow.Col10);
+                    
+                    rowCur.Cells[14].CellStyle = numberStyle; ;
                     rowCur.Cells[14].SetCellValue(dataRow.Col11);
 
+                    rowCur.Cells[15].CellStyle = numberStyle; ;
                     rowCur.Cells[15].SetCellValue(dataRow.Col12);
+
+                    rowCur.Cells[16].CellStyle = numberStyle; ;
                     rowCur.Cells[16].SetCellValue(dataRow.Col13);
                     rowCur.Cells[17].SetCellValue(dataRow.Col14);
                     rowCur.Cells[18].SetCellValue(dataRow.Col15);
                 }
 
                 #endregion
+
+                #region tổng hợp
+
+                ISheet sheetTH = workbook.GetSheetAt(17);
+                var startRowTH =  4;
+
+                for (var i = 0; i < data.Summary.Count; i++)
+                {
+                    var dataRow = data.Summary[i];
+                    var textStyle = dataRow.IsBold ? styles.TextBold : styles.Text;
+                    var numberStyle = dataRow.IsBold ? styles.NumberBold : styles.Number;
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetTH, startRowTH++, 21);
+
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+
+
+                    rowCur.Cells[1].SetCellValue(dataRow.ColB);
+                    //dataRow.IsBold ?? rowCur.Cells[1].CellStyle = styleCellBold;
+                    //dataRow.IsBold ?? rowCur.Cells[1].CellStyle.SetFont(fontBold);
+                    rowCur.Cells[1].CellStyle = textStyle;
+                    //rowCur.Cells[1].CellStyle.SetFont(fontBold);
+
+                    rowCur.Cells[2].SetCellValue(dataRow.ColC);
+                    rowCur.Cells[2].CellStyle = textStyle;
+
+                    rowCur.Cells[3].CellStyle = textStyle;
+                    rowCur.Cells[3].SetCellValue(dataRow.ColD);
+                    
+                    rowCur.Cells[4].CellStyle = textStyle;
+                    
+                    rowCur.Cells[5].CellStyle = textStyle;
+
+                    rowCur.Cells[6].CellStyle = numberStyle;
+                    rowCur.Cells[6].SetCellValue(dataRow.Col1);
+
+                    rowCur.Cells[7].CellStyle = numberStyle;
+                    rowCur.Cells[7].SetCellValue(dataRow.Col2);
+
+                    rowCur.Cells[8].CellStyle = numberStyle;
+                    rowCur.Cells[8].SetCellValue(dataRow.Col3);
+                    rowCur.Cells[9].SetCellValue(dataRow.Col4);
+                    rowCur.Cells[10].SetCellValue(dataRow.Col5);
+
+                    rowCur.Cells[11].CellStyle = numberStyle; ;
+                    rowCur.Cells[11].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
+
+                    rowCur.Cells[12].SetCellValue(dataRow.Col7 ?? "VND");
+                    rowCur.Cells[13].SetCellValue(dataRow.Col8);
+                    rowCur.Cells[14].SetCellValue(dataRow.Col9);
+                    rowCur.Cells[15].SetCellValue(dataRow.Col10);
+                    rowCur.Cells[16].SetCellValue(dataRow.Col11);
+                    rowCur.Cells[17].SetCellValue(dataRow.Col12);
+                    rowCur.Cells[18].SetCellValue(dataRow.Col13);
+                    rowCur.Cells[19].SetCellValue(dataRow.Col14);
+                    rowCur.Cells[20].SetCellValue(dataRow.Col15);
+
+                }
+                #endregion
+
 
                 var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "Upload", $"{Guid.NewGuid()}.xlsx");
                 using var outFile = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
@@ -2546,7 +3340,7 @@ namespace DMS.BUSINESS.Services.BU
                 throw;
             }
         }
-        private static readonly object lockObj = new object();
+
         //public async Task<MemoryStream> ExportExcel(MemoryStream outFileStream, string path, string headerId, CalculateResultModel data)
         //{
         //    try

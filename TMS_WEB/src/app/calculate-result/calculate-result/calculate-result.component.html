@@ -502,7 +502,7 @@
               }
             </tbody>
           </nz-table>
-          <nz-divider nzText="SO SÁNH VỚI KỲ - {{ data.nameOld }}" nzOrientation="left"></nz-divider>
+          <nz-divider nzText="SO SÁNH VỚI KỲ - {{ data.dlg.nameOld }}" nzOrientation="left"></nz-divider>
 
           <nz-divider nzText="THAY ĐỔI GIÁ BÁN LẺ" nzOrientation="left"></nz-divider>
           <div nz-row [nzGutter]="16">
@@ -1744,9 +1744,8 @@
         </div>
       </nz-tab>
 
-      <nz-tab *ngIf="
-          rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_FOB)
-        " nzTitle="VK11-FOB" (nzClick)="changeTitle('VK11-FOB',13)">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_FOB)" nzTitle="VK11-FOB"
+      (nzClick)="changeTitle('VK11-FOB',13)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -1820,9 +1819,8 @@
         </div>
       </nz-tab>
 
-      <nz-tab *ngIf="
-          rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_TNPP)
-        " nzTitle="VK11-TNPP" (nzClick)="changeTitle('VK11-TNPP',14)">
+      <nz-tab *ngIf="rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_TNPP)" nzTitle="VK11-TNPP"
+      (nzClick)="changeTitle('VK11-TNPP',14)">
         <div [ngStyle]="{
             overflow: 'auto',
             height: isZoom ? '100vh' : 'calc(100vh - 206px)',
@@ -2191,7 +2189,7 @@
           <th>Tiêu đề </th>
           <th>Nội dung</th>
           <th>Trạng Thái</th>
-          
+
         </tr>
       </thead>
       <tbody>
@@ -2296,17 +2294,17 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-      
+
       <div nz-col [nzSpan]="11">
         <label>Danh sách khách hàng đặc biệt</label>
         <nz-form-item>
           <nz-form-control>
             <nz-select nzShowSearch nzAllowClear>
-      
-      
+
+
               <nz-option [nzDisabled]="true" *ngFor="let item of model.fob" [nzLabel]="item.customerName + ' - ' + item.fob" [nzValue]="item.code">
               </nz-option>
-      
+
             </nz-select>
           </nz-form-control>
         </nz-form-item>

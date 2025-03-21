@@ -186,7 +186,7 @@
     symbol-observable "4.0.0"
     yargs "17.7.2"
 
-"@angular/common@^17.0.0", "@angular/common@^17.0.0 || ^18.0.0", "@angular/common@^17.0.1", "@angular/common@^17.3.0", "@angular/common@^18.0.0 || ^19.0.0", "@angular/common@>=16.0.0", "@angular/common@17.3.10":
+"@angular/common@^17.0.0", "@angular/common@^17.0.0 || ^18.0.0", "@angular/common@^17.0.1", "@angular/common@^17.3.0", "@angular/common@^18.0.0 || ^19.0.0", "@angular/common@>= 10.0.0", "@angular/common@>=16.0.0", "@angular/common@17.3.10":
   version "17.3.10"
   resolved "https://registry.npmjs.org/@angular/common/-/common-17.3.10.tgz"
   integrity sha512-6SfD21M3LujymmZsZQIxAsV8Bj5u6He6ImZ+p2rr7FAhFxpVJyKldK8LCmJcFsBD4srpQcxEZ0iDxXvg+0ihAw==
@@ -214,7 +214,7 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/core@^17.0.0", "@angular/core@^17.0.0 || ^18.0.0", "@angular/core@^17.0.1", "@angular/core@^17.3.0", "@angular/core@^18.0.0 || ^19.0.0", "@angular/core@>=16.0.0", "@angular/core@17.3.10":
+"@angular/core@^17.0.0", "@angular/core@^17.0.0 || ^18.0.0", "@angular/core@^17.0.1", "@angular/core@^17.3.0", "@angular/core@^18.0.0 || ^19.0.0", "@angular/core@>= 10.0.0", "@angular/core@>=16.0.0", "@angular/core@17.3.10":
   version "17.3.10"
   resolved "https://registry.npmjs.org/@angular/core/-/core-17.3.10.tgz"
   integrity sha512-ocEKu7X0yFCOvgJn1uZy76qjhsjKvULrO1k/BuIX0nwhp61DTGYTvCqKmwCBLM8/gvcKYH5vMKMHoQKtiSGE0A==
@@ -243,7 +243,7 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/platform-browser@^17.0.0", "@angular/platform-browser@^17.0.1", "@angular/platform-browser@^17.3.0", "@angular/platform-browser@17.3.10":
+"@angular/platform-browser@^17.0.0", "@angular/platform-browser@^17.0.1", "@angular/platform-browser@^17.3.0", "@angular/platform-browser@>= 10.0.0", "@angular/platform-browser@17.3.10":
   version "17.3.10"
   resolved "https://registry.npmjs.org/@angular/platform-browser/-/platform-browser-17.3.10.tgz"
   integrity sha512-LEhBDOKm2A7nRmZqsafVp6OinRDG1OYZBSqjnT1jZ+f0CRRFIXz6aJ0TMPoU6vq9SLRJ7vrGD9P/eBf2hW00NQ==
@@ -3614,6 +3614,11 @@ dns-packet@^5.2.2:
   dependencies:
     "@leichtgewicht/ip-codec" "^2.0.1"
 
+"docviewhelper@>= 0.0.1":
+  version "0.0.2"
+  resolved "https://registry.npmjs.org/docviewhelper/-/docviewhelper-0.0.2.tgz"
+  integrity sha512-4ETJdDT//5Q8qcEGY9UjYo6dZiFzn3CHXAoSli4w35uehVdkKschIoRjG3exesc5jyVc9Zrch3oZKZR/5i4ZQQ==
+
 dom-serialize@^2.2.1:
   version "2.2.1"
   resolved "https://registry.npmjs.org/dom-serialize/-/dom-serialize-2.2.1.tgz"
@@ -5497,6 +5502,14 @@ ng-zorro-antd@^17.4.1:
     "@angular/cdk" "^17.0.0"
     "@ant-design/icons-angular" "^17.0.0"
     date-fns "^2.16.1"
+    tslib "^2.3.0"
+
+ngx-doc-viewer@^15.0.1:
+  version "15.0.1"
+  resolved "https://registry.npmjs.org/ngx-doc-viewer/-/ngx-doc-viewer-15.0.1.tgz"
+  integrity sha512-8FtA79/cIQUVagSU+IAno00VKzkfs/ep3p4rzsa7RXCbEGzXhbtCFOaqzuJN18PTaV0h9q3gpCcs2YRQ9ppSQw==
+  dependencies:
+    docviewhelper ">= 0.0.1"
     tslib "^2.3.0"
 
 node-fetch@^2.6.7:

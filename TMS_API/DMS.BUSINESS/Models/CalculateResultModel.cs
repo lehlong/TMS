@@ -10,7 +10,6 @@ namespace DMS.BUSINESS.Models
 {
     public class CalculateResultModel
     {
-        public string? NameOld { get; set; }
         public List<PT>? PT { get; set; } = new List<PT>();
         public List<TblMdGoods>? lstGoods { get; set; }
         public DLG? DLG { get; set; } = new DLG();
@@ -34,6 +33,7 @@ namespace DMS.BUSINESS.Models
     }
     public class DLG
     {
+        public string? NameOld { get; set; }
         public List<DLG_1> Dlg_1 { get; set; } = new List<DLG_1>();
         public List<DLG_2> Dlg_2 { get; set; } = new List<DLG_2>();
         public List<DLG_3> Dlg_3 { get; set; } = new List<DLG_3>();
@@ -343,6 +343,7 @@ namespace DMS.BUSINESS.Models
         public string? CustomerName { get; set; }
         public string? PointCode { get; set; }
         public string? PointName { get; set; }
+        public decimal? CuocVcBq { get; set; }
 
     }
     public class BBFO
