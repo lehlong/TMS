@@ -51,8 +51,8 @@
                   <a *ngIf="item.code == ggtd.goodsCode" (click)="openEdit(data)">{{ item.name }}</a>
                 </span>
               </td>
-              <td>{{ ggtd.oldPrice }}</td>
-              <td>{{ ggtd.newPrice }}</td>
+              <td class="input-v">{{ ggtd.oldPrice }}</td>
+              <td class="input-v">{{ ggtd.newPrice }}</td>
             </tr>
           </ng-container>
       </tbody>
@@ -95,8 +95,8 @@
       <nz-form-item style="padding-right: 16px;">
         <!-- <nz-form-label [nzRequired]="true">Từ ngày</nz-form-label> -->
         <nz-form-control nzErrorTip="Không đươc để trống" >
-          <nz-date-picker nzShowTime nzFormat="HH:mm dd-MM-yyyy " (ngModelChange) = checkDate()
-            [(ngModel)]="model.ggtdlHeader.fDate" [disabled]="model.ggtdlHeader.isActive != null"></nz-date-picker>
+          <nz-date-picker nzShowTime nzFormat="HH:mm dd-MM-yyyy "
+            [(ngModel)]="model.ggtdlHeader.fDate" (ngModelChange) = checkDate() [disabled]="model.ggtdlHeader.isActive != null"></nz-date-picker>
         <div style="color: red" *ngIf="isDateValid">Ngày tạo phải lớn hơn ngày đã tạo</div>
           </nz-form-control>
       </nz-form-item>

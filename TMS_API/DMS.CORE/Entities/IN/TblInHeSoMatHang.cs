@@ -16,7 +16,7 @@ namespace DMS.CORE.Entities.IN
         public string GoodsCode { get; set; }
 
         [Column("HEADER_CODE", TypeName = "VARCHAR(50)")]
-        public string HeaderCode { set; get; }
+        public string? HeaderCode { set; get; }
 
         [Column("HE_SO_VCF", TypeName = "DECIMAL(18,4)")]
         public decimal HeSoVcf { get; set; }

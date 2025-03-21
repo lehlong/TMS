@@ -16,8 +16,7 @@ namespace DMS.BUSINESS.Services.MD
 {
     public interface IRetailPriceService : IGenericService<TblMdRetailPrice, RetailPriceDto>
     {
-        Task<IList<RetailPriceDto>> GetAll(BaseMdFilter filter);
-       
+        Task<GblModel> GetAll();
         Task<byte[]> Export(BaseMdFilter filter); 
         Task<GblModel> BuildDataCreate(); 
         Task<GblModel> InsertData(GblModel model);
@@ -33,8 +32,7 @@ namespace DMS.BUSINESS.Services.MD
 
                 if (!string.IsNullOrWhiteSpace(filter.KeyWord))
                 {
-                    query = query.Where(x =>
-                    x.Code.Contains(filter.KeyWord));
+                    query = query.Where(x => x.Code.Contains(filter.KeyWord));
                 }
                 if (filter.IsActive.HasValue)
                 {
@@ -45,25 +43,40 @@ namespace DMS.BUSINESS.Services.MD
             catch (Exception ex)
             {
                 Status = false;
+
                 Exception = ex;
+
                 return null;
             }
         }
-        public async Task<IList<RetailPriceDto>> GetAll(BaseMdFilter filter)
+        public async Task<GblModel> GetAll()
         {
             try
             {
-                var query = _dbContext.TblMdRetailPrice.AsQueryable();
-                if (filter.IsActive.HasValue)
+                var lstGblL = _dbContext.TblMdRetailPriceList.Where(x => x.IsActive == null).OrderByDescending(x => x.FDate).ToList();
+                
+                var lstGbl = await _dbContext.TblMdRetailPrice.ToListAsync();
+
+                var data = new GblModel();
+
+                foreach (var item in lstGblL)
                 {
-                    query = query.Where(x => x.IsActive == filter.IsActive);
+                    var gbllModel = new GblModel();
+                
+                    gbllModel.GbllHeader = item;
+                    
+                    gbllModel.Gbl = lstGbl.Where(x => x.GbllCode == item.Code).ToList();
+
+                    data = gbllModel;
                 }
-                return await base.GetAllMd(query, filter);
+                return data;
             }
             catch (Exception ex)
             {
                 Status = false;
+
                 Exception = ex;
+
                 return null;
             }
         }
@@ -101,10 +114,15 @@ namespace DMS.BUSINESS.Services.MD
                 foreach (var g in lstGoods)
                 {
                     var gbl = new TblMdRetailPrice();
+
                     gbl.Code = Guid.NewGuid().ToString();
+
                     gbl.GbllCode = gblModel.GbllHeader.Code;
+
                     gbl.GoodsCode = g.Code;
+
                     gbl.NewPrice = 0;
+
                     gbl.OldPrice = LstOldGbl.Where(x => x.GbllCode == OldGblList.Code && x.GoodsCode == g.Code).Select(x => x.NewPrice).SingleOrDefault();
 
                     gblModel.Gbl.Add(gbl);
@@ -121,20 +139,24 @@ namespace DMS.BUSINESS.Services.MD
         {
             try
             {
-                var exists = await _dbContext.TblMdGiaGiaoTapDoanList
-                    .AnyAsync(item => item.FDate > model.GbllHeader.FDate);
-                var OldGgtdList = await _dbContext.TblMdRetailPriceList.Where(x => x.Code == model.oldHeaderGbl).FirstOrDefaultAsync();
+                var exists = await _dbContext.TblMdRetailPriceList.AnyAsync(item => item.FDate > model.GbllHeader.FDate);
+                
+                var OldGblList = await _dbContext.TblMdRetailPriceList.Where(x => x.Code == model.oldHeaderGbl).FirstOrDefaultAsync();
 
-                OldGgtdList.IsActive = false;
                 if (exists)
                 {
                     model.oldHeaderGbl = "false";
+
                     return model;
                 }
                 else
                 {
-                    // Không có giá trị nào thỏa mãn
+                    if (OldGblList != null)
+                    {
+                        OldGblList.IsActive = false;
+                    }
                     _dbContext.TblMdRetailPriceList.Add(model.GbllHeader);
+
                     _dbContext.TblMdRetailPrice.AddRange(model.Gbl);
 
                     await _dbContext.SaveChangesAsync();
@@ -144,7 +166,9 @@ namespace DMS.BUSINESS.Services.MD
             catch (Exception ex)
             {
                 Status = false;
+
                 Exception = ex;
+
                 return null;
             }
         }
@@ -181,6 +205,7 @@ namespace DMS.BUSINESS.Services.MD
             try
             {
                 var query = _dbContext.TblMdRetailPrice.AsQueryable();
+
                 if (!string.IsNullOrWhiteSpace(filter.KeyWord))
                 {
                     query = query.Where(x => x.Code.Contains(filter.KeyWord));
@@ -190,7 +215,9 @@ namespace DMS.BUSINESS.Services.MD
                     query = query.Where(x => x.IsActive == filter.IsActive);
                 }
                 var data = await base.GetAllMd(query, filter);
+
                 int i = 1;
+
                 data.ForEach(x =>
                 {
                     x.OrdinalNumber = i++;
@@ -200,7 +227,9 @@ namespace DMS.BUSINESS.Services.MD
             catch (Exception ex)
             {
                 Status = false;
+
                 Exception = ex;
+
                 return null;
             }
         }

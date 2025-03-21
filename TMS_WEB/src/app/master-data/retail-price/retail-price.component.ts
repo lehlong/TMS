@@ -125,11 +125,12 @@ export class RetailPriceComponent {
     }
     return 'Không có ngày giờ';
   }
+
   search() {
     this.isSubmit = false
-    this._service.searchRetailPrice(this.filter).subscribe({
+    this._service.getall().subscribe({
       next: (data) => {
-        this.paginationResult = data
+        this.data = data
       },
       error: (response) => {
         console.log(response)
@@ -156,12 +157,11 @@ export class RetailPriceComponent {
     return this.paginationResult.data?.some((local: any) => local.code === code)
   }
 
-  checkDate() {
-    const date = new Date(this.model.gbllHeader.fDate)
-    const tDate = new Date(this.model.gbllHeader.toDate)
-    console.log(date , tDate);
+  checkDate(data: Date) {
+    this.date = new Date(this.model.gbllHeader.fDate)
+    const tDate = new Date(data)
 
-    if (date < tDate) {
+    if (this.date < tDate) {
       this.isDateValid = false
       return;
     } else {
@@ -179,7 +179,7 @@ export class RetailPriceComponent {
       if (this.edit) {
         this._service.updateRetailPrice(formData).subscribe({
           next: (data) => {
-            if (data.oldHeaderGgtd == 'false') {
+            if (data.oldHeaderGbl == 'false') {
               this.message.error(
                 `Ngày tạo không được nhỏ hơn ngày đã tạo`,
               )
@@ -195,13 +195,13 @@ export class RetailPriceComponent {
           },
         })
       } else {
-        if (this.date > this.model.oldHeaderGgtd.fDate) {
+        if (this.date > this.model.oldHeaderGbl.fDate) {
           this.message.error("Ngày kết thúc phải lớn hơn ngày đã tạo")
           return;
         }
         this._service.createRetailPrice(formData).subscribe({
           next: (data) => {
-              if (data.oldHeaderGgtd == 'false') {
+              if (data.oldHeaderGbl == 'false') {
                 this.message.error(
                   `Ngày tạo không được nhỏ hơn ngày đã tạo`,
                 )

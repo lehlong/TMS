@@ -35,7 +35,7 @@ namespace DMS.API.Controllers.MD
         public async Task<IActionResult> GetAll([FromQuery] BaseMdFilter filter)
         {
             var transferObject = new TransferObject();
-            var result = await _service.GetAll(filter);
+            var result = await _service.GetAll();
             if (_service.Status)
             {
                 transferObject.Data = result;
@@ -71,7 +71,7 @@ namespace DMS.API.Controllers.MD
         public async Task<IActionResult> Insert([FromBody] GblModel RetailPrice)
         {
             var transferObject = new TransferObject();
-            var result = await _service.UpdateData(RetailPrice);
+            var result = await _service.InsertData(RetailPrice);
             if (_service.Status)
             {
                 transferObject.Data = result;
