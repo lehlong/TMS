@@ -12,11 +12,13 @@ import { environment } from '../../../environments/environment.prod'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { SignerService } from '../../services/master-data/signer.service'
 import { FormControl } from '@angular/forms'
+import { isVisible } from 'ckeditor5'
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
 
 @Component({
   selector: 'app-calculate-result',
   standalone: true,
-  imports: [ShareModule],
+  imports: [ShareModule,NgxDocViewerModule],
   templateUrl: './calculate-result.component.html',
   styleUrl: './calculate-result.component.scss',
 })
@@ -52,6 +54,8 @@ export class CalculateResultComponent {
   isVisibleCustomer: boolean = false
   isVisibleLstTrinhKy: boolean = false
   isVisibleCustomerPDF: boolean = false
+  isVisiblePreview: boolean = false
+  UrlOffice: string = ''
   isName: boolean = false
   accountGroups: any = {}
   data: any = {
@@ -484,7 +488,7 @@ export class CalculateResultComponent {
         this.isVisibleExport = true
         this.lstHistoryFile.forEach((item) => {
           item.pathDownload = environment.apiUrl + item.path
-          item.pathView = `https://view.officeapps.live.com/op/embed.aspx?src=${environment.apiUrl}${item.path}`
+          item.pathView = environment.apiUrl+item.path
         })
       },
       error: (err) => {
@@ -511,6 +515,7 @@ export class CalculateResultComponent {
     this.lstCustomerChecked = []
     this.isVisibleEmail = false
     this.isVisibleSms = false
+
   }
   reCalculate() {
     this.GetData(this.headerId, 0)
@@ -575,6 +580,7 @@ export class CalculateResultComponent {
     this.isVisibleLstTrinhKy = !this.isVisibleLstTrinhKy
   }
 
+
   exportPDF() {
     this._service.GetCustomer().subscribe({
       next: (data) => {
@@ -627,9 +633,19 @@ export class CalculateResultComponent {
   }
 
   openNewTab(url: string) {
+    console.log(url)
     window.open(url, '_blank')
   }
-
+  Preview(url: string) {
+    
+    this.UrlOffice = url
+    console.log(this.UrlOffice)
+    this.isVisiblePreview = true
+   
+  }
+  cancelPreview() {
+    this.isVisiblePreview = !this.isVisiblePreview
+  }
   checkName(_name: string) {
     _name == '' ? (this.isName = true) : (this.isName = false)
   }
