@@ -81,7 +81,7 @@ namespace DMS.BUSINESS.Services.BU
                 var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive == true).OrderBy(x => x.CreateDate).ToListAsync();
                 data.lstGoods = lstGoods;
                 var lstMarket = await _dbContext.TblMdMarket.OrderBy(x => x.Code).ToListAsync();
-                var lstCustomer = await _dbContext.TblMdCustomer.ToListAsync();
+                var lstCustomer = await _dbContext.TblMdCustomer.Where(x => x.IsActive == true).ToListAsync();
                 var lstCR = await _dbContext.TblBuCalculateResultList.OrderBy(x => x.FDate).ToListAsync();
                
                 //data.HEADER_CR = lstCR.FirstOrDefault(x => x.Code == code);
@@ -992,13 +992,13 @@ namespace DMS.BUSINESS.Services.BU
                     }
                     _m = _m.OrderBy(x => x.CustomerName).ThenBy(x => x.PointName).ToList();
                     var _o = 1;
-                    var specialCustomerDict = lstSpecialCustomer.ToDictionary(x => x.CustomerCode, x => x.Fob);
+                    //var specialCustomerDict = lstSpecialCustomer.ToDictionary(x => x.CustomerCode, x => x.Fob);
                     foreach (var e in _m)
                     {
-                        bool isSpecial = specialCustomerDict.ContainsKey(e.CustomerCode);
-                        decimal col12Value = isSpecial
-                            ? specialCustomerDict[e.CustomerCode] ?? 0
-                            : Math.Round(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col14) ?? 0);
+                        //bool isSpecial = specialCustomerDict.ContainsKey(e.CustomerCode);
+                        //decimal col12Value = isSpecial
+                        //    ? specialCustomerDict[e.CustomerCode] ?? 0
+                        //    : Math.Round(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col14) ?? 0);
                         var i = new BBDO
                         {
                             ColA = _o.ToString(),
@@ -1015,7 +1015,7 @@ namespace DMS.BUSINESS.Services.BU
                             Col10 = e.CuocVcBq,
                             Col11 = lstCustomer.FirstOrDefault(x => x.Code == e.CustomerCode)?.BankLoanInterest,
 
-                            Col12 = col12Value,
+                            Col12 = 1,
                         };
                         i.Col8 = Math.Round((i.Col9 ?? 0) + (i.Col10 ?? 0) + (i.Col11 ?? 0));
                         i.Col7 = i.Col6 == 0 ? 0 : Math.Round(i.Col6 / 1.1M ?? 0);
@@ -1099,7 +1099,7 @@ namespace DMS.BUSINESS.Services.BU
                         Col3 = i.Col3,
                         Col4 = i.Col4,
                         Col5 = i.Col5,
-                        Col6 = i.Col19,
+                        Col6 = i.Col18,
                         Col7 = "VND",
                         Col8 = "1",
                         Col9 = "L",
@@ -1636,7 +1636,11 @@ namespace DMS.BUSINESS.Services.BU
                     Text = ExcelNPOIExtention.SetCellStyleText(workbook),
                     TextBold = ExcelNPOIExtention.SetCellStyleTextBold(workbook),
                     Number = ExcelNPOIExtention.SetCellStyleNumber(workbook),
-                    NumberBold = ExcelNPOIExtention.SetCellStyleNumberBold(workbook)
+                    NumberBold = ExcelNPOIExtention.SetCellStyleNumberBold(workbook),
+                    SignCenter = ExcelNPOIExtention.SetCellStyleTextSign(workbook,true, false, true),
+                    SignLeft = ExcelNPOIExtention.SetCellStyleTextSign(workbook, false, false, true),
+                    HumanSign = ExcelNPOIExtention.SetCellStyleTextSign(workbook, true, false, true, true),
+                    Header = ExcelNPOIExtention.SetCellStyleTextSign(workbook, true, false,false)
                 };
 
                 var header = _dbContext.TblBuCalculateResultList.Where(x => x.Code == headerId).ToList().FirstOrDefault();
@@ -1646,14 +1650,14 @@ namespace DMS.BUSINESS.Services.BU
                 var Date = header.FDate.ToString("dd/MM/yyyy");
                 var Date_2 = header.FDate.ToString("'ngày' dd 'tháng' MM 'năm' yyyy", CultureInfo.InvariantCulture);
                 var Date_3 = header.FDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
-                var Hour = header.FDate.ToString("HH'h'mm", CultureInfo.InvariantCulture);
-                var Time = header.FDate.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
+                var Hour = header.FDate.ToString("HH'h'00", CultureInfo.InvariantCulture);
+                var Time = header.FDate.ToString("HH") + ":00:00";
                 string valueHeader = $"Thực hiện: từ {Hour} ngày {Date}";
+                string valueHeader_2 = $"Kèm theo Quyết định số: …………............/PLXNA-QĐ ngày {Date}";
                 var CVA5 = $"  (Kèm theo Công văn số:                        /PLXNA ngày {header.FDate.Day:D2}/{header.FDate.Month:D2}/{header.FDate.Year} của Công ty Xăng dầu Nghệ An)";
                 var QuyetDinhSo = header.QuyetDinhSo;
-
                 #region Dữ liệu gốc
-                var startRowdlg_1 = 2;
+                var startRowdlg_1 = 4;
                 ISheet sheetGLG = workbook.GetSheetAt(0);
                 #region Thị trường Thành phố Vinh, TX Cửa Lò
 
@@ -2225,6 +2229,11 @@ namespace DMS.BUSINESS.Services.BU
                 var sheetPT = workbook.GetSheetAt(1);
                 int startRowPT = 7;
 
+                var rowDatePT = ReportUtilities.CreateRow(ref sheetPT, 1, 1);
+
+                rowDatePT.Cells[0].SetCellValue(valueHeader);
+                rowDatePT.Cells[0].CellStyle = styles.Header;
+
                 foreach (var item in data.PT)
                 {
                     var textStyle = item.IsBold ? styles.TextBold : styles.Text;
@@ -2237,37 +2246,84 @@ namespace DMS.BUSINESS.Services.BU
                     rowCur.Cells[1].CellStyle = textStyle;
 
                     rowCur.Cells[2].CellStyle = numberStyle;
-                    rowCur.Cells[2].SetCellValue(Convert.ToDouble(item.Col1));
+
+                    if (item.IsBold)
+                    {
+                        rowCur.Cells[2].SetCellValue("");
+                    }
+                    else
+                    {
+                        rowCur.Cells[2].SetCellValue(Convert.ToDouble(item.Col1));
+                    }
 
                     for (int lg = 0, col = 3; lg < item.LG.Count; lg++, col++)
                     {
                         rowCur.Cells[col].CellStyle = numberStyle;
-                        rowCur.Cells[col].SetCellValue(Convert.ToDouble(item.LG[lg]));
+                        if (item.IsBold)
+                        {
+                            rowCur.Cells[col].SetCellValue(Convert.ToDouble(""));
+                        }
+                        else
+                        {
+                            rowCur.Cells[col].SetCellValue(Convert.ToDouble(item.LG[lg]));
+                        }
                     }
 
-                    SetCellValues(rowCur, numberStyle, item, new[] { 8, 9, 10 }, new[] { item.Col3, item.Col4, item.Col5 });
+                    SetCellValues(rowCur, numberStyle, item, new[] { 8, 9, 10}, new[] { item.Col3, item.Col4, item.Col5 }, item.IsBold);
 
                     for (int ggIndex = 0, col = 13; ggIndex < item.GG.Count; ggIndex++, col += 2)
                     {
-                        SetCellValues(rowCur, numberStyle, item.GG[ggIndex], new[] { col, col + 1 }, new[] { item.GG[ggIndex].VAT, item.GG[ggIndex].NonVAT });
+                        SetCellValues(rowCur, numberStyle, item.GG[ggIndex], new[] { col, col + 1 }, new[] { item.GG[ggIndex].VAT, item.GG[ggIndex].NonVAT }, item.IsBold);
                     }
 
                     for (int ln = 0, col = 23; ln < item.LN.Count; ln++, col++)
                     {
                         rowCur.Cells[col].CellStyle = numberStyle;
-                        rowCur.Cells[col].SetCellValue(Convert.ToDouble(item.LN[ln]));
+                        if (item.IsBold)
+                        {
+                            rowCur.Cells[col].SetCellValue("");
+                        }
+                        else
+                        {
+                            rowCur.Cells[col].SetCellValue(Convert.ToDouble(item.LN[ln]));
+                        }
                     }
 
                     for (int bvIndex = 0, col = 28; bvIndex < item.BVMT.Count; bvIndex++, col += 2)
                     {
                         SetCellValues(rowCur, numberStyle, item.BVMT[bvIndex], new[] { col, col + 1 }, new[] { item.BVMT[bvIndex].NonVAT, item.BVMT[bvIndex].VAT });
                     }
+
+                    
                 }
+                var rowSignPT = ReportUtilities.CreateRow(ref sheetPT, startRowPT+1, 24);
+
+                rowSignPT.Cells[1].SetCellValue("LẬP BIỂU");
+                rowSignPT.Cells[1].CellStyle = ExcelNPOIExtention.SetCellStyleTextSign(workbook, true, false, true);
+
+                rowSignPT.Cells[5].SetCellValue("P. KINH DOANH XD");
+                rowSignPT.Cells[5].CellStyle = ExcelNPOIExtention.SetCellStyleTextSign(workbook, false, false, true);
+                sheetPT.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPT + 1, startRowPT + 1, 5, 8));
+
+                rowSignPT.Cells[9].SetCellValue("PHÒNG TCKT");
+                rowSignPT.Cells[9].CellStyle = ExcelNPOIExtention.SetCellStyleTextSign(workbook, true, false, true);
+                sheetPT.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPT + 1, startRowPT + 1, 9, 13));
+
+                rowSignPT.Cells[19].SetCellValue("DUYỆT");
+                rowSignPT.Cells[19].CellStyle = ExcelNPOIExtention.SetCellStyleTextSign(workbook, true, false, true);
+                sheetPT.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPT + 1, startRowPT + 1, 19, 23));
+
                 #endregion
 
                 #region Export ĐB
                 var startRowDB = 7;
                 var sheetDB = workbook.GetSheetAt(2);
+
+                var rowDateĐB = ReportUtilities.CreateRow(ref sheetDB, 1, 1);
+
+                rowDateĐB.Cells[0].SetCellValue(valueHeader);
+                rowDateĐB.Cells[0].CellStyle = styles.Header;
+
                 foreach (var dataRow in data.DB)
                 {
                     var textStyle = dataRow.IsBold ? styles.TextBold : styles.Text;
@@ -2281,7 +2337,14 @@ namespace DMS.BUSINESS.Services.BU
                     rowCur.Cells[2].CellStyle = textStyle;
 
                     rowCur.Cells[3].CellStyle = numberStyle;
-                    rowCur.Cells[3].SetCellValue(Convert.ToDouble(dataRow.Col2));
+                    if (dataRow.IsBold)
+                    {
+                        rowCur.Cells[3].SetCellValue("");
+                    }
+                    else
+                    {
+                        rowCur.Cells[3].SetCellValue(Convert.ToDouble(dataRow.Col2));
+                    }  
 
                     for (int lg = 0, col = 4; lg < dataRow.LG.Count; lg++, col++)
                     {
@@ -2290,11 +2353,11 @@ namespace DMS.BUSINESS.Services.BU
                     }
 
                     SetCellValues(rowCur, numberStyle, dataRow, Enumerable.Range(9, 8).ToArray(),
-                        new[] { dataRow.Col3, dataRow.Col4, dataRow.Col5, dataRow.Col6, dataRow.Col7, dataRow.Col8, dataRow.Col9, dataRow.Col10 });
+                        new[] { dataRow.Col3, dataRow.Col4, dataRow.Col5, dataRow.Col6, dataRow.Col7, dataRow.Col8, dataRow.Col9, dataRow.Col10 }, dataRow.IsBold);
 
                     for (int gg = 0, col = 17; gg < dataRow.GG.Count; gg++, col += 2)
                     {
-                        SetCellValues(rowCur, numberStyle, dataRow.GG[gg], new[] { col, col + 1 }, new[] { dataRow.GG[gg].VAT, dataRow.GG[gg].NonVAT });
+                        SetCellValues(rowCur, numberStyle, dataRow.GG[gg], new[] { col, col + 1 }, new[] { dataRow.GG[gg].VAT, dataRow.GG[gg].NonVAT }, dataRow.IsBold);
                     }
 
                     for (int ln = 0, col = 28; ln < dataRow.LN.Count; ln++, col++)
@@ -2305,14 +2368,35 @@ namespace DMS.BUSINESS.Services.BU
 
                     for (int bv = 0, col = 33; bv < dataRow.BVMT.Count; bv++, col += 2)
                     {
-                        SetCellValues(rowCur, numberStyle, dataRow.BVMT[bv], new[] { col, col + 1 }, new[] { dataRow.BVMT[bv].NonVAT, dataRow.BVMT[bv].VAT });
+                        SetCellValues(rowCur, numberStyle, dataRow.BVMT[bv], new[] { col, col + 1 }, new[] { dataRow.BVMT[bv].NonVAT, dataRow.BVMT[bv].VAT }, dataRow.IsBold);
                     }
                 }
+                var rowSignDB = ReportUtilities.CreateRow(ref sheetDB, startRowDB , 28);
+
+                rowSignDB.Cells[1].SetCellValue("LẬP BIỂU");
+                rowSignDB.Cells[1].CellStyle = styles.SignCenter;
+
+                rowSignDB.Cells[6].SetCellValue("P. KINH DOANH XD");
+                rowSignDB.Cells[6].CellStyle = styles.SignLeft;
+                sheetDB.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowDB , startRowDB , 6, 9));
+
+                rowSignDB.Cells[15].SetCellValue("KẾ  TOÁN TRƯỞNG");
+                rowSignDB.Cells[15].CellStyle = styles.SignCenter;
+                sheetDB.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowDB , startRowDB , 15, 17));
+
+                rowSignDB.Cells[27].SetCellValue("DUYỆT");
+                rowSignDB.Cells[27].CellStyle = styles.SignLeft;
                 #endregion
 
                 #region Export FOB
                 var startRowFOB = 7;
                 var sheetFOB = workbook.GetSheetAt(3);
+
+                var rowDateFOB = ReportUtilities.CreateRow(ref sheetFOB, 1, 1);
+
+                rowDateFOB.Cells[0].SetCellValue(valueHeader);
+                rowDateFOB.Cells[0].CellStyle = styles.Header;
+
                 foreach (var dataRow in data.FOB)
                 {
                     var textStyle = dataRow.IsBold ? styles.TextBold : styles.Text;
@@ -2331,7 +2415,7 @@ namespace DMS.BUSINESS.Services.BU
                     }
 
                     SetCellValues(rowCur, numberStyle, dataRow, Enumerable.Range(7, 7).ToArray(),
-                        new[] { dataRow.Col1, dataRow.Col2, dataRow.Col3, dataRow.Col4, dataRow.Col5, dataRow.Col6, dataRow.Col7 });
+                        new[] { dataRow.Col1, dataRow.Col2, dataRow.Col3, dataRow.Col4, dataRow.Col5, dataRow.Col6, dataRow.Col7 }, dataRow.IsBold);
 
                     for (int ggIndex = 0, col = 14; ggIndex < dataRow.GG.Count; ggIndex++, col += 2)
                     {
@@ -2341,23 +2425,44 @@ namespace DMS.BUSINESS.Services.BU
                     rowCur.Cells[22].SetCellValue(dataRow.Col8 == 0 ? 0 : Convert.ToDouble(dataRow.Col8));
                     rowCur.Cells[22].CellStyle = textStyle;
 
-                    for (int ln = 0, col = 23; ln < dataRow.LN.Count; ln++, col++)
+                    for (int ln = 0, col = 25; ln < dataRow.LN.Count; ln++, col++)
                     {
                         rowCur.Cells[col].CellStyle = numberStyle;
                         rowCur.Cells[col].SetCellValue(Convert.ToDouble(dataRow.LN[ln]));
                     }
 
-                    for (int bvIndex = 0, col = 29; bvIndex < dataRow.BVMT.Count; bvIndex++, col += 2)
+                    for (int bvIndex = 0, col = 30; bvIndex < dataRow.BVMT.Count; bvIndex++, col += 2)
                     {
                         SetCellValues(rowCur, numberStyle, dataRow.BVMT[bvIndex], new[] { col, col + 1 }, new[] { dataRow.BVMT[bvIndex].NonVAT, dataRow.BVMT[bvIndex].VAT });
                     }
                 }
+                var rowSignFOB = ReportUtilities.CreateRow(ref sheetFOB, startRowFOB + 1, 24);
+
+                rowSignFOB.Cells[1].SetCellValue("LẬP BIỂU");
+                rowSignFOB.Cells[1].CellStyle = ExcelNPOIExtention.SetCellStyleTextSign(workbook, true, false, true);
+
+                rowSignFOB.Cells[5].SetCellValue("P. KINH DOANH XD");
+                rowSignFOB.Cells[5].CellStyle = ExcelNPOIExtention.SetCellStyleTextSign(workbook, false, false, true);
+                sheetFOB.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowFOB + 1, startRowFOB + 1, 5, 8));
+
+                rowSignFOB.Cells[13].SetCellValue("KẾ  TOÁN TRƯỞNG");
+                rowSignFOB.Cells[13].CellStyle = ExcelNPOIExtention.SetCellStyleTextSign(workbook, false, false, true);
+                sheetFOB.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowFOB + 1, startRowFOB + 1, 13, 15));
+
+                rowSignFOB.Cells[20].SetCellValue("DUYỆT");
+                rowSignFOB.Cells[20].CellStyle = ExcelNPOIExtention.SetCellStyleTextSign(workbook, true, false, true);
+                sheetFOB.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowFOB + 1, startRowFOB + 1, 20, 24));
                 #endregion
 
                 #region Export PT09
 
                 var startRowPT09 = 7;
                 ISheet sheetPT09 = workbook.GetSheetAt(4);
+
+                var rowDatePT09 = ReportUtilities.CreateRow(ref sheetPT09, 1, 1);
+
+                rowDatePT09.Cells[0].SetCellValue(valueHeader);
+                rowDatePT09.Cells[0].CellStyle = styles.Header;
 
                 for (var i = 0; i < data.PT09.Count(); i++)
                 {
@@ -2426,13 +2531,39 @@ namespace DMS.BUSINESS.Services.BU
                         iBV += 2;
                     }
                 }
+                
+                var rowSignPT09 = ReportUtilities.CreateRow(ref sheetPT09, startRowPT09 + 1, 24);
 
+                rowSignPT09.Cells[1].SetCellValue("LẬP BIỂU");
+                rowSignPT09.Cells[1].CellStyle = ExcelNPOIExtention.SetCellStyleTextSign(workbook, true, false, true);
+
+                rowSignPT09.Cells[5].SetCellValue("P. KINH DOANH XD");
+                rowSignPT09.Cells[5].CellStyle = ExcelNPOIExtention.SetCellStyleTextSign(workbook, false, false, true);
+                sheetPT09.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPT09 + 1, startRowPT09 + 1, 5, 8));
+
+                rowSignPT09.Cells[9].SetCellValue("KẾ  TOÁN TRƯỞNG");
+                rowSignPT09.Cells[9].CellStyle = ExcelNPOIExtention.SetCellStyleTextSign(workbook, true, false, true);
+                sheetPT09.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPT09 + 1, startRowPT09 + 1, 9, 16));
+
+                rowSignPT09.Cells[19].SetCellValue("DUYỆT");
+                rowSignPT09.Cells[19].CellStyle = ExcelNPOIExtention.SetCellStyleTextSign(workbook, true, false, true);
+                sheetPT09.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPT09 + 1, startRowPT09 + 1, 19, 23));
                 #endregion
 
                 #region Export BB ĐO
 
                 var startRowBBDO = 9;
                 ISheet sheetBBDO = workbook.GetSheetAt(5);
+
+                var rowDateBBDO = ReportUtilities.CreateRow(ref sheetBBDO, 3, 1);
+
+                rowDateBBDO.Cells[0].SetCellValue(valueHeader);
+                rowDateBBDO.Cells[0].CellStyle = styles.Header;
+
+                var rowQdsBBDO = ReportUtilities.CreateRow(ref sheetBBDO, 4, 1);
+
+                rowQdsBBDO.Cells[0].SetCellValue(valueHeader_2);
+                rowQdsBBDO.Cells[0].CellStyle = styles.Header;
 
                 for (var i = 0; i < data.BBDO.Count(); i++)
                 {
@@ -2512,7 +2643,36 @@ namespace DMS.BUSINESS.Services.BU
                     rowCur.Cells[22].SetCellValue(dataRow.Col19 == 0 ? 0 : Convert.ToDouble(dataRow.Col19));
 
                 }
+                var rowSignBBDO = ReportUtilities.CreateRow(ref sheetBBDO, startRowBBDO + 1, 21);
 
+                rowSignBBDO.Cells[0].SetCellValue("                LẬP BIỂU                                   P.KDXD                                    PHÒNG TCKT");
+                rowSignBBDO.Cells[0].CellStyle = styles.SignLeft;
+
+                sheetBBDO.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowBBDO + 1, startRowBBDO + 1, 4, 22));
+                if (header.SignerCode == "TongGiamDoc")
+                {
+                    rowSignBBDO.Cells[4].SetCellValue($"{nguoiKy.Position}");
+                    rowSignBBDO.Cells[4].CellStyle = styles.HumanSign;
+                    var rowSignBBDO_SignName = ReportUtilities.CreateRow(ref sheetBBDO, startRowBBDO + 6, 25);
+                    sheetBBDO.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowBBDO + 6, startRowBBDO + 6, 4, 22));
+                    rowSignBBDO_SignName.Cells[4].SetCellValue($"{nguoiKy.Name}");
+                    rowSignBBDO_SignName.Cells[4].CellStyle = styles.HumanSign;
+                }
+                else
+                {
+                    rowSignBBDO.Cells[4].SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+                    rowSignBBDO.Cells[4].CellStyle = styles.HumanSign;
+
+                    var rowSignPositionBBDO = ReportUtilities.CreateRow(ref sheetBBDO, startRowBBDO + 2, 22);
+                    sheetBBDO.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowBBDO + 2, startRowBBDO + 2, 4, 22));
+                    rowSignPositionBBDO.Cells[4].SetCellValue($"{nguoiKy.Position}");
+                    rowSignPositionBBDO.Cells[4].CellStyle = styles.HumanSign;
+
+                    var rowSignBBDO_SignName = ReportUtilities.CreateRow(ref sheetBBDO, startRowBBDO + 7, 22);
+                    sheetBBDO.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowBBDO + 7, startRowBBDO + 7, 4, 22));
+                    rowSignBBDO_SignName.Cells[4].SetCellValue($"{nguoiKy.Name}");
+                    rowSignBBDO_SignName.Cells[4].CellStyle = styles.HumanSign;
+                }
                 #endregion
 
                 #region Export BB FO
@@ -2568,6 +2728,11 @@ namespace DMS.BUSINESS.Services.BU
                 var startRowPL1 = 8;
                 ISheet sheetPL1 = workbook.GetSheetAt(7);
 
+                var rowDatePL1 = ReportUtilities.CreateRow(ref sheetPL1, 2, 1);
+
+                rowDatePL1.Cells[0].SetCellValue(valueHeader);
+                rowDatePL1.Cells[0].CellStyle = styles.HumanSign;
+
                 for (var i = 0; i < data.PL1.Count(); i++)
                 {
                     var dataRow = data.PL1[i];
@@ -2587,11 +2752,46 @@ namespace DMS.BUSINESS.Services.BU
                     }
 
                 }
+                var rowSignPL1 = ReportUtilities.CreateRow(ref sheetPL1, startRowPL1 + 1, 6);
+
+                rowSignPL1.Cells[0].SetCellValue("LẬP BIỂU            P.KDXD              P.TCKT          ");
+                rowSignPL1.Cells[0].CellStyle = styles.SignLeft;
+                sheetPL1.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL1 + 1, startRowPL1 + 1, 0, 2));
+                sheetPL1.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL1 + 1, startRowPL1 + 1, 3, 5));
+                if (header.SignerCode == "TongGiamDoc")
+                {
+                    rowSignPL1.Cells[3].SetCellValue($"{nguoiKy.Position}");
+                    rowSignPL1.Cells[3].CellStyle = styles.HumanSign;
+                    var rowSignPL1_SignName = ReportUtilities.CreateRow(ref sheetPL1, startRowPL1   + 6, 25);
+                    sheetPL1.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL1 + 6, startRowPL1 + 6, 3, 5));
+                    rowSignPL1_SignName.Cells[3].SetCellValue($"{nguoiKy.Name}");
+                    rowSignPL1_SignName.Cells[3].CellStyle = styles.HumanSign;
+                }
+                else
+                {
+                    rowSignPL1.Cells[3].SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+                    rowSignPL1.Cells[3].CellStyle = styles.HumanSign;
+
+                    var rowSignPositionPL1 = ReportUtilities.CreateRow(ref sheetPL1, startRowPL1 + 2, 5);
+                    sheetPL1.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL1 + 2, startRowPL1 + 2, 3, 5));
+                    rowSignPositionPL1.Cells[3].SetCellValue($"{nguoiKy.Position}");
+                    rowSignPositionPL1.Cells[3].CellStyle = styles.HumanSign;
+
+                    var rowSignPL1_SignName = ReportUtilities.CreateRow(ref sheetPL1, startRowPL1 + 7, 6);
+                    sheetPL1.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL1 + 7, startRowPL1 + 7, 3, 5));
+                    rowSignPL1_SignName.Cells[3].SetCellValue($"{nguoiKy.Name}");
+                    rowSignPL1_SignName.Cells[3].CellStyle = styles.HumanSign;
+                }
                 #endregion
 
                 #region Export PL2
                 var startRowPL2 = 7;
                 ISheet sheetPL2 = workbook.GetSheetAt(8);
+
+                var rowDatePL2 = ReportUtilities.CreateRow(ref sheetPL2, 2, 1);
+
+                rowDatePL2.Cells[0].SetCellValue(valueHeader);
+                rowDatePL2.Cells[0].CellStyle = styles.HumanSign;
 
                 for (var i = 0; i < data.PL2.Count(); i++)
                 {
@@ -2611,12 +2811,47 @@ namespace DMS.BUSINESS.Services.BU
                         iGG += 1;
                     }
                 }
+                var rowSignPL2 = ReportUtilities.CreateRow(ref sheetPL2, startRowPL2 + 1, 6);
+
+                rowSignPL2.Cells[0].SetCellValue("     LẬP BIỂU            P.KDXD         P.TCKT        ");
+                rowSignPL2.Cells[0].CellStyle = styles.SignLeft;
+                sheetPL2.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL2 + 1, startRowPL2 + 1, 0, 2));
+                sheetPL2.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL2 + 1, startRowPL2 + 1, 3, 5));
+                if (header.SignerCode == "TongGiamDoc")
+                {
+                    rowSignPL2.Cells[3].SetCellValue($"{nguoiKy.Position}");
+                    rowSignPL2.Cells[3].CellStyle = styles.HumanSign;
+                    var rowSignPL2_SignName = ReportUtilities.CreateRow(ref sheetPL2, startRowPL2 + 6, 25);
+                    sheetPL2.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL2 + 6, startRowPL2 + 6, 3, 5));
+                    rowSignPL2_SignName.Cells[3].SetCellValue($"{nguoiKy.Name}");
+                    rowSignPL2_SignName.Cells[3].CellStyle = styles.HumanSign;
+                }
+                else
+                {
+                    rowSignPL2.Cells[3].SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+                    rowSignPL2.Cells[3].CellStyle = styles.HumanSign;
+                    var rowSignPositionPL2 = ReportUtilities.CreateRow(ref sheetPL2, startRowPL2 + 2, 5);
+                    sheetPL2.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL2 + 2, startRowPL2 + 2, 3, 5));
+                    rowSignPositionPL2.Cells[3].SetCellValue($"{nguoiKy.Position}");
+                    rowSignPositionPL2.Cells[3].CellStyle = styles.HumanSign;
+
+                    var rowSignPL2_SignName = ReportUtilities.CreateRow(ref sheetPL2, startRowPL2 + 7, 6);
+                    sheetPL2.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL2 + 7, startRowPL2 + 7, 3, 5));
+                    rowSignPL2_SignName.Cells[3].SetCellValue($"{nguoiKy.Name}");
+                    rowSignPL2_SignName.Cells[3].CellStyle = styles.HumanSign;
+                }
                 #endregion
 
                 #region Export PL3
 
                 var startRowPL3 = 7;
                 ISheet sheetPL3 = workbook.GetSheetAt(9);
+
+                var rowDatePL3 = ReportUtilities.CreateRow(ref sheetPL3, 2, 1);
+
+                rowDatePL3.Cells[0].SetCellValue(valueHeader);
+                rowDatePL3.Cells[0].CellStyle = styles.HumanSign;
+
                 for (var i = 0; i < data.PL3.Count(); i++)
                 {
                     var dataRow = data.PL3[i];
@@ -2635,12 +2870,46 @@ namespace DMS.BUSINESS.Services.BU
                         iGG += 1;
                     }
                 }
+                var rowSignPL3 = ReportUtilities.CreateRow(ref sheetPL3, startRowPL3 + 1, 6);
+
+                rowSignPL3.Cells[0].SetCellValue("     LẬP BIỂU            P.KDXD                  P.TCKT   ");
+                rowSignPL3.Cells[0].CellStyle = styles.SignLeft;
+                sheetPL3.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL3 + 1, startRowPL3 + 1, 0, 2));
+                sheetPL3.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL3 + 1, startRowPL3 + 1, 3, 5));
+                if (header.SignerCode == "TongGiamDoc")
+                {
+                    rowSignPL3.Cells[3].SetCellValue($"{nguoiKy.Position}");
+                    rowSignPL3.Cells[3].CellStyle = styles.HumanSign;
+                    var rowSignPL3_SignName = ReportUtilities.CreateRow(ref sheetPL3, startRowPL3 + 6, 25);
+                    sheetPL3.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL3 + 6, startRowPL3 + 6, 3, 5));
+                    rowSignPL3_SignName.Cells[3].SetCellValue($"{nguoiKy.Name}");
+                    rowSignPL3_SignName.Cells[3].CellStyle = styles.HumanSign;
+                }
+                else
+                {
+                    rowSignPL3.Cells[3].SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+                    rowSignPL3.Cells[3].CellStyle = styles.HumanSign;
+                    var rowSignPositionPL3 = ReportUtilities.CreateRow(ref sheetPL3, startRowPL3 + 2, 5);
+                    sheetPL3.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL3 + 2, startRowPL3 + 2, 3, 5));
+                    rowSignPositionPL3.Cells[3].SetCellValue($"{nguoiKy.Position}");
+                    rowSignPositionPL3.Cells[3].CellStyle = styles.HumanSign;
+
+                    var rowSignPL3_SignName = ReportUtilities.CreateRow(ref sheetPL3, startRowPL3 + 7, 6);
+                    sheetPL3.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL3 + 7, startRowPL3 + 7, 3, 5));
+                    rowSignPL3_SignName.Cells[3].SetCellValue($"{nguoiKy.Name}");
+                    rowSignPL3_SignName.Cells[3].CellStyle = styles.HumanSign;
+                }
                 #endregion
 
                 #region Export PL4
 
                 var startRowPL4 = 8;
                 ISheet sheetPL4 = workbook.GetSheetAt(10);
+
+                var rowDatePL4 = ReportUtilities.CreateRow(ref sheetPL4, 3, 1);
+
+                rowDatePL4.Cells[2].SetCellValue(valueHeader);
+                rowDatePL4.Cells[2].CellStyle = styles.HumanSign;
 
                 for (var i = 0; i < data.PL4.Count(); i++)
                 {
@@ -2659,6 +2928,35 @@ namespace DMS.BUSINESS.Services.BU
                         rowCur.Cells[2 + iGG].SetCellValue(dataRow.GG[gg] == 0 ? 0 : Convert.ToDouble(dataRow.GG[gg]));
                         iGG += 1;
                     }
+                }
+                var rowSignPL4 = ReportUtilities.CreateRow(ref sheetPL4, startRowPL4 + 1, 6);
+
+                rowSignPL4.Cells[0].SetCellValue("     LẬP BIỂU            P.KDXD                  P.TCKT          ");
+                rowSignPL4.Cells[0].CellStyle = styles.SignLeft;
+                sheetPL4.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL4 + 1, startRowPL4 + 1, 0, 2));
+                sheetPL4.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL4 + 1, startRowPL4 + 1, 3, 5));
+                if (header.SignerCode == "TongGiamDoc")
+                {
+                    rowSignPL4.Cells[3].SetCellValue($"{nguoiKy.Position}");
+                    rowSignPL4.Cells[3].CellStyle = styles.HumanSign;
+                    var rowSignPL4_SignName = ReportUtilities.CreateRow(ref sheetPL4, startRowPL4 + 6, 25);
+                    sheetPL4.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL4 + 6, startRowPL4 + 6, 3, 5));
+                    rowSignPL4_SignName.Cells[3].SetCellValue($"{nguoiKy.Name}");
+                    rowSignPL4_SignName.Cells[3].CellStyle = styles.HumanSign;
+                }
+                else
+                {
+                    rowSignPL4.Cells[3].SetCellValue("KT.CHỦ TỊCH KIÊM GIÁM ĐỐC");
+                    rowSignPL4.Cells[3].CellStyle = styles.HumanSign;
+                    var rowSignPositionPL4 = ReportUtilities.CreateRow(ref sheetPL4, startRowPL4 + 2, 5);
+                    sheetPL4.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL4 + 2, startRowPL4 + 2, 3, 5));
+                    rowSignPositionPL4.Cells[3].SetCellValue($"{nguoiKy.Position}");
+                    rowSignPositionPL4.Cells[3].CellStyle = styles.HumanSign;
+
+                    var rowSignPL4_SignName = ReportUtilities.CreateRow(ref sheetPL4, startRowPL4 + 7, 6);
+                    sheetPL4.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(startRowPL4 + 7, startRowPL4 + 7, 3, 5));
+                    rowSignPL4_SignName.Cells[3].SetCellValue($"{nguoiKy.Name}");
+                    rowSignPL4_SignName.Cells[3].CellStyle = styles.HumanSign;
                 }
                 #endregion
 
@@ -3143,12 +3441,20 @@ namespace DMS.BUSINESS.Services.BU
             }
         }
 
-        private void SetCellValues(IRow row, ICellStyle style, dynamic data, int[] indices, decimal?[] values)
+        private void SetCellValues(IRow row, ICellStyle style, dynamic data, int[] indices, decimal?[] values,bool isTitle = false)
         {
             for (int i = 0; i < indices.Length; i++)
             {
                 row.Cells[indices[i]].CellStyle = style;
-                row.Cells[indices[i]].SetCellValue(Convert.ToDouble(values[i] ?? 0));
+                if (isTitle)
+                {
+                    row.Cells[indices[i]].SetCellValue("");
+                }
+                else
+                {
+                    row.Cells[indices[i]].SetCellValue(Convert.ToDouble(values[i] ?? 0));
+                }
+                
             }
         }
 
@@ -6609,6 +6915,24 @@ public static class ExcelNPOIExtention
         style.BorderBottom = BorderStyle.Thin;
         style.BorderLeft = BorderStyle.Thin;
         style.BorderRight = BorderStyle.Thin;
+        return style;
+    }
+
+    public static ICellStyle SetCellStyleTextSign(IWorkbook workbook,bool isCenter,bool isFill,bool isBold, bool isVerticalAlignment = false)
+    {
+        ICellStyle style = workbook.CreateCellStyle();
+        IFont font = workbook.CreateFont();
+        font.FontName = "Times New Roman";
+        font.FontHeightInPoints = 12;
+        font.IsBold = isBold?true:false;
+        style.SetFont(font);
+        if (isFill)
+        {
+        style.FillForegroundColor = IndexedColors.White.Index;
+        style.FillPattern = FillPattern.SolidForeground;
+        }
+        style.Alignment = isCenter ? HorizontalAlignment.Center : HorizontalAlignment.Left;
+        style.VerticalAlignment = isVerticalAlignment ? VerticalAlignment.Center: VerticalAlignment.Bottom;
         return style;
     }
 

@@ -73,6 +73,13 @@ export class CustomerComponent {
 
   index = 0
 
+  visiblePhone: any[] = [];
+  visibleEmail: any[] = [];
+
+  visibleChange(value: boolean,i:number,isPhone:boolean): void {
+   isPhone?this.visiblePhone[i] = value:this.visibleEmail[i] = value;
+  }
+
   contactList: any[] = []
   listOfPhoneOptions: { [key: string]: string[] } = {} // Lưu danh sách số điện thoại theo customerCode
   listOfEmailOptions: { [key: string]: string[] } = {} // Lưu danh sách email theo customerCode
@@ -158,6 +165,17 @@ export class CustomerComponent {
     }
   }
 
+  getFirstActiveContact(isPhone:boolean): string {
+    if(isPhone){
+      const activePhone = this.listOfPhone.find(item => item.isActive === true);
+      return activePhone ? activePhone.value : "Danh sách số điện thoại";
+    }
+   else{
+    const activeEmail = this.listOfEmail.find(item => item.isActive === true);
+    return activeEmail ? activeEmail.value : "Danh sách email";
+   }
+  }
+
   removeItem(index: number, isPhone: boolean, isUpdate: boolean): void {
     if (isUpdate) {
       if (isPhone) {
@@ -172,6 +190,7 @@ export class CustomerComponent {
         this.listOfEmail.splice(index, 1)
       }
     }
+    isPhone?this.visiblePhone[index] = false:this.visibleEmail[index]=false;
   }
 
   trackByFn(index: number, item: any) {
@@ -237,12 +256,20 @@ export class CustomerComponent {
   }
 
   search() {
+    const formData = this.validateForm.getRawValue()
     this.isSubmit = false
 
     this._customerContactService.getall().subscribe({
       next: (contacts) => {
-        this.contactList = contacts
-
+        this.contactList = contacts        
+        if(this.edit){
+          this.listOfPhone = contacts.filter(
+            (item:any) => item.type === 'phone' && item.customer_Code === formData.code,
+          )
+          this.listOfEmail = contacts.filter(
+            (item:any) => item.type === 'email' && item.customer_Code === formData.code,
+          )
+        }
         this._service.searchCustomer(this.filter).subscribe({
           next: (data) => {
             this.paginationResult = data
@@ -288,7 +315,7 @@ export class CustomerComponent {
       error: (err) => {
         console.error('Lỗi khi gọi API getall:', err)
       },
-    })
+    }) 
   }
 
   // getAllCustomer(){
@@ -514,6 +541,7 @@ export class CustomerComponent {
     this.listOfEmail = this.contactList.filter(
       (item) => item.type === 'email' && item.customer_Code === data.code,
     )
+    
     setTimeout(() => {
       this.edit = true
       this.visible = true

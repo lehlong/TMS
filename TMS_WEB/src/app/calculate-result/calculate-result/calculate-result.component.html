@@ -2313,7 +2313,7 @@
 
     <nz-divider nzText="HỆ SỐ MẶT HÀNG" nzOrientation="left"></nz-divider>
 
-    <nz-table #hs2Table [nzData]="model.hS2" nzSize="small">
+    <nz-table #hs2Table [nzData]="model_2.hS2" nzSize="small">
       <thead>
         <tr>
           <th rowspan="2" [nzAlign]="'center'">Mặt hàng</th>
@@ -2347,29 +2347,72 @@
             </nz-select>
           </td>
           <td>
-            <input class="input-v" nz-input [(ngModel)]="data.gblcsV1" type="number" (keyup)="onKeyUpCalculate(data)" />
+            <input
+            class="input-v"
+            nz-input
+            type="text"
+            [(ngModel)]="data.gblcsV1"
+            (keydown)="onKeyDownNumberOnly($event)"
+            (input)="onInputNumberFormat(data,'gblcsV1',true)"
+            (keyup)="onKeyUpCalculate(data)"
+          />
+
           </td>
           <td>
-            <input class="input-v" nz-input [(ngModel)]="data.gblV2" type="number" (keyup)="onKeyUpCalculate(data)" />
+            <input
+            class="input-v"
+            nz-input
+            type="text"
+            [(ngModel)]="data.gblV2"
+            (keydown)="onKeyDownNumberOnly($event)"
+            (input)="onInputNumberFormat(data,'gblV2',true)"
+            (keyup)="onKeyUpCalculate(data)"
+          />
           </td>
           <td>
-            <input class="input-v" nz-input [(ngModel)]="data.v2_V1" type="number" />
+            <input
+            class="input-v"
+            nz-input
+            type="text"
+            [(ngModel)]="data.v2_V1"
+            (keydown)="onKeyDownNumberOnly($event)"
+            (input)="onInputNumberFormat(data,'v2_V1',true)"/>
           </td>
           <td>
-            <input class="input-v" nz-input [(ngModel)]="data.mtsV1" type="number" (keyup)="onKeyUpCalculate(data)" />
+            <input
+            class="input-v"
+            nz-input
+            type="text"
+            [(ngModel)]="data.mtsV1"
+            (keydown)="onKeyDownNumberOnly($event)"
+            (input)="onInputNumberFormat(data,'mtsV1',true)"
+            (keyup)="onKeyUpCalculate(data)"
+          />
           </td>
           <td>
-            <input class="input-v" nz-input [(ngModel)]="data.gny" type="number" />
+            <input
+            class="input-v"
+            nz-input
+            type="text"
+            [(ngModel)]="data.gny"
+            (keydown)="onKeyDownNumberOnly($event)"
+            (input)="onInputNumberFormat(data,'gny',true)"/>
           </td>
           <td>
-            <input class="input-v" nz-input [(ngModel)]="data.clgblv" type="number" />
+            <input
+            class="input-v"
+            nz-input
+            type="text"
+            [(ngModel)]="data.clgblv"
+            (keydown)="onKeyDownNumberOnly($event)"
+            (input)="onInputNumberFormat(data,'clgblv',true)"/>
           </td>
         </tr>
         }
       </tbody>
     </nz-table>
 
-    <nz-table #hs1Table [nzData]="model.hS1" nzSize="small">
+    <nz-table #hs1Table [nzData]="model_2.hS1" nzSize="small">
       <thead>
         <tr>
           <th [nzAlign]="'center'">Mặt hàng</th>
@@ -2406,22 +2449,64 @@
             </nz-select>
           </td>
           <td>
-            <input [disabled]="true" class="input-v" nz-input [(ngModel)]="data.heSoVcf" type="number" />
+          <input
+          class="input-v"
+          nz-input
+          type="text"
+          [(ngModel)]="data.heSoVcf"
+          (keydown)="onKeyDownNumberOnly($event)"
+          (input)="onInputNumberFormat(data,'heSoVcf',false)"
+            />
           </td>
           <td>
-            <input class="input-v" nz-input [(ngModel)]="data.thueBvmt" type="number" />
+            <input
+            class="input-v"
+            nz-input
+            type="text"
+            [(ngModel)]="data.thueBvmt"
+            (keydown)="onKeyDownNumberOnly($event)"
+            (input)="onInputNumberFormat(data,'thueBvmt',false)"
+              />
           </td>
           <td>
-            <input class="input-v" nz-input [(ngModel)]="data.l15ChuaVatBvmt" type="number" />
+            <input
+            class="input-v"
+            nz-input
+            type="text"
+            [(ngModel)]="data.l15ChuaVatBvmt"
+            (keydown)="onKeyDownNumberOnly($event)"
+            (input)="onInputNumberFormat(data,'l15ChuaVatBvmt',false)"
+              />
           </td>
           <td>
-            <input class="input-v" nz-input [(ngModel)]="data.l15ChuaVatBvmtNbl" type="number" />
+            <input
+            class="input-v"
+            nz-input
+            type="text"
+            [(ngModel)]="data.l15ChuaVatBvmtNbl"
+            (keydown)="onKeyDownNumberOnly($event)"
+            (input)="onInputNumberFormat(data,'l15ChuaVatBvmtNbl',false)"
+              />
           </td>
           <td>
-            <input class="input-v" nz-input [(ngModel)]="data.giamGiaFob" type="number" />
+            <input
+            class="input-v"
+            nz-input
+            type="text"
+            [(ngModel)]="data.giamGiaFob"
+            (keydown)="onKeyDownNumberOnly($event)"
+            (input)="onInputNumberFormat(data,'giamGiaFob',false)"
+              />
           </td>
           <td>
-            <input class="input-v" nz-input [(ngModel)]="data.laiGopDieuTiet" type="number" />
+            <input
+            class="input-v"
+            nz-input
+            type="text"
+            [(ngModel)]="data.laiGopDieuTiet"
+            (keydown)="onKeyDownNumberOnly($event)"
+            (input)="onInputNumberFormat(data,'laiGopDieuTiet',false)"
+              />
           </td>
         </tr>
         }

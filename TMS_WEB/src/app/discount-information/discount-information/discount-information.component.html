@@ -27,20 +27,6 @@
       <tr>
         <th rowspan="4">STT</th>
         <th rowspan="4">Điểm giao hàng</th>
-        <th
-          colspan="{{ data.lstCompetitor.length + 1 }}"
-          rowspan="2"
-          class="align-center"
-        >
-          Cự ly vận chuyển từ kho trung tâm (Km)
-        </th>
-        <th
-          colspan="{{ data.lstCompetitor.length + 1 }}"
-          rowspan="2"
-          class="align-center"
-        >
-          Đơn giá cước vận chuyển
-        </th>
         <th colspan="{{
             data.lstGoods.length * (data.lstCompetitor.length * 2 + 1)
           }}" rowspan="1">
@@ -55,15 +41,6 @@
         }
       </tr>
       <tr>
-        <th rowspan="4">PLXNA</th>
-        @for (i of data.lstCompetitor; track i) {
-          <th rowspan="2" class="align-center">{{ i.name }}</th>
-        }
-
-        <th rowspan="2">PLXNA</th>
-        @for (i of data.lstCompetitor; track i) {
-          <th rowspan="2" class="align-center">{{ i.name }}</th>
-        }
         @for (i of data.lstGoods; track i) {
         <th rowspan="2">PLXNA</th>
         @for (c of data.lstCompetitor; track c) {
@@ -92,14 +69,6 @@
         <td [ngStyle]="{ 'font-weight': d.isBold ? '600' : '' }">
           {{ d.colB }}
         </td>
-        <td class="align-right">{{ d.col1 }}</td>
-          @for (gap of d.gaps; track gap) {
-            <td class="align-right">{{ gap }}</td>
-          }
-          <td class="align-right">{{ d.col4 }}</td>
-          @for (cuoc of d.cuocVCs; track cuoc) {
-            <td class="align-right">{{ cuoc }}</td>
-          }
         @for (cK of d.ck; track cK) {
         <td class="align-right">{{ cK.plxna }}</td>
         @for (dT of cK.dt; track dT) {

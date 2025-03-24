@@ -13,7 +13,7 @@ export class SignerService {
   }
 
   getall(): Observable<any> {
-    return this.commonService.get('Signer/GetAll')
+    return this.commonService.get('Signer/GetAll?IsActive=true')
   }
 
   createSigner(params: any): Observable<any> {

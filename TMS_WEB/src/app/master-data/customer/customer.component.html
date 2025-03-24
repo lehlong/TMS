@@ -374,7 +374,7 @@
             [nzClickHide]="false"
             [nzTrigger]="'click'"
           >
-            Danh sách số điện thoại
+            {{edit && listOfPhone.length>0?getFirstActiveContact(true):"Danh sách số điện thoại"}}
             <span nz-icon nzType="down" style="color: #d9d9d9"></span>
           </p>
           <nz-dropdown-menu class="wrap" #phoneMenu="nzDropdownMenu">
@@ -396,15 +396,28 @@
                       (keypress)="returnOnlyNumbers($event)"
                     />
                     <button
-                      style="margin-left: 12px"
                       nz-button
-                      nzType="default"
-                      nzShape="circle"
-                      nzSize="small"
-                      (click)="removeItem(i, true, edit ? true : false)"
+                      nz-popover
+                      nzType="primary"
+                      nzPopoverTitle="Bạn chắc chắn muốn xoá ?"
+                      nzPopoverTrigger="click"
+                      [nzPopoverContent]="contentTemplate"
+                      [nzPopoverVisible]="visiblePhone[i]"
+                      (nzPopoverVisibleChange)="visibleChange($event,i,true)"
+                      nzDanger
+                      ><span nz-icon nzType="delete" style="color: white"></span></button
                     >
-                      <span nz-icon nzType="delete" style="color: red"></span>
-                    </button>
+                    <ng-template #contentTemplate>
+                      <button nz-button nzSize="small" nzType="primary" nzDanger (click)="visibleChange(false,i,true)"><span nz-icon nzType="close" style="color: white"></span> Hủy</button>
+                      <button nz-button nzSize="small"
+                       nzType="primary" (click)="visibleChange(false,i,true)"
+                       nzType="primary"
+                       style="margin-left: 12px"
+                       nz-button
+                       nzSize="small"
+                       (click)="removeItem(i, true, edit ? true : false)"
+                       > <span nz-icon nzType="check" style="color: white"></span> Chắc chắn</button>
+                    </ng-template>
                   </div>
                 </li>
               </ng-container>
@@ -440,7 +453,7 @@
             [nzClickHide]="false"
             [nzTrigger]="'click'"
           >
-            Danh sách email
+          {{edit && listOfEmail.length>0 ?getFirstActiveContact(false):"Danh sách email"}}
             <span nz-icon nzType="down" style="color: #d9d9d9"></span>
           </p>
           <nz-dropdown-menu class="wrap" #emailMenu="nzDropdownMenu">
@@ -461,15 +474,27 @@
                       [ngModelOptions]="{ standalone: true }"
                     />
                     <button
-                      style="margin-left: 12px"
-                      nz-button
-                      nzType="default"
-                      nzShape="circle"
-                      nzSize="small"
-                      (click)="removeItem(i, false, edit ? true : false)"
-                    >
-                      <span nz-icon nzType="delete" style="color: red"></span>
-                    </button>
+                    nz-button
+                    nz-popover
+                    nzType="primary"
+                    nzPopoverTitle="Bạn chắc chắn muốn xoá ?"
+                    nzPopoverTrigger="click"
+                    [nzPopoverContent]="contentTemplate"
+                    [nzPopoverVisible]="visibleEmail[i]"
+                    (nzPopoverVisibleChange)="visibleChange($event,i,false)"
+                    nzDanger
+                    ><span nz-icon nzType="delete" style="color: white"></span></button
+                  >
+                  <ng-template #contentTemplate>
+                    <button nz-button nzSize="small" nzType="primary" nzDanger (click)="visibleChange(false,i,false)"><span nz-icon nzType="close" style="color: white"></span> Hủy</button>
+                    <button nz-button nzSize="small"
+                     nzType="primary" (click)="visibleChange(false,i,false)"
+                     style="margin-left: 12px"
+                     nz-button
+                     nzSize="small"
+                     (click)="removeItem(i, false, edit ? true : false)"
+                     > <span nz-icon nzType="check" style="color: white"></span> Chắc chắn</button>
+                  </ng-template>
                   </div>
                 </li>
               </ng-container>

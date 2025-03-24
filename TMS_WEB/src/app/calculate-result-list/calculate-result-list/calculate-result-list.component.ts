@@ -73,6 +73,13 @@ export class CalculateResultListComponent {
     hS2: [],
     fob: []
   }
+
+  model_2: any = {
+    header: {},
+    hS1: [],
+    hS2: [],
+    fob: []
+  }
   goodsResult: any[] = []
   signerResult: any[] = []
   selectedValue = {}
@@ -87,6 +94,82 @@ export class CalculateResultListComponent {
     console.log('calculate')
   }
 
+  onInputNumberFormat(data: any, field: string, isHs2: boolean) {
+    let value = data[field];
+  
+    // 1. Bỏ ký tự không hợp lệ (chỉ giữ số, '-', '.')
+    value = value.replace(/[^0-9\-.]/g, '');
+  
+    // 2. Đảm bảo chỉ có 1 dấu '-' và nó đứng đầu
+    const minusMatches = value.match(/-/g);
+    if (minusMatches && minusMatches.length > 1) {
+      value = value.replace(/-/g, ''); // Xoá hết
+      value = '-' + value; // Thêm 1 dấu '-' đầu tiên
+    } else if (minusMatches && !value.startsWith('-')) {
+      value = value.replace(/-/g, '');
+      value = '-' + value;
+    }
+  
+    // 3. Xử lý dấu '.': chỉ cho sau '0' hoặc '-0' và duy nhất
+    const dotIndex = value.indexOf('.');
+    if (dotIndex !== -1) {
+      const beforeDot = value.substring(0, dotIndex);
+      const afterDot = value.substring(dotIndex + 1).replace(/\./g, '');
+  
+      if (beforeDot === '0' || beforeDot === '-0') {
+        value = beforeDot + '.' + afterDot;
+      } else {
+        // Loại bỏ dấu '.' nếu không đúng điều kiện
+        value = beforeDot + afterDot;
+      }
+    }
+  
+    // 4. Format phần nguyên với dấu ','
+    const parts = value.split('.');
+    let integerPart = parts[0].replace(/[^0-9\-]/g, ''); // giữ dấu '-'
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  
+    // 5. Ghép lại
+    let formattedValue = integerPart;
+    if (parts[1]) {
+      formattedValue += '.' + parts[1];
+    }
+  
+    // 6. Cập nhật lại giá trị hiển thị
+    data[field] = formattedValue;
+  
+    // 7. Parse về số
+    const rawNumber = formattedValue.replace(/,/g, '');
+    const numberValue = parseFloat(rawNumber);
+    const finalNumber = isNaN(numberValue) ? 0 : numberValue;
+  
+    // 8. Update vào model chuẩn
+    if (isHs2) {
+      const index = this.model.hS2.findIndex((x: any) => x.goodsCode === data.goodsCode);
+      if (index !== -1) {
+        this.model.hS2[index][field] = finalNumber;
+      }
+    } else {
+      const index = this.model.hS1.findIndex((x: any) => x.goodsCode === data.goodsCode);
+      if (index !== -1) {
+        this.model.hS1[index][field] = finalNumber;
+      }
+    }
+  }
+  
+  onKeyDownNumberOnly(event: KeyboardEvent) {
+    const allowedKeys = [
+      'Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab', '-', '.', // Thêm "-" và "."
+    ];
+  
+    if (
+      (event.key >= '0' && event.key <= '9') || allowedKeys.includes(event.key)
+    ) {
+      return; // Cho phép số, -, .
+    } else {
+      event.preventDefault(); // Chặn ký tự khác
+    }
+  }
   onSortChange(name: string, value: any) {
     this.filter = {
       ...this.filter,
@@ -166,7 +249,8 @@ export class CalculateResultListComponent {
     this._service.getObjectCreate().subscribe({
       next: (data) => {
         this.model = data
-        console.log(this.model)
+        this.model_2 = structuredClone(data)
+        this.formatHSData()
         this.visible = true
       },
       error: (err) => {
@@ -174,7 +258,16 @@ export class CalculateResultListComponent {
       },
     })
   }
-
+  formatHSData() {
+    if (this.model_2.hS1 && Array.isArray(this.model_2.hS1)) {
+      this.model_2.hS1.forEach((item:any) => {
+        // Format các trường số cần format
+        console.log("Cũ: " + item.heSoVcf);
+        item.heSoVcf = this.formatNumber(item.heSoVcf);
+        item.thueBvmt = this.formatNumber(item.thueBvmt);
+      });
+    }
+  }
   resetForm() {
     this.validateForm.reset()
     this.isSubmit = false
@@ -231,10 +324,27 @@ export class CalculateResultListComponent {
     })
   }
 
+  formatNumber(value: any): string {
+    if (value == null || value === '') return '';
+  
+    const num = parseFloat(value.toString().replace(/,/g, ''));
+    if (isNaN(num)) return '';
+  
+    // Format giữ 4 chữ số sau dấu phẩy (mày có thể chỉnh lại tuỳ)
+    return num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 4 });
+  }
+
   onKeyUpCalculate(row: any) {
-    row.v2_V1 = row.gblV2 - row.gblcsV1
-    row.gny = row.gblcsV1 + row.mtsV1
-    row.clgblv = row.gblV2 - row.gny
+    const index = this.model_2.hS2.indexOf(row)
+
+    this.model.hS2[index].v2_V1 = this.model.hS2[index].gblV2 - this.model.hS2[index].gblcsV1
+    
+    this.model.hS2[index].gny = this.model.hS2[index].gblcsV1 + this.model.hS2[index].mtsV1
+    this.model.hS2[index].clgblv = this.model.hS2[index].gblV2 - this.model.hS2[index].gny
+
+    this.model_2.hS2[index].v2_V1 = this.formatNumber(this.model.hS2[index].v2_V1)
+    this.model_2.hS2[index].gny = this.formatNumber(this.model.hS2[index].gny)
+    this.model_2.hS2[index].clgblv = this.formatNumber(this.model.hS2[index].clgblv)
   }
 
   checkName(_name: string) {
