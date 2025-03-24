@@ -166,7 +166,7 @@ namespace DMS.API.Controllers.BU
         public async Task<IActionResult> ExportExcel([FromQuery] string headerId)
         {
             var transferObject = new TransferObject();
-            var result = await _service.ExportExcelPlus(headerId);
+            var result = await _service.GenarateFile(new List<string>(), "EXCEL", headerId);
             if (_service.Status)
             {
                 transferObject.Data = result;

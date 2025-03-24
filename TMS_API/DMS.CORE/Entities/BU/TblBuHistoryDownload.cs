@@ -14,18 +14,18 @@ namespace DMS.CORE.Entities.BU
     public class TblBuHistoryDownload : SoftDeleteEntity
     {
         [Key]
-        [Column("CODE", TypeName = "NVARCHAR(50)")]
+        [Column("CODE", TypeName = "NVARCHAR(500)")]
         public string Code { get; set; }
-        [Column("HEADER_CODE", TypeName = "NVARCHAR(50)")]
+        [Column("HEADER_CODE", TypeName = "NVARCHAR(500)")]
         public string HeaderCode { get; set; }
 
-        [Column("NAME", TypeName = "NVARCHAR(50)")]
+        [Column("NAME", TypeName = "NVARCHAR(500)")]
         public string Name { get; set; }
 
-        [Column("TYPE", TypeName = "NVARCHAR(50)")]
+        [Column("TYPE", TypeName = "NVARCHAR(500)")]
         public string? Type { get; set; }
 
-        [Column("PATH", TypeName = "NVARCHAR(500)")]
+        [Column("PATH", TypeName = "NVARCHAR(MAX)")]
         public string? Path { get; set; }
 
 

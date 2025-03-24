@@ -3461,7 +3461,7 @@ namespace DMS.BUSINESS.Services.BU
                 #endregion
 
 
-                var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "Upload", $"{Guid.NewGuid()}.xlsx");
+                var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "Upload", $"{DateTime.Now:ddMMyyyy_HHmmss}_CSTMGG.xlsx");
                 using var outFile = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
                 workbook.Write(outFile);
 
@@ -6850,7 +6850,23 @@ namespace DMS.BUSINESS.Services.BU
                 }
                 return null;
             }
+            if(type == "EXCEL")
+            {
+               
+                    var path = await ExportExcelPlus(headerId);
+                    _dbContext.TblBuHistoryDownload.Add(new TblBuHistoryDownload
+                    {
+                        Code = Guid.NewGuid().ToString(),
+                        HeaderCode = headerId,
+                        Name = path.Replace($"Upload/", ""),
+                        Type = "xlsx",
+                        Path = path
+                    });
+                    await _dbContext.SaveChangesAsync();
+                    return path;
+               
 
+            }
             else
             {
                 var w = await GenarateWord(lstCustomerChecked, headerId);
