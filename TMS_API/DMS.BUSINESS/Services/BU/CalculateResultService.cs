@@ -211,7 +211,7 @@ namespace DMS.BUSINESS.Services.BU
                         Col4 = hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmtNbl),
                         Col5 = (hsmh.Sum(x => x.ThueBvmt) + hsmh.Sum(x => x.HeSoVcf) * hsmh.Sum(x => x.L15ChuaVatBvmtNbl)) * 1.1M,
                         Col6 = dlg1.Sum(x => x.Col6),
-                        Col14 = hsmh.Sum(x => x.GiamGiaFob),
+                        Col14 = hsmh.Sum(x => x.GiamGiaFob) - 30,
                         Col10 = hsmh.Sum(x => x.LaiGopDieuTiet) == null ? 0 : hsmh.Sum(x => x.LaiGopDieuTiet),
                     };
                     if (i.Col6 != 0)
@@ -473,6 +473,11 @@ namespace DMS.BUSINESS.Services.BU
                         ColB = local.Name,
                         IsBold = true,
                     });
+                    data.PL1.Add(new PL1
+                    {
+                        ColB = local.Name,
+                        IsBold = true,
+                    });
                     foreach (var m in lstMarket.Where(x => x.LocalCode == l).ToList())
                     {
                         var i = new PT
@@ -531,10 +536,6 @@ namespace DMS.BUSINESS.Services.BU
                             var _nVAT = _h - d.VAT != 0 ? (_h - d.VAT) / 1.1M - _d : 0;
                             _b.NonVAT = Math.Round(_nVAT ?? 0);
                             i.BVMT.Add(_b);
-
-
-
-
                         }
                         data.PT.Add(i);
                         orderPT++;
@@ -746,23 +747,32 @@ namespace DMS.BUSINESS.Services.BU
 
                 #region PL2
                 var _oPl2 = 1;
-                foreach (var c in lstCustomer.Where(x => x.CustomerTypeCode == "KBM").ToList())
+                foreach (var l in lstMarket)
                 {
-                    var pl2 = new PL2
+                    data.PL2.Add(new PL2
                     {
-                        Code = c.Code,
-                        ColA = _oPl2.ToString(),
-                        ColB = c.Name,
-                    };
-                    var _db = data.DB.FirstOrDefault(x => x.Code == c.Code);
-                    _oPl2++;
-                    if (_db == null) continue;
-                    foreach (var gg in _db.GG)
+                        ColB = l.Name,
+                        IsBold = true,
+                    });
+                    foreach (var c in lstCustomer.Where(x => x.CustomerTypeCode == "KBM" && x.MarketCode == l.Code).ToList())
                     {
-                        pl2.GG.Add(gg.VAT);
+                        var pl2 = new PL2
+                        {
+                            Code = c.Code,
+                            ColA = _oPl2.ToString(),
+                            ColB = c.Name,
+                        };
+                        var _db = data.DB.FirstOrDefault(x => x.Code == c.Code);
+                        _oPl2++;
+                        if (_db == null) continue;
+                        foreach (var gg in _db.GG)
+                        {
+                            pl2.GG.Add(gg.VAT);
+                        }
+                        data.PL2.Add(pl2);
                     }
-                    data.PL2.Add(pl2);
                 }
+                    
 
                 #endregion
 

@@ -1453,7 +1453,11 @@
             </thead>
             <tbody>
               @for (t of pl1Table.data; track t) {
-              <tr *ngIf="(!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <tr *ngIf="t.isBold" style="font-weight: bold">
+                  <td></td>
+                  <td colspan="22">{{ t.colB }}</td>
+                </tr>
+              <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                 <td>{{ t.colA }}</td>
                 <td>{{ t.colB }}</td>
                 @for (i of t.gg; track i) {
@@ -1495,7 +1499,11 @@
             </thead>
             <tbody>
               @for (t of pl2Table.data; track t) {
-              <tr *ngIf="(!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
+                <tr *ngIf="t.isBold" style="font-weight: bold">
+                  <td></td>
+                  <td colspan="22">{{ t.colB }}</td>
+                </tr>
+              <tr *ngIf="!t.isBold && (!searchTerm || t?.colB?.toLowerCase().includes(searchTerm?.toLowerCase()))">
                 <td>{{ t.colA }}</td>
                 <td>{{ t.colB }}</td>
                 @for (i of t.gg; track i) {
