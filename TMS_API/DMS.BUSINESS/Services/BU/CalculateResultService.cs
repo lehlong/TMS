@@ -61,8 +61,6 @@ namespace DMS.BUSINESS.Services.BU
         Task SendSMS(string headerId);
         Task<List<TblNotifyEmail>> GetMail(string headerId);
         Task<List<TblNotifySms>> GetSms(string headerId);
-
-        //Task<MemoryStream> ExportExcel(MemoryStream outFileStream, string path, string headerId, CalculateResultModel data);
         Task<string> SaveFileHistory(MemoryStream outFileStream, string headerId);
         Task<string> GenarateWordTrinhKy(string headerId, string nameTeam);
         Task<string> GenarateWord(List<string> lstCustomerChecked, string headerId);
@@ -78,7 +76,7 @@ namespace DMS.BUSINESS.Services.BU
             {
                 var data = new CalculateResultModel();
                 //var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive == true).OrderBy(x => x.CreateDate).ToListAsync();
-                var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive == true).OrderBy(x => x.CreateDate).ToListAsync();
+                var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive == true).OrderBy(x => x.CreateDate).ToListAsync(); 
                 data.lstGoods = lstGoods;
                 var lstMarket = await _dbContext.TblMdMarket.OrderBy(x => x.Code).ToListAsync();
                 var lstCustomer = await _dbContext.TblMdCustomer.Where(x => x.IsActive == true).ToListAsync();
@@ -1652,7 +1650,7 @@ namespace DMS.BUSINESS.Services.BU
                     HumanSign = ExcelNPOIExtention.SetCellStyleTextSign(workbook, true, false, true, true),
                     Header = ExcelNPOIExtention.SetCellStyleTextSign(workbook, true, false,false)
                 };
-
+                #region biến sử dụng
                 var header = _dbContext.TblBuCalculateResultList.Where(x => x.Code == headerId).ToList().FirstOrDefault();
 
                 var nguoiKy = _dbContext.TblMdSigner.Where(x => x.Code == header.SignerCode).ToList().FirstOrDefault();
@@ -1666,6 +1664,9 @@ namespace DMS.BUSINESS.Services.BU
                 string valueHeader_2 = $"Kèm theo Quyết định số: …………............/PLXNA-QĐ ngày {Date}";
                 var CVA5 = $"  (Kèm theo Công văn số:                        /PLXNA ngày {header.FDate.Day:D2}/{header.FDate.Month:D2}/{header.FDate.Year} của Công ty Xăng dầu Nghệ An)";
                 var QuyetDinhSo = header.QuyetDinhSo;
+                #endregion
+
+
                 #region Dữ liệu gốc
                 var startRowdlg_1 = 4;
                 ISheet sheetGLG = workbook.GetSheetAt(0);
@@ -1675,6 +1676,7 @@ namespace DMS.BUSINESS.Services.BU
                 ICell header_dlg_1 = rowHeader_dlg_1.GetCell(1) ?? rowHeader_dlg_1.CreateCell(1);
                 header_dlg_1.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                 header_dlg_1.SetCellValue($"1. Thị trường Thành phố Vinh, TX Cửa Lò (áp dụng từ {Hour} ngày {Date})");
+
 
                 for (var i = 0; i < data.DLG.Dlg_1.Count(); i++)
                 {
@@ -2233,7 +2235,7 @@ namespace DMS.BUSINESS.Services.BU
 
                 #endregion
 
-                #endregion
+                #endregion 
 
                 #region PT
                 var sheetPT = workbook.GetSheetAt(1);
@@ -2278,6 +2280,8 @@ namespace DMS.BUSINESS.Services.BU
                             rowCur.Cells[col].SetCellValue(Convert.ToDouble(item.LG[lg]));
                         }
                     }
+                    rowCur.Cells[11].CellStyle = textStyle;
+                    rowCur.Cells[12].CellStyle = textStyle;
 
                     SetCellValues(rowCur, numberStyle, item, new[] { 8, 9, 10}, new[] { item.Col3, item.Col4, item.Col5 }, item.IsBold);
 
@@ -3392,14 +3396,12 @@ namespace DMS.BUSINESS.Services.BU
                     var numberStyle = dataRow.IsBold ? styles.NumberBold : styles.Number;
                     IRow rowCur = ReportUtilities.CreateRow(ref sheetTH, startRowTH++, 21);
 
+                    rowCur.Cells[0].CellStyle = numberStyle;
                     rowCur.Cells[0].SetCellValue(dataRow.ColA);
 
 
                     rowCur.Cells[1].SetCellValue(dataRow.ColB);
-                    //dataRow.IsBold ?? rowCur.Cells[1].CellStyle = styleCellBold;
-                    //dataRow.IsBold ?? rowCur.Cells[1].CellStyle.SetFont(fontBold);
                     rowCur.Cells[1].CellStyle = textStyle;
-                    //rowCur.Cells[1].CellStyle.SetFont(fontBold);
 
                     rowCur.Cells[2].SetCellValue(dataRow.ColC);
                     rowCur.Cells[2].CellStyle = textStyle;
@@ -3419,20 +3421,40 @@ namespace DMS.BUSINESS.Services.BU
 
                     rowCur.Cells[8].CellStyle = numberStyle;
                     rowCur.Cells[8].SetCellValue(dataRow.Col3);
+
+                    rowCur.Cells[9].CellStyle = textStyle;
                     rowCur.Cells[9].SetCellValue(dataRow.Col4);
+
+                    rowCur.Cells[10].CellStyle = numberStyle;
                     rowCur.Cells[10].SetCellValue(dataRow.Col5);
 
                     rowCur.Cells[11].CellStyle = numberStyle; ;
                     rowCur.Cells[11].SetCellValue(dataRow.Col6 == 0 ? 0 : Convert.ToDouble(dataRow.Col6));
 
+                    rowCur.Cells[12].CellStyle = textStyle;
                     rowCur.Cells[12].SetCellValue(dataRow.Col7 ?? "VND");
+
+                    rowCur.Cells[13].CellStyle = numberStyle;
                     rowCur.Cells[13].SetCellValue(dataRow.Col8);
+                    rowCur.Cells[14].CellStyle = numberStyle;
                     rowCur.Cells[14].SetCellValue(dataRow.Col9);
+                    
+                    rowCur.Cells[15].CellStyle = textStyle;
                     rowCur.Cells[15].SetCellValue(dataRow.Col10);
+
+                    rowCur.Cells[16].CellStyle = numberStyle;
                     rowCur.Cells[16].SetCellValue(dataRow.Col11);
+                    
+                    rowCur.Cells[17].CellStyle = numberStyle;
                     rowCur.Cells[17].SetCellValue(dataRow.Col12);
+                    
+                    rowCur.Cells[18].CellStyle = numberStyle;
                     rowCur.Cells[18].SetCellValue(dataRow.Col13);
+                    
+                    rowCur.Cells[19].CellStyle = numberStyle;
                     rowCur.Cells[19].SetCellValue(dataRow.Col14);
+                    
+                    rowCur.Cells[20].CellStyle = numberStyle;
                     rowCur.Cells[20].SetCellValue(dataRow.Col15);
 
                 }

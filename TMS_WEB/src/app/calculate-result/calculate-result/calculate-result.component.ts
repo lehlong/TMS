@@ -13,12 +13,12 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { SignerService } from '../../services/master-data/signer.service'
 import { FormControl } from '@angular/forms'
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
-import { CommonModule} from '@angular/common'
+import { CommonModule } from '@angular/common'
 
 @Component({
   selector: 'app-calculate-result',
   standalone: true,
-  imports: [ShareModule,NgxDocViewerModule,CommonModule],
+  imports: [ShareModule, NgxDocViewerModule, CommonModule],
   templateUrl: './calculate-result.component.html',
   styleUrl: './calculate-result.component.scss',
 })
@@ -117,7 +117,11 @@ export class CalculateResultComponent {
       contents: '',
     },
   }
-
+  checked = false
+  lstCustomerChecked: any[] = []
+  lstTrinhKyChecked: any[] = []
+  signerResult: any[] = []
+  selectedValue = {}
   lstHistory: any[] = []
   lstHistoryFile: any[] = []
   lstSMS: any[] = []
@@ -145,14 +149,26 @@ export class CalculateResultComponent {
       next: (params) => {
         const code = params.get('code')
         this.headerId = code
-        if(this.accountGroups != 'G_NV_K'){
-          this.changeTitle('DỮ LIỆU GỐC',0)
+        if (this.accountGroups != 'G_NV_K') {
+          this.changeTitle('DỮ LIỆU GỐC', 0)
         }
-        else{
-          this.changeTitle('PT',1)
+        else {
+          this.changeTitle('PT', 1)
         }
         this._service.GetDataInput(this.headerId).subscribe({
           next: (data) => {
+            data.hS2.sort((a: any, b: any) => {
+              const indexA = this.goodsResult.findIndex(item => item.code === a.goodsCode);
+              const indexB = this.goodsResult.findIndex(item => item.code === b.goodsCode);
+
+              return indexA - indexB;
+            });
+            data.hS1.sort((a: any, b: any) => {
+              const indexA = this.goodsResult.findIndex(item => item.code === a.goodsCode);
+              const indexB = this.goodsResult.findIndex(item => item.code === b.goodsCode);
+
+              return indexA - indexB;
+            });
             this.model = data
             this.model_2 = structuredClone(data)
             this.formatHSData()
@@ -161,83 +177,11 @@ export class CalculateResultComponent {
       },
     })
     this.getAllGoods()
-    // if (this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DLG)) {
-    //   this.changeTitle('DỮ LIỆU GỐC')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT)
-    // ) {
-    //   this.changeTitle('PT')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_DB)
-    // ) {
-    //   this.changeTitle('DB')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_FOB)
-    // ) {
-    //   this.changeTitle('FOB')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PT09)
-    // ) {
-    //   this.changeTitle('PT09')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_DO)
-    // ) {
-    //   this.changeTitle('BB DO')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_BB_FO)
-    // ) {
-    //   this.changeTitle('BB FO')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL1)
-    // ) {
-    //   this.changeTitle('PL1')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL2)
-    // ) {
-    //   this.changeTitle('PL2')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL3)
-    // ) {
-    //   this.changeTitle('PL3')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PL4)
-    // ) {
-    //   this.changeTitle('PL4')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_PT)
-    // ) {
-    //   this.changeTitle('VK11 PT')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_DB)
-    // ) {
-    //   this.changeTitle('VK11 ĐB')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_FOB)
-    // ) {
-    //   this.changeTitle('VK11-FOB')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_TNPP)
-    // ) {
-    //   this.changeTitle('VK11-TNPP')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_PTS)
-    // ) {
-    //   this.changeTitle('PTS')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_VK11_BB)
-    // ) {
-    //   this.changeTitle('VK11 BB')
-    // } else if (
-    //   this.rightList.includes(IMPORT_BATCH.WATCH_IMPORT_BATCH_LIST_TONG_HOP)
-    // ) {
-    //   this.changeTitle('TỔNG HỢP')
-    // } else {
-    //   this.changeTitle('')
-    // }
+
   }
   formatHSData() {
     if (this.model_2.hS1 && Array.isArray(this.model_2.hS1)) {
-      this.model_2.hS1.forEach((item:any) => {
+      this.model_2.hS1.forEach((item: any) => {
         // Format các trường số cần format
         console.log("Cũ: " + item.heSoVcf);
         item.heSoVcf = this.formatNumber(item.heSoVcf);
@@ -250,7 +194,7 @@ export class CalculateResultComponent {
     }
 
     if (this.model_2.hS2 && Array.isArray(this.model_2.hS2)) {
-      this.model_2.hS2.forEach((item:any) => {
+      this.model_2.hS2.forEach((item: any) => {
         item.gblcsV1 = this.formatNumber(item.gblcsV1);
         item.gblV2 = this.formatNumber(item.gblV2);
         item.v2_V1 = this.formatNumber(item.v2_V1);
@@ -258,21 +202,21 @@ export class CalculateResultComponent {
         item.gny = this.formatNumber(item.gny);
         item.clgblv = this.formatNumber(item.clgblv);
 
-        
+
       });
     }
   }
 
   formatNumber(value: any): string {
     if (value == null || value === '') return '';
-  
+
     const num = parseFloat(value.toString().replace(/,/g, ''));
     if (isNaN(num)) return '';
-  
+
     // Format giữ 4 chữ số sau dấu phẩy (mày có thể chỉnh lại tuỳ)
     return num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 4 });
   }
-  
+
   getRight() {
     const rights = localStorage.getItem('userRights');
     this.rightList = rights ? JSON.parse(rights) : [];
@@ -281,11 +225,6 @@ export class CalculateResultComponent {
     this.accountGroups = accountGroups ? JSON.parse(accountGroups).accountGroups[0].name : [];
   }
 
-  checked = false
-  lstCustomerChecked: any[] = []
-  lstTrinhKyChecked: any[] = []
-  signerResult: any[] = []
-  selectedValue = {}
 
   updateTrinhKyCheckedSet(code: any, checked: boolean): void {
     if (checked) {
@@ -364,8 +303,8 @@ export class CalculateResultComponent {
     this.searchTerm = this.searchInput;
   }
   reset() {
-    this.searchTerm =''
-    this.searchInput=''
+    this.searchTerm = ''
+    this.searchInput = ''
   }
   getAllSigner() {
     this._signerService.getall().subscribe({
@@ -408,10 +347,10 @@ export class CalculateResultComponent {
 
   onInputNumberFormat(data: any, field: string, isHs2: boolean) {
     let value = data[field];
-  
+
     // 1. Bỏ ký tự không hợp lệ (chỉ giữ số, '-', '.')
     value = value.replace(/[^0-9\-.]/g, '');
-  
+
     // 2. Đảm bảo chỉ có 1 dấu '-' và nó đứng đầu
     const minusMatches = value.match(/-/g);
     if (minusMatches && minusMatches.length > 1) {
@@ -421,13 +360,13 @@ export class CalculateResultComponent {
       value = value.replace(/-/g, '');
       value = '-' + value;
     }
-  
+
     // 3. Xử lý dấu '.': chỉ cho sau '0' hoặc '-0' và duy nhất
     const dotIndex = value.indexOf('.');
     if (dotIndex !== -1) {
       const beforeDot = value.substring(0, dotIndex);
       const afterDot = value.substring(dotIndex + 1).replace(/\./g, '');
-  
+
       if (beforeDot === '0' || beforeDot === '-0') {
         value = beforeDot + '.' + afterDot;
       } else {
@@ -435,26 +374,26 @@ export class CalculateResultComponent {
         value = beforeDot + afterDot;
       }
     }
-  
+
     // 4. Format phần nguyên với dấu ','
     const parts = value.split('.');
     let integerPart = parts[0].replace(/[^0-9\-]/g, ''); // giữ dấu '-'
     integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  
+
     // 5. Ghép lại
     let formattedValue = integerPart;
     if (parts[1]) {
       formattedValue += '.' + parts[1];
     }
-  
+
     // 6. Cập nhật lại giá trị hiển thị
     data[field] = formattedValue;
-  
+
     // 7. Parse về số
     const rawNumber = formattedValue.replace(/,/g, '');
     const numberValue = parseFloat(rawNumber);
     const finalNumber = isNaN(numberValue) ? 0 : numberValue;
-  
+
     // 8. Update vào model chuẩn
     if (isHs2) {
       const index = this.model.hS2.findIndex((x: any) => x.goodsCode === data.goodsCode);
@@ -468,12 +407,12 @@ export class CalculateResultComponent {
       }
     }
   }
-  
+
   onKeyDownNumberOnly(event: KeyboardEvent) {
     const allowedKeys = [
       'Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab', '-', '.', // Thêm "-" và "."
     ];
-  
+
     if (
       (event.key >= '0' && event.key <= '9') || allowedKeys.includes(event.key)
     ) {
@@ -590,17 +529,17 @@ export class CalculateResultComponent {
     })
   }
   removeHtmlTags(html: string): string {
-    if (!html) return ''; 
-    return html.replace(/<\/?[^>]+(>|$)/g, ""); 
+    if (!html) return '';
+    return html.replace(/<\/?[^>]+(>|$)/g, "");
   }
   showSMSAction() {
-  
+
     this._service.GetSms(this.headerId).subscribe({
       next: (data) => {
         this.lstSMS = data
         console.log(data)
         this.isVisibleSms = true
-        
+
       },
       error: (err) => {
         console.log(err)
@@ -614,7 +553,7 @@ export class CalculateResultComponent {
         this.isVisibleExport = true
         this.lstHistoryFile.forEach((item) => {
           item.pathDownload = environment.apiUrl + item.path
-          item.pathView = environment.apiUrl+item.path
+          item.pathView = environment.apiUrl + item.path
         })
       },
       error: (err) => {
@@ -667,7 +606,7 @@ export class CalculateResultComponent {
     const index = this.model_2.hS2.indexOf(row)
 
     this.model.hS2[index].v2_V1 = this.model.hS2[index].gblV2 - this.model.hS2[index].gblcsV1
-    
+
     this.model.hS2[index].gny = this.model.hS2[index].gblcsV1 + this.model.hS2[index].mtsV1
     this.model.hS2[index].clgblv = this.model.hS2[index].gblV2 - this.model.hS2[index].gny
 
@@ -723,7 +662,7 @@ export class CalculateResultComponent {
       },
     })
   }
-  onCurrentPageDataChange($event: any): void {}
+  onCurrentPageDataChange($event: any): void { }
 
   fullScreen() {
     this.isZoom = true
@@ -733,17 +672,17 @@ export class CalculateResultComponent {
     this.isZoom = false
     document
       .exitFullscreen()
-      .then(() => {})
-      .catch(() => {})
+      .then(() => { })
+      .catch(() => { })
   }
 
-  cancelSendSMS() {}
-  cancelSendEmail() {}
+  cancelSendSMS() { }
+  cancelSendEmail() { }
 
   confirmSendSMS() {
     console.log("err")
     this._service.SendSMS(this.headerId).subscribe({
-    
+
       next: (data) => {
         this.message.create('success', 'Gửi mail thành công')
       },
@@ -756,7 +695,7 @@ export class CalculateResultComponent {
   confirmSendsMail() {
     console.log("err")
     this._service.SendMail(this.headerId).subscribe({
-    
+
       next: (data) => {
         this.message.create('success', 'Gửi mail thành công')
       },
@@ -771,11 +710,11 @@ export class CalculateResultComponent {
     window.open(url, '_blank')
   }
   Preview(url: string) {
-    
+
     this.UrlOffice = url
     console.log(this.UrlOffice)
     this.isVisiblePreview = true
-   
+
   }
   cancelPreview() {
     this.isVisiblePreview = !this.isVisiblePreview

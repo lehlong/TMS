@@ -48,9 +48,9 @@ namespace DMS.BUSINESS.Services.MD
             try
             {
                 var query = _dbContext.TblMdGoods.AsQueryable();
+                    query = query.Where(x => x.IsActive == true).OrderBy(x => x.CreateDate);
                 if (filter.IsActive.HasValue)
                 {
-                    query = query.Where(x => x.IsActive == filter.IsActive);
                 }
                 return await base.GetAllMd(query, filter);
             }
