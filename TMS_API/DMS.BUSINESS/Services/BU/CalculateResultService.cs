@@ -3461,7 +3461,7 @@ namespace DMS.BUSINESS.Services.BU
                 #endregion
 
 
-                var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "Upload", $"{DateTime.Now:ddMMyyyy_HHmmss}_CSTMGG.xlsx");
+                var outputPath = Path.Combine("Upload/", $"{DateTime.Now:ddMMyyyy_HHmmss}_CSTMGG.xlsx");
                 using var outFile = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
                 workbook.Write(outFile);
 
@@ -5811,7 +5811,7 @@ namespace DMS.BUSINESS.Services.BU
 
         public async Task<string> GenarateWordTrinhKy(string headerId, string nameTemp)
         {
-            #region Tạo 1 file word mới từ file template
+            #region Tạo 1 file word mới từ file template    
             var filePathTemplate = Directory.GetCurrentDirectory() + $"/Template/TempTrinhKy/{nameTemp}.docx";
             var folderName = Path.Combine($"Upload/{DateTime.Now.Year}/{DateTime.Now.Month}");
             if (!Directory.Exists(folderName))
