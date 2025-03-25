@@ -51,8 +51,11 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('thueBvmt', $event)" nzAlign="center">
             Thuế BVMT
           </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('thueBvmt', $event)" nzAlign="center">
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('vfc', $event)" nzAlign="center">
             Hệ số VFC BQ mùa miền
+          </th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('mtsV1', $event)" nzAlign="center">
+            Mức tăng so với vùng 1
           </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('createDate', $event)" nzAlign="center">
             Ngày tạo
@@ -85,6 +88,7 @@
           </td>
           <td nzAlign="right">{{ data.thueBvmt }}</td>
           <td nzAlign="right">{{ data.vfc }}</td>
+          <td nzAlign="right">{{ data.mtsV1 }}</td>
           <td nzAlign="center">{{ data.createDate | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
@@ -130,9 +134,12 @@
         [control]="$any(validateForm).controls['thueBvmt']"></app-input-clear>
 
       <app-input-clear placeholder="Nhập thuế hệ số VFC" [required]="true" label="Hệ số VFC"
-        [control]="$any(validateForm).controls['vfc']"></app-input-clear>
+      [control]="$any(validateForm).controls['vfc']"></app-input-clear>
 
-      <nz-form-item>
+      <app-input-clear placeholder="Nhập mức tăng so với Vùng 1" [required]="true" label="Mức tăng so với Vùng 1"
+        [control]="$any(validateForm).controls['mtsV1']"></app-input-clear>
+
+        <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>
         <nz-form-control>
           <nz-radio-group formControlName="isActive">

@@ -145,6 +145,7 @@ export class CalculateResultComponent {
   ]
   ngOnInit() {
     this.getRight()
+    this.getAllGoods()
     this.route.paramMap.subscribe({
       next: (params) => {
         const code = params.get('code')
@@ -157,6 +158,8 @@ export class CalculateResultComponent {
         }
         this._service.GetDataInput(this.headerId).subscribe({
           next: (data) => {
+            console.log(this.goodsResult);
+
             data.hS2.sort((a: any, b: any) => {
               const indexA = this.goodsResult.findIndex(item => item.code === a.goodsCode);
               const indexB = this.goodsResult.findIndex(item => item.code === b.goodsCode);
@@ -169,6 +172,8 @@ export class CalculateResultComponent {
 
               return indexA - indexB;
             });
+            console.log(data);
+
             this.model = data
             this.model_2 = structuredClone(data)
             this.formatHSData()
@@ -176,7 +181,6 @@ export class CalculateResultComponent {
         })
       },
     })
-    this.getAllGoods()
 
   }
   formatHSData() {
@@ -606,7 +610,6 @@ export class CalculateResultComponent {
     const index = this.model_2.hS2.indexOf(row)
 
     this.model.hS2[index].v2_V1 = this.model.hS2[index].gblV2 - this.model.hS2[index].gblcsV1
-
     this.model.hS2[index].gny = this.model.hS2[index].gblcsV1 + this.model.hS2[index].mtsV1
     this.model.hS2[index].clgblv = this.model.hS2[index].gblV2 - this.model.hS2[index].gny
 

@@ -167,6 +167,7 @@ namespace DMS.BUSINESS.Services.BU
                         Code = Guid.NewGuid().ToString(),
                         HeaderCode = obj.Header.Code,
                         GoodsCode = g.Code,
+                        MtsV1 = g.MtsV1,
                         IsActive = true,
                         FromDate = DateTime.Now,
                         ToDate = DateTime.Now,

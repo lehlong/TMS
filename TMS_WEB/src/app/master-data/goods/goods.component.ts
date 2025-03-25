@@ -23,6 +23,7 @@ export class GoodsComponent {
     type: [''],
     thueBvmt: ['', [Validators.required]],
     vfc: ['', [Validators.required]],
+    mtsV1: ['', [Validators.required]],
     createDate: [new Date(), [Validators.required]],
     isActive: [true, [Validators.required]],
   })
@@ -109,9 +110,11 @@ export class GoodsComponent {
   }
   submitForm(): void {
     this.isSubmit = true
-    if (this.validateForm.valid) {
+    // if (this.validateForm.valid) {
       const formData = this.validateForm.getRawValue()
       if (this.edit) {
+        console.log(formData);
+
         this._service.updateGoods(formData).subscribe({
           next: (data) => {
             this.search()
@@ -136,14 +139,14 @@ export class GoodsComponent {
           },
         })
       }
-    } else {
-      Object.values(this.validateForm.controls).forEach((control) => {
-        if (control.invalid) {
-          control.markAsDirty()
-          control.updateValueAndValidity({ onlySelf: true })
-        }
-      })
-    }
+    // } else {
+    //   Object.values(this.validateForm.controls).forEach((control) => {
+    //     if (control.invalid) {
+    //       control.markAsDirty()
+    //       control.updateValueAndValidity({ onlySelf: true })
+    //     }
+    //   })
+    // }
   }
 
   close() {
@@ -178,12 +181,14 @@ export class GoodsComponent {
   }
 
   openEdit(data: any) {
+    console.log(data)
     this.validateForm.setValue({
       code: data.code,
       name: data.name,
       type: data.type,
       thueBvmt: data.thueBvmt,
       vfc: data.vfc,
+      mtsV1: data.mtsV1,
       createDate: data.createDate,
       isActive: data.isActive,
     })

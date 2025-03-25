@@ -32,6 +32,9 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("Hệ số VFC BQ mùa miền")]
         public decimal Vfc { get; set; }
 
+        [Description("Mức Tăng So với V1")]
+        public decimal? MtsV1 { get; set; }
+
         [Description("Ngày tạo")]
         public DateTime createDate { get; set; }
 
