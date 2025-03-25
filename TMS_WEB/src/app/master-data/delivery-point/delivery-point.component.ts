@@ -17,7 +17,7 @@ import { CustomerService } from '../../services/master-data/customer.service'
 })
 export class DeliveryPointComponent {
   validateForm: FormGroup = this.fb.group({
-    code: ['', [Validators.required]],
+    code: [''],
     name: ['', [Validators.required]],
     cuocVcBq: [''],
     isActive: [true, [Validators.required]],

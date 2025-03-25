@@ -1,47 +1,21 @@
-<div
-  class="container-list"
-  [appPermission]="MASTER_DATA_MANAGEMENT.CUSTOMER_MANAGEMENT"
->
+<div class="container-list" [appPermission]="MASTER_DATA_MANAGEMENT.CUSTOMER_MANAGEMENT">
   <div class="site-page-header-ghost-wrapper">
-    <nz-page-header
-      nzBackIcon
-      nzTitle="Khách hàng"
-      nzSubtitle="Danh sách khách hàng"
-      class="site-page-header"
-    >
+    <nz-page-header nzBackIcon nzTitle="Khách hàng" nzSubtitle="Danh sách khách hàng" class="site-page-header">
       <nz-page-header-extra>
         <nz-space [nzWrap]="true" class="gap-[5px]">
           <nz-space>
-            <app-input-clear
-              placeholder="Tìm kiếm"
-              (enterEvent)="search()"
-              [(value)]="filter.keyWord"
-            ></app-input-clear>
-            <button
-              (click)="search()"
-              class="flex !items-center !border-l-0 gray-btn"
-              nzType="default"
-              nz-button
-              nzType="default"
-            >
+            <app-input-clear placeholder="Tìm kiếm" (enterEvent)="search()"
+              [(value)]="filter.keyWord"></app-input-clear>
+            <button (click)="search()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+              nzType="default">
               <span nz-icon nzType="search"></span>
             </button>
-            <button
-              (click)="reset()"
-              class="flex !items-center !border-l-0 gray-btn"
-              nzType="default"
-              nz-button
-              nzType="default"
-            >
+            <button (click)="reset()" class="flex !items-center !border-l-0 gray-btn" nzType="default" nz-button
+              nzType="default">
               <span nz-icon nzType="redo"></span>
             </button>
           </nz-space>
-          <button
-            (click)="openCreate()"
-            class="!flex !items-center"
-            nzType="primary"
-            nz-button
-          >
+          <button (click)="openCreate()" class="!flex !items-center" nzType="primary" nz-button>
             <span nz-icon nzType="plus-circle"></span> Thêm mới
           </button>
           <!-- <button
@@ -59,146 +33,80 @@
     </nz-page-header>
   </div>
   <div class="overflow-auto flex-grow">
-    <nz-table
-      [nzScroll]="{ x: 'max-content' }"
-      nzTableLayout="fixed"
-      [nzShowPagination]="false"
-      [nzFrontPagination]="false"
-      #headerTable
-      [nzData]="paginationResult.data"
-    >
+    <nz-table [nzScroll]="{ x: 'max-content' }" nzTableLayout="fixed" [nzShowPagination]="false"
+      [nzFrontPagination]="false" #headerTable [nzData]="paginationResult.data">
       <thead>
         <tr>
           <th nzWidth="15px">STT</th>
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('name', $event)"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)">
             Khách hàng
           </th>
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('phone', $event)"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('phone', $event)">
             Số điện thoại
           </th>
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('email', $event)"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('email', $event)">
             Email
           </th>
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('address', $event)"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('address', $event)">
             Địa chỉ
           </th>
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('paymentTerm', $event)"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('paymentTerm', $event)">
             Hạn thanh toán
           </th>
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('localCode', $event)"
-            nzAlign="center"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('localCode', $event)" nzAlign="center">
             Vùng giá
           </th>
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('marketCode', $event)"
-            nzAlign="center"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('marketCode', $event)" nzAlign="center">
             Thị trường
           </th>
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('gap', $event)"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('gap', $event)">
             Cự ly BQ <br />
             (Km)
           </th>
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('cuocVcBq', $event)"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('cuocVcBq', $event)">
             Cước vận <br />
             chuyển BQ
           </th>
-          <th
-          [nzSortFn]="true"
-          (nzSortOrderChange)="onSortChange('fob', $event)"
-          nzAlign="center"
-        >
-           Mức giảm giá <br />
-          tại kho bên bán (FOB)
-        </th>
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('mgglhXang', $event)"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('fob', $event)" nzAlign="center">
+            Mức giảm giá <br />
+            tại kho bên bán (FOB)
+          </th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('mgglhXang', $event)">
             Mức giảm <br />
             linh hoạt xăng
           </th>
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('mgglhDau', $event)"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('mgglhDau', $event)">
             Mức giảm <br />
             linh hoạt dầu
           </th>
 
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('salesMethodCode', $event)"
-            nzAlign="center"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('salesMethodCode', $event)" nzAlign="center">
             Phương thức bán
           </th>
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('customerTypeCode', $event)"
-            nzAlign="center"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('customerTypeCode', $event)" nzAlign="center">
             Kiểu khách hàng
           </th>
 
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('bankLoanInterest', $event)"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('bankLoanInterest', $event)">
             Lãi vay <br />
             ngân hàng
           </th>
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('buyInfo', $event)"
-          >
+          <!-- <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('buyInfo', $event)">
             Thông tin mua hàng
-          </th>
+          </th> -->
 
-          <th
-            [nzSortFn]="true"
-            (nzSortOrderChange)="onSortChange('isActive', $event)"
-            nzAlign="center"
-          >
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('isActive', $event)" nzAlign="center">
             Trạng thái
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let data of headerTable.data; let i = index"
-          (dblclick)="openEdit(data)"
-        >
+        <tr *ngFor="let data of headerTable.data; let i = index" (dblclick)="openEdit(data)">
           <td>
             {{
-              (paginationResult.currentPage - 1) * paginationResult.pageSize +
-                i +
-                1
+            (paginationResult.currentPage - 1) * paginationResult.pageSize +
+            i +
+            1
             }}
           </td>
 
@@ -206,38 +114,20 @@
             <a (click)="openEdit(data)">{{ data.name }}</a>
           </td>
           <td>
-            <nz-select
-              class="selectPhone"
-              nzShowSearch
-              nzServerSearch
-              nzPlaceHolder="Danh sách điện thoại"
-              [(ngModel)]="selectedPhones[data.code]"
-              [nzFilterOption]="nzFilterOption"
-              (nzOnSearch)="searchContactList($event, 'phone', data.code)"
-            >
-              <nz-option
-                *ngFor="let item of listOfPhoneOptions[data.code] || []"
-                [nzLabel]="item"
-                [nzValue]="item"
-              ></nz-option>
+            <nz-select class="selectPhone" nzShowSearch nzServerSearch nzPlaceHolder="Danh sách điện thoại"
+              [(ngModel)]="selectedPhones[data.code]" [nzFilterOption]="nzFilterOption"
+              (nzOnSearch)="searchContactList($event, 'phone', data.code)">
+              <nz-option *ngFor="let item of listOfPhoneOptions[data.code] || []" [nzLabel]="item"
+                [nzValue]="item"></nz-option>
             </nz-select>
           </td>
 
           <td>
-            <nz-select
-              class="selectPhone"
-              nzShowSearch
-              nzServerSearch
-              nzPlaceHolder="Danh sách email"
-              [(ngModel)]="selectedEmails[data.code]"
-              [nzFilterOption]="nzFilterOption"
-              (nzOnSearch)="searchContactList($event, 'email', data.code)"
-            >
-              <nz-option
-                *ngFor="let item of listOfEmailOptions[data.code] || []"
-                [nzLabel]="item"
-                [nzValue]="item"
-              ></nz-option>
+            <nz-select class="selectPhone" nzShowSearch nzServerSearch nzPlaceHolder="Danh sách email"
+              [(ngModel)]="selectedEmails[data.code]" [nzFilterOption]="nzFilterOption"
+              (nzOnSearch)="searchContactList($event, 'email', data.code)">
+              <nz-option *ngFor="let item of listOfEmailOptions[data.code] || []" [nzLabel]="item"
+                [nzValue]="item"></nz-option>
             </nz-select>
           </td>
 
@@ -247,7 +137,7 @@
             <span *ngFor="let item of localResult">
               <span *ngIf="item.code == data.localCode">{{
                 item.code + ' - ' + item.name
-              }}</span>
+                }}</span>
             </span>
           </td>
           <td>
@@ -265,64 +155,39 @@
             <span *ngFor="let item of salesMethodResult">
               <span *ngIf="item.code == data.salesMethodCode">{{
                 item.name
-              }}</span>
+                }}</span>
             </span>
           </td>
           <td style="padding: 5px">
             <span *ngFor="let item of customerTypeList">
               <span *ngIf="item.code == data.customerTypeCode">{{
                 item.name
-              }}</span>
+                }}</span>
             </span>
           </td>
           <td>{{ data.bankLoanInterest }}</td>
-          <td>{{ data.buyInfo }}</td>
+          <!-- <td>{{ data.buyInfo }}</td> -->
 
           <td>
-            <span
-              [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'"
-              nz-icon
-              nzType="check-circle"
-              nzTheme="outline"
-            ></span>
+            <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
+              nzTheme="outline"></span>
           </td>
         </tr>
       </tbody>
     </nz-table>
   </div>
-  <div
-    *ngIf="paginationResult?.data"
-    class="flex justify-end p-[10px] border-t border-custom-gray border-solid"
-  >
-    <nz-pagination
-      nzShowSizeChanger
-      [nzPageIndex]="filter.currentPage"
-      [nzTotal]="paginationResult.totalRecord"
-      [nzPageSize]="filter.pageSize"
-      (nzPageIndexChange)="pageIndexChange($event)"
-      (nzPageSizeChange)="pageSizeChange($event)"
-    ></nz-pagination>
+  <div *ngIf="paginationResult?.data" class="flex justify-end p-[10px] border-t border-custom-gray border-solid">
+    <nz-pagination nzShowSizeChanger [nzPageIndex]="filter.currentPage" [nzTotal]="paginationResult.totalRecord"
+      [nzPageSize]="filter.pageSize" (nzPageIndexChange)="pageIndexChange($event)"
+      (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
   </div>
 </div>
 
 <!--Create Update-->
-<nz-drawer
-  nzWidth="60%"
-  [nzMask]="!edit"
-  nzSize="default"
-  [nzVisible]="visible"
-  nzPlacement="right"
-  [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '"
-  [nzExtra]="extra"
-  (nzOnClose)="close()"
->
+<nz-drawer nzWidth="60%" [nzMask]="!edit" nzSize="default" [nzVisible]="visible" nzPlacement="right"
+  [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
-    <form
-      nz-form
-      nzLayout="vertical"
-      [formGroup]="validateForm"
-      (ngSubmit)="submitFormCustomer()"
-    >
+    <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitFormCustomer()">
       <!--
         <nz-form-item nz-col nzSpan="11">
           <nz-form-label>Vùng</nz-form-label>
@@ -336,106 +201,56 @@
           </nz-form-control>
         </nz-form-item>zzz -->
       <div nz-row nzJustify="space-evenly">
-        <app-input-clear
-          nzWidth="100%"
-          nz-col
-          nzSpan="13"
-          placeholder="Nhập khách hàng "
-          [required]="true"
-          label="Tên khách hàng "
-          [control]="$any(validateForm).controls['name']"
-        ></app-input-clear>
+        <app-input-clear nzWidth="100%" nz-col nzSpan="13" placeholder="Nhập khách hàng " [required]="true"
+          label="Tên khách hàng " [control]="$any(validateForm).controls['name']"></app-input-clear>
 
-        <app-input-clear
-          nz-col
-          nzSpan="5"
-          placeholder="Nhập Cự ly"
-          label="Cự ly BQ"
-          [control]="$any(validateForm).controls['gap']"
-        ></app-input-clear>
+        <app-input-clear nz-col nzSpan="5" placeholder="Nhập Cự ly" label="Cự ly BQ"
+          [control]="$any(validateForm).controls['gap']"></app-input-clear>
 
-        <app-input-clear
-          nz-col
-          nzSpan="5"
-          placeholder="Nhập cước VC BQ"
-          label="Cước VC bình quân"
-          [control]="$any(validateForm).controls['cuocVcBq']"
-        ></app-input-clear>
+        <app-input-clear nz-col nzSpan="5" placeholder="Nhập cước VC BQ" label="Cước VC bình quân"
+          [control]="$any(validateForm).controls['cuocVcBq']"></app-input-clear>
       </div>
 
       <div class="contact">
         <!-- Số điện thoại -->
         <div class="item">
           <p>Số điện thoại</p>
-          <p
-            class="contact-dropdown"
-            nz-dropdown
-            [nzDropdownMenu]="phoneMenu"
-            [nzClickHide]="false"
-            [nzTrigger]="'click'"
-          >
+          <p class="contact-dropdown" nz-dropdown [nzDropdownMenu]="phoneMenu" [nzClickHide]="false"
+            [nzTrigger]="'click'">
             {{edit && listOfPhone.length>0?getFirstActiveContact(true):"Danh sách số điện thoại"}}
             <span nz-icon nzType="down" style="color: #d9d9d9"></span>
           </p>
           <nz-dropdown-menu class="wrap" #phoneMenu="nzDropdownMenu">
             <ul nz-menu>
-              <ng-container
-                *ngFor="
+              <ng-container *ngFor="
                   let item of listOfPhone;
                   let i = index;
                   trackBy: trackByFn
-                "
-              >
+                ">
                 <li class="dropdown-li" nz-menu-item *ngIf="item.isActive">
                   <div class="drop-down-item">
-                    <input
-                      type="text"
-                      nz-input
-                      [(ngModel)]="listOfPhone[i].value"
-                      [ngModelOptions]="{ standalone: true }"
-                      (keypress)="returnOnlyNumbers($event)"
-                    />
-                    <button
-                      nz-button
-                      nz-popover
-                      nzType="primary"
-                      nzPopoverTitle="Bạn chắc chắn muốn xoá ?"
-                      nzPopoverTrigger="click"
-                      [nzPopoverContent]="contentTemplate"
-                      [nzPopoverVisible]="visiblePhone[i]"
-                      (nzPopoverVisibleChange)="visibleChange($event,i,true)"
-                      nzDanger
-                      ><span nz-icon nzType="delete" style="color: white"></span></button
-                    >
+                    <input type="text" nz-input [(ngModel)]="listOfPhone[i].value"
+                      [ngModelOptions]="{ standalone: true }" (keypress)="returnOnlyNumbers($event)" />
+                    <button nz-button nz-popover nzType="primary" nzPopoverTitle="Bạn chắc chắn muốn xoá ?"
+                      nzPopoverTrigger="click" [nzPopoverContent]="contentTemplate" [nzPopoverVisible]="visiblePhone[i]"
+                      (nzPopoverVisibleChange)="visibleChange($event,i,true)" nzDanger><span nz-icon nzType="delete"
+                        style="color: white"></span></button>
                     <ng-template #contentTemplate>
-                      <button nz-button nzSize="small" nzType="primary" nzDanger (click)="visibleChange(false,i,true)"><span nz-icon nzType="close" style="color: white"></span> Hủy</button>
-                      <button nz-button nzSize="small"
-                       nzType="primary" (click)="visibleChange(false,i,true)"
-                       nzType="primary"
-                       style="margin-left: 12px"
-                       nz-button
-                       nzSize="small"
-                       (click)="removeItem(i, true, edit ? true : false)"
-                       > <span nz-icon nzType="check" style="color: white"></span> Chắc chắn</button>
+                      <button nz-button nzSize="small" nzType="primary" nzDanger
+                        (click)="visibleChange(false,i,true)"><span nz-icon nzType="close" style="color: white"></span>
+                        Hủy</button>
+                      <button nz-button nzSize="small" nzType="primary" (click)="visibleChange(false,i,true)"
+                        nzType="primary" style="margin-left: 12px" nz-button nzSize="small"
+                        (click)="removeItem(i, true, edit ? true : false)"> <span nz-icon nzType="check"
+                          style="color: white"></span> Chắc chắn</button>
                     </ng-template>
                   </div>
                 </li>
               </ng-container>
               <li class="drop-down-add" nz-menu-item>
-                <input
-                  class="inputAdd"
-                  type="text"
-                  nz-input
-                  #phoneInput
-                  placeholder="Nhập số điện thoại"
-                  (keypress)="returnOnlyNumbers($event)"
-                />
-                <button
-                  class="btn-add"
-                  nz-button
-                  nzType="primary"
-                  (click)="addItem(phoneInput, true)"
-                >
+                <input class="inputAdd" type="text" nz-input #phoneInput placeholder="Nhập số điện thoại"
+                  (keypress)="returnOnlyNumbers($event)" />
+                <button class="btn-add" nz-button nzType="primary" (click)="addItem(phoneInput, true)">
                   Thêm
                 </button>
               </li>
@@ -446,72 +261,41 @@
         <!-- Email -->
         <div class="item">
           <p>Email</p>
-          <p
-            class="contact-dropdown"
-            nz-dropdown
-            [nzDropdownMenu]="emailMenu"
-            [nzClickHide]="false"
-            [nzTrigger]="'click'"
-          >
-          {{edit && listOfEmail.length>0 ?getFirstActiveContact(false):"Danh sách email"}}
+          <p class="contact-dropdown" nz-dropdown [nzDropdownMenu]="emailMenu" [nzClickHide]="false"
+            [nzTrigger]="'click'">
+            {{edit && listOfEmail.length>0 ?getFirstActiveContact(false):"Danh sách email"}}
             <span nz-icon nzType="down" style="color: #d9d9d9"></span>
           </p>
           <nz-dropdown-menu class="wrap" #emailMenu="nzDropdownMenu">
             <ul nz-menu>
-              <ng-container
-                *ngFor="
+              <ng-container *ngFor="
                   let item of listOfEmail;
                   let i = index;
                   trackBy: trackByFn
-                "
-              >
+                ">
                 <li class="dropdown-li" nz-menu-item *ngIf="item.isActive">
                   <div class="drop-down-item">
-                    <input
-                      type="text"
-                      nz-input
-                      [(ngModel)]="listOfEmail[i].value"
-                      [ngModelOptions]="{ standalone: true }"
-                    />
-                    <button
-                    nz-button
-                    nz-popover
-                    nzType="primary"
-                    nzPopoverTitle="Bạn chắc chắn muốn xoá ?"
-                    nzPopoverTrigger="click"
-                    [nzPopoverContent]="contentTemplate"
-                    [nzPopoverVisible]="visibleEmail[i]"
-                    (nzPopoverVisibleChange)="visibleChange($event,i,false)"
-                    nzDanger
-                    ><span nz-icon nzType="delete" style="color: white"></span></button
-                  >
-                  <ng-template #contentTemplate>
-                    <button nz-button nzSize="small" nzType="primary" nzDanger (click)="visibleChange(false,i,false)"><span nz-icon nzType="close" style="color: white"></span> Hủy</button>
-                    <button nz-button nzSize="small"
-                     nzType="primary" (click)="visibleChange(false,i,false)"
-                     style="margin-left: 12px"
-                     nz-button
-                     nzSize="small"
-                     (click)="removeItem(i, false, edit ? true : false)"
-                     > <span nz-icon nzType="check" style="color: white"></span> Chắc chắn</button>
-                  </ng-template>
+                    <input type="text" nz-input [(ngModel)]="listOfEmail[i].value"
+                      [ngModelOptions]="{ standalone: true }" />
+                    <button nz-button nz-popover nzType="primary" nzPopoverTitle="Bạn chắc chắn muốn xoá ?"
+                      nzPopoverTrigger="click" [nzPopoverContent]="contentTemplate" [nzPopoverVisible]="visibleEmail[i]"
+                      (nzPopoverVisibleChange)="visibleChange($event,i,false)" nzDanger><span nz-icon nzType="delete"
+                        style="color: white"></span></button>
+                    <ng-template #contentTemplate>
+                      <button nz-button nzSize="small" nzType="primary" nzDanger
+                        (click)="visibleChange(false,i,false)"><span nz-icon nzType="close" style="color: white"></span>
+                        Hủy</button>
+                      <button nz-button nzSize="small" nzType="primary" (click)="visibleChange(false,i,false)"
+                        style="margin-left: 12px" nz-button nzSize="small"
+                        (click)="removeItem(i, false, edit ? true : false)"> <span nz-icon nzType="check"
+                          style="color: white"></span> Chắc chắn</button>
+                    </ng-template>
                   </div>
                 </li>
               </ng-container>
               <li class="drop-down-add" nz-menu-item>
-                <input
-                  class="inputAdd"
-                  type="text"
-                  nz-input
-                  #emailInput
-                  placeholder="Nhập email"
-                />
-                <button
-                  class="btn-add"
-                  nz-button
-                  nzType="primary"
-                  (click)="addItem(emailInput, false)"
-                >
+                <input class="inputAdd" type="text" nz-input #emailInput placeholder="Nhập email" />
+                <button class="btn-add" nz-button nzType="primary" (click)="addItem(emailInput, false)">
                   Thêm
                 </button>
               </li>
@@ -521,39 +305,20 @@
       </div>
 
       <div nz-row nzJustify="space-evenly">
-        <app-input-clear
-          nz-col
-          nzSpan="17"
-          placeholder="Quận / Huyện / Thành Phố"
-          label="Địa chỉ "
-          [control]="$any(validateForm).controls['address']"
-        ></app-input-clear>
+        <app-input-clear nz-col nzSpan="17" placeholder="Quận / Huyện / Thành Phố" label="Địa chỉ "
+          [control]="$any(validateForm).controls['address']"></app-input-clear>
 
-        <app-input-clear
-          nz-col
-          nzSpan="6"
-          placeholder="Hạn thanh toán"
-          label="Hạn thanh toán "
-          [control]="$any(validateForm).controls['paymentTerm']"
-        ></app-input-clear>
+        <app-input-clear nz-col nzSpan="6" placeholder="Hạn thanh toán" label="Hạn thanh toán "
+          [control]="$any(validateForm).controls['paymentTerm']"></app-input-clear>
       </div>
       <div nz-row nzJustify="space-evenly">
         <nz-form-item nz-col nzSpan="11">
           <nz-form-label>Vùng giá</nz-form-label>
           <nz-form-control>
-            <nz-select
-              nzShowSearch
-              nzAllowClear
-              placeholder="Chọn Vùng Giá"
-              formControlName="localCode"
-              (ngModelChange)="searchMarket()"
-            >
-              <nz-option
-                cdkScrollable
-                *ngFor="let item of localResult"
-                [nzLabel]="item.code + ' - ' + item.name"
-                [nzValue]="item.code"
-              >
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn Vùng Giá" formControlName="localCode"
+              (ngModelChange)="searchMarket()">
+              <nz-option cdkScrollable *ngFor="let item of localResult" [nzLabel]="item.code + ' - ' + item.name"
+                [nzValue]="item.code">
               </nz-option>
             </nz-select>
           </nz-form-control>
@@ -562,18 +327,9 @@
         <nz-form-item nz-col nzSpan="12">
           <nz-form-label>Thị Trường</nz-form-label>
           <nz-form-control>
-            <nz-select
-              nzShowSearch
-              nzAllowClear
-              placeholder="Chọn thị trường"
-              formControlName="marketCode"
-            >
-              <nz-option
-                cdkScrollable
-                *ngFor="let item of marketResult"
-                [nzLabel]="item.code + ' - ' + item.name"
-                [nzValue]="item.code"
-              >
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn thị trường" formControlName="marketCode">
+              <nz-option cdkScrollable *ngFor="let item of marketResult" [nzLabel]="item.code + ' - ' + item.name"
+                [nzValue]="item.code">
               </nz-option>
             </nz-select>
           </nz-form-control>
@@ -581,47 +337,23 @@
       </div>
       <div nz-row nzJustify="space-evenly">
 
-        <app-input-clear
-        nz-col
-        nzSpan="13"
-        placeholder="Nhập mức giảm giá tại kho bên bán"
-        label="Mức giảm giá tại kho bên bán (FOB)"
-        [control]="$any(validateForm).controls['fob']"
-      ></app-input-clear>
+        <app-input-clear nz-col nzSpan="13" placeholder="Nhập mức giảm giá tại kho bên bán"
+          label="Mức giảm giá tại kho bên bán (FOB)" [control]="$any(validateForm).controls['fob']"></app-input-clear>
 
-        <app-input-clear
-          nz-col
-          nzSpan="5"
-          placeholder="Nhập mức giảm dầu"
-          label="Mức giảm giá linh hoạt xăng "
-          [control]="$any(validateForm).controls['mgglhXang']"
-        ></app-input-clear>
+        <app-input-clear nz-col nzSpan="5" placeholder="Nhập mức giảm dầu" label="Mức giảm giá linh hoạt xăng "
+          [control]="$any(validateForm).controls['mgglhXang']"></app-input-clear>
 
-        <app-input-clear
-          nz-col
-          nzSpan="5"
-          placeholder="Nhập mức giảm xăng"
-          label="Mức giảm giá linh hoạt dầu"
-          [control]="$any(validateForm).controls['mgglhDau']"
-        ></app-input-clear>
+        <app-input-clear nz-col nzSpan="5" placeholder="Nhập mức giảm xăng" label="Mức giảm giá linh hoạt dầu"
+          [control]="$any(validateForm).controls['mgglhDau']"></app-input-clear>
       </div>
 
       <div nz-row nzWidth="100%" nzJustify="space-evenly">
         <nz-form-item nz-col nzSpan="10">
           <nz-form-label>Phương thức bán</nz-form-label>
           <nz-form-control nzErrorTip="Không được để trống">
-            <nz-select
-              nzShowSearch
-              nzAllowClear
-              placeholder="Chọn Phương thức bán"
-              formControlName="salesMethodCode"
-            >
-              <nz-option
-                cdkScrollable
-                *ngFor="let item of salesMethodResult"
-                [nzLabel]="item.code + ' - ' + item.name"
-                [nzValue]="item.code"
-              >
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn Phương thức bán" formControlName="salesMethodCode">
+              <nz-option cdkScrollable *ngFor="let item of salesMethodResult" [nzLabel]="item.code + ' - ' + item.name"
+                [nzValue]="item.code">
               </nz-option>
             </nz-select>
           </nz-form-control>
@@ -630,45 +362,26 @@
         <nz-form-item nz-col nzSpan="7">
           <nz-form-label>Kiểu khách hàng</nz-form-label>
           <nz-form-control>
-            <nz-select
-              nzShowSearch
-              nzAllowClear
-              placeholder="Chọn kiểu khách hàng"
-              formControlName="customerTypeCode"
-            >
-              <nz-option
-                cdkScrollable
-                *ngFor="let item of customerTypeList"
-                [nzLabel]="item.name"
-                [nzValue]="item.code"
-              >
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn kiểu khách hàng" formControlName="customerTypeCode">
+              <nz-option cdkScrollable *ngFor="let item of customerTypeList" [nzLabel]="item.name"
+                [nzValue]="item.code">
               </nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
 
-        <app-input-clear
-          nz-col
-          nzSpan="6"
-          placeholder="Nhập lãi vay"
-          label="Lãi vay ngân hàng"
-          [control]="$any(validateForm).controls['bankLoanInterest']"
-        ></app-input-clear>
+        <app-input-clear nz-col nzSpan="6" placeholder="Nhập lãi vay" label="Lãi vay ngân hàng"
+          [control]="$any(validateForm).controls['bankLoanInterest']"></app-input-clear>
       </div>
       <!-- <div class="" nzWidth="100%"> -->
 
-      <div nzJustify="space-evenly" style="padding: 0 12px">
+      <!-- <div nzJustify="space-evenly" style="padding: 0 12px">
         <nz-form-item nzSpan="12">
           <nz-form-label>Thông tin mua hàng</nz-form-label>
-          <textarea
-            nz-input
-            [nzAutosize]="{ minRows: 3, maxRows: 5 }"
-            placeholder="Thông tin mua hàng"
-            label="Thông tin mua hàng"
-            formControlName="buyInfo"
-          ></textarea>
+          <textarea nz-input [nzAutosize]="{ minRows: 3, maxRows: 5 }" placeholder="Thông tin mua hàng"
+            label="Thông tin mua hàng" formControlName="buyInfo"></textarea>
         </nz-form-item>
-      </div>
+      </div> -->
       <!-- </div> -->
 
       <nz-form-item style="padding: 0 12px">
@@ -686,38 +399,19 @@
 <ng-template #extra>
   <nz-space>
     <ng-container *ngIf="edit">
-      <button
-        [nzLoading]="loading"
-        *nzSpaceItem
-        nz-button
-        nzType="primary"
-        class="!flex !items-center"
-        (click)="submitFormCustomer()"
-      >
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitFormCustomer()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>
     <ng-container *ngIf="!edit">
-      <button
-        [nzLoading]="loading"
-        *nzSpaceItem
-        nz-button
-        nzType="primary"
-        class="!flex !items-center"
-        (click)="submitFormCustomer()"
-      >
+      <button [nzLoading]="loading" *nzSpaceItem nz-button nzType="primary" class="!flex !items-center"
+        (click)="submitFormCustomer()">
         <span nz-icon nzType="save" nzTheme="outline"></span>Lưu
       </button>
     </ng-container>
-    <button
-      *nzSpaceItem
-      nz-button
-      nzType="default"
-      nzType="primary"
-      class="!flex !items-center"
-      nzDanger
-      (click)="close()"
-    >
+    <button *nzSpaceItem nz-button nzType="default" nzType="primary" class="!flex !items-center" nzDanger
+      (click)="close()">
       <span nz-icon nzType="close-circle" nzTheme="outline"></span>Huỷ
     </button>
   </nz-space>

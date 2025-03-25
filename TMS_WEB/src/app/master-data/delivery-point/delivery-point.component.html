@@ -31,9 +31,9 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('name', $event)" nzAlign="center">
             Điểm giao hàng
           </th>
-          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('cuocVcBq', $event)" nzAlign="center">
+          <!-- <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('cuocVcBq', $event)" nzAlign="center">
             Cước Vận chuyển bình quân
-          </th>
+          </th> -->
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('isActive', $event)" nzAlign="center">
             Trạng thái
           </th>
@@ -47,7 +47,7 @@
           <td>
             <a (click)="openEdit(data)">{{ data.name }}</a>
           </td>
-          <td class="align-center">{{ data.cuocVcBq | number}}</td>
+          <!-- <td class="align-center">{{ data.cuocVcBq | number}}</td> -->
 
           <td nzAlign="center">
             <span [ngClass]="data?.isActive ? '!text-green-500' : '!text-red-500'" nz-icon nzType="check-circle"
@@ -75,9 +75,9 @@
 
       <app-input-clear placeholder="Nhập điểm giao hàng" [required]="true" label="Điểm giao hàng"
         [control]="$any(validateForm).controls['name']"></app-input-clear>
-
+<!--
       <app-input-clear placeholder="Nhập cước vận chuyển bình quân" [required]="true" label="Cước vận chuyển bình quân"
-        [control]="$any(validateForm).controls['cuocVcBq']"></app-input-clear>
+        [control]="$any(validateForm).controls['cuocVcBq']"></app-input-clear> -->
 
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>
