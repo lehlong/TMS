@@ -2989,14 +2989,31 @@ namespace DMS.BUSINESS.Services.BU
                     rowCur.Cells[1].SetCellValue(dataRow.ColB);
                     rowCur.Cells[1].CellStyle = textStyle;
 
-                    rowCur.Cells[2].SetCellValue(dataRow.Col1);
                     rowCur.Cells[2].CellStyle = textStyle;
+                    rowCur.Cells[2].SetCellValue(dataRow.Col1);
 
-                    rowCur.Cells[3].CellStyle = numberStyle; ;
+                    rowCur.Cells[3].CellStyle = numberStyle;
+
+                    rowCur.Cells[4].CellStyle = numberStyle;
+
+                    rowCur.Cells[10].CellStyle = numberStyle;
+
+                    rowCur.Cells[12].CellStyle = numberStyle;
+
+                    if (dataRow.IsBold)
+                    {
+                    rowCur.Cells[3].SetCellValue("");
+                    rowCur.Cells[4].SetCellValue("");
+                    rowCur.Cells[10].SetCellValue("");
+                    rowCur.Cells[12].SetCellValue("");
+                    }
+                    else
+                    {
                     rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
-
-                    rowCur.Cells[4].CellStyle = numberStyle; ;
                     rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+                    rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+                    rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
+                    }
 
                     rowCur.Cells[5].CellStyle = numberStyle; ;
                     rowCur.Cells[5].SetCellValue(dataRow.Col4);
@@ -3012,15 +3029,9 @@ namespace DMS.BUSINESS.Services.BU
 
                     rowCur.Cells[9].CellStyle = numberStyle; ;
                     rowCur.Cells[9].SetCellValue(dataRow.Col8);
-
-                    rowCur.Cells[10].CellStyle = numberStyle; ;
-                    rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
                     
                     rowCur.Cells[11].CellStyle = textStyle; ;
                     rowCur.Cells[11].SetCellValue(dataRow.Col10);
-
-                    rowCur.Cells[12].CellStyle = numberStyle; ;
-                    rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
 
                     rowCur.Cells[13].CellStyle = textStyle; ;
                     rowCur.Cells[13].SetCellValue(dataRow.Col12);
@@ -3124,7 +3135,7 @@ namespace DMS.BUSINESS.Services.BU
                     var dataRow = data.VK11FOB[i];
                     var textStyle = dataRow.IsBold ? styles.TextBold : styles.Text;
                     var numberStyle = dataRow.IsBold ? styles.NumberBold : styles.Number;
-                    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11FOB, startRowVK11FOB++, 21);
+                    IRow rowCur = ReportUtilities.CreateRow(ref sheetVK11FOB, startRowVK11FOB++, 17);
                     rowCur.Cells[0].SetCellValue(dataRow.ColA);
 
                     rowCur.Cells[1].SetCellValue(dataRow.ColC == null ? dataRow.ColB : dataRow.ColC);
@@ -3133,52 +3144,44 @@ namespace DMS.BUSINESS.Services.BU
                     rowCur.Cells[2].SetCellValue(dataRow.Col1);
                     rowCur.Cells[2].CellStyle = textStyle;
 
-                    rowCur.Cells[3].CellStyle = numberStyle; ;
-                    rowCur.Cells[3].SetCellValue(dataRow.Col2 == 0 ? 0 : Convert.ToDouble(dataRow.Col2));
+                    rowCur.Cells[3].CellStyle = numberStyle;
+                    rowCur.Cells[3].SetCellValue(dataRow.Col4);
 
-                    rowCur.Cells[4].CellStyle = numberStyle; ;
-                    rowCur.Cells[4].SetCellValue(dataRow.Col3 == 0 ? 0 : Convert.ToDouble(dataRow.Col3));
+                    rowCur.Cells[4].CellStyle = numberStyle;
+                    rowCur.Cells[4].SetCellValue(dataRow.Col5);
 
-                    rowCur.Cells[5].CellStyle = numberStyle; ;
-                    rowCur.Cells[5].SetCellValue(dataRow.Col4);
+                    rowCur.Cells[5].CellStyle = numberStyle;
+                    rowCur.Cells[5].SetCellValue(dataRow.Col6);
 
-                    rowCur.Cells[6].CellStyle = numberStyle; ;
-                    rowCur.Cells[6].SetCellValue(dataRow.Col5);
+                    rowCur.Cells[6].CellStyle = textStyle;
+                    rowCur.Cells[6].SetCellValue(dataRow.Col7);
                     
                     rowCur.Cells[7].CellStyle = numberStyle; ;
-                    rowCur.Cells[7].SetCellValue(dataRow.Col6);
+                    rowCur.Cells[7].SetCellValue(" ");
                     
-                    rowCur.Cells[8].CellStyle = textStyle;
-                    rowCur.Cells[8].SetCellValue(dataRow.Col7);
+                    rowCur.Cells[8].CellStyle = numberStyle;
+                    rowCur.Cells[8].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
 
                     rowCur.Cells[9].CellStyle = textStyle;
-                    rowCur.Cells[9].SetCellValue(dataRow.Col8);
+                    rowCur.Cells[9].SetCellValue(dataRow.Col10);
 
                     rowCur.Cells[10].CellStyle = numberStyle; ;
-                    rowCur.Cells[10].SetCellValue(dataRow.Col9 == 0 ? 0 : Convert.ToDouble(dataRow.Col9));
+                    rowCur.Cells[10].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
 
                     rowCur.Cells[11].CellStyle = textStyle;
-                    rowCur.Cells[11].SetCellValue(dataRow.Col10);
+                    rowCur.Cells[11].SetCellValue(dataRow.Col12);
 
-                    rowCur.Cells[12].CellStyle = numberStyle;
-                    rowCur.Cells[12].SetCellValue(dataRow.Col11 == 0 ? 0 : Convert.ToDouble(dataRow.Col11));
+                    rowCur.Cells[12].CellStyle = textStyle;
+                    rowCur.Cells[12].SetCellValue(dataRow.Col13);
 
                     rowCur.Cells[13].CellStyle = textStyle;
-                    
+                    rowCur.Cells[13].SetCellValue(dataRow.Col14);
+
                     rowCur.Cells[14].CellStyle = textStyle;
-                    rowCur.Cells[14].SetCellValue(dataRow.Col13);
+                    rowCur.Cells[14].SetCellValue(dataRow.Col15);
                     
                     rowCur.Cells[15].CellStyle = numberStyle; ;
-                    rowCur.Cells[15].SetCellValue(dataRow.Col14);
-
-                    rowCur.Cells[16].CellStyle = numberStyle; ;
-                    rowCur.Cells[16].SetCellValue(dataRow.Col15);
-                    
-                    rowCur.Cells[17].CellStyle = numberStyle; ;
-                    rowCur.Cells[17].SetCellValue(dataRow.Col16);
-                    
-                    rowCur.Cells[18].SetCellValue(dataRow.Col17);
-                    rowCur.Cells[19].SetCellValue(dataRow.Col18);
+                    rowCur.Cells[15].SetCellValue(dataRow.Col16);
                 }
 
                 #endregion
