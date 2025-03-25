@@ -150,12 +150,16 @@ export class CalculateResultComponent {
       next: (params) => {
         const code = params.get('code')
         this.headerId = code
-        if (this.accountGroups != 'G_NV_K') {
-          this.changeTitle('DỮ LIỆU GỐC', 0)
-        }
-        else {
-          this.changeTitle('PT', 1)
-        }
+
+        this.GetData(this.headerId, 0)
+        //this.changeTitle('DỮ LIỆU GỐC', 0)
+
+        // if (this.accountGroups != 'G_NV_K') {
+        //   this.changeTitle('DỮ LIỆU GỐC', 0)
+        // }
+        // else {
+        //   this.changeTitle('PT', 1)
+        // }
         this._service.GetDataInput(this.headerId).subscribe({
           next: (data) => {
             console.log(this.goodsResult);
@@ -475,7 +479,7 @@ export class CalculateResultComponent {
   changeTitle(value: string, tab: any) {
     this.reset()
     this.title = value
-    this.GetData(this.headerId, tab);
+    //this.GetData(this.headerId, tab);
   }
 
   changeStatus(value: string, status: string) {
@@ -633,7 +637,7 @@ export class CalculateResultComponent {
   }
 
   exportExcel() {
-    this._service.ExportExcel(this.headerId).subscribe({
+    this._service.ExportExcel(this.headerId, this.data).subscribe({
       next: (data) => {
         var a = document.createElement('a')
         a.href = environment.apiUrl + data

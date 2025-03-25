@@ -51,34 +51,34 @@ namespace DMS.BUSINESS.Models
     {
         public string? Code { get; set; }
         public string? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? Col3 { get; set; }
-        public decimal? Col4 { get; set; }
-        public decimal? Col5 { get; set; }
-        public decimal? Col6 { get; set; }
-        public decimal? Col7 { get; set; }
+        public decimal Col2 { get; set; } = 0;
+        public decimal Col3 { get; set; } = 0;
+        public decimal Col4 { get; set; } = 0;
+        public decimal Col5 { get; set; } = 0;
+        public decimal Col6 { get; set; } = 0;
+        public decimal Col7 { get; set; } = 0;
     }
     public class DLG_2
     {
         public string? Code { get; set; }
         public string? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
+        public decimal Col2 { get; set; } = 0;
     }
     public class DLG_3
     {
         public string? Code { get; set; }
         public string? ColA { get; set; }
         public string? ColB { get; set; }
-        public decimal? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? Col3 { get; set; }
-        public decimal? Col4 { get; set; }
-        public decimal? Col5 { get; set; }
-        public decimal? Col6 { get; set; }
-        public decimal? Col7 { get; set; }
-        public decimal? Col8 { get; set; }
-        public decimal? Col9 { get; set; }
-        public decimal? Col10 { get; set; }
+        public decimal Col1 { get; set; } = 0;
+        public decimal Col2 { get; set; } = 0;
+        public decimal Col3 { get; set; } = 0;
+        public decimal Col4 { get; set; } = 0;
+        public decimal Col5 { get; set; } = 0;
+        public decimal Col6 { get; set; } = 0;
+        public decimal Col7 { get; set; } = 0;
+        public decimal Col8 { get; set; } = 0;
+        public decimal Col9 { get; set; } = 0;
+        public decimal Col10 { get; set; } = 0;
     }
     public class DLG_4
     {
@@ -86,22 +86,22 @@ namespace DMS.BUSINESS.Models
         public string? Type { get; set; }
         public string? ColA { get; set; }
         public string? ColB { get; set; }
-        public decimal? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? Col3 { get; set; }
-        public decimal? Col4 { get; set; }
-        public decimal? Col5 { get; set; }
-        public decimal? Col6 { get; set; }
-        public decimal? Col7 { get; set; }
-        public decimal? Col8 { get; set; }
-        public decimal? Col9 { get; set; }
-        public decimal? Col10 { get; set; }
-        public decimal? Col11 { get; set; }
-        public decimal? Col12 { get; set; }
-        public decimal? Col13 { get; set; }
-        public decimal? Col14 { get; set; }
-        public decimal? Col15 { get; set; }
-        public decimal? Col16 { get; set; }
+        public decimal Col1 { get; set; } = 0;
+        public decimal Col2 { get; set; } = 0;
+        public decimal Col3 { get; set; } = 0;
+        public decimal Col4 { get; set; } = 0;
+        public decimal Col5 { get; set; } = 0;
+        public decimal Col6 { get; set; } = 0;
+        public decimal Col7 { get; set; } = 0;
+        public decimal Col8 { get; set; } = 0;
+        public decimal Col9 { get; set; } = 0;
+        public decimal Col10 { get; set; } = 0;
+        public decimal Col11 { get; set; } = 0;
+        public decimal Col12 { get; set; } = 0;
+        public decimal Col13 { get; set; } = 0;
+        public decimal Col14 { get; set; } = 0;
+        public decimal Col15 { get; set; } = 0;
+        public decimal Col16 { get; set; } = 0;
         public bool IsBold { get; set; } = false;
     }
     public class DLG_4_Old
@@ -110,22 +110,22 @@ namespace DMS.BUSINESS.Models
         public string? Type { get; set; }
         public string? ColA { get; set; }
         public string? ColB { get; set; }
-        public decimal? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? Col3 { get; set; }
-        public decimal? Col4 { get; set; }
-        public decimal? Col5 { get; set; }
-        public decimal? Col6 { get; set; }
-        public decimal? Col7 { get; set; }
-        public decimal? Col8 { get; set; }
-        public decimal? Col9 { get; set; }
-        public decimal? Col10 { get; set; }
-        public decimal? Col11 { get; set; }
-        public decimal? Col12 { get; set; }
-        public decimal? Col13 { get; set; }
-        public decimal? Col14 { get; set; }
-        public decimal? Col15 { get; set; }
-        public decimal? Col16 { get; set; }
+        public decimal Col1 { get; set; } = 0;
+        public decimal Col2 { get; set; } = 0;
+        public decimal Col3 { get; set; } = 0;
+        public decimal Col4 { get; set; } = 0;
+        public decimal Col5 { get; set; } = 0;
+        public decimal Col6 { get; set; } = 0;
+        public decimal Col7 { get; set; } = 0;
+        public decimal Col8 { get; set; } = 0;
+        public decimal Col9 { get; set; } = 0;
+        public decimal Col10 { get; set; } = 0;
+        public decimal Col11 { get; set; } = 0;
+        public decimal Col12 { get; set; } = 0;
+        public decimal Col13 { get; set; } = 0;
+        public decimal Col14 { get; set; } = 0;
+        public decimal Col15 { get; set; } = 0;
+        public decimal Col16 { get; set; } = 0;
         public bool IsBold { get; set; } = false;
     }
     public class DLG_5
@@ -133,24 +133,24 @@ namespace DMS.BUSINESS.Models
         public string? Code { get; set; }
         public string? ColA { get; set; }
         public string? ColB { get; set; }
-        public decimal? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? Col3 { get; set; }
-        public decimal? Col4 { get; set; }
-        public decimal? Col5 { get; set; }
+        public decimal Col1 { get; set; } = 0;
+        public decimal Col2 { get; set; } = 0;
+        public decimal Col3 { get; set; } = 0;
+        public decimal Col4 { get; set; } = 0;
+        public decimal Col5 { get; set; } = 0;
     }
     public class DLG_6
     {
         public string? Code { get; set; }
         public string? ColA { get; set; }
         public string? ColB { get; set; }
-        public decimal? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? Col3 { get; set; }
-        public decimal? Col4 { get; set; }
-        public decimal? Col5 { get; set; }
-        public decimal? Col6 { get; set; }
-        public decimal? Col7 { get; set; }
+        public decimal Col1 { get; set; } = 0;
+        public decimal Col2 { get; set; } = 0;
+        public decimal Col3 { get; set; } = 0;
+        public decimal Col4 { get; set; } = 0;
+        public decimal Col5 { get; set; } = 0;
+        public decimal Col6 { get; set; } = 0;
+        public decimal Col7 { get; set; } = 0;
         public string? Col8 { get; set; }
 
     }
@@ -159,38 +159,38 @@ namespace DMS.BUSINESS.Models
         public string? Code { get; set; }
         public string? Type { get; set; }
         public string? ColA { get; set; }
-        public decimal? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? TangGiam1_2 { get; set; }
+        public decimal Col1 { get; set; } = 0;
+        public decimal Col2 { get; set; } = 0;
+        public decimal TangGiam1_2 { get; set; } = 0;
     }
     public class DLG_8
     {
         public string? Code { get; set; }
         public string? ColA { get; set; }
         public string? Type { get; set; }
-        public decimal? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? TangGiam1_2 { get; set; }
+        public decimal Col1 { get; set; } = 0;
+        public decimal Col2 { get; set; } = 0;
+        public decimal TangGiam1_2 { get; set; } = 0;
     }
     public class Dlg_TDGBL
     {
         public string? Code { get; set; }
         public string? ColA { get; set; }
-        public decimal? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? TangGiam1_2 { get; set; }
-        public decimal? Col3 { get; set; }
-        public decimal? Col4 { get; set; }
-        public decimal? TangGiam3_4 { get; set; }
+        public decimal Col1 { get; set; } = 0;
+        public decimal Col2 { get; set; } = 0;
+        public decimal TangGiam1_2 { get; set; } = 0;
+        public decimal Col3 { get; set; } = 0;
+        public decimal Col4 { get; set; } = 0;
+        public decimal TangGiam3_4 { get; set; } = 0;
     }
 
     public class Dlg_TdGgptbl
     {
         public string? Code { get; set; }
         public string? ColA { get; set; }
-        public decimal? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? TangGiam1_2 { get; set; }
+        public decimal Col1 { get; set; } = 0;
+        public decimal Col2 { get; set; } = 0;
+        public decimal TangGiam1_2 { get; set; } = 0;
     }
 
     public class PT
@@ -198,16 +198,16 @@ namespace DMS.BUSINESS.Models
         public string? Code { get; set; }
         public string? ColA { get; set; }
         public string? ColB { get; set; }
-        public decimal? Col1 { get; set; }
-        public List<decimal?> LG { get; set; } = new List<decimal?>();
-        public List<decimal?> LN { get; set; } = new List<decimal?>();
+        public decimal Col1 { get; set; } = 0;
+        public List<decimal> LG { get; set; } = new List<decimal>();
+        public List<decimal> LN { get; set; } = new List<decimal>();
         public List<PT_GG> GG { get; set; } = new List<PT_GG>();
         public List<PT_BVMT> BVMT { get; set; } = new List<PT_BVMT>();
-        public decimal? Col3 { get; set; }
-        public decimal? Col4 { get; set; }
-        public decimal? Col5 { get; set; }
-        public decimal? Col6 { get; set; }
-        public decimal? Col7 { get; set; }
+        public decimal Col3 { get; set; } = 0;
+        public decimal Col4 { get; set; } = 0;
+        public decimal Col5 { get; set; } = 0;
+        public decimal Col6 { get; set; } = 0;
+        public decimal Col7 { get; set; } = 0;
         public int Order { get; set; }
         public bool IsBold { get; set; }
 
@@ -215,14 +215,14 @@ namespace DMS.BUSINESS.Models
     public class PT_GG
     {
         public string? Code { get; set; }
-        public decimal? VAT { get; set; }
-        public decimal? NonVAT { get; set; }
+        public decimal VAT { get; set; } = 0;
+        public decimal NonVAT { get; set; } = 0;
     }
     public class PT_BVMT
     {
         public string? Code { get; set; }
-        public decimal? VAT { get; set; }
-        public decimal? NonVAT { get; set; }
+        public decimal VAT { get; set; } = 0;
+        public decimal NonVAT { get; set; } = 0;
     }
     public class DB
     {
@@ -230,33 +230,33 @@ namespace DMS.BUSINESS.Models
         public string? ColA { get; set; }
         public string? ColB { get; set; }
         public string? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public List<decimal?> LG { get; set; } = new List<decimal?>();
-        public decimal? Col3 { get; set; }
-        public decimal? Col4 { get; set; }
-        public decimal? Col5 { get; set; }
-        public decimal? Col6 { get; set; }
-        public decimal? Col7 { get; set; }
-        public decimal? Col8 { get; set; }
-        public decimal? Col9 { get; set; }
-        public decimal? Col10 { get; set; }
+        public decimal Col2 { get; set; } = 0;
+        public List<decimal> LG { get; set; } = new List<decimal>();
+        public decimal Col3 { get; set; } = 0;
+        public decimal Col4 { get; set; } = 0;
+        public decimal Col5 { get; set; } = 0;
+        public decimal Col6 { get; set; } = 0;
+        public decimal Col7 { get; set; } = 0;
+        public decimal Col8 { get; set; } = 0;
+        public decimal Col9 { get; set; } = 0;
+        public decimal Col10 { get; set; } = 0;
         public List<DB_GG> GG { get; set; } = new List<DB_GG>();
-        public List<decimal?> LN { get; set; } = new List<decimal?>();
+        public List<decimal> LN { get; set; } = new List<decimal>();
         public bool IsBold { get; set; } = false;
         public List<DB_BVMT> BVMT { get; set; } = new List<DB_BVMT>();
     }
 
     public class DB_GG
     {
-        public decimal? VAT { get; set; }
-        public decimal? NonVAT { get; set; }
+        public decimal VAT { get; set; } = 0;
+        public decimal NonVAT { get; set; } = 0;
     }
 
     public class DB_BVMT
     {
         public string? Code { get; set; }
-        public decimal? VAT { get; set; }
-        public decimal? NonVAT { get; set; }
+        public decimal VAT { get; set; } = 0;
+        public decimal NonVAT { get; set; } = 0;
     }
 
     public class FOB
@@ -264,25 +264,25 @@ namespace DMS.BUSINESS.Models
         public string? Code { get; set; }
         public string? ColA { get; set; }
         public string? ColB { get; set; }
-        public List<decimal?> LG { get; set; } = new List<decimal?>();
-        public decimal? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? Col3 { get; set; }
-        public decimal? Col4 { get; set; }
-        public decimal? Col5 { get; set; }
-        public decimal? Col6 { get; set; }
-        public decimal? Col7 { get; set; }
+        public List<decimal> LG { get; set; } = new List<decimal>();
+        public decimal Col1 { get; set; } = 0;
+        public decimal Col2 { get; set; } = 0;
+        public decimal Col3 { get; set; } = 0;
+        public decimal Col4 { get; set; } = 0;
+        public decimal Col5 { get; set; } = 0;
+        public decimal Col6 { get; set; } = 0;
+        public decimal Col7 { get; set; } = 0;
         public List<FOB_GG?> GG { get; set; } = new List<FOB_GG>();
-        public decimal? Col8 { get; set; }
-        public List<decimal?> LN { get; set; } = new List<decimal?>();
+        public decimal Col8 { get; set; } = 0;
+        public List<decimal> LN { get; set; } = new List<decimal>();
         public bool IsBold { get; set; } = false;
         public List<PT_BVMT> BVMT { get; set; } = new List<PT_BVMT>();
     }
 
     public class FOB_GG
     {
-        public decimal? VAT { get; set; }
-        public decimal? NonVAT { get; set; }
+        public decimal VAT { get; set; } = 0;
+        public decimal NonVAT { get; set; } = 0;
     }
 
     public class PT09
@@ -290,23 +290,23 @@ namespace DMS.BUSINESS.Models
         public string? Code { get; set; }
         public string? ColA { get; set; }
         public string? ColB { get; set; }
-        public List<decimal?> LG { get; set; } = new List<decimal?>();
-        public decimal? Col3 { get; set; }
-        public decimal? Col4 { get; set; }
-        public decimal? Col5 { get; set; }
-        public decimal? Col6 { get; set; }
-        public decimal? Col7 { get; set; }
-        public decimal? Col8 { get; set; }
+        public List<decimal> LG { get; set; } = new List<decimal>();
+        public decimal Col3 { get; set; } = 0;
+        public decimal Col4 { get; set; } = 0;
+        public decimal Col5 { get; set; } = 0;
+        public decimal Col6 { get; set; } = 0;
+        public decimal Col7 { get; set; } = 0;
+        public decimal Col8 { get; set; } = 0;
         public List<PT09_GG> GG { get; set; } = new List<PT09_GG>();
-        public decimal? Col18 { get; set; }
-        public List<decimal?> LN { get; set; } = new List<decimal?>();
+        public decimal Col18 { get; set; }
+        public List<decimal> LN { get; set; } = new List<decimal>();
         public List<PT_BVMT> BVMT { get; set; } = new List<PT_BVMT>();
         public bool IsBold { get; set; } = false;
     }
     public class PT09_GG
     {
-        public decimal? VAT { get; set; }
-        public decimal? NonVAT { get; set; }
+        public decimal VAT { get; set; } = 0;
+        public decimal NonVAT { get; set; } = 0;
     }
     public class BBDO
     {
@@ -315,7 +315,7 @@ namespace DMS.BUSINESS.Models
         public string? ColB { get; set; }
         public string? ColC { get; set; }
         public string? ColD { get; set; }
-        public List<decimal?> LG { get; set; } = new List<decimal?>();
+        public List<decimal> LG { get; set; } = new List<decimal>();
         public bool IsBold { get; set; } = false;
         public string? Col1 { get; set; }
         public string? Col2 { get; set; }
@@ -323,20 +323,20 @@ namespace DMS.BUSINESS.Models
         public string? Col4 { get; set; }
         public string? Col5 { get; set; }
 
-        public decimal? Col6 { get; set; }
-        public decimal? Col7 { get; set; }
-        public decimal? Col8 { get; set; }
-        public decimal? Col9 { get; set; }
-        public decimal? Col10 { get; set; }
-        public decimal? Col11 { get; set; }
-        public decimal? Col12 { get; set; }
-        public decimal? Col13 { get; set; }
-        public decimal? Col14 { get; set; }
-        public decimal? Col15 { get; set; }
-        public decimal? Col16 { get; set; }
-        public decimal? Col17 { get; set; }
-        public decimal? Col18 { get; set; }
-        public decimal? Col19 { get; set; }
+        public decimal Col6 { get; set; } = 0;
+        public decimal Col7 { get; set; } = 0;
+        public decimal Col8 { get; set; } = 0;
+        public decimal Col9 { get; set; }   = 0;
+        public decimal Col10 { get; set; } = 0;
+        public decimal Col11 { get; set; } = 0;
+        public decimal Col12 { get; set; } = 0;
+        public decimal Col13 { get; set; } = 0;
+        public decimal Col14 { get; set; } = 0;
+        public decimal Col15 { get; set; } = 0;
+        public decimal Col16 { get; set; } = 0;
+        public decimal Col17 { get; set; } = 0;
+        public decimal Col18 { get; set; } = 0;
+        public decimal Col19 { get; set; } = 0;
     }
     public class BBDO_MAP
     {
@@ -344,7 +344,7 @@ namespace DMS.BUSINESS.Models
         public string? CustomerName { get; set; }
         public string? PointCode { get; set; }
         public string? PointName { get; set; }
-        public decimal? CuocVcBq { get; set; }
+        public decimal CuocVcBq { get; set; } = 0;
 
     }
     public class BBFO
@@ -354,23 +354,23 @@ namespace DMS.BUSINESS.Models
         public string? ColB { get; set; }
         public string? ColC { get; set; }
         public bool IsBold { get; set; } = false;
-        public decimal? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? Col3 { get; set; }
-        public decimal? Col4 { get; set; }
-        public decimal? Col5 { get; set; }
-        public decimal? Col6 { get; set; }
-        public decimal? Col7 { get; set; }
-        public decimal? Col8 { get; set; }
-        public decimal? Col9 { get; set; }
-        public decimal? Col10 { get; set; }
+        public decimal Col1 { get; set; } = 0;
+        public decimal Col2 { get; set; } = 0;
+        public decimal Col3 { get; set; } = 0;
+        public decimal Col4 { get; set; } = 0;
+        public decimal Col5 { get; set; } = 0;
+        public decimal Col6 { get; set; } = 0;
+        public decimal Col7 { get; set; } = 0;
+        public decimal Col8 { get; set; } = 0;
+        public decimal Col9 { get; set; } = 0;
+        public decimal Col10 { get; set; } = 0;
     }
     public class PL1
     {
         public string? Code { get; set; }
         public string? ColA { get; set; }
         public string? ColB { get; set; }
-        public List<decimal?> GG { get; set; } = new List<decimal?>();
+        public List<decimal> GG { get; set; } = new List<decimal>();
         public bool  IsBold { get; set; } = false;
     }
     public class PL2
@@ -378,7 +378,7 @@ namespace DMS.BUSINESS.Models
         public string? Code { get; set; }
         public string? ColA { get; set; }
         public string? ColB { get; set; }
-        public List<decimal?> GG { get; set; } = new List<decimal?>();
+        public List<decimal> GG { get; set; } = new List<decimal>();
         public bool IsBold { get; set; } = false;
     }
 
@@ -387,7 +387,7 @@ namespace DMS.BUSINESS.Models
         public string? Code { get; set; }
         public string? ColA { get; set; }
         public string? ColB { get; set; }
-        public List<decimal?> GG { get; set; } = new List<decimal?>();
+        public List<decimal> GG { get; set; } = new List<decimal>();
         public bool IsBold { get; set; } = false;
     }
     public class PL4
@@ -395,7 +395,7 @@ namespace DMS.BUSINESS.Models
         public string? Code { get; set; }
         public string? ColA { get; set; }
         public string? ColB { get; set; }
-        public List<decimal?> GG { get; set; } = new List<decimal?>();
+        public List<decimal> GG { get; set; } = new List<decimal>();
         public bool IsBold { get; set; } = false;
     }
     public class VK11PT
@@ -405,16 +405,16 @@ namespace DMS.BUSINESS.Models
         public string? ColB { get; set; }
         public bool IsBold { get; set; } = false;
         public string? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? Col3 { get; set; }
+        public decimal Col2 { get; set; } = 0;
+        public decimal Col3 { get; set; } = 0;
         public string? Col4 { get; set; }
         public string? Col5 { get; set; }
         public string? Col6 { get; set; }
         public string? Col7 { get; set; }
         public string? Col8 { get; set; }
-        public decimal? Col9 { get; set; }
+        public decimal Col9 { get; set; } = 0;
         public string? Col10 { get; set; }
-        public decimal? Col11 { get; set; }
+        public decimal Col11 { get; set; } = 0;
         public string? Col12 { get; set; }
         public string? Col13 { get; set; }
         public string? Col14 { get; set; }
@@ -431,16 +431,16 @@ namespace DMS.BUSINESS.Models
         public string? ColC { get; set; }
         public bool IsBold { get; set; } = false;
         public string? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? Col3 { get; set; }
+        public decimal Col2 { get; set; } = 0;
+        public decimal Col3 { get; set; } = 0;
         public string? Col4 { get; set; }
         public string? Col5 { get; set; }
         public string? Col6 { get; set; }
         public string? Col7 { get; set; }
         public string? Col8 { get; set; }
-        public decimal? Col9 { get; set; }
+        public decimal Col9 { get; set; } = 0;
         public string? Col10 { get; set; }
-        public decimal? Col11 { get; set; }
+        public decimal Col11 { get; set; } = 0;
         public string? Col12 { get; set; }
         public string? Col13 { get; set; }
         public string? Col14 { get; set; }
@@ -457,16 +457,16 @@ namespace DMS.BUSINESS.Models
         public string? ColC { get; set; }
         public bool IsBold { get; set; } = false;
         public string? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? Col3 { get; set; }
+        public decimal Col2 { get; set; } = 0;
+        public decimal Col3 { get; set; } = 0;
         public string? Col4 { get; set; }
         public string? Col5 { get; set; }
         public string? Col6 { get; set; }
         public string? Col7 { get; set; }
         public string? Col8 { get; set; }
-        public decimal? Col9 { get; set; }
+        public decimal Col9 { get; set; } = 0;
         public string? Col10 { get; set; }
-        public decimal? Col11 { get; set; }
+        public decimal Col11 { get; set; } = 0;
         public string? Col12 { get; set; }
         public string? Col13 { get; set; }
         public string? Col14 { get; set; }
@@ -483,16 +483,16 @@ namespace DMS.BUSINESS.Models
         public string? ColC { get; set; }
         public bool IsBold { get; set; } = false;
         public string? Col1 { get; set; }
-        public decimal? Col2 { get; set; }
-        public decimal? Col3 { get; set; }
+        public decimal Col2 { get; set; } = 0;
+        public decimal Col3 { get; set; } = 0;
         public string? Col4 { get; set; }
         public string? Col5 { get; set; }
         public string? Col6 { get; set; }
         public string? Col7 { get; set; }
         public string? Col8 { get; set; }
-        public decimal? Col9 { get; set; }
+        public decimal Col9 { get; set; } = 0;
         public string? Col10 { get; set; }
-        public decimal? Col11 { get; set; }
+        public decimal Col11 { get; set; } = 0;
         public string? Col12 { get; set; }
         public string? Col13 { get; set; }
         public string? Col14 { get; set; }
@@ -509,8 +509,8 @@ namespace DMS.BUSINESS.Models
         public string? Col3 { get; set; }
         public string? Col4 { get; set; }
         public string? Col5 { get; set; }
-        public decimal? Col6 { get; set; }
-        public decimal? Col7 { get; set; }
+        public decimal Col6 { get; set; } = 0;
+        public decimal Col7 { get; set; } = 0;
         public string? Col8 { get; set; }
         public string? Col9 { get; set; }
         public string? Col10 { get; set; }
@@ -524,7 +524,7 @@ namespace DMS.BUSINESS.Models
         public string? ColB { get; set; }
         public string? ColC { get; set; }
         public string? ColD { get; set; }
-        public List<decimal?> LG { get; set; } = new List<decimal?>();
+        public List<decimal> LG { get; set; } = new List<decimal>();
         public bool IsBold { get; set; } = false;
         public string? Col1 { get; set; }
         public string? Col2 { get; set; }
@@ -532,7 +532,7 @@ namespace DMS.BUSINESS.Models
         public string? Col4 { get; set; }
         public string? Col5 { get; set; }
 
-        public decimal? Col6 { get; set; }
+        public decimal Col6 { get; set; } = 0;
         public string? Col7 { get; set; }
         public string? Col8 { get; set; }
         public string? Col9 { get; set; }
@@ -550,7 +550,7 @@ namespace DMS.BUSINESS.Models
         public string? ColB { get; set; }
         public string? ColC { get; set; }
         public string? ColD { get; set; }
-        public List<decimal?> LG { get; set; } = new List<decimal?>();
+        public List<decimal> LG { get; set; } = new List<decimal>();
         public bool IsBold { get; set; } = false;
         public string? Col1 { get; set; }
         public string? Col2 { get; set; }
@@ -558,7 +558,7 @@ namespace DMS.BUSINESS.Models
         public string? Col4 { get; set; }
         public string? Col5 { get; set; }
 
-        public decimal? Col6 { get; set; }
+        public decimal Col6 { get; set; } = 0;
         public string? Col7 { get; set; }
         public string? Col8 { get; set; }
         public string? Col9 { get; set; }

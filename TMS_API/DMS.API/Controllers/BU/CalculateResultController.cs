@@ -162,11 +162,11 @@ namespace DMS.API.Controllers.BU
         //    }
         //}
 
-        [HttpGet("ExportExcel")]
-        public async Task<IActionResult> ExportExcel([FromQuery] string headerId)
+        [HttpPost("ExportExcel")]
+        public async Task<IActionResult> ExportExcel([FromQuery] string headerId, [FromBody] CalculateResultModel data)
         {
             var transferObject = new TransferObject();
-            var result = await _service.GenarateFile(new List<string>(), "EXCEL", headerId);
+            var result = await _service.GenarateFile(new List<string>(), "EXCEL", headerId, data);
             if (_service.Status)
             {
                 transferObject.Data = result;
@@ -186,7 +186,7 @@ namespace DMS.API.Controllers.BU
         public async Task<IActionResult> ExportWord([FromBody] List<string> lstCustomerChecked, [FromQuery] string headerId)
         {
             var transferObject = new TransferObject();
-            var result = await _service.GenarateFile(lstCustomerChecked, "WORD", headerId);
+            var result = await _service.GenarateFile(lstCustomerChecked, "WORD", headerId, new CalculateResultModel());
             if (_service.Status)
             {
                 transferObject.Data = result;
@@ -207,7 +207,7 @@ namespace DMS.API.Controllers.BU
         public async Task<IActionResult> ExportWordTrinhky([FromBody] List<string> lstTrinhKyChecked, [FromQuery] string headerId)
         {
             var transferObject = new TransferObject();
-            var result = await _service.GenarateFile(lstTrinhKyChecked, "WORDTRINHKY", headerId);
+            var result = await _service.GenarateFile(lstTrinhKyChecked, "WORDTRINHKY", headerId, new CalculateResultModel());
             if (_service.Status)
             {
                 transferObject.Data = result;
@@ -228,7 +228,7 @@ namespace DMS.API.Controllers.BU
         public async Task<IActionResult> ExportPDF([FromBody] List<string> lstCustomerChecked, [FromQuery] string headerId)
         {
             var transferObject = new TransferObject();
-            var result = await _service.GenarateFile(lstCustomerChecked, "PDF", headerId);
+            var result = await _service.GenarateFile(lstCustomerChecked, "PDF", headerId, new CalculateResultModel());
             if (_service.Status)
             {
                 transferObject.Data = result;
