@@ -2253,7 +2253,8 @@ namespace DMS.BUSINESS.Services.BU
                     var numberStyle = item.IsBold ? styles.NumberBold : styles.Number;
                     var rowCur = ReportUtilities.CreateRow(ref sheetPT, startRowPT++, 38);
 
-                    rowCur.Cells[0].SetCellValue(item.ColA);
+                    rowCur.Cells[0].CellStyle = textStyle;
+                    rowCur.Cells[0].SetCellValue(item.ColA?.ToString());
                     
                     rowCur.Cells[1].SetCellValue(item.ColB);
                     rowCur.Cells[1].CellStyle = textStyle;
@@ -2345,7 +2346,8 @@ namespace DMS.BUSINESS.Services.BU
                     var numberStyle = dataRow.IsBold ? styles.NumberBold : styles.Number;
                     var rowCur = ReportUtilities.CreateRow(ref sheetDB, startRowDB++, 43);
 
-                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA?.ToString());
+                    rowCur.Cells[0].CellStyle = textStyle;
                     rowCur.Cells[1].SetCellValue(dataRow.ColB);
                     rowCur.Cells[1].CellStyle = textStyle;
                     rowCur.Cells[2].SetCellValue(dataRow.Col1);
@@ -2418,8 +2420,8 @@ namespace DMS.BUSINESS.Services.BU
                     var numberStyle = dataRow.IsBold ? styles.NumberBold : styles.Number;
                     var rowCur = ReportUtilities.CreateRow(ref sheetFOB, startRowFOB++, 41);
 
-                    rowCur.Cells[0].SetCellValue(dataRow.ColA);
-
+                    rowCur.Cells[0].SetCellValue(dataRow.ColA?.ToString());
+                    rowCur.Cells[0].CellStyle = textStyle;
                     rowCur.Cells[1].SetCellValue(dataRow.ColB);
                     rowCur.Cells[1].CellStyle = textStyle;
 
@@ -6943,9 +6945,10 @@ public static class ExcelNPOIExtention
     {
         ICellStyle style = workbook.CreateCellStyle();
         IFont font = workbook.CreateFont();
-        font.FontName = "Times New Roman";
+        font.FontName = "Segoe UI";
         font.FontHeightInPoints = 12;
         style.SetFont(font);
+        style.WrapText = true;
         style.Alignment = HorizontalAlignment.Left;
         style.BorderTop = BorderStyle.Thin;
         style.BorderBottom = BorderStyle.Thin;
@@ -6958,10 +6961,11 @@ public static class ExcelNPOIExtention
     {
         ICellStyle style = workbook.CreateCellStyle();
         IFont font = workbook.CreateFont();
-        font.FontName = "Times New Roman";
+        font.FontName = "Segoe UI";
         font.FontHeightInPoints = 12;
         font.IsBold = true;
         style.SetFont(font);
+        style.WrapText = true;
         style.Alignment = HorizontalAlignment.Left;
         style.BorderTop = BorderStyle.Thin;
         style.BorderBottom = BorderStyle.Thin;
@@ -6974,7 +6978,7 @@ public static class ExcelNPOIExtention
     {
         ICellStyle style = workbook.CreateCellStyle();
         IFont font = workbook.CreateFont();
-        font.FontName = "Times New Roman";
+        font.FontName = "Segoe UI";
         font.FontHeightInPoints = 12;
         font.IsBold = isBold?true:false;
         style.SetFont(font);
@@ -6992,7 +6996,7 @@ public static class ExcelNPOIExtention
     {
         ICellStyle style = workbook.CreateCellStyle();
         IFont font = workbook.CreateFont();
-        font.FontName = "Times New Roman";
+        font.FontName = "Segoe UI";
         font.FontHeightInPoints = 12;
         style.SetFont(font);
         style.Alignment = HorizontalAlignment.Right;
@@ -7008,7 +7012,7 @@ public static class ExcelNPOIExtention
     {
         ICellStyle style = workbook.CreateCellStyle();
         IFont font = workbook.CreateFont();
-        font.FontName = "Times New Roman";
+        font.FontName = "Segoe UI";
         font.FontHeightInPoints = 12;
         font.IsBold = true;
         style.SetFont(font);
