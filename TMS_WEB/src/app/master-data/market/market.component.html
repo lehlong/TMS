@@ -49,6 +49,12 @@
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('cuocVCBQ', $event)">
             Cước VC BQ
           </th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('ckDieuTietXang', $event)">
+            CK điều tiết cho xăng
+          </th>
+          <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('ckDieuTietDau', $event)">
+            CK điều tiết cho dầu
+          </th>
           <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('createDate', $event)">
             Ngày tạo
           </th>
@@ -79,6 +85,8 @@
           </td>
           <td class="align-right">{{ data.cpChungChuaCuocVC }}</td>
           <td class="align-right">{{ data.cuocVCBQ }}</td>
+          <td class="align-right">{{ data.ckDieuTietXang }}</td>
+          <td class="align-right">{{ data.ckDieuTietDau }}</td>
           <td class="align-right">{{ data.createDate | date: 'dd/MM/yyyy HH:mm' }}</td>
 
           <td nzAlign="center">
@@ -138,6 +146,12 @@
 
       <app-input-clear placeholder="CP chung chưa cước VC" [required]="true" label="CP chung chưa cước VC"
         [control]="$any(validateForm).controls['cpChungChuaCuocVC']"></app-input-clear>
+
+      <app-input-clear placeholder="CK điều tiết cho xăng" [required]="true" label="CK điều tiết cho xăng"
+        [control]="$any(validateForm).controls['ckDieuTietXang']"></app-input-clear>
+
+      <app-input-clear placeholder="CK điều tiết cho dầu" [required]="true" label="CK điều tiết cho dầu"
+        [control]="$any(validateForm).controls['ckDieuTietDau']"></app-input-clear>
 
       <nz-form-item>
         <nz-form-label>Trạng thái</nz-form-label>

@@ -487,7 +487,8 @@ namespace DMS.BUSINESS.Services.BU
                             Col3 = m.CPChungChuaCuocVC + m.CuocVCBQ,
                             Col4 = m.CPChungChuaCuocVC,
                             Col5 = m.CuocVCBQ,
-                            Col6 = 0,
+                            Col6 = m.CkDieuTietXang ?? 0,
+                            Col7 = m.CkDieuTietDau ?? 0,
                         };
                         var _2 = i.Col3;
 
@@ -510,7 +511,7 @@ namespace DMS.BUSINESS.Services.BU
                             {
                                 Code = _l.Code,
                                 //VAT = p - i.Col5 * m.Coefficient + i.Col6
-                                VAT = p - i.Col5 * 1.1M + i.Col6
+                                VAT =  p - i.Col5 * 1.1M +  (_l.Type == "X" ? i.Col6 : i.Col7)
                             };
                             d.VAT = Math.Round(d.VAT == null ? 0M : d.VAT / 10 ?? 0) * 10;
                             d.NonVAT = d.VAT == 0 ? 0 : d.VAT / 1.1M;
@@ -2283,7 +2284,7 @@ namespace DMS.BUSINESS.Services.BU
                     rowCur.Cells[11].CellStyle = textStyle;
                     rowCur.Cells[12].CellStyle = textStyle;
 
-                    SetCellValues(rowCur, numberStyle, item, new[] { 8, 9, 10}, new[] { item.Col3, item.Col4, item.Col5 }, item.IsBold);
+                    SetCellValues(rowCur, numberStyle, item, new[] { 8, 9, 10, 11, 12}, new[] { item.Col3, item.Col4, item.Col5, item.Col6, item.Col7 }, item.IsBold);
 
                     for (int ggIndex = 0, col = 13; ggIndex < item.GG.Count; ggIndex++, col += 2)
                     {

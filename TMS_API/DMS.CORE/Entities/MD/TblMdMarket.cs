@@ -37,5 +37,11 @@ namespace DMS.CORE.Entities.MD
         [Column("CP_CHUNG_CHUA_CUOC_VC", TypeName = "DECIMAL(18,0)")]
         public decimal? CPChungChuaCuocVC { get; set; }
 
+        [Column("CK_DIEU_TIET_XANG", TypeName = "DECIMAL(18,0)")]
+        public decimal? CkDieuTietXang { get; set; }
+
+        [Column("CK_DIEU_TIET_DAU", TypeName = "DECIMAL(18,0)")]
+        public decimal? CkDieuTietDau { get; set; }
+
     }
 }

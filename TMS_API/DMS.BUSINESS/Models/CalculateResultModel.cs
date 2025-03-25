@@ -207,6 +207,7 @@ namespace DMS.BUSINESS.Models
         public decimal? Col4 { get; set; }
         public decimal? Col5 { get; set; }
         public decimal? Col6 { get; set; }
+        public decimal? Col7 { get; set; }
         public int Order { get; set; }
         public bool IsBold { get; set; }
 

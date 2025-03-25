@@ -35,6 +35,12 @@ namespace DMS.BUSINESS.Dtos.MD
         [Description("CP chung chưa Cước VC")]
         public decimal? CPChungChuaCuocVC { get; set; }
 
+        [Description("CK điều tiết cho xăng")]
+        public decimal? CkDieuTietXang { get; set; }
+
+        [Description("CK điều tiết cho dầu")]
+        public decimal? CkDieuTietDau { get; set; }
+
         [Description("Mã vùng")]
         public string LocalCode { get; set; }
 
