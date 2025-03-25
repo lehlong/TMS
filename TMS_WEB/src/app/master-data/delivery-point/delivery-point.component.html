@@ -69,9 +69,9 @@
   [nzTitle]="edit ? ' Chỉnh sửa  ' : ' Tạo mới  '" [nzExtra]="extra" (nzOnClose)="close()">
   <ng-container *nzDrawerContent>
     <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
-      <app-input-clear placeholder="Nhập mã " [required]="true" label="Mã "
+      <!-- <app-input-clear placeholder="Nhập mã " [required]="true" label="Mã "
         [control]="$any(validateForm).controls['code']" [required]="true"
-        [disabled]="edit ? true : false"></app-input-clear>
+        [disabled]="edit ? true : false"></app-input-clear> -->
 
       <app-input-clear placeholder="Nhập điểm giao hàng" [required]="true" label="Điểm giao hàng"
         [control]="$any(validateForm).controls['name']"></app-input-clear>

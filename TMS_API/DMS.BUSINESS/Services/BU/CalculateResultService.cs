@@ -424,8 +424,8 @@ namespace DMS.BUSINESS.Services.BU
                                 Code = g.Code,
                                 ColA = g.Name,
                                 Type = n.Type,
-                                Col1 = dlg_4_Old.Where(x => x.Code == g.Code).Where(x => x.Type == "TT").Sum(x => x.Col14),
-                                Col2 = n.Col14,
+                                Col1 = dlg_4_Old.Where(x => x.Code == g.Code).Where(x => x.Type == "TT").Sum(x => x.Col14) + 30,
+                                Col2 = n.Col14 + 30,
                                 TangGiam1_2 = n.Col14 - dlg_4_Old.Where(x => x.Code == g.Code).Where(x => x.Type == "TT").Sum(x => x.Col14),
                             };
                             data.DLG.Dlg_8.Add(i);
