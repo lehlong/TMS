@@ -201,13 +201,18 @@
           </nz-form-control>
         </nz-form-item>zzz -->
       <div nz-row nzJustify="space-evenly">
-        <app-input-clear nzWidth="100%" nz-col nzSpan="13" placeholder="Nhập khách hàng " [required]="true"
-          label="Tên khách hàng " [control]="$any(validateForm).controls['name']"></app-input-clear>
+        <app-input-clear nz-col nzSpan="12" placeholder="Nhập mã khách hàng " [disabled]="edit?true:false" [required]="true"
+          label="Mã khách hàng " [control]="$any(validateForm).controls['code']"></app-input-clear>
 
-        <app-input-clear nz-col nzSpan="5" placeholder="Nhập Cự ly" label="Cự ly BQ"
+        <app-input-clear nz-col nzSpan="11" placeholder="Nhập khách hàng " [required]="true"
+          label="Tên khách hàng " [control]="$any(validateForm).controls['name']"></app-input-clear>
+      </div>
+
+      <div nz-row nzJustify="space-evenly">
+        <app-input-clear nz-col nzSpan="12" placeholder="Nhập Cự ly" label="Cự ly BQ"
           [control]="$any(validateForm).controls['gap']"></app-input-clear>
 
-        <app-input-clear nz-col nzSpan="5" placeholder="Nhập cước VC BQ" label="Cước VC bình quân"
+        <app-input-clear nz-col nzSpan="11" placeholder="Nhập cước VC BQ" label="Cước VC bình quân"
           [control]="$any(validateForm).controls['cuocVcBq']"></app-input-clear>
       </div>
 
@@ -315,8 +320,7 @@
         <nz-form-item nz-col nzSpan="11">
           <nz-form-label>Vùng giá</nz-form-label>
           <nz-form-control>
-            <nz-select nzShowSearch nzAllowClear placeholder="Chọn Vùng Giá" formControlName="localCode"
-              (ngModelChange)="searchMarket()">
+            <nz-select nzShowSearch nzAllowClear placeholder="Chọn Vùng Giá" formControlName="localCode">
               <nz-option cdkScrollable *ngFor="let item of localResult" [nzLabel]="item.code + ' - ' + item.name"
                 [nzValue]="item.code">
               </nz-option>
@@ -328,7 +332,7 @@
           <nz-form-label>Thị Trường</nz-form-label>
           <nz-form-control>
             <nz-select nzShowSearch nzAllowClear placeholder="Chọn thị trường" formControlName="marketCode">
-              <nz-option cdkScrollable *ngFor="let item of marketResult" [nzLabel]="item.code + ' - ' + item.name"
+              <nz-option cdkScrollable *ngFor="let item of marketList" [nzLabel]="item.code + ' - ' + item.name"
                 [nzValue]="item.code">
               </nz-option>
             </nz-select>

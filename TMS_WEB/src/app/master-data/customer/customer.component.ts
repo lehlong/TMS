@@ -39,7 +39,7 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown'
 })
 export class CustomerComponent {
   validateForm: FormGroup = this.fb.group({
-    code: [''],
+    code: ['', [Validators.required]],
     name: ['', [Validators.required]],
     address: [''],
     paymentTerm: [''],
@@ -368,13 +368,13 @@ export class CustomerComponent {
     })
   }
 
-  searchMarket() {
-    this.isSubmit = false
-    this.marketResult = this.marketList.filter(
-      (market) =>
-        market.localCode === this.validateForm.get('localCode')?.value,
-    )
-  }
+  // searchMarket() {
+  //   this.isSubmit = false
+  //   this.marketResult = this.marketList.filter(
+  //     (market) =>
+  //       market.localCode === this.validateForm.get('localCode')?.value,
+  //   )
+  // }
 
   getAllSalesMethod() {
     this.isSubmit = false
@@ -437,7 +437,7 @@ export class CustomerComponent {
       } else {
         if (this.isCodeExist(formData.code)) {
           this.message.error(
-            `Mã khu vục ${formData.code} đã tồn tại, vui lòng nhập lại`,
+            `Mã khách hàng ${formData.code} đã tồn tại, vui lòng nhập lại`,
           )
           return
         }
@@ -545,7 +545,6 @@ export class CustomerComponent {
     setTimeout(() => {
       this.edit = true
       this.visible = true
-      this.searchMarket()
     }, 200)
   }
 
