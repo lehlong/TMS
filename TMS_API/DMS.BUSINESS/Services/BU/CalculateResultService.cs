@@ -75,17 +75,22 @@ namespace DMS.BUSINESS.Services.BU
             try
             {
                 var data = new CalculateResultModel();
-                var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive == true).OrderBy(x => x.CreateDate).ToListAsync(); 
+                //var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive == true).OrderBy(x => x.CreateDate).ToListAsync();
+                var lstGoods = await _dbContext.TblMdGoods.Where(x => x.IsActive == true).OrderBy(x => x.CreateDate).ToListAsync();
                 data.lstGoods = lstGoods;
                 var lstMarket = await _dbContext.TblMdMarket.OrderBy(x => x.Code).ToListAsync();
                 var lstCustomer = await _dbContext.TblMdCustomer.Where(x => x.IsActive == true).ToListAsync();
                 var lstCR = await _dbContext.TblBuCalculateResultList.OrderBy(x => x.FDate).ToListAsync();
+
+                //data.HEADER_CR = lstCR.FirstOrDefault(x => x.Code == code);
+
                 DateTime fDate = lstCR.FirstOrDefault(x => x.Code == code).FDate;
 
                 var OldCalculate = await _dbContext.TblBuCalculateResultList
-                                                    .Where(x => x.FDate < fDate) 
-                                                    .Where(x => x.Status == "04") 
+                                                    .Where(x => x.FDate < fDate) // Lọc các trường có FDate nhỏ hơn ngày hiện tại
+                                                    .Where(x => x.Status == "04") //lấy trường đã đươc phê duyệt
                                                     .OrderByDescending(x => x.FDate)
+                                                    //.Select(x => x.Code) // Chọn trường Code
                                                     .FirstOrDefaultAsync();
 
                 data.DLG.NameOld = OldCalculate.Name ?? "";
@@ -100,7 +105,6 @@ namespace DMS.BUSINESS.Services.BU
                 {
                     return data;
                 }
-
                 #region DLG
                 var _oDlg = 1;
                 foreach (var g in lstGoods)
@@ -270,10 +274,16 @@ namespace DMS.BUSINESS.Services.BU
                     data.DLG.Dlg_4.Add(i);
                     _oII++;
                 }
+
+                #region
+
+                //if (OldCalculate != null)
+                //{
                 foreach (var g in lstGoods)
                 {
                     var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
                     var vclo = dataVCLOld.Where(x => x.GoodsCode == g.Code).ToList();
+                    //var dlg1 = data.DLG.Dlg_1.Where(x => x.Code == g.Code).ToList();
                     var k = new DLG_4_Old
                     {
                         Code = g.Code,
@@ -309,6 +319,7 @@ namespace DMS.BUSINESS.Services.BU
                 {
                     var hsmho = dataHSMHOld.Where(x => x.GoodsCode == g.Code).ToList();
                     var vclo = dataVCLOld.Where(x => x.GoodsCode == g.Code).ToList();
+                    //var dlg1 = data.DLG.Dlg_3.Where(x => x.Code == g.Code).ToList();
                     var k = new DLG_4_Old
                     {
                         Code = g.Code,
@@ -341,6 +352,7 @@ namespace DMS.BUSINESS.Services.BU
                     data.DLG.Dlg_4_Old.Add(k);
 
                 }
+                #endregion
 
 
                 // thay dổi giá bán lẻ 
@@ -451,15 +463,20 @@ namespace DMS.BUSINESS.Services.BU
 
                 #region PT
                 var orderPT = 1;
-                var localCache = lstMarket.Select(x => x.LocalCode).Distinct()
-                    .ToDictionary(l => l, l => _dbContext.tblMdLocal.Find(l)?.Name);
-
-                foreach (var l in localCache)
+                foreach (var l in lstMarket.Select(x => x.LocalCode).Distinct().ToList())
                 {
-                    data.PT.Add(new PT { ColB = l.Value, IsBold = true });
-                    data.PL1.Add(new PL1 { ColB = l.Value, IsBold = true });
-
-                    foreach (var m in lstMarket.Where(x => x.LocalCode == l.Key))
+                    var local = _dbContext.tblMdLocal.Find(l);
+                    data.PT.Add(new PT
+                    {
+                        ColB = local.Name,
+                        IsBold = true,
+                    });
+                    data.PL1.Add(new PL1
+                    {
+                        ColB = local.Name,
+                        IsBold = true,
+                    });
+                    foreach (var m in lstMarket.Where(x => x.LocalCode == l).ToList())
                     {
                         var i = new PT
                         {
@@ -467,46 +484,57 @@ namespace DMS.BUSINESS.Services.BU
                             ColA = orderPT.ToString(),
                             ColB = m.Name,
                             Col1 = m.Gap ?? 0,
-                            Col3 = (m.CPChungChuaCuocVC ?? 0) + (m.CuocVCBQ ?? 0),
+                            Col3 = m.CPChungChuaCuocVC ?? 0 + m.CuocVCBQ ?? 0,
                             Col4 = m.CPChungChuaCuocVC ?? 0,
                             Col5 = m.CuocVCBQ ?? 0,
                             Col6 = m.CkDieuTietXang ?? 0,
                             Col7 = m.CkDieuTietDau ?? 0,
                         };
                         var _2 = i.Col3;
-                        var _pl1 = new PL1 { Code = m.Code, ColA = orderPT.ToString(), ColB = m.Name };
-                        data.PL1.Add(_pl1);
 
-                        var dlgType = m.LocalCode == "V1" ? "TT" : "OTHER";
+                        var _pl1 = new PL1
+                        {
+                            Code = m.Code,
+                            ColA = orderPT.ToString(),
+                            ColB = m.Name,
+                        };
+                        data.PL1.Add(_pl1);
                         foreach (var _l in lstGoods)
                         {
-                            var dlgFiltered = data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == dlgType);
-
-                            var _1 = dlgFiltered.Sum(x => x.Col13);
+                            //var _c = lstLGDT.Where(x => x.MarketCode == m.Code && x.GoodsCode == _l.Code);
+                            var _1 = m.LocalCode == "V1" ? data.DLG.Dlg_4.Where(x => x.Type == "TT" && x.Code == _l.Code).Sum(x => x.Col13) : data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == _l.Code).Sum(x => x.Col13);
+                            //var _1 = _c == null || _c.Count() == 0 ? 0 : _c.Sum(x => x.Price);
                             i.LG.Add(Math.Round(_1));
 
-                            var p = dlgFiltered.Sum(x => x.Col14);
+                            var p = m.LocalCode == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "TT").Sum(x => x.Col14) : data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "OTHER").Sum(x => x.Col14);
                             var d = new PT_GG
                             {
                                 Code = _l.Code,
+                                //VAT = p - i.Col5 * m.Coefficient + i.Col6
                                 VAT = p - i.Col5 * 1.1M + (_l.Type == "X" ? i.Col6 : i.Col7)
                             };
-                            d.VAT = Math.Round(d.VAT / 10) * 10;
-                            d.NonVAT = d.VAT == 0 ? 0 : Math.Round(d.VAT / 1.1M);
+                            d.VAT = Math.Round(d.VAT == null ? 0M : d.VAT / 10) * 10;
+                            d.NonVAT = d.VAT == 0 ? 0 : d.VAT / 1.1M;
+                            d.NonVAT = Math.Round(d.NonVAT);
                             i.GG.Add(d);
+
                             _pl1.GG.Add(d.VAT);
 
-                            i.LN.Add(_1 - _2 - d.NonVAT);
 
-                            var _h = dlgFiltered.Sum(x => x.Col6);
-                            var _d = dlgFiltered.Sum(x => x.Col2);
+                            var _3 = d.NonVAT;
+                            i.LN.Add(_1 - _2 - _3);
 
-                            i.BVMT.Add(new PT_BVMT
+                            var _h = m.LocalCode == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "TT").Sum(x => x.Col6) : data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "OTHER").Sum(x => x.Col6);
+                            var _d = m.LocalCode == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "TT").Sum(x => x.Col2) : data.DLG.Dlg_4.Where(x => x.Code == _l.Code && x.Type == "OTHER").Sum(x => x.Col2);
+
+                            var _b = new PT_BVMT
                             {
                                 Code = _l.Code,
                                 VAT = Math.Round(_h - d.VAT),
-                                NonVAT = Math.Round((_h - d.VAT != 0 ? (_h - d.VAT) / 1.1M - _d : 0))
-                            });
+                            };
+                            var _nVAT = _h - d.VAT != 0 ? (_h - d.VAT) / 1.1M - _d : 0;
+                            _b.NonVAT = Math.Round(_nVAT);
+                            i.BVMT.Add(_b);
                         }
                         data.PT.Add(i);
                         orderPT++;
@@ -515,131 +543,146 @@ namespace DMS.BUSINESS.Services.BU
                 #endregion
 
                 #region ĐB
+
                 var _oDb = 1;
-                var localCacheDB = lstCustomer.Where(x => x.CustomerTypeCode == "KBM")
-                    .OrderBy(x => x.LocalCode).Select(x => x.LocalCode).Distinct()
-                    .ToDictionary(v => v, v => _dbContext.tblMdLocal.Find(v)?.Name);
-
-                var marketCache = lstMarket.ToDictionary(x => x.Code, x => x.Name);
-
-                foreach (var (key, value) in localCacheDB)
+                foreach (var v in lstCustomer.Where(x => x.CustomerTypeCode == "KBM").OrderBy(x => x.LocalCode).Select(x => x.LocalCode).Distinct().ToList())
                 {
-                    data.DB.Add(new DB { ColB = value, IsBold = true });
-
-                    var customers = lstCustomer.Where(x => x.LocalCode == key && x.CustomerTypeCode == "KBM").ToList();
-                    foreach (var c in customers)
+                    var _v = _dbContext.tblMdLocal.Find(v);
+                    data.DB.Add(new DB
                     {
-                        var _rPt = data.PT.Where(x => x.Code == c.MarketCode);
-                        var col4Sum = _rPt.Sum(x => x.Col4);
-                        var col3Sum = col4Sum + _rPt.Sum(x => x.Col6) + (c.CuocVcBq ?? 0);
+                        ColB = _v.Name,
+                        IsBold = true,
+                    });
+                    foreach (var c in lstCustomer.Where(x => x.LocalCode == v && x.CustomerTypeCode == "KBM").ToList())
+                    {
 
                         var _c = new DB
                         {
                             Code = c.Code,
-                            ColA = _oDb++.ToString(),
+                            ColA = _oDb.ToString(),
                             ColB = c.Name,
-                            Col1 = marketCache.GetValueOrDefault(c.MarketCode),
+                            Col1 = lstMarket.FirstOrDefault(x => x.Code == c.MarketCode).Name,
                             Col2 = c.Gap ?? 0,
-                            Col4 = col4Sum,
+                            Col4 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4),
                             Col5 = c.CuocVcBq ?? 0,
                             Col6 = 0,
-                            Col3 = col3Sum,
+                            Col3 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4 + x.Col6) + c.CuocVcBq ?? 0,
                             Col8 = 0,
-                            Col9 = c.MgglhXang ?? 0,
+                            Col9 = c.MgglhXang ??0,
                             Col10 = c.MgglhDau ?? 0,
-                        };
 
-                        var dlgFiltered = data.DLG.Dlg_4.Where(x => x.Type == (c.LocalCode == "V1" ? "TT" : "OTHER"));
+                        };
+                        var _rPt = data.PT.FirstOrDefault(x => x.Code == c.MarketCode);
                         foreach (var g in lstGoods)
                         {
-                            var _lg = dlgFiltered.Where(x => x.Code == g.Code).Sum(x => x.Col13);
+                            var _lg = c.LocalCode == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col13) : data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col13);
                             _c.LG.Add(Math.Round(_lg));
-
-                            var vat = _rPt.SelectMany(x => x.GG).Where(x => x.Code == g.Code).Sum(x => x.VAT) +
-                                      (g.Code == "601005" ? 0 : (g.Type == "X" ? _c.Col9 : _c.Col10) + _c.Col8);
+                            //var vat = g.Type == "X" ? _rPt.GG.Where(x => x.Code == g.Code).Sum(x => x.VAT) + _c.Col9 + _c.Col8 : _rPt.GG.Where(x => x.Code == g.Code).Sum(x => x.VAT) + _c.Col10 + _c.Col8;
+                            var vat = g.Type == "X"
+                                            ? _rPt.GG.Where(x => x.Code == g.Code).Sum(x => x.VAT) + (g.Code == "601005" ? 0 : _c.Col9 + _c.Col8)
+                                            : _rPt.GG.Where(x => x.Code == g.Code).Sum(x => x.VAT) + (g.Code == "601005" ? 0 : _c.Col10 + _c.Col8);
 
                             var nonVat = vat == 0 ? 0 : vat / 1.1M;
-                            _c.GG.Add(new DB_GG { VAT = Math.Round(vat), NonVAT = Math.Round(nonVat) });
-                            _c.LN.Add(Math.Round(_lg - col3Sum - nonVat));
+                            _c.GG.Add(new DB_GG
+                            {
+                                VAT = Math.Round(vat),
+                                NonVAT = Math.Round(nonVat),
+                            });
 
-                            var bv = dlgFiltered.Where(x => x.Code == g.Code).Sum(x => x.Col6);
+                            _c.LN.Add(Math.Round(_lg - _c.Col3 - nonVat - 0 / 1.1M));
+
+
+                            var bv = c.LocalCode == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col6) : data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col6);
+                            var t = c.LocalCode == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col2) : data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col2);
+
                             var bv_vat = bv - vat;
+                            var bv_nonVat = bv_vat != 0 ? bv_vat / 1.1M - t : 0;
                             _c.BVMT.Add(new DB_BVMT
                             {
                                 Code = g.Code,
                                 VAT = Math.Round(bv_vat),
-                                NonVAT = Math.Round(bv_vat != 0 ? bv_vat / 1.1M - dlgFiltered.Where(x => x.Code == g.Code).Sum(x => x.Col2) : 0)
+                                NonVAT = Math.Round(bv_nonVat)
                             });
+
+
                         }
+                        ;
                         data.DB.Add(_c);
+                        _oDb++;
                     }
                 }
                 #endregion
 
                 #region FOB
-                var kbbCustomers = lstCustomer.Where(x => x.CustomerTypeCode == "KBB").ToList();
-                var localCodes = kbbCustomers.Select(x => x.LocalCode).Distinct().OrderBy(x => x).ToList();
-                foreach (var l in localCodes)
+
+                foreach (var l in lstCustomer.Where(x => x.CustomerTypeCode == "KBB").OrderBy(x => x.LocalCode).Select(x => x.LocalCode).Distinct().ToList())
                 {
                     var local = _dbContext.tblMdLocal.Find(l);
-                    data.FOB.Add(new FOB { ColB = local.Name, IsBold = true });
-
-                    var _oFob = 1;
-                    var filteredCustomers = kbbCustomers.Where(x => x.LocalCode == l);
-
-                    foreach (var c in filteredCustomers)
+                    data.FOB.Add(new FOB
                     {
-                        var marketSum = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4);
-                        var cuocVcBq = c.CuocVcBq ?? 0;
+                        ColB = local.Name,
+                        IsBold = true,
+                    });
+                    var _oFob = 1;
+                    foreach (var c in lstCustomer.Where(x => x.CustomerTypeCode == "KBB" && x.LocalCode == l))
+                    {
                         var _fob = new FOB
                         {
                             Code = c.Code,
-                            ColA = (_oFob++).ToString(),
+                            ColA = _oFob.ToString(),
                             ColB = c.Name,
-                            Col2 = marketSum,
-                            Col3 = cuocVcBq,
+                            Col2 = data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4),
+                            Col3 = c.CuocVcBq ?? 0,
                             Col4 = 0,
-                            Col1 = cuocVcBq + marketSum,
+                            Col1 = c.CuocVcBq ?? 0 + data.PT.Where(x => x.Code == c.MarketCode).Sum(x => x.Col4),
                             Col5 = 0,
                             Col6 = c.MgglhXang ?? 0,
                             Col7 = c.MgglhDau ?? 0,
-                            Col8 = 0
+                            Col8 = 0,
                         };
-
-                        var dlgType = l == "V1" ? "TT" : "OTHER";
+                        _oFob++;
+                        var lPT = data.PT.FirstOrDefault(x => x.Code == c.MarketCode);
                         foreach (var g in lstGoods)
                         {
-                            var dlg4 = data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == dlgType);
-                            var lg = dlg4.Sum(x => x.Col13);
-                            var gg = dlg4.Sum(x => x.Col14);
-
+                            var lg = l == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col13) : data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col13);
                             _fob.LG.Add(Math.Round(lg));
 
+                            var gg = l == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col14) : data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col14);
                             var vat = g.Type == "X" ? gg + _fob.Col6 + _fob.Col5 : gg + _fob.Col7 + _fob.Col5;
                             var nonVat = vat == 0 ? 0 : vat / 1.1M;
-                            _fob.GG.Add(new FOB_GG { VAT = Math.Round(vat), NonVAT = Math.Round(nonVat) });
+
+                            _fob.GG.Add(new FOB_GG
+                            {
+                                VAT = Math.Round(vat),
+                                NonVAT = Math.Round(nonVat),
+                            });
                             _fob.LN.Add(Math.Round(lg - _fob.Col1 - nonVat - _fob.Col8 / 1.1M));
 
-                            var bv = dlg4.Sum(x => x.Col6);
-                            var t = dlg4.Sum(x => x.Col2);
+
+                            var bv = c.LocalCode == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col6) : data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col6);
+                            var t = c.LocalCode == "V1" ? data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col2) : data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col2);
+
                             var bv_vat = bv - vat;
                             var bv_nonVat = bv_vat != 0 ? bv_vat / 1.1M - t : 0;
-                            _fob.BVMT.Add(new PT_BVMT { Code = g.Code, VAT = Math.Round(bv_vat), NonVAT = Math.Round(bv_nonVat) });
+                            _fob.BVMT.Add(new PT_BVMT
+                            {
+                                Code = g.Code,
+                                VAT = Math.Round(bv_vat),
+                                NonVAT = Math.Round(bv_nonVat)
+                            });
+
                         }
                         data.FOB.Add(_fob);
+
                     }
                 }
+
                 #endregion
 
                 #region PT09
                 var _oPt09 = 1;
-                var firstCPChungChuaCuocVC = lstMarket.FirstOrDefault()?.CPChungChuaCuocVC ?? 0;
-
-                foreach (var c in lstCustomer.Where(x => x.CustomerTypeCode == "TNPP"))
+                foreach (var c in lstCustomer.Where(x => x.CustomerTypeCode == "TNPP").ToList())
                 {
-                    var col7 = c.MgglhXang ?? 0;
-                    var col8 = c.MgglhDau ?? 0;
-
                     var _i = new PT09
                     {
                         Code = c.Code,
@@ -647,68 +690,61 @@ namespace DMS.BUSINESS.Services.BU
                         ColB = c.Name,
                         Col5 = 0,
                         Col6 = 0,
-                        Col4 = firstCPChungChuaCuocVC,
-                        Col7 = col7,
-                        Col8 = col8,
+                        Col4 = lstMarket.FirstOrDefault()?.CPChungChuaCuocVC ?? 0,
+                        Col7 = c.MgglhXang ?? 0,
+                        Col8 = c.MgglhDau ?? 0,
                         Col18 = 0,
-                        Col3 = firstCPChungChuaCuocVC
                     };
+                    _i.Col3 = _i.Col4 + _i.Col5 + _i.Col6;
 
                     var _pl4 = new PL4
                     {
                         Code = c.Code,
                         ColA = _oPt09.ToString(),
-                        ColB = c.Name
+                        ColB = c.Name,
                     };
                     data.PL4.Add(_pl4);
 
+
                     foreach (var g in lstGoods)
                     {
-                        var dlgOther = data.DLG.Dlg_4
-                            .Where(x => x.Code == g.Code && x.Type == "OTHER")
-                            .Select(x => new { x.Col13, x.Col14, x.Col6, x.Col2 })
-                            .ToList();
+                        var _2 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col13));
+                        _i.LG.Add(_2);
 
-                        var sumCol13 = Math.Round(dlgOther.Sum(x => x.Col13));
-                        var sumCol14 = dlgOther.Sum(x => x.Col14);
-                        var sumCol6 = dlgOther.Sum(x => x.Col6);
-                        var sumCol2 = dlgOther.Sum(x => x.Col2);
-
-                        _i.LG.Add(sumCol13);
-
-                        var _x_d = g.Type == "X" ? col7 : col8;
-                        var vat = Math.Round(sumCol14) + _x_d;
+                        var _x_d = g.Type == "X" ? _i.Col7 : _i.Col8;
+                        var vat = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col14)) + _x_d;
                         var nonVat = vat != 0 ? vat / 1.1M : 0;
-
                         _i.GG.Add(new PT09_GG
                         {
                             VAT = Math.Round(vat),
-                            NonVAT = Math.Round(nonVat)
+                            NonVAT = Math.Round(nonVat),
                         });
-
-                        _i.LN.Add(Math.Round(sumCol13 - _i.Col3 - nonVat - _i.Col18));
+                        _i.LN.Add(Math.Round(_2 - _i.Col3 - nonVat - _i.Col18));
                         _pl4.GG.Add(Math.Round(vat));
 
-                        var bv_vat = sumCol6 - vat;
-                        var bv_nonVat = bv_vat != 0 ? bv_vat / 1.1M - sumCol2 : 0;
 
+                        var bv = data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col6);
+                        var t = data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "OTHER").Sum(x => x.Col2);
+
+                        var bv_vat = bv - vat;
+                        var bv_nonVat = bv_vat != 0 ? bv_vat / 1.1M - t : 0;
                         _i.BVMT.Add(new PT_BVMT
                         {
                             Code = g.Code,
                             VAT = Math.Round(bv_vat),
                             NonVAT = Math.Round(bv_nonVat)
                         });
-                    }
 
+
+                    }
                     _oPt09++;
                     data.PT09.Add(_i);
+
                 }
                 #endregion
 
                 #region PL2
                 var _oPl2 = 1;
-                var dbLookup = data.DB.Where(x => !string.IsNullOrEmpty(x.Code)).ToDictionary(x => x.Code);
-
                 foreach (var l in lstMarket)
                 {
                     data.PL2.Add(new PL2
@@ -716,49 +752,52 @@ namespace DMS.BUSINESS.Services.BU
                         ColB = l.Name,
                         IsBold = true,
                     });
-
-                    var customers = lstCustomer.Where(x => x.CustomerTypeCode == "KBM" && x.MarketCode == l.Code);
-
-                    foreach (var c in customers)
+                    foreach (var c in lstCustomer.Where(x => x.CustomerTypeCode == "KBM" && x.MarketCode == l.Code).ToList())
                     {
-                        if (!dbLookup.TryGetValue(c.Code, out var _db)) continue;
-
                         var pl2 = new PL2
                         {
                             Code = c.Code,
-                            ColA = _oPl2++.ToString(),
+                            ColA = _oPl2.ToString(),
                             ColB = c.Name,
-                            GG = _db.GG.Select(gg => gg.VAT).ToList()
                         };
-
+                        var _db = data.DB.FirstOrDefault(x => x.Code == c.Code);
+                        _oPl2++;
+                        if (_db == null) continue;
+                        foreach (var gg in _db.GG)
+                        {
+                            pl2.GG.Add(gg.VAT);
+                        }
                         data.PL2.Add(pl2);
                     }
                 }
+
+
                 #endregion
 
                 #region PL3
-                int _oPl3 = 1;
-                var fobDict = data.FOB.Where(x => !string.IsNullOrEmpty(x.Code)).ToDictionary(x => x.Code);
-
-                foreach (var c in lstCustomer.Where(x => x.CustomerTypeCode == "KBB"))
+                var _oPl3 = 1;
+                foreach (var c in lstCustomer.Where(x => x.CustomerTypeCode == "KBB").ToList())
                 {
-                    if (!fobDict.TryGetValue(c.Code, out var dataFob)) continue;
-
                     var pl3 = new PL3
                     {
                         Code = c.Code,
-                        ColA = _oPl3++.ToString(),
+                        ColA = _oPl3.ToString(),
                         ColB = c.Name,
-                        GG = dataFob.GG.Select(gg => gg.VAT).ToList()
                     };
+                    var dataFob = data.FOB.FirstOrDefault(x => x.Code == c.Code);
+                    _oPl3++;
+                    if (dataFob == null) continue;
+                    foreach (var gg in dataFob.GG)
+                    {
+                        pl3.GG.Add(gg.VAT);
+                    }
 
                     data.PL3.Add(pl3);
                 }
+
                 #endregion
 
                 #region VK11 PT
-                var marketDict = _dbContext.TblMdMarket.ToDictionary(m => m.Code, m => m.Name);
-
                 foreach (var g in lstGoods)
                 {
                     data.VK11PT.Add(new VK11PT
@@ -766,22 +805,16 @@ namespace DMS.BUSINESS.Services.BU
                         ColB = g.Name,
                         IsBold = true,
                     });
-
                     var _o = 1;
-                    var vk11ptCustomers = lstCustomer.Where(x => x.CustomerTypeCode == "VK11PT");
-
-                    foreach (var c in vk11ptCustomers)
+                    foreach (var c in lstCustomer.Where(x => x.CustomerTypeCode == "VK11PT").ToList())
                     {
-                        marketDict.TryGetValue(c.MarketCode, out var marketName);
-                        var v = data.PT.FirstOrDefault(x => x.Code == c.MarketCode)?.BVMT
-                                    .Where(x => x.Code == g.Code)
-                                    .Sum(x => x.NonVAT) ?? 0;
-
-                        data.VK11PT.Add(new VK11PT
+                        var m = _dbContext.TblMdMarket.Find(c.MarketCode);
+                        var v = data.PT.FirstOrDefault(x => x.Code == c.MarketCode).BVMT.Where(x => x.Code == g.Code).Sum(x => x.NonVAT);
+                        var _i = new VK11PT
                         {
                             ColA = _o.ToString(),
                             ColB = c.Name,
-                            Col1 = marketName,
+                            Col1 = m?.Name,
                             Col2 = c.Gap ?? 0,
                             Col4 = "10",
                             Col5 = c.Code,
@@ -794,16 +827,15 @@ namespace DMS.BUSINESS.Services.BU
                             Col13 = "C",
                             Col14 = fDate.ToString("dd.MM.yyyy"),
                             Col15 = fDate.ToString("HH:mm"),
-                            Col16 = "31.12.9999",
-                        });
+                            Col16 = $"31.12.9999",
+                        };
+                        data.VK11PT.Add(_i);
                         _o++;
                     }
                 }
                 #endregion
 
                 #region VK11 ĐB
-                var customersKBM = lstCustomer.Where(x => x.CustomerTypeCode == "KBM");
-
                 foreach (var g in lstGoods)
                 {
                     data.VK11DB.Add(new VK11DB
@@ -811,21 +843,17 @@ namespace DMS.BUSINESS.Services.BU
                         ColB = g.Name,
                         IsBold = true,
                     });
-
-                    int _o = 1;
-                    foreach (var c in customersKBM)
+                    var _o = 1;
+                    foreach (var c in lstCustomer.Where(x => x.CustomerTypeCode == "KBM").ToList())
                     {
-                        var mName = marketDict.GetValueOrDefault(c.MarketCode);
-                        var v = data.DB.FirstOrDefault(x => x.Code == c.Code)?
-                                    .BVMT.Where(x => x.Code == g.Code)
-                                    .Sum(x => x.NonVAT) ?? 0;
-
-                        data.VK11DB.Add(new VK11DB
+                        var m = _dbContext.TblMdMarket.Find(c.MarketCode);
+                        var v = data.DB.FirstOrDefault(x => x.Code == c.Code).BVMT.Where(x => x.Code == g.Code).Sum(x => x.NonVAT);
+                        var _i = new VK11DB
                         {
                             ColA = _o.ToString(),
                             ColB = c.Address,
                             ColC = c.Name,
-                            Col1 = mName,
+                            Col1 = m?.Name,
                             Col2 = c.Gap ?? 0,
                             Col4 = "10",
                             Col5 = c.Code,
@@ -838,18 +866,15 @@ namespace DMS.BUSINESS.Services.BU
                             Col13 = "C",
                             Col14 = fDate.ToString("dd.MM.yyyy"),
                             Col15 = fDate.ToString("HH:mm"),
-                            Col16 = "31.12.9999",
-                        });
+                            Col16 = $"31.12.9999",
+                        };
+                        data.VK11DB.Add(_i);
                         _o++;
                     }
                 }
                 #endregion
 
                 #region VK11 FOB
-                var marketCacheFOB = _dbContext.TblMdMarket
-                    .Where(m => lstCustomer.Any(c => c.MarketCode == m.Code && c.CustomerTypeCode == "KBB"))
-                    .ToDictionary(m => m.Code, m => m.Name);
-
                 foreach (var g in lstGoods)
                 {
                     data.VK11FOB.Add(new VK11FOB
@@ -857,24 +882,17 @@ namespace DMS.BUSINESS.Services.BU
                         ColB = g.Name,
                         IsBold = true,
                     });
-
                     var _o = 1;
-
-                    var filteredCustomers = lstCustomer.Where(x => x.CustomerTypeCode == "KBB");
-
-                    foreach (var c in filteredCustomers)
+                    foreach (var c in lstCustomer.Where(x => x.CustomerTypeCode == "KBB").ToList())
                     {
-                        var marketName = marketCacheFOB.GetValueOrDefault(c.MarketCode);
-                        var v = data.FOB.FirstOrDefault(x => x.Code == c.Code)?.BVMT
-                                    .Where(x => x.Code == g.Code)
-                                    .Sum(x => x.NonVAT) ?? 0;
-
-                        data.VK11FOB.Add(new VK11FOB
+                        var m = _dbContext.TblMdMarket.Find(c.MarketCode);
+                        var v = data.FOB.FirstOrDefault(x => x.Code == c.Code).BVMT.Where(x => x.Code == g.Code).Sum(x => x.NonVAT);
+                        var _i = new VK11FOB
                         {
                             ColA = _o.ToString(),
                             ColB = c.Address,
                             ColC = c.Name,
-                            Col1 = marketName,
+                            Col1 = m?.Name,
                             Col2 = c.Gap ?? 0,
                             Col4 = "10",
                             Col5 = c.Code,
@@ -887,13 +905,13 @@ namespace DMS.BUSINESS.Services.BU
                             Col13 = "C",
                             Col14 = fDate.ToString("dd.MM.yyyy"),
                             Col15 = fDate.ToString("HH:mm"),
-                            Col16 = "31.12.9999",
-                        });
+                            Col16 = $"31.12.9999",
+                        };
+                        data.VK11FOB.Add(_i);
                         _o++;
                     }
                 }
                 #endregion
-
 
                 #region VK11 TNPP
                 foreach (var g in lstGoods)
@@ -982,8 +1000,13 @@ namespace DMS.BUSINESS.Services.BU
                     }
                     _m = _m.OrderBy(x => x.CustomerName).ThenBy(x => x.PointName).ToList();
                     var _o = 1;
+                    //var specialCustomerDict = lstSpecialCustomer.ToDictionary(x => x.CustomerCode, x => x.Fob);
                     foreach (var e in _m)
                     {
+                        //bool isSpecial = specialCustomerDict.ContainsKey(e.CustomerCode);
+                        //decimal col12Value = isSpecial
+                        //    ? specialCustomerDict[e.CustomerCode] ?? 0
+                        //    : Math.Round(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col14) ?? 0);
                         var i = new BBDO
                         {
                             ColA = _o.ToString(),
@@ -1004,11 +1027,14 @@ namespace DMS.BUSINESS.Services.BU
                         };
                         i.Col8 = Math.Round((i.Col9) + (i.Col10) + (i.Col11));
                         i.Col7 = i.Col6 == 0 ? 0 : Math.Round(i.Col6 / 1.1M);
-                        i.Col13 = i.Col12 == 0 ? 0 : Math.Round(i.Col12 / 1.1M);
-                        i.Col14 = Math.Round((i.Col12) - (i.Col10) * 1.1M);
-                        i.Col15 = i.Col14 == 0 ? 0 : Math.Round(i.Col14 / 1.1M);
-                        i.Col17 = Math.Round(i.Col7 - i.Col8 - i.Col15 - i.Col11);
+                        i.Col13 = i.Col12 == 0 ? 0 : Math.Round(i.Col12 / 1.1M );
+                        i.Col14 = Math.Round((i.Col12) - (i.Col10 ) * 1.1M);
+                        i.Col15 = i.Col14 == 0 ? 0 : Math.Round(i.Col14 / 1.1M );
+                        i.Col17 = Math.Round(i.Col7 - i.Col8 - i.Col15 - i.Col11 );
                         i.Col16 = Math.Round(i.Col17 * 1.1M);
+                        //i.Col19 = Math.Round(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col14  ?? 0);
+
+                        //i.Col19 =  (e.CustomerCode== "305152" ||e.CustomerCode== "308417") ? ((data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col16)==0 ? 0 : (int)((Math.Floor((data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col16 ?? 0)- (decimal)0.5) -5)/100)*100) :(data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col16 ??0) ;
                         i.Col19 = (data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col6) - i.Col14);
                         i.Col18 = i.Col19 == 0 ? 0 : Math.Round(i.Col19 / 1.1M - data.DLG.Dlg_4.Where(x => x.Type == "OTHER" && x.Code == g.Code).Sum(x => x.Col2));
 
@@ -1026,6 +1052,7 @@ namespace DMS.BUSINESS.Services.BU
                 {
                     foreach (var _c in lstMapDOFO.Where(x => x.GoodsCode == g.Code).Select(x => x.CustomerCode).ToList().Distinct().ToList())
                     {
+                        //var g = lstGoods.FirstOrDefault(x => x.Code == lstMapDOFO.FirstOrDefault().GoodsCode);
                         var lstPointCode = lstMapDOFO.Where(x => x.CustomerCode == _c).Select(x => x.DeliveryPointCode).ToList();
                         var lstPoint = dataPoint.Where(x => lstPointCode.Contains(x.Code)).ToList();
 
@@ -1044,14 +1071,14 @@ namespace DMS.BUSINESS.Services.BU
                                 ColB = p.Name,
                                 ColC = g.Name ?? "",
                                 Col1 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col8)),
-                                Col2 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col9)),
+                                Col2 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col9) ),
                                 Col4 = data.PT.FirstOrDefault(x => x.IsBold == false)?.Col4 ?? 0,
                                 Col5 = _5?.CuocVcBq ?? 0,
                                 Col6 = Math.Round(lstCustomer.FirstOrDefault(x => x.Code == _c)?.BankLoanInterest ?? 0),
                             };
                             i.Col3 = Math.Round(i.Col4 + i.Col5 + i.Col6);
                             var _8 = data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col7);
-                            i.Col8 = _8 == 0 ? 0 : Math.Round(_8 / 100);
+                            i.Col8 = _8 == 0 ? 0 : Math.Round(_8 / 100 );
                             i.Col7 = Math.Round(i.Col8 + i.Col3 - i.Col2);
                             i.Col10 = Math.Round(data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col6) + i.Col7);
                             i.Col9 = i.Col10 == 0 ? 0 : Math.Round(i.Col10 / 1.1M - data.DLG.Dlg_4.Where(x => x.Code == g.Code && x.Type == "TT").Sum(x => x.Col2));
@@ -1252,9 +1279,8 @@ namespace DMS.BUSINESS.Services.BU
                 }
                 #endregion
 
-                //var rData = await RoundNumberData(data);
-                //return tab == -1 ? rData : await ReturnTabData(rData, tab);
-                return await RoundNumberData(data);
+                var rData = await RoundNumberData(data);
+                return rData;
             }
             catch (Exception ex)
             {
